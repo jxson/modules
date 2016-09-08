@@ -48,7 +48,3 @@ coverage:
 .PHONY: run
 run:
 	@true
-
-.PHONY: ci
-ci:
-	@true
