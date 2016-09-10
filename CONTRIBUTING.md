@@ -1,9 +1,8 @@
-This repository accepts contributions using Gerrit.
+# Contributing
 
-Instructions for using Gerrit:
+This is an open source project and accepts contributions. All contributors must:
 
- * https://gerrit-review.googlesource.com/Documentation/
+* Sign the [Google CLA](https://cla.developers.google.com/).
+* Submit changes via Gerrit (https://fuchsia-review.googlesource.com).
 
-Before we can land your change, you need to sign the Google CLA:
-
- * https://cla.developers.google.com/
+Detailed contribution instructions can be found in the [doc directory](./doc/contributing/README.md).
