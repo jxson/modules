@@ -24,5 +24,6 @@
 
 ## Meta
 
+* [FAQ](faq.md)
 * [Glossary](GLOSSARY.md)
 * [Resources](RESOURCES.md)

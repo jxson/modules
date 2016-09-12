@@ -61,6 +61,6 @@ doc:
 		echo ""; \
 		echo "Install gitbook with npm:"; \
 		echo ""; \
-		echo "    npm install --global gitbook"; \
+		echo "    npm install -g gitbook-cli"; \
 		echo ""; \
 	fi; \
