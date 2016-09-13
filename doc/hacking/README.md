@@ -6,6 +6,3 @@ There are a few steps to walk through and understand before you can start hackin
 * [Environment](environment.md) - Setup development tools, and environment variables.
 * [Dependencies](dependencies.md) - Install and build local dependencies.
 * [Workflow](workflow.md) - Tips for a happy development experience.
-
-
-assert(foo typeOf(), '')
