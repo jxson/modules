@@ -1,4 +1,4 @@
-MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --warn-undefined-variables --no-print-directory
 SHELL := /bin/bash
 
 # TODO(jxson): Add appropriate PATH based on deps/tools.
@@ -8,8 +8,19 @@ SHELL := /bin/bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
+DIRNAME := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+DEPS_DIR := third_party
+
+################################################################################
+## Common variables to use
 gitbook = $(shell which gitbook)
 
+JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/node_modules/*")
+SH_FILES = $(shell find ./tools -name "*.sh")
+ALL_SOURCE_FILES = $(JS_FILES) $(SH_FILES)
+
+################################################################################
+## Common targets
 .PHONY:
 all: ## Default task to build dependencies.
 	@true
@@ -31,6 +42,21 @@ build:
 clean:
 	@true
 
+.PHONY: copyright-check
+copyright-check: ## Run the copyright checker.
+	@echo "** Checking the copyright headers ..."
+	@export COPYRIGHT_ERROR=false; \
+	for sf in $(ALL_SOURCE_FILES); do \
+		echo $${sf}; \
+		if ! $$(tools/copyright_check.sh $${sf}); then \
+			export COPYRIGHT_ERROR=true; \
+			echo "Invalid copyright header: '$${sf}'"; \
+		fi; \
+	done; \
+	if [ "$${COPYRIGHT_ERROR}" = true ]; then \
+		exit 1; \
+	fi
+
 .PHONY: fmt
 fmt:
 	@true
@@ -38,6 +64,11 @@ fmt:
 .PHONY: lint
 lint:
 	@true
+
+# TODO(youngseokyoon): integrate this with the CI system later.
+.PHONY: presubmit
+presubmit: ## Run the presubmit tests.
+	@$(MAKE) copyright-check
 
 .PHONY: test
 test:
