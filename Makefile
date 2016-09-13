@@ -10,19 +10,23 @@ SHELL := /bin/bash
 
 DIRNAME := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 DEPS_DIR := third_party
+FLUTTER_DIR := $(DEPS_DIR)/flutter
+FLUTTER_BIN := $(DIRNAME)/$(DEPS_DIR)/flutter/bin
+PATH := $(FLUTTER_BIN):$(PATH)
 
 ################################################################################
 ## Common variables to use
 gitbook = $(shell which gitbook)
 
+DART_FILES = $(shell find . -name "*.dart" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "./*/packages/*")
 JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/node_modules/*")
 SH_FILES = $(shell find ./tools -name "*.sh")
-ALL_SOURCE_FILES = $(JS_FILES) $(SH_FILES)
+ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES)
 
 ################################################################################
 ## Common targets
-.PHONY:
-all: ## Default task to build dependencies.
+.PHONY: all
+all: $(FLUTTER_DIR) ## Default task to build dependencies.
 	@true
 
 # SEE: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -57,6 +61,10 @@ copyright-check: ## Run the copyright checker.
 		exit 1; \
 	fi
 
+.PHONY: depclean
+depclean:
+	@rm -rf $(FLUTTER_DIR)
+
 .PHONY: fmt
 fmt:
 	@true
@@ -79,8 +87,8 @@ coverage:
 	@true
 
 .PHONY: run
-run:
-	@true
+run: $(FLUTTER_DIR) ## Run the gallery flutter app.
+	@cd gallery && flutter run --hot
 
 # TODO(jxson): Add gitbook as a third-party dependency.
 .PHONY: doc
@@ -96,3 +104,13 @@ doc:
 		echo "    npm install -g gitbook-cli"; \
 		echo ""; \
 	fi; \
+
+
+################################################################################
+## Dependencies
+$(FLUTTER_DIR): FLUTTER_VERSION
+	@$(MAKE) depclean
+	git clone https://github.com/flutter/flutter.git $@
+	cd $@ && git checkout $(shell echo -e `cat FLUTTER_VERSION`)
+	flutter precache
+	@touch $@

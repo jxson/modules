@@ -1,0 +1,5 @@
+name: gallery
+description: View UI Widgets and screens.
+dependencies:
+  flutter:
+    path: ../third_party/flutter/packages/flutter
