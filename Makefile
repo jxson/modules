@@ -8,6 +8,8 @@ SHELL := /bin/bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
+gitbook = $(shell which gitbook)
+
 .PHONY:
 all: ## Default task to build dependencies.
 	@true
@@ -48,3 +50,18 @@ coverage:
 .PHONY: run
 run:
 	@true
+
+# TODO(jxson): Add gitbook as a third-party dependency.
+.PHONY: doc
+doc:
+	@if [ -f "$(gitbook)" ]; then \
+		gitbook install; \
+		gitbook serve; \
+	else \
+		echo "The gitbook tool is required to view docs locally."; \
+		echo ""; \
+		echo "Install gitbook with npm:"; \
+		echo ""; \
+		echo "    npm install -g gitbook-cli"; \
+		echo ""; \
+	fi; \
