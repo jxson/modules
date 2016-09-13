@@ -55,6 +55,7 @@ run:
 .PHONY: doc
 doc:
 	@if [ -f "$(gitbook)" ]; then \
+		gitbook install; \
 		gitbook serve; \
 	else \
 		echo "The gitbook tool is required to view docs locally."; \

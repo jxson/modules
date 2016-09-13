@@ -1,5 +1,5 @@
 # Writing Tests
 
-* [Dart Testing](testing/dart.md)
-* [Flutter Unit Testing](testing/flutter-unit-testing.md)
-* [Flutter Integration Testing](testing/flutter-integration-testing.md)
+* [Dart Testing](dart.md)
+* [Flutter Unit Testing](flutter-unit-testing.md)
+* [Flutter Integration Testing](flutter-integration-testing.md)
