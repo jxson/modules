@@ -1,0 +1,5 @@
+name: util
+description: Utilities
+dependencies:
+dev_dependencies:
+  test: any
