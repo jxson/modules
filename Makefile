@@ -12,7 +12,8 @@ DIRNAME := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 DEPS_DIR := third_party
 FLUTTER_DIR := $(DEPS_DIR)/flutter
 FLUTTER_BIN := $(DIRNAME)/$(DEPS_DIR)/flutter/bin
-PATH := $(FLUTTER_BIN):$(PATH)
+DART_BIN := $(FLUTTER_BIN)/cache/dart-sdk/bin
+PATH := $(FLUTTER_BIN):$(DART_BIN):$(PATH)
 
 ################################################################################
 ## Common variables to use

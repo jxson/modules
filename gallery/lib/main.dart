@@ -4,6 +4,9 @@
 
 import 'package:flutter/material.dart';
 
+import 'gallery/collection.dart';
+import 'routes.dart';
+
 void main() {
   runApp(new App());
 }
@@ -11,18 +14,25 @@ void main() {
 /// An Application Widget.
 ///
 /// The top-level widget for the gallery.
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   /// Creates an App.
   App({Key key}) : super(key: key);
 
+  @override
+  AppState createState() => new AppState();
+}
+
+/// The Application State.
+class AppState extends State<App> {
   @override
   Widget build(BuildContext content) {
     return new MaterialApp(
       title: 'FX Modules',
       theme: new ThemeData(primarySwatch: Colors.blue),
+      routes: kRoutes,
       home: new Scaffold(
         appBar: new AppBar(title: new Text('FX Modules')),
-        body: new Text('Gallery screen should be put here.'),
+        body: new Block(children: kGalleryCollection),
       ),
     );
   }
