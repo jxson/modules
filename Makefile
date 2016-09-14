@@ -27,7 +27,7 @@ ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES)
 ################################################################################
 ## Common targets
 .PHONY: all
-all: $(FLUTTER_DIR) ## Default task to build dependencies.
+all: ## Default task to build dependencies.
 	@true
 
 # SEE: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -64,7 +64,7 @@ copyright-check: ## Run the copyright checker.
 
 .PHONY: depclean
 depclean:
-	@rm -rf $(FLUTTER_DIR)
+	@true
 
 .PHONY: fmt
 fmt:
@@ -88,7 +88,7 @@ coverage:
 	@true
 
 .PHONY: run
-run: $(FLUTTER_DIR) ## Run the gallery flutter app.
+run: ## Run the gallery flutter app.
 	@cd gallery && flutter run --hot
 
 # TODO(jxson): Add gitbook as a third-party dependency.
@@ -105,13 +105,3 @@ doc:
 		echo "    npm install -g gitbook-cli"; \
 		echo ""; \
 	fi; \
-
-
-################################################################################
-## Dependencies
-$(FLUTTER_DIR): FLUTTER_VERSION
-	@$(MAKE) depclean
-	git clone https://github.com/flutter/flutter.git $@
-	cd $@ && git checkout $(shell echo -e `cat FLUTTER_VERSION`)
-	flutter precache
-	@touch $@
