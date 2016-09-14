@@ -1,0 +1,8 @@
+name: models
+description: Data models used by the gallery widgets
+dependencies:
+  intl: '>=0.12.4+2 <0.14.0'
+  util:
+    path: ../util
+dev_dependencies:
+  test: any
