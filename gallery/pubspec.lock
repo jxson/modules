@@ -42,7 +42,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "1.1.1"
   crypto:
     description:
       name: crypto
@@ -97,6 +97,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  models:
+    description:
+      path: "../packages/models"
+      relative: true
+    source: path
+    version: "0.0.0"
   mojo:
     description:
       name: mojo
@@ -187,6 +193,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.0+3"
+  util:
+    description:
+      path: "../packages/util"
+      relative: true
+    source: path
+    version: "0.0.0"
   vector_math:
     description:
       name: vector_math
@@ -199,6 +211,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.7+3"
+  widgets:
+    description:
+      path: "../packages/widgets"
+      relative: true
+    source: path
+    version: "0.0.0"
   yaml:
     description:
       name: yaml
@@ -206,4 +224,4 @@ packages:
     source: hosted
     version: "2.1.10"
 sdks:
-  dart: ">=1.17.0-dev.6.2 <2.0.0"
+  dart: ">=1.16.0 <2.0.0"

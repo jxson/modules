@@ -11,10 +11,10 @@ import 'groups.dart';
 /// Holds a list of all [GalleryItem] instances.
 final List<GalleryItem> kGalleryCollection = <GalleryItem>[
   new GalleryItem(
-    title: 'Dummy Screen',
-    subtitle: 'A dummy screen',
+    title: 'Email - Inbox',
+    subtitle: 'A list view of a Gmail style inbox.',
     group: GalleryGroups.screen,
-    href: '/dummy/example',
-    builder: (BuildContext context) => new DummyScreen(),
+    href: '/email/inbox',
+    builder: (BuildContext context) => new EmailInboxScreen(),
   ),
 ];

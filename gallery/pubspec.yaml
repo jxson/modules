@@ -3,3 +3,7 @@ description: View UI Widgets and screens.
 dependencies:
   flutter:
     path: ../third_party/flutter/packages/flutter
+  models:
+    path: ../packages/models
+  widgets:
+    path: ../packages/widgets
