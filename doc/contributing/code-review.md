@@ -9,6 +9,23 @@ You can hack and make incremental commits on this branch, once you are ready to 
 
     jiri cl upload
 
+Before the `jiri` tool sends the CL off to https://fuchsia-review.googlesource.com it will open your text editor `$EDITOR` asking for a commit message to attach to your changes. Please draft a commit message adhering to the [Angular Git Commit Guidelines](https://git.io/viDaW):
+
+* A header that defines the "type" of change and it's "scope" followed by a brief description in the following format: <type>(<scope>): <description>, lower case please.
+
+* The body of the commit message can contain more concise details
+
+* Add a footer for any references, links to issues, etc.
+
+An example commit message:
+
+    feature(doc): commit message instructions
+
+    Adds a short summary about writing commit messages for this project.
+
+    See also: https://git.io/viDaW
+    Closes #555
+
 Open the URL printed by `jiri` and add the appropriate reviewers. Address and commit any feedback and then upload a new patch using the same command as above.
 
 Once your CL has been submitted you can remove your local branch with:

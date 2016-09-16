@@ -6,10 +6,16 @@ import 'package:models/email/message.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('generateSnippet() should return text of message', () {
-    String messageText = 'Baku in the Bathroom';
-    Message message = new Message(text: messageText);
-    expect(message.generateSnippet(), messageText);
+  group('Message', () {
+    setUp(() {
+      Attributes attributes = fixtures('message');
+    });
+
+    test('.generateSnippet() should return text of message', () {
+      String messageText = 'Baku in the Bathroom';
+      Message message = new Message(text: messageText);
+      expect(message.generateSnippet(), messageText);
+    });
   });
 
   test(
