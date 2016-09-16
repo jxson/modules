@@ -87,11 +87,10 @@ presubmit: ## Run the presubmit tests.
 .PHONY: test
 test: ## Run tests for all modules.
 	@$(MAKE) dart-test
-	@true
 
 .PHONY: coverage
-coverage:
-	@true
+coverage: ## Show coverage for all modules.
+	@$(MAKE) dart-coverage
 
 .PHONY: run
 run: ## Run the gallery flutter app.
@@ -128,9 +127,19 @@ dart-base: $(addsuffix /packages, $(DART_PACKAGES))
 dart-clean:
 	@for pkg in $(DART_PACKAGES); do \
 		pushd $${pkg} > /dev/null; \
-		rm -rf .packages packages .pub build; \
+		rm -rf .packages packages .pub build coverage; \
 		popd > /dev/null; \
 	done
+	@rm -rf coverage
+
+.PHONY: dart-coverage
+dart-coverage:
+	@FLUTTER_TEST_FLAGS='--coverage' $(MAKE) dart-test
+	@echo
+	@echo "** Code coverage for dart files **"
+	@echo
+	@tools/merge_coverage.sh
+	@dart tools/report_coverage.dart coverage/lcov.info
 
 .PHONY: dart-fmt
 dart-fmt: dart-base
@@ -199,7 +208,7 @@ dart-test: dart-base
 		pushd $${pkg} > /dev/null; \
 		if [ -d "test" ]; then \
 			echo "** Running the flutter tests in '$${pkg}' ..."; \
-			flutter test || exit 1; \
+			flutter test $(FLUTTER_TEST_FLAGS) || exit 1; \
 		else \
 			echo "** No tests found in '$${pkg}'."; \
 		fi; \
