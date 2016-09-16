@@ -12,7 +12,7 @@ import 'helpers.dart';
 
 void main() {
   String profileUrl =
-    'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
+      'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
   testWidgets(
       'Test to see if tapping on a ThreadListItem will call the'
       'appropiate callback with given Thread', (WidgetTester tester) async {
