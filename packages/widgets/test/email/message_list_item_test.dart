@@ -10,7 +10,7 @@ import 'package:widgets/email/message_list_item.dart';
 
 void main() {
   String profileUrl =
-    'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
+      'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
   testWidgets(
       'Test to see if tapping the header for a MessageListItem will call the'
       'appropiate callback with given Message', (WidgetTester tester) async {

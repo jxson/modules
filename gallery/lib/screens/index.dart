@@ -3,3 +3,4 @@
 // found in the LICENSE file.
 
 export 'email/inbox.dart';
+export 'email/thread.dart';

@@ -9,7 +9,7 @@ import 'package:widgets/email/message_action_bar_footer.dart';
 
 void main() {
   String profileUrl =
-    'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
+      'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
   testWidgets(
       'Test to see if tapping on the REPLY, REPLY ALL, and FORWARD buttons'
       'will call the appropiate callbacks', (WidgetTester tester) async {
