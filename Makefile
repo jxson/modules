@@ -21,7 +21,7 @@ gitbook = $(shell which gitbook)
 
 DART_PACKAGES = $(shell find . -name "pubspec.yaml" ! -wholename "./$(DEPS_DIR)/*" -exec dirname {} \;)
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
-JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! - wholename "*/_book/*" ! -wholename "*/node_modules/*")
+JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
 SH_FILES = $(shell find ./tools -name "*.sh")
 ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES)
 
