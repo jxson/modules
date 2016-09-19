@@ -19,9 +19,9 @@ You must use the `jiri` CLI to clone a local git repository for CL submissions. 
       export PATH="${FUCHSIA_WORKSPACE}/.jiri_root/scripts:$PATH"
     fi
 
-Once you have a working fucshia workspace you can add the `modules` manifest and clone/update with `jiri update`:
+Once you have a working fucshia workspace you can add the `experience` manifest and clone/update with `jiri update`:
 
-    jiri import modules https://fuchsia.googlesource.com/manifest
+    jiri import experience https://fuchsia.googlesource.com/manifest
     jiri update
     cd "${FUCHSIA_WORKSPACE}/modules
 

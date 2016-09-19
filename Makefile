@@ -10,8 +10,9 @@ SHELL := /bin/bash
 
 DIRNAME := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 DEPS_DIR := third_party
-FLUTTER_DIR := $(DEPS_DIR)/flutter
-FLUTTER_BIN := $(DIRNAME)/$(DEPS_DIR)/flutter/bin
+SYSUI_DEPS_DIR := $(realpath $(DIRNAME)/../sysui/third_party)
+FLUTTER_DIR := $(SYSUI_DEPS_DIR)/flutter
+FLUTTER_BIN := $(FLUTTER_DIR)/bin
 DART_BIN := $(FLUTTER_BIN)/cache/dart-sdk/bin
 PATH := $(FLUTTER_BIN):$(DART_BIN):$(PATH)
 
