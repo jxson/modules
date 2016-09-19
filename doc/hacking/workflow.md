@@ -82,6 +82,8 @@ On a separate machine you can add your remote fork as a new origin and push/pull
 
 You can now repeat step #2 as many times as you want on either computer.
 
+**NOTE:** Since forks of any repositories hosted at https://github.com/fucshia-mirror are public, please remember that your incremental commits sync'd to your personal fork will be as well.
+
 **4. Contribute, maybe?**
 
 If your feature branch is complete and you would like to contribute your work back to this project, review and follow the [contribution documentation].
