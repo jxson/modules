@@ -2,10 +2,10 @@ name: widgets
 description: UI widgets for FX
 dependencies:
   flutter:
-    path: ../../third_party/flutter/packages/flutter
+    path: ../../../sysui/third_party/flutter/packages/flutter
   models:
     path: ../models
 dev_dependencies:
   test: any
   flutter_test:
-    path: ../../third_party/flutter/packages/flutter_test
+    path: ../../../sysui/third_party/flutter/packages/flutter_test
