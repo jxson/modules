@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'gallery/collection.dart';
+import 'gallery/home.dart';
 import 'routes.dart';
 
 void main() {
@@ -24,16 +24,27 @@ class App extends StatefulWidget {
 
 /// The Application State.
 class AppState extends State<App> {
+  /// Indicates whether the performance overlay should be shown.
+  ///
+  /// This state should be kept at this top level, because it needs to be passed
+  /// as one of the MaterialApp constructor arguments.
+  bool showPerformanceOverlay = false;
+
   @override
-  Widget build(BuildContext content) {
+  Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'FX Modules',
       theme: new ThemeData(primarySwatch: Colors.blue),
       routes: kRoutes,
-      home: new Scaffold(
-        appBar: new AppBar(title: new Text('FX Modules')),
-        body: new Block(children: kGalleryCollection),
+      home: new Home(
+        showPerformanceOverlay: showPerformanceOverlay,
+        onShowPerformanceOverlayChanged: (bool value) {
+          setState(() {
+            showPerformanceOverlay = value;
+          });
+        },
       ),
+      showPerformanceOverlay: showPerformanceOverlay,
     );
   }
 }

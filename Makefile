@@ -20,6 +20,8 @@ PATH := $(FLUTTER_BIN):$(DART_BIN):$(PATH)
 ## Common variables to use
 gitbook = $(shell which gitbook)
 
+FLUTTER_TEST_FLAGS ?=
+
 DART_PACKAGES = $(shell find . -name "pubspec.yaml" ! -wholename "./$(DEPS_DIR)/*" -exec dirname {} \;)
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
 JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
@@ -74,6 +76,7 @@ depclean:
 .PHONY: fmt
 fmt: ## Format everything.
 	@$(MAKE) dart-fmt
+	@$(MAKE) dart-fmt-quotes
 
 .PHONY: lint
 lint: ## Lint everything.
@@ -94,7 +97,7 @@ coverage: ## Show coverage for all modules.
 	@$(MAKE) dart-coverage
 
 .PHONY: run
-run: ## Run the gallery flutter app.
+run: dart-base ## Run the gallery flutter app.
 	@cd gallery && flutter run --hot
 
 # TODO(jxson): Add gitbook as a third-party dependency.
@@ -221,4 +224,4 @@ dart-presubmit:
 	@$(MAKE) dart-fmt-check
 	@$(MAKE) dart-fmt-quotes-check
 	@$(MAKE) dart-lint
-	@$(MAKE) dart-test
+	@$(MAKE) dart-coverage
