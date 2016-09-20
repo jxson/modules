@@ -24,11 +24,16 @@ class ThreadView extends StatelessWidget {
   /// Optional footer widget that is rendered at the bottom of the thread
   Widget footer;
 
+  /// Optional header widget that is rendered at the top of the thread
+  // TODO(dayang) make headers sticky, or perhaps make the stickness an option
+  Widget header;
+
   /// Creates a ThreadView for given [Thread]
   ThreadView(
       {Key key,
       @required this.thread,
       this.footer,
+      this.header,
       this.onSelectMessage,
       this.expandedMessageIds})
       : super(key: key) {
@@ -38,6 +43,43 @@ class ThreadView extends StatelessWidget {
     }
   }
 
+  /// Builds the [Thread] subject line that at the top of the messages
+  /// The subject should be limited to a maximum of two lines of text
+  Widget _buildSubjectLine() {
+    return new Material(
+      color: Colors.white,
+      child: new Container(
+        child: new Row(
+          children: <Widget>[
+            new Flexible(
+              flex: 1,
+              child: new Container(
+                constraints: new BoxConstraints(maxHeight: 86.0),
+                padding: const EdgeInsets.all(16.0),
+                child: new Text(
+                  thread.getSubject(),
+                  style: new TextStyle(
+                    fontSize: 18.0,
+                    height: 1.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        decoration: new BoxDecoration(
+          border: new Border(
+            bottom: new BorderSide(
+              color: Colors.grey[200],
+              width: 1.0,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> children = thread.messages.map((Message message) {
@@ -45,7 +87,7 @@ class ThreadView extends StatelessWidget {
         decoration: new BoxDecoration(
           border: new Border(
             bottom: new BorderSide(
-              color: Colors.grey[100],
+              color: Colors.grey[200],
               width: 1.0,
             ),
           ),
@@ -59,9 +101,17 @@ class ThreadView extends StatelessWidget {
       );
     }).toList();
 
+    // Prepend Thread Subject line to beginning of list of messages
+    children.insert(0, _buildSubjectLine());
+
     // Append footer widget to end of the list of messages if specified
     if (footer != null) {
       children.add(footer);
+    }
+
+    // Prepend header widget to begiining of list of messages if specified
+    if (header != null) {
+      children.insert(0, header);
     }
 
     // Using a LazyBlock since each EmailListItem might be a different size if

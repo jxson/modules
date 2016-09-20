@@ -121,4 +121,36 @@ void main() {
 
     expect(find.byKey(footerKey), findsOneWidget);
   });
+
+  testWidgets('Test to see the header widget will be rendered if given',
+      (WidgetTester tester) async {
+    Thread thread = new Thread(
+      id: '1',
+      messages: <Message>[
+        new Message(
+          sender: 'Coco Yang',
+          recipientList: <String>['David Yang'],
+          senderProfileUrl: profileUrl,
+          subject: 'Feed Me!!!',
+          text: "Woof Woof. I'm so hungry. You need to feed me!",
+          timestamp: new DateTime.now(),
+          isRead: true,
+        ),
+      ],
+    );
+
+    Key headerKey = new UniqueKey();
+
+    await tester.pumpWidget(new StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+      return new Material(
+        child: new ThreadView(
+          thread: thread,
+          header: new Text('Start', key: headerKey),
+        ),
+      );
+    }));
+
+    expect(find.byKey(headerKey), findsOneWidget);
+  });
 }

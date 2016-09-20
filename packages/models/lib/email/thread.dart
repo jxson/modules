@@ -26,4 +26,16 @@ class Thread {
     this.historyId,
     this.messages,
   });
+
+  /// Gets the subject of the thread
+  /// For now, this will return the subject of the first message of the thread
+  // TODO (dayang): Figure out how the thread subject is determined based on
+  // Gmail APIs
+  String getSubject() {
+    if (this.messages.isNotEmpty) {
+      return this.messages[0].subject;
+    } else {
+      return null;
+    }
+  }
 }

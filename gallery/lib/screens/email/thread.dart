@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:widgets/email/thread_view.dart';
 import 'package:widgets/email/message_action_bar_footer.dart';
+import 'package:widgets/email/thread_action_bar_header.dart';
 import 'package:models/email/message.dart';
 import 'package:models/email/mock_thread.dart';
 import 'package:models/email/thread.dart';
@@ -48,6 +49,13 @@ class _EmailThreadScreenState extends State<EmailThreadScreen> {
           onReplyAllMessage: _onPerformMessageAction,
           onReplyMessage: _onPerformMessageAction,
         ),
+        header: new ThreadActionBarHeader(
+          thread: _mockThread,
+          onArchive: _onPerformThreadAction,
+          onClose: _onPerformThreadAction,
+          onMoreActions: _onPerformThreadAction,
+          onDelete: _onPerformThreadAction,
+        ),
       ),
     );
   }
@@ -63,6 +71,10 @@ class _EmailThreadScreenState extends State<EmailThreadScreen> {
   }
 
   void _onPerformMessageAction(Message message) {
+    print('Action Performed');
+  }
+
+  void _onPerformThreadAction(Thread thread) {
     print('Action Performed');
   }
 }
