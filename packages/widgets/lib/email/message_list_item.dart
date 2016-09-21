@@ -98,7 +98,7 @@ class MessageListItem extends StatelessWidget {
     );
   }
 
-  void _onHeaderTap() {
+  void _handleHeaderTap() {
     if (onHeaderTap != null) {
       onHeaderTap(message);
     }
@@ -116,7 +116,7 @@ class MessageListItem extends StatelessWidget {
       new ListItem(
         key: new ObjectKey(message),
         enabled: true,
-        onTap: _onHeaderTap,
+        onTap: _handleHeaderTap,
         isThreeLine: false,
         leading: avatar,
         title: messageTitle,

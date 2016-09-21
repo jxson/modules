@@ -44,19 +44,19 @@ class ThreadActionBarHeader extends StatelessWidget {
     assert(onMoreActions != null);
   }
 
-  void _onClose() {
+  void _handleClose() {
     onClose(thread);
   }
 
-  void _onDelete() {
+  void _handleDelete() {
     onDelete(thread);
   }
 
-  void _onArchive() {
+  void _handleArchive() {
     onArchive(thread);
   }
 
-  void _onMoreActions() {
+  void _handleMoreActions() {
     onMoreActions(thread);
   }
 
@@ -70,7 +70,7 @@ class ThreadActionBarHeader extends StatelessWidget {
             children: <Widget>[
               new IconButton(
                 icon: new Icon(Icons.close),
-                onPressed: _onClose,
+                onPressed: _handleClose,
                 color: Colors.grey[600],
               ),
             ],
@@ -83,17 +83,17 @@ class ThreadActionBarHeader extends StatelessWidget {
             children: <Widget>[
               new IconButton(
                 icon: new Icon(Icons.delete),
-                onPressed: _onDelete,
+                onPressed: _handleDelete,
                 color: Colors.grey[600],
               ),
               new IconButton(
                 icon: new Icon(Icons.archive),
-                onPressed: _onArchive,
+                onPressed: _handleArchive,
                 color: Colors.grey[600],
               ),
               new IconButton(
                 icon: new Icon(Icons.more_vert),
-                onPressed: _onMoreActions,
+                onPressed: _handleMoreActions,
                 color: Colors.grey[600],
               )
             ],

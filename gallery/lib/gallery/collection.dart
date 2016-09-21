@@ -24,4 +24,11 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     href: '/email/thread',
     builder: (BuildContext context) => new EmailThreadScreen(),
   ),
+  new GalleryItem(
+    title: 'Email - Editor',
+    subtitle: 'A Google Inbox style email editor',
+    group: GalleryGroups.screen,
+    href: '/email/editor',
+    builder: (BuildContext context) => new EmailEditorScreen(),
+  ),
 ];
