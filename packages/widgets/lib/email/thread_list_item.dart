@@ -41,13 +41,13 @@ class ThreadListItem extends StatelessWidget {
     assert(thread != null);
   }
 
-  void _onSelect() {
+  void _handleSelect() {
     if (onSelect != null) {
       onSelect(thread);
     }
   }
 
-  void _onDismissed(DismissDirection direction) {
+  void _handleDismissed(DismissDirection direction) {
     onArchive(thread);
   }
 
@@ -110,7 +110,7 @@ class ThreadListItem extends StatelessWidget {
       color: Colors.white,
       child: new ListItem(
         enabled: true,
-        onTap: _onSelect,
+        onTap: _handleSelect,
         isThreeLine: true,
         leading: avatar,
         title: threadTitle,
@@ -123,7 +123,7 @@ class ThreadListItem extends StatelessWidget {
       return new Dismissable(
         key: new Key('${key.toString()}-dismissable'),
         direction: DismissDirection.horizontal,
-        onDismissed: _onDismissed,
+        onDismissed: _handleDismissed,
         child: listItem,
         background: new ArchiveDismissableBackground(
           direction: DismissDirection.startToEnd,

@@ -38,15 +38,15 @@ class MessageActionBarFooter extends StatelessWidget {
     assert(onReplyMessage != null);
   }
 
-  void _onForwardMessage() {
+  void _handleForwardMessage() {
     onForwardMessage(message);
   }
 
-  void _onReplyAllMessage() {
+  void _handleReplyAllMessage() {
     onReplyAllMessage(message);
   }
 
-  void _onReplyMessage() {
+  void _handleReplyMessage() {
     onReplyMessage(message);
   }
 
@@ -84,7 +84,7 @@ class MessageActionBarFooter extends StatelessWidget {
             ),
             color: Colors.white,
             textColor: Colors.grey[400],
-            onPressed: _onReplyMessage,
+            onPressed: _handleReplyMessage,
             height: 50.0,
           ),
           new MaterialButton(
@@ -94,7 +94,7 @@ class MessageActionBarFooter extends StatelessWidget {
             ),
             color: Colors.white,
             textColor: Colors.grey[400],
-            onPressed: _onReplyAllMessage,
+            onPressed: _handleReplyAllMessage,
             height: 50.0,
           ),
           new MaterialButton(
@@ -104,7 +104,7 @@ class MessageActionBarFooter extends StatelessWidget {
             ),
             color: Colors.white,
             textColor: Colors.grey[400],
-            onPressed: _onForwardMessage,
+            onPressed: _handleForwardMessage,
             height: 50.0,
           ),
         ],
