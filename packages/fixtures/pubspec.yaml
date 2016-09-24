@@ -1,0 +1,4 @@
+name: fixtures
+description: Generate programatic fixtures for UI mocks and tests.
+dev_dependencies:
+  test: any
