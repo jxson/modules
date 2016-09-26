@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 import 'package:models/email/message.dart';
 import 'package:models/email/thread.dart';
 
-import 'alphatar.dart';
+import '../user/alphatar.dart';
 import 'archive_dismissable_background.dart';
 import 'thread_participant_list.dart';
 import 'type_defs.dart';
@@ -57,7 +57,10 @@ class ThreadListItem extends StatelessWidget {
     final Message lastMessage = thread.messages.last;
 
     final Widget avatar = new Container(
-      child: new Alphatar(avatarUrl: lastMessage.senderProfileUrl),
+      child: new Alphatar.withUrl(
+        avatarUrl: lastMessage.senderProfileUrl,
+        letter: lastMessage.sender.substring(0, 1),
+      ),
     );
 
     final Widget threadTitle = new Row(
