@@ -23,7 +23,9 @@ class MockThread extends Thread {
             id: 'm1',
             sender: 'Coco Yang',
             recipientList: <String>['David Yang'],
-            senderProfileUrl: _kCocoAvatarUrl,
+            // NOTE(youngseokyoon): The profile url below is intentionally set
+            // to null to show how the alphatar falls back to the user initial.
+            senderProfileUrl: null,
             subject: 'Feed Me!!!',
             text: 'Woof Woof. I\'m so hungry. You need to feed me!',
             timestamp: new DateTime.now(),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/email/message.dart';
 
-import 'alphatar.dart';
+import '../user/alphatar.dart';
 import 'message_content.dart';
 import 'type_defs.dart';
 
@@ -106,7 +106,10 @@ class MessageListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget avatar = new Alphatar(avatarUrl: message.senderProfileUrl);
+    final Widget avatar = new Alphatar.withUrl(
+      avatarUrl: message.senderProfileUrl,
+      letter: message.sender.substring(0, 1),
+    );
 
     final Widget messageTitle = _buildMessageTitle();
 
