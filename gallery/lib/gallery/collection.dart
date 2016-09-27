@@ -31,4 +31,11 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     href: '/email/editor',
     builder: (BuildContext context) => new EmailEditorScreen(),
   ),
+  new GalleryItem(
+    title: 'Email - Menu',
+    subtitle: 'A Google Gmail style main menu',
+    group: GalleryGroups.screen,
+    href: '/email/menu',
+    builder: (BuildContext context) => new EmailMenuScreen(),
+  ),
 ];

@@ -5,3 +5,4 @@
 export 'email/editor.dart';
 export 'email/inbox.dart';
 export 'email/thread.dart';
+export 'email/menu.dart';
