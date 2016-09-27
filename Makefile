@@ -118,13 +118,13 @@ doc:
 
 ################################################################################
 ## Dart specific targets
-%/packages: %/pubspec.yaml
-	@echo "** Running pub get in package ./$* ..."
-	@cd $* && pub get
+%/.packages: %/pubspec.yaml
+	@echo "** Running 'flutter packages get' in package ./$* ..."
+	@cd $* && flutter packages get
 	@touch $*
 
 .PHONY: dart-base
-dart-base: $(addsuffix /packages, $(DART_PACKAGES))
+dart-base: $(addsuffix /.packages, $(DART_PACKAGES))
 	@true
 
 .PHONY: dart-clean

@@ -2,7 +2,7 @@ name: gallery
 description: View UI Widgets and screens.
 dependencies:
   flutter:
-    path: ../../sysui/third_party/flutter/packages/flutter
+    sdk: flutter
   models:
     path: ../packages/models
   widgets:
