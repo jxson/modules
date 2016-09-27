@@ -6,7 +6,6 @@ import 'package:test/test.dart';
 import 'package:fixtures/fixtures.dart';
 import 'package:models/user/user.dart';
 
-
 void main() {
   User bob = Fixtures.user(
     name: 'Bob'
