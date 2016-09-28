@@ -7,11 +7,17 @@ import 'package:fixtures/fixtures.dart';
 import 'package:models/user/user.dart';
 
 void main() {
+  Fixtures fixtures;
+
+  setUp(() {
+    fixtures = new Fixtures();
+  });
+
   group('User user = Fixtures.user(...)', () {
     test('generates random user', () {
-      User user = Fixtures.user();
+      User user = fixtures.user();
 
-      expect(user.name, isEmpty);
+      expect(user.name, isNotEmpty);
       expect(user.email, contains(user.name.toLowerCase()));
     });
   });

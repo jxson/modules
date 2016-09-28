@@ -5,3 +5,4 @@
 library fixtures;
 
 export 'src/fixtures.dart';
+export 'src/name.dart';

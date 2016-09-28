@@ -9,8 +9,15 @@ import 'package:models/user/user.dart';
 import 'name.dart';
 
 class Fixtures {
-  static User user({ String name }) {
+  Fixtures() {
 
+  }
+
+  Name name([String value]) {
+    return new Name(value);
+  }
+
+  User user({ String name }) {
     // name ??= new Name().toString();
     name ??= 'Jason';
     String email = 'jason@artifact.sh';

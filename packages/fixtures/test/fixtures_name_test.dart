@@ -8,9 +8,19 @@ import 'package:models/user/user.dart';
 
 void main() {
   group('Fixtures.name()', () {
-    test('generates random names.', () {
+    Fixtures fixtures;
 
-    }, skip: 'TODO');
+    setUp(() {
+      fixtures = new Fixtures();
+    });
+
+    test('generates random names.', () {
+      Name n1 = fixtures.name();
+      Name n2 = fixtures.name();
+
+      expect(n1, isNot(equals(n2)));
+      expect(n1.toString(), isNot(equals(n2.toString())));
+    });
 
     test('generates up to 1k unique random names.', () {
 
