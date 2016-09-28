@@ -2,8 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:uuid/uuid.dart';
 import 'dart:math';
+
+import 'package:uuid/uuid.dart';
+import 'package:quiver/core.dart';
+
 import 'names.dart';
 
 /// TODO document.
@@ -40,10 +43,18 @@ class Name {
   String _value;
 
   /// TODO document
+  // Make sure name == is setup correctly.
   Name([String value]) {
     _value = value ?? generate();
     id = uuid.v5(_root, _value);
+
+    // print('=> ${id} : ${_value}');
   }
+
+  bool operator ==(o) => o is Name && o.id == id;
+  int get hashCode => hash2(id.hashCode, _value.hashCode);
+
+
 
   @override
   String toString() {

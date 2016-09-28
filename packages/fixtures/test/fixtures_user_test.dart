@@ -21,21 +21,4 @@ void main() {
       expect(user.email, contains(user.name.toLowerCase()));
     });
   });
-
-
-  // Fixture<User> bob = new Fixture<User>({
-  //   'name': 'Bob'
-  // });
-
-  // print('bob: $bob');
-  // print('bob.name: ${bob.name}');
-  // print('bob.email: ${bob.email}');
-
-  // setUp(() {
-  //
-  // });
-  //
-  // test('', () {
-  //   User bob = new Fixture<User>(name: 'Bob');
-  // });
 }

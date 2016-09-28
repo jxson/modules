@@ -5,12 +5,10 @@ import 'package:fixtures/src/name.dart';
 void main() {
   group('Name name = new Name();', () {
     test('generates a random name', () {
-      Name n1 = new Name();
-      Name n2 = new Name();
+      Name name = new Name();
 
-      // TODO override == operator to compare ids
-      expect(n1, isNot(equals(n2)));
-      expect(n1.toString(), isNot(equals(n2.toString())));
+      expect(name.id, isNotEmpty);
+      expect(name.toString(), isNotEmpty);
     });
   });
 
@@ -20,6 +18,8 @@ void main() {
       Name bob2 = new Name('Bob');
 
       expect(bob1.id, equals(bob2.id));
+      expect(bob1.toString(), equals(bob2.toString()));
+      expect(bob1, equals(bob2));
     });
   });
 }

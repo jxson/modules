@@ -6,12 +6,14 @@ import 'package:test/test.dart';
 import 'package:fixtures/fixtures.dart';
 import 'package:models/user/user.dart';
 
+const int THRESHOLD = 1000;
+
 void main() {
   group('Fixtures.name()', () {
     Fixtures fixtures;
 
     setUp(() {
-      fixtures = new Fixtures();
+      fixtures = new Fixtures(threshold: THRESHOLD);
     });
 
     test('generates random names.', () {
@@ -22,8 +24,16 @@ void main() {
       expect(n1.toString(), isNot(equals(n2.toString())));
     });
 
-    test('generates up to 1k unique random names.', () {
+    test('generates up to "${THRESHOLD}" unique names.', () {
+      Set<Name> names = new Set<Name>();
 
-    }, skip: 'TODO');
+      for (var i = 0; i < fixtures.threshold; i++) {
+        Name name = fixtures.name();
+
+        if (!names.add(name)) {
+          fail('Non unique name $name generated at index $i');
+        }
+      }
+    });
   });
 }
