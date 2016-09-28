@@ -4,13 +4,15 @@
 
 // TODO(jxson): Fixup dir structure so this works.
 // import 'package:models/models.dart';
-import 'name.dart';
+// import 'name.dart';
 import 'package:models/user/user.dart';
+import 'name.dart';
 
 class Fixtures {
   static User user({ String name }) {
 
-    name ??= new Name().toString();
+    // name ??= new Name().toString();
+    name ??= 'Jason';
     String email = 'jason@artifact.sh';
 
     return new User(name: name, email: email);

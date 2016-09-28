@@ -4,67 +4,34 @@
 
 import 'package:uuid/uuid.dart';
 
+/// TODO document.
+final Uuid uuid = new Uuid();
+
+/// TODO document
 class Name {
-  static String baseurl = 'name.fuchsia.community';
+  static String _root = uuid.v5(Uuid.NAMESPACE_URL, 'name.fuchsia.community');
 
-  static String generate() {
-    // TODO: pull from a random list.
-    return '';
-  }
-
-  // Generate a v5 (namespace-name-sha1-based) id
-  // uuid.v5(Uuid.NAMESPACE_URL, 'www.google.com'); // -> 'c74a196f-f19d-5ea9-bffd-a2742432fc9c'
-  static Set<Uuid> _generated = new Set<Uuid>();
-  // TODO generate this from a list of random names.
-  static String _generate() => 'foo';
-
-  // Note: base uuid on string buffer from generated name.
-  static Uuid uuid(String value) {
-    return uuid.v5(Uuid.NAMESPACE_URL, baseurl);
-  }
-
+  /// TODO document
+  String id;
   String _value;
 
-  Uuid get uuid => _uuid;
-  Uuid get id => _uuid;
+  /// TODO document
+  Name([String value = 'Jason']) {
+    // generate name with a factory that checks for repeats.
+    _value = value;
+    id = uuid.v5(_root, value);
 
-  // get value => _value;
-  // get uri => _uri;
-
-  factory Name() {
-    value = _generate();
-    Uuid uuid = uuid(value);
-
-    // if (_cache.containsKey(name)) {
-    //   return _cache[name];
-    // } else {
-    //   final symbol = new Symbol._internal(name);
-    //   _cache[name] = symbol;
-    //   return symbol;
-    // }
-
-    while (!_generated.contains(uuid)) {
-      value =
-    }
-
-    // Uri encoded = Uri.encodeFull(name);
-    // String uuid;
-
-    // uuid.v5(Uuid.NAMESPACE_URL, ''); // ->
-    // 'c74a196f-f19d-5ea9-bffd-a2742432fc9c'
-
-    // while uuid exisits for baseurl + urlencoded(_value);
-
-    // _uuid = uuid.v5(Uuid.NAMESPACE_URL, uri)
-
+    print('Generated name: $_value');
+    print('            id: $id');
   }
 
+  /// TODO document
+  bool operator ==(o) => o is Name && o.id == id;
+
+  /// TODO override hashCode: http://pchalin.blogspot.com/2014/04/defining-equality-and-hashcode-for-dart.html
+
+  @override
   String toString() {
     return _value;
-  }
-
-
-  String _uri() {
-    return '${baseurl}/${uuid}';
   }
 }

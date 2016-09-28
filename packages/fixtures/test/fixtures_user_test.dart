@@ -7,17 +7,23 @@ import 'package:fixtures/fixtures.dart';
 import 'package:models/user/user.dart';
 
 void main() {
-  User bob = Fixtures.user(
-    name: 'Bob'
-  );
+  group('User user = Fixtures.user(...)', () {
+    test('generates random user', () {
+      User user = Fixtures.user();
+
+      expect(user.name, isEmpty);
+      expect(user.email, contains(user.name.toLowerCase()));
+    });
+  });
+
 
   // Fixture<User> bob = new Fixture<User>({
   //   'name': 'Bob'
   // });
 
-  print('bob: $bob');
-  print('bob.name: ${bob.name}');
-  print('bob.email: ${bob.email}');
+  // print('bob: $bob');
+  // print('bob.name: ${bob.name}');
+  // print('bob.email: ${bob.email}');
 
   // setUp(() {
   //

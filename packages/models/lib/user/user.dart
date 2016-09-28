@@ -11,9 +11,8 @@ class User {
 
   /// TODO(jxson): Document this.
   User({
-    this.name,
-    this.email }) {
-      print("User init");
+    @required this.name,
+    @required this.email, }) {
     assert(name != null);
     assert(email != null);
   }
