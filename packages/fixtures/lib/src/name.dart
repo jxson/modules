@@ -40,24 +40,22 @@ class Name {
 
   /// TODO document
   String id;
-  String _value;
+  String value;
 
   /// TODO document
   // Make sure name == is setup correctly.
   Name([String value]) {
-    _value = value ?? generate();
-    id = uuid.v5(_root, _value);
-
-    // print('=> ${id} : ${_value}');
+    value = value ?? generate();
+    id = uuid.v5(_root, value);
   }
 
   bool operator ==(o) => o is Name && o.id == id;
-  int get hashCode => hash2(id.hashCode, _value.hashCode);
 
-
+  @override
+  int get hashCode => hash2(id.hashCode, value.hashCode);
 
   @override
   String toString() {
-    return _value;
+    return value;
   }
 }
