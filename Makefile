@@ -118,13 +118,13 @@ doc:
 
 ################################################################################
 ## Dart specific targets
-%/packages: %/pubspec.yaml
-	@echo "** Running pub get in package ./$* ..."
-	@cd $* && pub get
+%/.packages: %/pubspec.yaml
+	@echo "** Running 'flutter packages get' in package ./$* ..."
+	@cd $* && flutter packages get
 	@touch $*
 
 .PHONY: dart-base
-dart-base: $(addsuffix /packages, $(DART_PACKAGES))
+dart-base: $(addsuffix /.packages, $(DART_PACKAGES))
 	@true
 
 .PHONY: dart-clean
@@ -181,7 +181,8 @@ dart-fmt-quotes:
 .PHONY: dart-fmt-quotes-check
 dart-fmt-quotes-check:
 	@echo "** Checking double-quotes in dart source files ..."
-	@for file in $(DART_FILES); do \
+	@export QUOTE_ERROR=false; \
+	for file in $(DART_FILES); do \
 		grep --color=auto -rnEH "\"[^']*\"" $$file && export QUOTE_ERROR=true; \
 	done; \
 	if [ "$${QUOTE_ERROR}" = true ]; then \

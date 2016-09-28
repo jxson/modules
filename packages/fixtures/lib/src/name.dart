@@ -3,32 +3,47 @@
 // found in the LICENSE file.
 
 import 'package:uuid/uuid.dart';
+import 'dart:math';
+import 'names.dart';
 
 /// TODO document.
 final Uuid uuid = new Uuid();
 
 /// TODO document
 class Name {
-  static String _root = uuid.v5(Uuid.NAMESPACE_URL, 'name.fuchsia.community');
+  static String _root = uuid.v5(Uuid.NAMESPACE_URL, 'fuchsia.googlesource.com/fixtures/names');
+  static Random _rng = new Random();
+  static bool _toggle = true;
+
+  static String generate() {
+    String first;
+    int firstIndex;
+
+    if (_toggle) {
+      firstIndex = _rng.nextInt(kFirstNamesMale.length);
+      first = kFirstNamesMale[firstIndex];
+    } else {
+      firstIndex = _rng.nextInt(kFirstNamesFemale.length);
+      first = kFirstNamesFemale[firstIndex];
+    }
+
+    _toggle = !_toggle;
+
+    int lastIndex = _rng.nextInt(kSurnames.length);
+    String last = kSurnames[lastIndex];
+
+    return '$first $last';
+  }
 
   /// TODO document
   String id;
   String _value;
 
   /// TODO document
-  Name([String value = 'Jason']) {
-    // generate name with a factory that checks for repeats.
-    _value = value;
-    id = uuid.v5(_root, value);
-
-    print('Generated name: $_value');
-    print('            id: $id');
+  Name([String value]) {
+    _value = value ?? generate();
+    id = uuid.v5(_root, _value);
   }
-
-  /// TODO document
-  bool operator ==(o) => o is Name && o.id == id;
-
-  /// TODO override hashCode: http://pchalin.blogspot.com/2014/04/defining-equality-and-hashcode-for-dart.html
 
   @override
   String toString() {

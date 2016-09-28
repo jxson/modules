@@ -6,7 +6,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.11.1"
+    version: "1.11.2"
   charcode:
     description:
       name: charcode
@@ -20,10 +20,8 @@ packages:
     source: hosted
     version: "1.9.1"
   flutter:
-    description:
-      path: "../../sysui/third_party/flutter/packages/flutter"
-      relative: true
-    source: path
+    description: flutter
+    source: sdk
     version: "0.0.21"
   flutter_services:
     description:
