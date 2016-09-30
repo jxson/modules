@@ -4,9 +4,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:models/user/user.dart';
 import 'package:models/email/folder.dart';
 import 'package:models/email/folder_group.dart';
-import 'package:widgets/email/folder_group_list.dart';
+import 'package:widgets/email/inbox_menu.dart';
 
 void main() {
   testWidgets(
@@ -26,18 +27,25 @@ void main() {
         new Folder(name: 'Finance'),
       ],
     );
+    User user = new User(
+      name: 'Coco Yang',
+      email: 'littlePuppyCoco@puppy.cute',
+      picture:
+          'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
+    );
 
     int taps = 0;
 
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
-        child: new FolderGroupList(
+        child: new InboxMenu(
           folderGroups: <FolderGroup>[folderGroup1, folderGroup2],
           onSelectFolder: (Folder f) {
             expect(f, folderGroup2.folders[0]);
             taps++;
           },
+          user: user,
         ),
       );
     }));
