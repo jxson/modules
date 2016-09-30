@@ -3,9 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:widgets/email/folder_group_list.dart';
+import 'package:widgets/email/inbox_menu.dart';
 import 'package:models/email/folder.dart';
 import 'package:models/email/folder_group.dart';
+import 'package:models/user/user.dart';
 
 /// This screen displays an inbox.
 class EmailMenuScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
   final GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
   List<FolderGroup> _folderGroups;
   Folder _selectFolder;
+  User _user;
 
   @override
   void initState() {
@@ -82,6 +84,12 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
         ],
       ),
     ];
+    _user = new User(
+      name: 'Coco Yang',
+      email: 'littlePuppyCoco@puppy.cute',
+      picture:
+          'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
+    );
     super.initState();
   }
 
@@ -99,10 +107,11 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
         title: new Text('Email - Menu'),
       ),
       body: new Center(
-        child: new FolderGroupList(
+        child: new InboxMenu(
           folderGroups: _folderGroups,
           onSelectFolder: _handleSelectFolder,
           selectedFolder: _selectFolder,
+          user: _user,
         ),
       ),
     );
