@@ -11,9 +11,15 @@ import 'package:uuid/uuid.dart';
 import 'namespace.dart';
 import 'name.dart';
 
+final Uuid _uuid = new Uuid();
+
 /// The operation was not allowed by the current state of the [Fixtures]
 /// instance.
 class FixturesError extends StateError {
+  /// Create a [FixturesError].
+  ///
+  ///     FixturesError err = new FixturesError('Something bad happend');
+  ///
   FixturesError(String msg) : super(msg);
 }
 
@@ -31,9 +37,9 @@ class FixturesError extends StateError {
 class Fixtures {
   static Set<Name> _names = new Set<Name>();
   Map<String, int> _sequences = new Map<String, int>();
-    static String _uuidUser = uuid.v5(Uuid.NAMESPACE_URL, namespace('users'));
+    static String _uuidUser = _uuid.v5(Uuid.NAMESPACE_URL, namespace('users'));
 
-  /// Uniqueness [threshold] for this instance of [Fixtrues].
+  /// Uniqueness [threshold] for this instance of [Fixtures].
   ///
   /// Generators like [name] use the [threshold] to limit the total unique
   /// values they produce. When the threshold is reached a [FixturesError]
@@ -124,7 +130,7 @@ class Fixtures {
     int seq = sequence('email');
     String email = 'user-$seq@example.org';
     // TODO(jxson): automatically grab avatars from uifaces.com
-    String id = uuid.v5(_uuidUser, email);
+    String id = _uuid.v5(_uuidUser, email);
     String avatar = 'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
     return new User(id: id, name: name, email: email, locale: 'en', picture: avatar);
   }

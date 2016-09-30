@@ -4,16 +4,15 @@
 
 import 'package:test/test.dart';
 import 'package:fixtures/fixtures.dart';
-import 'package:models/user/user.dart';
 
-const int THRESHOLD = 1000;
+const int _kThreshold = 1000;
 
 void main() {
   group('Fixtures.name()', () {
     Fixtures fixtures;
 
     setUp(() {
-      fixtures = new Fixtures(threshold: THRESHOLD);
+      fixtures = new Fixtures(threshold: _kThreshold);
     });
 
     test('generates random names.', () {
@@ -24,10 +23,10 @@ void main() {
       expect(n1.toString(), isNot(equals(n2.toString())));
     });
 
-    test('generates up to "$THRESHOLD" unique names.', () {
+    test('generates up to "$_kThreshold" unique names.', () {
       Set<Name> names = new Set<Name>();
 
-      for (var i = 0; i < fixtures.threshold; i++) {
+      for (int i = 0; i < fixtures.threshold; i++) {
         Name name = fixtures.name();
 
         if (!names.add(name)) {

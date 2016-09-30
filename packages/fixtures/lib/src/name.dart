@@ -8,28 +8,55 @@ import 'package:uuid/uuid.dart';
 import 'package:quiver/core.dart';
 
 import 'names.dart';
+import 'namespace.dart';
 
-/// TODO document.
-final Uuid uuid = new Uuid();
+final Uuid _uuid = new Uuid();
 
-/// TODO document
+/// Used by Fixtures for creating names and tracking thier uniqueness.
+///
+/// A [Name] can be randomly generated or created with an explicit string
+/// value.
+///
+/// When a new [Name] is "generated" it is derieved from a random first name,
+/// alternating between values from [kFirstNamesFemale], and
+/// [kFirstNamesMale],  a random last name from [kSurnames] is then appended.
+///
+/// Uniqueness can be verified using the [id] which is a
+/// [UUID](http://www.ietf.org/rfc/rfc4122.txt) V5 and hashed off the [Name]'s
+/// [value]. The equality operator [==] and [hashCode] have been defined in a
+/// way that makes checking uniqueness on [Name] objects arbitrary. For
+/// example, two [Name] instances with the same [value] will always have
+/// identical [id] values and will pass equality checks. This ensures
+/// compatibility with Dart core classes like [Set].
 class Name {
-  static String _root = uuid.v5(Uuid.NAMESPACE_URL, namespace('names'));
+  static String _root = _uuid.v5(Uuid.NAMESPACE_URL, namespace('names'));
   static Random _rng = new Random();
   static bool _toggle = true;
 
-  /// TODO document
+  /// The [id] of this [Name]. This is a string UUID derived from hashing the
+  /// String [value] of the [Name].
   String id;
-  /// TODO document
+
+  /// The string [value] of the [Name].
   String value;
 
-  /// TODO document
+  /// Create a [Name] instance.
+  ///
+  /// Specify a specific [Name] [value].
+  ///
+  ///     Name bob = new Name('Bob');
+  ///
+  /// Generate a random [Name].
+  ///
+  ///     Name name = new Name();
+  ///
+  /// Random names will have a [value] set to something like "Kathleen Gonzales" or "Andrew Johnson". A unique [Name] [value] is not a garuntee of this constructor.
   Name([this.value]) {
     value ??= generate();
-    id = uuid.v5(_root, value);
+    id = _uuid.v5(_root, value);
   }
 
-  /// TODO document
+  /// Generate a random String name.
   static String generate() {
     String first;
     int firstIndex;
@@ -50,9 +77,6 @@ class Name {
     return '$first $last';
   }
 
-  // The created Set is a plain LinkedHashSet. As such, it considers elements that a
-  // re equal (using ==) to be indistinguishable, and requires them to have a com
-  // patible Object.hashCode implementation.
   @override
   bool operator ==(Object o) => o is Name && o.id == id;
 
