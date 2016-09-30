@@ -42,8 +42,6 @@ class User {
     assert(name != null);
     assert(email != null);
 
-    print('Name: $name');
-
     List<String> names = name.split(' ');
     givenName ??= names.first;
     familyName ??= names.last;
