@@ -18,6 +18,18 @@ class Name {
   static Random _rng = new Random();
   static bool _toggle = true;
 
+  /// TODO document
+  String id;
+  /// TODO document
+  String value;
+
+  /// TODO document
+  Name([this.value]) {
+    value ??= generate();
+    id = uuid.v5(_root, value);
+  }
+
+  /// TODO document
   static String generate() {
     String first;
     int firstIndex;
@@ -38,18 +50,11 @@ class Name {
     return '$first $last';
   }
 
-  /// TODO document
-  String id;
-  String value;
-
-  /// TODO document
-  // Make sure name == is setup correctly.
-  Name([String value]) {
-    value = value ?? generate();
-    id = uuid.v5(_root, value);
-  }
-
-  bool operator ==(o) => o is Name && o.id == id;
+  // The created Set is a plain LinkedHashSet. As such, it considers elements that a
+  // re equal (using ==) to be indistinguishable, and requires them to have a com
+  // patible Object.hashCode implementation.
+  @override
+  bool operator ==(Object o) => o is Name && o.id == id;
 
   @override
   int get hashCode => hash2(id.hashCode, value.hashCode);

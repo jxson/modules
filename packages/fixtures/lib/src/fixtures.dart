@@ -6,22 +6,33 @@
 // import 'package:models/models.dart';
 // import 'name.dart';
 import 'package:models/user/user.dart';
+import 'package:uuid/uuid.dart';
+
 import 'name.dart';
 
+/// TODO document
 class Fixtures {
-  // The created Set is a plain LinkedHashSet. As such, it considers elements that a
-  // re equal (using ==) to be indistinguishable, and requires them to have a com
-  // patible Object.hashCode implementation.
+
+  /// TODO document this.
   static Set<Name> names = new Set<Name>();
 
-  int threshold;
+  Map<String, int> _sequences = new Map<String, int>();
 
+  /// TODO document this.
+  int threshold = 1000;
+
+  /// TODO document this.
   Fixtures({ this.threshold }) {
-    threshold ??= 1000;
-
-    // Add a gaurd on threshold to limit to the maximum number of possible names.
+    // TODO Add a gaurd on threshold to limit to the maximum number of possible names.
   }
 
+  /// TODO document this.
+  int sequence(String key) {
+    _sequences[key] ??= 0;
+    return ++_sequences[key];
+  }
+
+  /// TODO document this.
   // Add thershold for set length.
   Name name([String value]) {
     Name name;
@@ -33,7 +44,6 @@ class Fixtures {
       name = new Name();
 
       while (!names.add(name)) {
-        // print('==> "${name.toString()}" already exists. Trying again...');
         name = new Name();
       }
     }
@@ -41,11 +51,19 @@ class Fixtures {
     return name;
   }
 
-  User user({ String name }) {
-    // name ??= new Name().toString();
-    name ??= 'Jason';
-    String email = 'jason@artifact.sh';
 
-    return new User(name: name, email: email);
+  static String _userRoot = uuid.v5(Uuid.NAMESPACE_URL, 'fuchsia.googlesource.com/fixtures/users');
+  /// TODO document
+  User user({ String name }) {
+    name ??= new Name().toString();
+
+    print('Generated name: $name');
+
+    int seq = sequence('email');
+    String email = 'user-$seq@example.org';
+    // TODO(jxson): automatically grab avatars from uifaces.com
+    String id = uuid.v5(_userRoot, email);
+    String avatar = 'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
+    return new User(id: id, name: name, email: email, locale: 'en', picture: avatar);
   }
 }

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:meta/meta.dart';
+
 /// Represents a Google User Account
 /// Fields are based off the data from the Google Identity API:
 /// https://developers.google.com/identity/
@@ -39,5 +41,11 @@ class User {
   }) {
     assert(name != null);
     assert(email != null);
+
+    print('Name: $name');
+
+    List<String> names = name.split(' ');
+    givenName ??= names.first;
+    familyName ??= names.last;
   }
 }
