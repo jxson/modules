@@ -111,7 +111,7 @@ class _AlphatarState extends State<Alphatar> {
 
   Widget _buildLetter() {
     return new Container(
-      align: FractionalOffset.center,
+      alignment: FractionalOffset.center,
       decoration: new BoxDecoration(
         backgroundColor: _background,
         shape: BoxShape.circle,
