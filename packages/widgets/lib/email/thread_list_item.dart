@@ -68,7 +68,7 @@ class ThreadListItem extends StatelessWidget {
         new Flexible(
           flex: 1,
           child: new Text(
-            lastMessage.subject,
+            thread.getSubject(),
             softWrap: false,
             overflow: TextOverflow.ellipsis,
             style: new TextStyle(

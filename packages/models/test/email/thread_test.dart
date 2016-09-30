@@ -33,4 +33,42 @@ void main() {
     );
     expect(thread.getSubject(), 'Feed Me!!!');
   });
+
+  test(
+      'getSubject() should default to (No Subject) if subject is null'
+      'for first message of thread', () {
+    Thread thread = new Thread(
+      id: '1',
+      messages: <Message>[
+        new Message(
+          sender: 'Coco Yang',
+          recipientList: <String>['David Yang'],
+          subject: null,
+          text: "Woof Woof. I'm so hungry. You need to feed me!",
+          timestamp: new DateTime.now(),
+          isRead: true,
+        ),
+      ],
+    );
+    expect(thread.getSubject(), '(No Subject)');
+  });
+
+  test(
+      'getSubject() should default to (No Subject) if subject is a empty string'
+      'for first message of thread', () {
+    Thread thread = new Thread(
+      id: '1',
+      messages: <Message>[
+        new Message(
+          sender: 'Coco Yang',
+          recipientList: <String>['David Yang'],
+          subject: '',
+          text: "Woof Woof. I'm so hungry. You need to feed me!",
+          timestamp: new DateTime.now(),
+          isRead: true,
+        ),
+      ],
+    );
+    expect(thread.getSubject(), '(No Subject)');
+  });
 }

@@ -29,13 +29,16 @@ class Thread {
 
   /// Gets the subject of the thread
   /// For now, this will return the subject of the first message of the thread
+  /// If there is no subject specified, a default of '(no subject)' will be set
   // TODO (dayang): Figure out how the thread subject is determined based on
   // Gmail APIs
   String getSubject() {
-    if (this.messages.isNotEmpty) {
+    if (this.messages.isNotEmpty &&
+        this.messages[0].subject != null &&
+        this.messages[0].subject.isNotEmpty) {
       return this.messages[0].subject;
     } else {
-      return null;
+      return '(No Subject)';
     }
   }
 }
