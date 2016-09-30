@@ -24,6 +24,11 @@ FLUTTER_TEST_FLAGS ?=
 
 DART_PACKAGES = $(shell find . -name "pubspec.yaml" ! -wholename "./$(DEPS_DIR)/*" -exec dirname {} \;)
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
+## Temporary fix for the JSON data embedded in test files.
+## TODO(youngseokyoon): make the double-quote checker smarter.
+## See: https://fuchsia.atlassian.net/browse/SO-31
+DART_QUOTE_CHECK_EXCLUDE = ./packages/clients/test/gmail_client_test.dart
+
 JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
 SH_FILES = $(shell find ./tools -name "*.sh")
 ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES)
@@ -173,7 +178,7 @@ dart-fmt-quotes:
 	@# Need to create a temporary backup file to deal with some quirks in sed tool
 	@# between Linux and Darwin.
 	@# See: http://stackoverflow.com/questions/5694228
-	@for file in $(DART_FILES); do \
+	@for file in $(filter-out $(DART_QUOTE_CHECK_EXCLUDE),$(DART_FILES)); do \
 		sed -E -i.bak-quotes "s/\"([^']*)\"/\'\1\'/g" $$file; \
 		rm $${file}.bak-quotes; \
 	done
@@ -182,7 +187,7 @@ dart-fmt-quotes:
 dart-fmt-quotes-check:
 	@echo "** Checking double-quotes in dart source files ..."
 	@export QUOTE_ERROR=false; \
-	for file in $(DART_FILES); do \
+	for file in $(filter-out $(DART_QUOTE_CHECK_EXCLUDE),$(DART_FILES)); do \
 		grep --color=auto -rnEH "\"[^']*\"" $$file && export QUOTE_ERROR=true; \
 	done; \
 	if [ "$${QUOTE_ERROR}" = true ]; then \
@@ -201,7 +206,7 @@ dart-lint: dart-base
 	@for pkg in $(DART_PACKAGES); do \
 		echo "** Running the dartanalyzer in '$${pkg}' ..."; \
 		pushd $${pkg} > /dev/null; \
-		dartanalyzer --lints --fatal-lints \
+		dartanalyzer --lints --fatal-lints --fatal-warnings \
 			--options $(DIRNAME)/.analysis_options . || exit 1; \
 		popd > /dev/null; \
 	done

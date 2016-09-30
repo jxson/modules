@@ -82,8 +82,12 @@ class ThreadView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = thread.messages.map((Message message) {
-      return new Container(
+    // Add the thread subject line to the beginning of the list of messages.
+    List<Widget> children = <Widget>[_buildSubjectLine()];
+
+    // Add the messages.
+    thread.messages.forEach((Message message) {
+      children.add(new Container(
         decoration: new BoxDecoration(
           border: new Border(
             bottom: new BorderSide(
@@ -98,11 +102,8 @@ class ThreadView extends StatelessWidget {
           onHeaderTap: onSelectMessage,
           isExpanded: expandedMessageIds.contains(message.id),
         ),
-      );
-    }).toList();
-
-    // Prepend Thread Subject line to beginning of list of messages
-    children.insert(0, _buildSubjectLine());
+      ));
+    });
 
     // Append footer widget to end of the list of messages if specified
     if (footer != null) {

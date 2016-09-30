@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:collection/collection.dart';
+import 'package:quiver/core.dart' as quiver;
+
 import 'message.dart';
 
 /// Represents a single Gmail Thread
@@ -41,4 +44,20 @@ class Thread {
       return '(No Subject)';
     }
   }
+
+  @override
+  bool operator ==(Object o) =>
+      o is Thread &&
+      o.id == id &&
+      o.snippet == snippet &&
+      o.historyId == historyId &&
+      const ListEquality<Message>().equals(o.messages, messages);
+
+  @override
+  int get hashCode => quiver.hashObjects(<dynamic>[
+        id,
+        snippet,
+        historyId,
+        messages,
+      ]);
 }

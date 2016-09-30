@@ -1,7 +1,9 @@
 name: models
 description: Data models used by the gallery widgets
 dependencies:
-  intl: '^0.14.0'
+  collection: ^1.9.1
+  intl: ^0.14.0
+  quiver: ^0.21.4
   util:
     path: ../util
 dev_dependencies:

@@ -3,6 +3,10 @@ description: View UI Widgets and screens.
 dependencies:
   flutter:
     sdk: flutter
+  auth:
+    path: ../packages/auth
+  clients:
+    path: ../packages/clients
   models:
     path: ../packages/models
   widgets:

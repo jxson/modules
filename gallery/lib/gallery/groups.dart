@@ -9,4 +9,7 @@ enum GalleryGroups {
 
   /// Widgets are the building blocks for screens.
   widget,
+
+  /// Integrated UI flows across multiple screens.
+  flow,
 }

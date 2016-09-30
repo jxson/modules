@@ -1,0 +1,12 @@
+name: clients
+description: >
+  A collection of client APIs used for communicating with various backend
+  services and transforming the data into the right formats.
+dependencies:
+  flutter:
+    sdk: flutter
+  models:
+    path: ../models
+dev_dependencies:
+  test: any
+  mockito: ^1.0.1

@@ -36,6 +36,7 @@ class AppState extends State<App> {
       title: 'FX Modules',
       theme: new ThemeData(primarySwatch: Colors.blue),
       routes: kRoutes,
+      onGenerateRoute: handleRoute,
       home: new Home(
         showPerformanceOverlay: showPerformanceOverlay,
         onShowPerformanceOverlayChanged: (bool value) {

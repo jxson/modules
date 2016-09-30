@@ -3,8 +3,11 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:auth/auth_credentials.dart';
+import 'package:auth/login_screen.dart';
 
 import '../screens/index.dart';
+import '../src/config.dart';
 import 'item.dart';
 import 'groups.dart';
 
@@ -37,5 +40,22 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     group: GalleryGroups.screen,
     href: '/email/menu',
     builder: (BuildContext context) => new EmailMenuScreen(),
+  ),
+  new GalleryItem(
+    title: 'Integrated Email Flow',
+    subtitle: 'An integrated flow of email experience using real data',
+    group: GalleryGroups.flow,
+    href: '/flow/email',
+    builder: (BuildContext context) => new LoginScreen(
+          clientId: kConfig['client_id'],
+          clientSecret: kConfig['client_secret'],
+          onLoginSuccess: (AuthCredentials credentials) {
+            // Navigate to the EmailInboxScreen, with the obtained access token.
+            Navigator.popAndPushNamed(
+              context,
+              '/email/inbox/${credentials.accessToken}',
+            );
+          },
+        ),
   ),
 ];

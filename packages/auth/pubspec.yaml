@@ -1,0 +1,5 @@
+name: auth
+description: OAuth related data models and UI screens
+dependencies:
+  flutter:
+    sdk: flutter
