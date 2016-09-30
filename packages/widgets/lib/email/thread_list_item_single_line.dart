@@ -77,7 +77,7 @@ class ThreadListItemSingleLine extends StatelessWidget {
         children: <TextSpan>[
           new TextSpan(
             //Message Subject
-            text: lastMessage.subject,
+            text: thread.getSubject(),
             style: new TextStyle(
               color: Colors.black,
               fontWeight:
