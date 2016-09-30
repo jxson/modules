@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
+import 'package:quiver/core.dart' as quiver;
 import 'package:util/time_util.dart';
 
 /// Represents a single Gmail Message
@@ -75,4 +77,30 @@ class Message {
       return new DateFormat.MMMd().format(timestamp);
     }
   }
+
+  @override
+  bool operator ==(Object o) =>
+      o is Message &&
+      o.id == id &&
+      o.sender == sender &&
+      o.senderProfileUrl == senderProfileUrl &&
+      const ListEquality<String>().equals(o.recipientList, recipientList) &&
+      const ListEquality<String>().equals(o.ccList, ccList) &&
+      o.subject == subject &&
+      o.text == text &&
+      o.timestamp == timestamp &&
+      o.isRead == isRead;
+
+  @override
+  int get hashCode => quiver.hashObjects(<dynamic>[
+        id,
+        sender,
+        senderProfileUrl,
+        recipientList,
+        ccList,
+        subject,
+        text,
+        timestamp,
+        isRead,
+      ]);
 }
