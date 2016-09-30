@@ -24,7 +24,7 @@ void main() {
       expect(n1.toString(), isNot(equals(n2.toString())));
     });
 
-    test('generates up to "${THRESHOLD}" unique names.', () {
+    test('generates up to "$THRESHOLD" unique names.', () {
       Set<Name> names = new Set<Name>();
 
       for (var i = 0; i < fixtures.threshold; i++) {

@@ -14,7 +14,7 @@ final Uuid uuid = new Uuid();
 
 /// TODO document
 class Name {
-  static String _root = uuid.v5(Uuid.NAMESPACE_URL, 'fuchsia.googlesource.com/fixtures/names');
+  static String _root = uuid.v5(Uuid.NAMESPACE_URL, namespace('names'));
   static Random _rng = new Random();
   static bool _toggle = true;
 
