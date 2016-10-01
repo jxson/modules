@@ -8,22 +8,22 @@ import 'package:fixtures/fixtures.dart';
 const int _kThreshold = 1000;
 
 void main() {
-  group('Fixtures.name()', () {
-    Fixtures fixtures;
+  Fixtures fixtures;
 
-    setUp(() {
-      fixtures = new Fixtures(threshold: _kThreshold);
-    });
+  setUp(() {
+    fixtures = new Fixtures();
+  });
 
+  group('fixtures.name()', () {
     test('generates random names.', () {
-      Name n1 = fixtures.name();
-      Name n2 = fixtures.name();
+      Name first = fixtures.name();
+      Name second = fixtures.name();
 
-      expect(n1, isNot(equals(n2)));
-      expect(n1.toString(), isNot(equals(n2.toString())));
+      expect(first, isNot(second), reason: 'Generated names should not be the same.');
     });
 
-    test('generates up to "$_kThreshold" unique names.', () {
+    test('can generate up to "$_kThreshold" unique names', () {
+      Fixtures fixtures = new Fixtures(threshold: _kThreshold);
       Set<Name> names = new Set<Name>();
 
       for (int i = 0; i < fixtures.threshold; i++) {
@@ -33,6 +33,20 @@ void main() {
           fail('Non unique name $name generated at index $i');
         }
       }
+    });
+
+    test('create a specific name', () {
+      String value = 'Jason Campbell';
+      Name jason = fixtures.name(value);
+
+      expect('$jason', equals(value));
+    });
+
+    test('threshold limit on unique Names', () {
+      Fixtures fixtures = new Fixtures(threshold: 1);
+      Name fist = fixtures.name();
+
+      expect(() => fixtures.name(), throwsA(new isInstanceOf<FixturesError>()));
     });
   });
 }

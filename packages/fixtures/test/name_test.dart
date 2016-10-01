@@ -1,6 +1,9 @@
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:test/test.dart';
 import 'package:fixtures/fixtures.dart';
-import 'package:fixtures/src/name.dart';
 
 void main() {
   group('Name name = new Name();', () {

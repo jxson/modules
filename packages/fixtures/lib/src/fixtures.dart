@@ -35,7 +35,7 @@ class FixturesError extends StateError {
 /// The objects returned from [Fixtures] methods are not Stubs, or Mocks. They
 /// are actual instances of thier return types.
 class Fixtures {
-  static Set<Name> _names = new Set<Name>();
+  Set<Name> _names = new Set<Name>();
   Map<String, int> _sequences = new Map<String, int>();
     static String _uuidUser = _uuid.v5(Uuid.NAMESPACE_URL, namespace('users'));
 
@@ -44,7 +44,7 @@ class Fixtures {
   /// Generators like [name] use the [threshold] to limit the total unique
   /// values they produce. When the threshold is reached a [FixturesError]
   /// will be thrown.
-  int threshold = 1000;
+  int threshold;
 
   /// Create an instance of [Fixtures].
   ///
@@ -55,7 +55,9 @@ class Fixtures {
   ///
   ///     Fixtures fixtures = new Fixtures(threshold: 5000);
   ///
-  Fixtures({ this.threshold });
+  Fixtures({ this.threshold }) {
+    threshold ??= 1000;
+  }
 
   /// Retrieve a namespaced [sequence].
   ///
@@ -109,6 +111,12 @@ class Fixtures {
       while (!_names.add(name)) {
         name = new Name();
       }
+    }
+
+    if (_names.length == threshold+1) {
+      String message = 'Threshold for Names exceeded, $threshold unique'
+        'names have been generated.';
+      throw new FixturesError(message);
     }
 
     return name;

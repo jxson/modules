@@ -27,29 +27,28 @@ void main() {
     });
 
     test('with optional args', () {
-
-    }, skip: true);
+      User alice = fixtures.user(name: 'Alice');
+      expect(alice.name, equals('Alice'));
+    });
 
     test('generates unique users', () {
       User one = fixtures.user();
       User two = fixtures.user();
 
       expect(one, isNot(equals(two)));
-      expect(one.name, isNot(equals(two.name)));
-      expect(one.email, isNot(equals(two.email)));
+      expect(one.name, isNot(two.name));
+      expect(one.email, isNot(two.email));
     });
 
     test('generates users with email sequences', () {
       // NOTE: fixtures is defined here, instead of in setUp(...) to prevent
       // other tests from impacting the email sequences.
       Fixtures fixtures = new Fixtures();
-      User bob = fixtures.user(name: 'Bob');
-      User alice = fixtures.user(name: 'Alice');
+      User first = fixtures.user(name: 'Bob');
+      User last = fixtures.user(name: 'Alice');
 
-      expect(bob.name, equals('Bob'));
-      expect(bob.email, contains('1'));
-      expect(alice.name, equals('Alice'));
-      expect(alice.email, contains('2'));
+      expect(first.email, contains('1'));
+      expect(last.email, contains('2'));
     });
   });
 }
