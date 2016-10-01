@@ -2,9 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// TODO(jxson): Fixup dir structure so this works.
-// import 'package:models/models.dart';
-// import 'name.dart';
 import 'package:models/user/user.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,7 +15,7 @@ final Uuid _uuid = new Uuid();
 class FixturesError extends StateError {
   /// Create a [FixturesError].
   ///
-  ///     FixturesError err = new FixturesError('Something bad happend');
+  ///     FixturesError err = new FixturesError('Something bad happened');
   ///
   FixturesError(String msg) : super(msg);
 }
@@ -27,19 +24,19 @@ class FixturesError extends StateError {
 ///
 /// Generators are, and should be defined as methods of [Fixtures] and return
 /// instances of objects that attempt to be random and unique. Uniqueness is
-/// only garunteed up to the set uniqueness [threshold].
+/// only guaranteed up to the set uniqueness [threshold].
 ///
 /// New instances can used to reset sequences ([sequence]) and generators like
 /// [name] and [user].
 ///
 /// The objects returned from [Fixtures] methods are not Stubs, or Mocks. They
-/// are actual instances of thier return types.
+/// are actual instances of their return types.
 class Fixtures {
   Set<Name> _names = new Set<Name>();
   Map<String, int> _sequences = new Map<String, int>();
     static String _uuidUser = _uuid.v5(Uuid.NAMESPACE_URL, namespace('users'));
 
-  /// Uniqueness [threshold] for this instance of [Fixtures].
+  /// Uniqueness [threshold].
   ///
   /// Generators like [name] use the [threshold] to limit the total unique
   /// values they produce. When the threshold is reached a [FixturesError]
@@ -64,11 +61,17 @@ class Fixtures {
   /// The [sequence] [int] returned for the namespace key will be increased
   /// incrementally for every call.
   ///
-  ///     // emailSequence will equal `1` the first time it is called.
-  ///     int emailSequence = fixtures.sequence('email');
+  /// The first time a sequence is called it will return an `int` value of
+  ///  `1`.
   ///
-  ///     // emailSequence will equal `2` the second time it is called, etc.
-  ///     int nextEmailSequence = fixtures.sequence('email');
+  ///     // The sequence value will equal `1`.
+  ///     int sequence = fixtures.sequence('email');
+  ///
+  /// Subsequent calls will return a value that is incremented above the
+  /// previously returned value.
+  ///
+  ///     // The sequence value will equal `2`.
+  ///     int sequence = fixtures.sequence('email');
   ///
   int sequence(String key) {
     _sequences[key] ??= 0;
@@ -76,29 +79,28 @@ class Fixtures {
   }
 
   /// Generate a [Name].
-
-  /// When called without the optional value a new, random [Name] will be
-  /// automatically generated.
   ///
-  /// When using the optional String value, a [Name] will be created with the
-  /// value and then tracked. This allows subsequent calls for a random name
-  /// to generate unique names even against ones that were explicitly set.
-  /// Additional calls for explicit names will not be counted against the
-  /// [threshold] after the first time.
+  /// When called without the optional value, a new random [Name] will be
+  /// returned.
   ///
-  /// Throws [FixturesError] if the [threshold] for unique names is met.
+  ///     // The name will have value like "Brenda Wade".
+  ///     Name name = fixtures.name();
   ///
-  /// ## Examples
+  /// [Fixtures] instances track subsequent calls to [name] to guarantee
+  /// unique random [Name] values, even against ones that have an explicitly
+  /// set value. Additional calls for explicit names will not be counted
+  /// against the [threshold] after the first time.
   ///
   /// Generates a Name object with the value 'Bob'.
   ///
-  ///     Name bob = fixtures.name('Bob');
+  ///     Name bob = fixtures.name('Jason Campbell');
   ///
-  /// Generates a [Name] object with a random value like "Brenda Wade". The
-  /// random [Name] will never have the value "Bob".
+  /// Generates a [Name] object with a random value. The
+  /// random [Name] will never have the value "Jason Campbell".
   ///
-  ///     Name name = fixtures.name('Bob');
+  ///     Name name = fixtures.name();
   ///
+  /// Throws [FixturesError] if the [threshold] for unique names is met.
   Name name([String value]) {
     Name name;
 
@@ -130,14 +132,13 @@ class Fixtures {
   ///
   /// Generate a [User] with a specific name:
   ///
-  ///     User user = fixtures.user('Alice');
+  ///     User user = fixtures.user(name: 'Alice');
   ///
   User user({ String name }) {
     name ??= new Name().toString();
 
     int seq = sequence('email');
     String email = 'user-$seq@example.org';
-    // TODO(jxson): automatically grab avatars from uifaces.com
     String id = _uuid.v5(_uuidUser, email);
     String avatar = 'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
     return new User(id: id, name: name, email: email, locale: 'en', picture: avatar);

@@ -12,17 +12,18 @@ import 'namespace.dart';
 
 final Uuid _uuid = new Uuid();
 
-/// Used by Fixtures for creating names and tracking thier uniqueness.
+/// Used by Fixtures for creating names and tracking their uniqueness.
 ///
 /// A [Name] can be randomly generated or created with an explicit string
 /// value.
 ///
-/// When a new [Name] is "generated" it is derieved from a random first name,
-/// alternating between values from [kFirstNamesFemale], and
-/// [kFirstNamesMale],  a random last name from [kSurnames] is then appended.
+/// When a new [Name] [value] is "generated" it is derived from a random first
+/// name, and random last name. First names alternate between values from
+/// [kFirstNamesFemale], and [kFirstNamesMale], random last names selected
+/// from [kSurnames].
 ///
-/// Uniqueness can be verified using the [id] which is a
-/// [UUID](http://www.ietf.org/rfc/rfc4122.txt) V5 and hashed off the [Name]'s
+/// Uniqueness can be verified using the [id] which is a [UUID
+/// V5](http://www.ietf.org/rfc/rfc4122.txt) and hashed off the [Name]'s
 /// [value]. The equality operator [==] and [hashCode] have been defined in a
 /// way that makes checking uniqueness on [Name] objects arbitrary. For
 /// example, two [Name] instances with the same [value] will always have
@@ -50,13 +51,18 @@ class Name {
   ///
   ///     Name name = new Name();
   ///
-  /// Random names will have a [value] set to something like "Kathleen Gonzales" or "Andrew Johnson". A unique [Name] [value] is not a garuntee of this constructor.
+  /// Random names will have a [value] set to something like "Kathleen
+  /// Gonzales" or "Andrew Johnson". A unique [Name] [value] is not a
+  /// guarantee of this constructor.
   Name([this.value]) {
     value ??= generate();
     id = _uuid.v5(_root, value);
   }
 
   /// Generate a random String name.
+  ///
+  ///     String name = Name.generate();
+  ///
   static String generate() {
     String first;
     int firstIndex;

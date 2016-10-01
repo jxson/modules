@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// A list of surnames from [US Census data](http://www.census.gov/en.html) and
-/// [Wikipedia](https://goo.gl/tqlzVJ).
+/// A list of surnames from [US Census data](http://www.census.gov/en.html)
+/// and [Wikipedia](https://goo.gl/tqlzVJ).
 const List<String> kSurnames = const <String>[
   'Abbott',
   'Acevedo',
@@ -1049,7 +1049,8 @@ const List<String> kSurnames = const <String>[
   'Zimmerman',
 ];
 
-/// A list of male first names from [US Census data](http://www.census.gov/en.html).
+/// A list of male first names from
+/// [US Census data](http://www.census.gov/en.html).
 const List<String> kFirstNamesMale = const <String>[
   'Aaron',
   'Abel',
@@ -1584,7 +1585,8 @@ const List<String> kFirstNamesMale = const <String>[
   'Zachary',
 ];
 
-/// A list of female first names from [US Census data](http://www.census.gov/en.html).
+/// A list of female first names from
+/// [US Census data](http://www.census.gov/en.html).
 const List<String> kFirstNamesFemale = const <String>[
   'Aaliyah',
   'Abbie',
