@@ -21,7 +21,7 @@ void main() {
       Name bob2 = new Name('Bob');
 
       expect(bob1.id, equals(bob2.id));
-      expect(bob1.toString(), equals(bob2.toString()));
+      expect('$bob1', equals('$bob2'));
       expect(bob1, equals(bob2));
     });
   });
