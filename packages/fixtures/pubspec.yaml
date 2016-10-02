@@ -1,0 +1,8 @@
+name: fixtures
+description: Generate programatic fixtures for UI mocks and tests.
+dependencies:
+  models:
+    path: ../models
+  uuid: 0.5.3
+dev_dependencies:
+  test: 0.12.15+6
