@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:meta/meta.dart';
+
 /// Represents a Google User Account
 /// Fields are based off the data from the Google Identity API:
 /// https://developers.google.com/identity/
@@ -28,13 +30,19 @@ class User {
   String locale;
 
   /// Constructor to create a new user
-  User({
-    this.id,
-    this.email,
-    this.name,
-    this.givenName,
-    this.familyName,
-    this.picture,
-    this.locale,
-  });
+  User(
+      {this.id,
+      @required this.email,
+      @required this.name,
+      this.givenName,
+      this.familyName,
+      this.picture,
+      this.locale}) {
+    assert(name != null);
+    assert(email != null);
+
+    List<String> names = name.split(' ');
+    givenName ??= names.first;
+    familyName ??= names.last;
+  }
 }
