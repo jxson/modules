@@ -80,11 +80,14 @@ class ThreadListItem extends StatelessWidget {
         ),
         new Flexible(
           flex: null,
-          child: new Text(
-            lastMessage.getDisplayDate(),
-            style: new TextStyle(
-              fontSize: 12.0,
-              color: Colors.grey[500],
+          child: new Container(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: new Text(
+              lastMessage.getDisplayDate(),
+              style: new TextStyle(
+                fontSize: 12.0,
+                color: Colors.grey[500],
+              ),
             ),
           ),
         ),
