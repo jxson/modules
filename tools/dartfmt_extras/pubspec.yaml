@@ -1,0 +1,6 @@
+name: dartfmt_extras
+description: Fix dart formatting issues that are not handled by dartfmt
+dependencies:
+  analyzer: ^0.28.1
+  path: ^1.3.9
+  source_span: ^1.2.3
