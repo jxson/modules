@@ -83,15 +83,13 @@ class _AlphatarState extends State<Alphatar> {
   void initState() {
     super.initState();
 
-    // Initialize the background color, if needed.
+    // Initialize the background color.
     // The same color should be reused in subsequent re-rendering.
     //
     // TODO(youngseokyoon): figure out a way to associate this color to the
     // user, so that the same user always gets the same background color.
     // Ref: https://fuchsia.atlassian.net/browse/SO-13
-    if (config.avatarImage == null) {
-      _background = _pickRandomBackgroundColor();
-    }
+    _background = _pickRandomBackgroundColor();
   }
 
   Color _pickRandomBackgroundColor() {
@@ -100,11 +98,30 @@ class _AlphatarState extends State<Alphatar> {
 
   @override
   Widget build(BuildContext context) {
+    // If the avatar has a network image, always build a fallback letter
+    // underneath so that a placeholder is there while the network call
+    // is running.
+    //
+    // Eventually, a Flutter Image widget should have a fallback widget as
+    // part of the implementation, see:
+    // https://github.com/flutter/flutter/issues/6229
+    Widget image;
+    if (config.avatarImage != null) {
+      image = new Stack(
+        children: <Widget>[
+          _buildLetter(),
+          config.avatarImage,
+        ],
+      );
+    } else {
+      image = _buildLetter();
+    }
+
     return new Container(
       width: config.size,
       height: config.size,
       child: new ClipOval(
-        child: config.avatarImage ?? _buildLetter(),
+        child: image,
       ),
     );
   }
@@ -117,7 +134,7 @@ class _AlphatarState extends State<Alphatar> {
         shape: BoxShape.circle,
       ),
       child: new Text(
-        config.letter,
+        config.letter ?? '',
         style: new TextStyle(
           color: Colors.white,
           fontSize: config.size * 2 / 3,
