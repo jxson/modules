@@ -12,7 +12,8 @@ void main() {
 
   testWidgets(
       'Alphatar should display the image when given, whether or not the'
-      'fall-back letter is given.', (WidgetTester tester) async {
+      'fall-back letter is given, but also display fallback letter in'
+      'the background', (WidgetTester tester) async {
     // First, try without providing a letter.
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
@@ -22,7 +23,7 @@ void main() {
     }));
 
     expect(find.byType(Image), findsOneWidget);
-    expect(find.byType(Text), findsNothing);
+    expect(find.byType(Text), findsOneWidget);
 
     // Try again with a letter provided.
     await tester.pumpWidget(new StatefulBuilder(
@@ -33,7 +34,7 @@ void main() {
     }));
 
     expect(find.byType(Image), findsOneWidget);
-    expect(find.byType(Text), findsNothing);
+    expect(find.byType(Text), findsOneWidget);
   });
 
   testWidgets(
