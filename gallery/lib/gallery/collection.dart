@@ -42,20 +42,28 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     builder: (BuildContext context) => new EmailMenuScreen(),
   ),
   new GalleryItem(
-    title: 'Integrated Email Flow',
-    subtitle: 'An integrated flow of email experience using real data',
-    group: GalleryGroups.flow,
-    href: '/flow/email',
-    builder: (BuildContext context) => new LoginScreen(
-          clientId: kConfig['client_id'],
-          clientSecret: kConfig['client_secret'],
-          onLoginSuccess: (AuthCredentials credentials) {
-            // Navigate to the EmailInboxScreen, with the obtained access token.
-            Navigator.popAndPushNamed(
-              context,
-              '/email/inbox/${credentials.accessToken}',
-            );
-          },
-        ),
-  ),
+      title: 'Integrated Email Flow',
+      subtitle: 'An integrated flow of email experience using real data',
+      group: GalleryGroups.flow,
+      href: '/flow/email',
+      builder: (BuildContext context) {
+        try {
+          String clientId = kConfig.get('client_id');
+          String clientSecret = kConfig.get('client_secret');
+
+          return new LoginScreen(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            onLoginSuccess: (AuthCredentials credentials) {
+              // Navigate to the EmailInboxScreen, with the obtained access token.
+              Navigator.popAndPushNamed(
+                context,
+                '/email/inbox/${credentials.accessToken}',
+              );
+            },
+          );
+        } catch (e) {
+          return new ErrorScreen(e.toString());
+        }
+      }),
 ];

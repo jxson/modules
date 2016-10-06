@@ -123,8 +123,15 @@ doc:
 	@cd $* && flutter packages get
 	@touch $*
 
+# Copy the example config file, if the config file does not exist.
+EXAMPLE_CONFIG_FILE = gallery/lib/src/config.example.dart
+TARGET_CONFIG_FILE = gallery/lib/src/config.dart
+
+$(TARGET_CONFIG_FILE):
+	cp $(EXAMPLE_CONFIG_FILE) $(TARGET_CONFIG_FILE)
+
 .PHONY: dart-base
-dart-base: $(addsuffix /.packages, $(DART_PACKAGES))
+dart-base: $(addsuffix /.packages, $(DART_PACKAGES)) $(TARGET_CONFIG_FILE)
 	@true
 
 .PHONY: dart-clean
