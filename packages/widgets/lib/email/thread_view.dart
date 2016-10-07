@@ -21,6 +21,15 @@ class ThreadView extends StatelessWidget {
   /// Callback for when a given message is selected in thread
   MessageActionCallback onSelectMessage;
 
+  /// Callback for selecting forward for a message
+  MessageActionCallback onForwardMessage;
+
+  /// Callback for selecting reply all for a message
+  MessageActionCallback onReplyAllMessage;
+
+  /// Callback for selecting reply for a message
+  MessageActionCallback onReplyMessage;
+
   /// Optional footer widget that is rendered at the bottom of the thread
   Widget footer;
 
@@ -32,6 +41,9 @@ class ThreadView extends StatelessWidget {
   ThreadView(
       {Key key,
       @required this.thread,
+      @required this.onForwardMessage,
+      @required this.onReplyAllMessage,
+      @required this.onReplyMessage,
       this.footer,
       this.header,
       this.onSelectMessage,
@@ -101,6 +113,9 @@ class ThreadView extends StatelessWidget {
           key: new ObjectKey(message),
           onHeaderTap: onSelectMessage,
           isExpanded: expandedMessageIds.contains(message.id),
+          onForward: onForwardMessage,
+          onReply: onReplyMessage,
+          onReplyAll: onReplyAllMessage,
         ),
       ));
     });

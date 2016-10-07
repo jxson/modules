@@ -8,5 +8,7 @@ dependencies:
   models:
     path: ../models
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   test: any
   mockito: ^1.0.1
