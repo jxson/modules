@@ -24,10 +24,22 @@ class MessageListItem extends StatelessWidget {
   /// Callback if MessageListItem header is tapped
   MessageActionCallback onHeaderTap;
 
+  /// Callback for selecting forward in popup action menu
+  MessageActionCallback onForward;
+
+  /// Callback for selecting reply all in popup action menu
+  MessageActionCallback onReplyAll;
+
+  /// Callback for selecting reply in popup action menu
+  MessageActionCallback onReply;
+
   /// Creates new MessageListItem
   MessageListItem(
       {Key key,
       @required this.message,
+      @required this.onForward,
+      @required this.onReplyAll,
+      @required this.onReply,
       this.onHeaderTap,
       this.isExpanded: false})
       : super(key: key) {
@@ -54,15 +66,46 @@ class MessageListItem extends StatelessWidget {
             flex: 1,
             child: titleText,
           ),
-          new Flexible(
-            flex: null,
-            child: new Text(
-              message.getDisplayDate(),
-              style: new TextStyle(
-                fontSize: 12.0,
-                color: Colors.grey[500],
-              ),
+          new Text(
+            message.getDisplayDate(),
+            style: new TextStyle(
+              fontSize: 12.0,
+              color: Colors.grey[500],
             ),
+          ),
+          new PopupMenuButton<MessageActionCallback>(
+            child: new Icon(
+              Icons.more_vert,
+              color: Colors.grey[500],
+              size: 20.0,
+            ),
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuItem<MessageActionCallback>>[
+                  new PopupMenuItem<MessageActionCallback>(
+                    value: onReply,
+                    child: new ListItem(
+                      leading: new Icon(Icons.reply),
+                      title: new Text('Reply'),
+                    ),
+                  ),
+                  new PopupMenuItem<MessageActionCallback>(
+                    value: onReplyAll,
+                    child: new ListItem(
+                      leading: new Icon(Icons.reply_all),
+                      title: new Text('Reply All'),
+                    ),
+                  ),
+                  new PopupMenuItem<MessageActionCallback>(
+                    value: onForward,
+                    child: new ListItem(
+                      leading: new Icon(Icons.forward),
+                      title: new Text('Forward'),
+                    ),
+                  ),
+                ],
+            onSelected: (MessageActionCallback messageCallback) {
+              messageCallback(message);
+            },
           ),
         ],
       );

@@ -37,6 +37,9 @@ void main() {
       return new Material(
         child: new ThreadView(
           thread: thread,
+          onForwardMessage: (Message m) {},
+          onReplyMessage: (Message m) {},
+          onReplyAllMessage: (Message m) {},
           onSelectMessage: (Message m) {
             expect(m, thread.messages[0]);
             taps++;
@@ -82,6 +85,9 @@ void main() {
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
         child: new ThreadView(
+          onForwardMessage: (Message m) {},
+          onReplyMessage: (Message m) {},
+          onReplyAllMessage: (Message m) {},
           thread: thread,
         ),
       );
@@ -113,6 +119,9 @@ void main() {
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
         child: new ThreadView(
+          onForwardMessage: (Message m) {},
+          onReplyMessage: (Message m) {},
+          onReplyAllMessage: (Message m) {},
           thread: thread,
           footer: new Text('End', key: footerKey),
         ),
@@ -145,6 +154,9 @@ void main() {
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
         child: new ThreadView(
+          onForwardMessage: (Message m) {},
+          onReplyMessage: (Message m) {},
+          onReplyAllMessage: (Message m) {},
           thread: thread,
           header: new Text('Start', key: headerKey),
         ),

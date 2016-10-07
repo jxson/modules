@@ -106,6 +106,9 @@ class _EmailThreadScreenState extends State<EmailThreadScreen> {
       thread: _thread,
       expandedMessageIds: _expandedMessages,
       onSelectMessage: _handleSelectMessage,
+      onForwardMessage: _handleMessageAction,
+      onReplyAllMessage: _handleMessageAction,
+      onReplyMessage: _handleMessageAction,
       footer: new MessageActionBarFooter(
         message: _thread.messages.last,
         onForwardMessage: _handleMessageAction,
