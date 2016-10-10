@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:models/email/message.dart';
 import 'package:models/email/thread.dart';
-import 'package:widgets/email/thread_view.dart';
 import 'package:widgets/email/message_list_item.dart';
+import 'package:widgets/email/thread_view.dart';
 
 void main() {
   String profileUrl =

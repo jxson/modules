@@ -76,7 +76,7 @@ depclean:
 .PHONY: fmt
 fmt: ## Format everything.
 	@$(MAKE) dart-fmt
-	@$(MAKE) dart-fmt-quotes
+	@$(MAKE) dart-fmt-extras
 
 .PHONY: lint
 lint: ## Lint everything.
@@ -168,19 +168,19 @@ dart-fmt-check: dart-base
 		echo; \
 	fi
 
-.PHONY: dart-fmt-quotes
-dart-fmt-quotes:
+.PHONY: dart-fmt-extras
+dart-fmt-extras:
 	@cd tools/dartfmt_extras; \
 	pub run bin/main.dart fix $(DIRNAME) $(DART_FILES)
 
-.PHONY: dart-fmt-quotes-check
-dart-fmt-quotes-check:
-	@echo "** Checking double-quotes in dart source files ..."
+.PHONY: dart-fmt-extras-check
+dart-fmt-extras-check:
+	@echo "** Checking for more dart formatting issues ..."
 	@cd tools/dartfmt_extras; \
 	pub run bin/main.dart check $(DIRNAME) $(DART_FILES); \
 	if [ $$? -ne 0 ] ; then \
 		echo; \
-		echo "The above dart files have double-quoted strings:"; \
+		echo "The above dart files have formatting issues."; \
 		echo "Run \"make fmt\" to fix the formatting."; \
 		echo; \
 		exit 1; \
@@ -216,6 +216,6 @@ dart-test: dart-base
 .PHONY: dart-presubmit
 dart-presubmit:
 	@$(MAKE) dart-fmt-check
-	@$(MAKE) dart-fmt-quotes-check
+	@$(MAKE) dart-fmt-extras-check
 	@$(MAKE) dart-lint
 	@$(MAKE) dart-coverage

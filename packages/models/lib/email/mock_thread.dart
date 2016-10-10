@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'thread.dart';
 import 'message.dart';
+import 'thread.dart';
 
 // TODO(dayang) Generate mockdata rather than hard coding it in.
 final String _kCocoAvatarUrl =

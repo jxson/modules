@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart';
 import 'package:auth/auth_credentials.dart';
 import 'package:auth/login_screen.dart';
+import 'package:flutter/material.dart';
 
 import '../screens/index.dart';
 import '../src/config.dart';
-import 'item.dart';
 import 'groups.dart';
+import 'item.dart';
 
 /// Holds a list of all [GalleryItem] instances.
 final List<GalleryItem> kGalleryCollection = <GalleryItem>[

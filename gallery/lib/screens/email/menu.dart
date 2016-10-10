@@ -3,10 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:widgets/email/inbox_menu.dart';
 import 'package:models/email/folder.dart';
 import 'package:models/email/folder_group.dart';
 import 'package:models/user/user.dart';
+import 'package:widgets/email/inbox_menu.dart';
 
 /// This screen displays an inbox.
 class EmailMenuScreen extends StatefulWidget {
