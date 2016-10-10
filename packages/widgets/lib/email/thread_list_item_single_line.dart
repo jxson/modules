@@ -59,7 +59,7 @@ class ThreadListItemSingleLine extends StatelessWidget {
     final Widget avatar = new Container(
       child: new Alphatar.withUrl(
         avatarUrl: lastMessage.senderProfileUrl,
-        letter: lastMessage.sender.substring(0, 1),
+        letter: lastMessage.sender.displayText[0],
       ),
     );
 

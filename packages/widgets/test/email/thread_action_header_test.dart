@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:models/email/mailbox.dart';
 import 'package:models/email/message.dart';
 import 'package:models/email/thread.dart';
 import 'package:widgets/email/thread_action_bar_header.dart';
@@ -18,8 +19,16 @@ void main() {
     Thread thread = new Thread(
       messages: <Message>[
         new Message(
-          sender: 'Coco Yang',
-          recipientList: <String>['David Yang'],
+          sender: new Mailbox(
+            address: 'cocoyang@cu.te',
+            displayName: 'Coco Yang',
+          ),
+          recipientList: <Mailbox>[
+            new Mailbox(
+              address: 'david@ya.ng',
+              displayName: 'David Yang',
+            )
+          ],
           senderProfileUrl: profileUrl,
           subject: 'Feed Me!!!',
           text: "Woof Woof. I'm so hungry. You need to feed me!",

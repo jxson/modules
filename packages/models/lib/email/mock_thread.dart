@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'mailbox.dart';
 import 'message.dart';
 import 'thread.dart';
 
@@ -21,8 +22,16 @@ class MockThread extends Thread {
         <Message>[
           new Message(
             id: 'm1',
-            sender: 'Coco Yang',
-            recipientList: <String>['David Yang'],
+            sender: new Mailbox(
+              address: 'cocoyang@cu.te',
+              displayName: 'Coco Yang',
+            ),
+            recipientList: <Mailbox>[
+              new Mailbox(
+                address: 'david@ya.ng',
+                displayName: 'David Yang',
+              )
+            ],
             // NOTE(youngseokyoon): The profile url below is intentionally set
             // to null to show how the alphatar falls back to the user initial.
             senderProfileUrl: null,
@@ -33,8 +42,16 @@ class MockThread extends Thread {
           ),
           new Message(
             id: 'm2',
-            sender: 'Yoyo Yang',
-            recipientList: <String>['David Yang'],
+            sender: new Mailbox(
+              address: 'yoyoyang@cu.te',
+              displayName: 'Yoyo Yang',
+            ),
+            recipientList: <Mailbox>[
+              new Mailbox(
+                address: 'david@ya.ng',
+                displayName: 'David Yang',
+              )
+            ],
             senderProfileUrl: _kYoyoAvatarUrl,
             subject: 'Feed Me!!!',
             text: 'Dude, same here. I\'m starving!',
@@ -43,8 +60,16 @@ class MockThread extends Thread {
           ),
           new Message(
             id: 'm3',
-            sender: 'Coco Yang',
-            recipientList: <String>['David Yang'],
+            sender: new Mailbox(
+              address: 'cocoyang@cu.te',
+              displayName: 'Coco Yang',
+            ),
+            recipientList: <Mailbox>[
+              new Mailbox(
+                address: 'david@ya.ng',
+                displayName: 'David Yang',
+              )
+            ],
             senderProfileUrl: _kCocoAvatarUrl,
             subject: 'Feed Me!!!',
             text: 'Okay David, I know you are busy...but I\'m your dog! '

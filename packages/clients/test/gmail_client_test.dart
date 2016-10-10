@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:clients/gmail_client.dart';
 import 'package:flutter/http.dart' as http;
 import 'package:mockito/mockito_no_mirrors.dart';
+import 'package:models/email/mailbox.dart';
 import 'package:models/email/message.dart';
 import 'package:models/email/thread.dart';
 import 'package:test/test.dart';
@@ -56,15 +57,15 @@ Map<String, String> _getThreadResponses = new Map<String, String>.fromIterable(
         "headers": [
           {
             "name": "To",
-            "value": "fx-test-recipient@example.com"
+            "value": "fx-recipient <fx-test-recipient@example.com>"
           },
           {
             "name": "From",
-            "value": "fx-test-sender@example.com"
+            "value": "fx-sender <fx-test-sender@example.com>"
           },
           {
             "name": "Cc",
-            "value": "fx-test-cc@example.com"
+            "value": "fx-cc <fx-test-cc@example.com>"
           },
           {
             "name": "Subject",
@@ -86,15 +87,15 @@ Map<String, String> _getThreadResponses = new Map<String, String>.fromIterable(
         "headers": [
           {
             "name": "To",
-            "value": "fx-test-recipient@example.com"
+            "value": "fx-recipient <fx-test-recipient@example.com>"
           },
           {
             "name": "From",
-            "value": "fx-test-sender@example.com"
+            "value": "fx-sender <fx-test-sender@example.com>"
           },
           {
             "name": "Cc",
-            "value": "fx-test-cc@example.com"
+            "value": "fx-cc <fx-test-cc@example.com>"
           },
           {
             "name": "Subject",
@@ -164,10 +165,23 @@ void main() {
         messages: <Message>[
           new Message(
             id: 'thread-01-message-01',
-            sender: 'fx-test-sender@example.com',
+            sender: new Mailbox(
+              address: 'fx-test-sender@example.com',
+              displayName: 'fx-sender',
+            ),
             senderProfileUrl: null,
-            recipientList: <String>['fx-test-recipient@example.com'],
-            ccList: <String>['fx-test-cc@example.com'],
+            recipientList: <Mailbox>[
+              new Mailbox(
+                address: 'fx-test-recipient@example.com',
+                displayName: 'fx-recipient',
+              )
+            ],
+            ccList: <Mailbox>[
+              new Mailbox(
+                address: 'fx-test-cc@example.com',
+                displayName: 'fx-cc',
+              )
+            ],
             subject: 'Subject for thread-01-message-01',
             text: 'Snippet for thread-01-message-01',
             timestamp: _timestamp,
@@ -175,10 +189,23 @@ void main() {
           ),
           new Message(
             id: 'thread-01-message-02',
-            sender: 'fx-test-sender@example.com',
+            sender: new Mailbox(
+              address: 'fx-test-sender@example.com',
+              displayName: 'fx-sender',
+            ),
             senderProfileUrl: null,
-            recipientList: <String>['fx-test-recipient@example.com'],
-            ccList: <String>['fx-test-cc@example.com'],
+            recipientList: <Mailbox>[
+              new Mailbox(
+                address: 'fx-test-recipient@example.com',
+                displayName: 'fx-recipient',
+              )
+            ],
+            ccList: <Mailbox>[
+              new Mailbox(
+                address: 'fx-test-cc@example.com',
+                displayName: 'fx-cc',
+              )
+            ],
             subject: 'Subject for thread-01-message-02',
             text: 'Snippet for thread-01-message-02',
             timestamp: _timestamp,
@@ -193,10 +220,23 @@ void main() {
         messages: <Message>[
           new Message(
             id: 'thread-02-message-01',
-            sender: 'fx-test-sender@example.com',
+            sender: new Mailbox(
+              address: 'fx-test-sender@example.com',
+              displayName: 'fx-sender',
+            ),
             senderProfileUrl: null,
-            recipientList: <String>['fx-test-recipient@example.com'],
-            ccList: <String>['fx-test-cc@example.com'],
+            recipientList: <Mailbox>[
+              new Mailbox(
+                address: 'fx-test-recipient@example.com',
+                displayName: 'fx-recipient',
+              )
+            ],
+            ccList: <Mailbox>[
+              new Mailbox(
+                address: 'fx-test-cc@example.com',
+                displayName: 'fx-cc',
+              )
+            ],
             subject: 'Subject for thread-02-message-01',
             text: 'Snippet for thread-02-message-01',
             timestamp: _timestamp,
@@ -204,10 +244,23 @@ void main() {
           ),
           new Message(
             id: 'thread-02-message-02',
-            sender: 'fx-test-sender@example.com',
+            sender: new Mailbox(
+              address: 'fx-test-sender@example.com',
+              displayName: 'fx-sender',
+            ),
             senderProfileUrl: null,
-            recipientList: <String>['fx-test-recipient@example.com'],
-            ccList: <String>['fx-test-cc@example.com'],
+            recipientList: <Mailbox>[
+              new Mailbox(
+                address: 'fx-test-recipient@example.com',
+                displayName: 'fx-recipient',
+              )
+            ],
+            ccList: <Mailbox>[
+              new Mailbox(
+                address: 'fx-test-cc@example.com',
+                displayName: 'fx-cc',
+              )
+            ],
             subject: 'Subject for thread-02-message-02',
             text: 'Snippet for thread-02-message-02',
             timestamp: _timestamp,

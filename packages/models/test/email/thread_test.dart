@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:models/email/mailbox.dart';
 import 'package:models/email/message.dart';
 import 'package:models/email/thread.dart';
 import 'package:test/test.dart';
@@ -14,16 +15,32 @@ void main() {
       id: '1',
       messages: <Message>[
         new Message(
-          sender: 'Coco Yang',
-          recipientList: <String>['David Yang'],
+          sender: new Mailbox(
+            address: 'cocoyang@cu.te',
+            displayName: 'Coco Yang',
+          ),
+          recipientList: <Mailbox>[
+            new Mailbox(
+              address: 'david@ya.ng',
+              displayName: 'David Yang',
+            )
+          ],
           subject: 'Feed Me!!!',
           text: "Woof Woof. I'm so hungry. You need to feed me!",
           timestamp: new DateTime.now(),
           isRead: true,
         ),
         new Message(
-          sender: 'Coco Yang',
-          recipientList: <String>['David Yang'],
+          sender: new Mailbox(
+            address: 'cocoyang@cu.te',
+            displayName: 'Coco Yang',
+          ),
+          recipientList: <Mailbox>[
+            new Mailbox(
+              address: 'david@ya.ng',
+              displayName: 'David Yang',
+            )
+          ],
           subject: 'PLEAZE Feed Me!!!',
           text: "Woof Woof. I'm so hungry. You need to feed me!",
           timestamp: new DateTime.now(),
@@ -41,8 +58,16 @@ void main() {
       id: '1',
       messages: <Message>[
         new Message(
-          sender: 'Coco Yang',
-          recipientList: <String>['David Yang'],
+          sender: new Mailbox(
+            address: 'cocoyang@cu.te',
+            displayName: 'Coco Yang',
+          ),
+          recipientList: <Mailbox>[
+            new Mailbox(
+              address: 'david@ya.ng',
+              displayName: 'David Yang',
+            )
+          ],
           subject: null,
           text: "Woof Woof. I'm so hungry. You need to feed me!",
           timestamp: new DateTime.now(),
@@ -60,8 +85,16 @@ void main() {
       id: '1',
       messages: <Message>[
         new Message(
-          sender: 'Coco Yang',
-          recipientList: <String>['David Yang'],
+          sender: new Mailbox(
+            address: 'cocoyang@cu.te',
+            displayName: 'Coco Yang',
+          ),
+          recipientList: <Mailbox>[
+            new Mailbox(
+              address: 'david@ya.ng',
+              displayName: 'David Yang',
+            )
+          ],
           subject: '',
           text: "Woof Woof. I'm so hungry. You need to feed me!",
           timestamp: new DateTime.now(),

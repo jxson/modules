@@ -37,9 +37,9 @@ class ThreadParticipantList extends StatelessWidget {
         new LinkedHashMap<String, bool>();
     thread.messages.forEach((Message message) {
       if (!message.isRead) {
-        participantToUnread[message.sender] = true;
+        participantToUnread[message.sender.displayText] = true;
       } else if (!participantToUnread.containsKey(message.sender)) {
-        participantToUnread[message.sender] = false;
+        participantToUnread[message.sender.displayText] = false;
       }
     });
 

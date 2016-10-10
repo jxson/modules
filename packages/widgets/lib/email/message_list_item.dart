@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:models/email/mailbox.dart';
 import 'package:models/email/message.dart';
 
 import '../user/alphatar.dart';
@@ -50,7 +51,7 @@ class MessageListItem extends StatelessWidget {
   /// Show timestamp if message is expanded
   Widget _buildMessageTitle() {
     final Widget titleText = new Text(
-      message.sender,
+      message.sender.displayText,
       softWrap: false,
       overflow: TextOverflow.ellipsis,
       style: new TextStyle(
@@ -123,8 +124,13 @@ class MessageListItem extends StatelessWidget {
 
     if (isExpanded) {
       // Create list of both CCed and direct recipients of email
-      List<String> allRecipientList =
-          new List<String>.from(message.recipientList)..addAll(message.ccList);
+      List<String> allRecipientList = <String>[];
+      message.recipientList.forEach((Mailbox m) {
+        allRecipientList.add(m.displayText);
+      });
+      message.ccList.forEach((Mailbox m) {
+        allRecipientList.add(m.displayText);
+      });
       subtitleText = 'to ${allRecipientList.join(', ')}';
     } else {
       subtitleText = message.generateSnippet();
@@ -151,7 +157,7 @@ class MessageListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final Widget avatar = new Alphatar.withUrl(
       avatarUrl: message.senderProfileUrl,
-      letter: message.sender.substring(0, 1),
+      letter: message.sender.displayText[0],
     );
 
     final Widget messageTitle = _buildMessageTitle();
