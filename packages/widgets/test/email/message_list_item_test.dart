@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:models/email/mailbox.dart';
 import 'package:models/email/message.dart';
 import 'package:widgets/email/message_content.dart';
 import 'package:widgets/email/message_list_item.dart';
@@ -15,8 +16,16 @@ void main() {
       'Test to see if tapping the header for a MessageListItem will call the'
       'appropiate callback with given Message', (WidgetTester tester) async {
     Message message = new Message(
-      sender: 'Coco Yang',
-      recipientList: <String>['David Yang'],
+      sender: new Mailbox(
+        address: 'cocoyang@cu.te',
+        displayName: 'Coco Yang',
+      ),
+      recipientList: <Mailbox>[
+        new Mailbox(
+          address: 'david@ya.ng',
+          displayName: 'David Yang',
+        )
+      ],
       senderProfileUrl: profileUrl,
       subject: 'Feed Me!!!',
       text: "Woof Woof. I'm so hungry. You need to feed me!",
@@ -51,8 +60,16 @@ void main() {
       'Test to see if the MessageContent is not shown if a MessageListItem'
       'is not expanded', (WidgetTester tester) async {
     Message message = new Message(
-      sender: 'Coco Yang',
-      recipientList: <String>['David Yang'],
+      sender: new Mailbox(
+        address: 'cocoyang@cu.te',
+        displayName: 'Coco Yang',
+      ),
+      recipientList: <Mailbox>[
+        new Mailbox(
+          address: 'david@ya.ng',
+          displayName: 'David Yang',
+        )
+      ],
       senderProfileUrl: profileUrl,
       subject: 'Feed Me!!!',
       text: "Woof Woof. I'm so hungry. You need to feed me!",
@@ -80,8 +97,16 @@ void main() {
       'Test to see if the MessageContent is shown if a MessageListItem'
       'is expanded', (WidgetTester tester) async {
     Message message = new Message(
-      sender: 'Coco Yang',
-      recipientList: <String>['David Yang'],
+      sender: new Mailbox(
+        address: 'cocoyang@cu.te',
+        displayName: 'Coco Yang',
+      ),
+      recipientList: <Mailbox>[
+        new Mailbox(
+          address: 'david@ya.ng',
+          displayName: 'David Yang',
+        )
+      ],
       senderProfileUrl: profileUrl,
       subject: 'Feed Me!!!',
       text: "Woof Woof. I'm so hungry. You need to feed me!",
@@ -110,8 +135,16 @@ void main() {
       'will call the appropiate callback with given Message',
       (WidgetTester tester) async {
     Message message = new Message(
-      sender: 'Coco Yang',
-      recipientList: <String>['David Yang'],
+      sender: new Mailbox(
+        address: 'cocoyang@cu.te',
+        displayName: 'Coco Yang',
+      ),
+      recipientList: <Mailbox>[
+        new Mailbox(
+          address: 'david@ya.ng',
+          displayName: 'David Yang',
+        )
+      ],
       senderProfileUrl: profileUrl,
       subject: 'Feed Me!!!',
       text: "Woof Woof. I'm so hungry. You need to feed me!",

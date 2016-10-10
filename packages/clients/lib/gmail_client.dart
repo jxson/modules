@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 
 import 'package:flutter/http.dart' as http;
+import 'package:models/email/mailbox.dart';
 import 'package:models/email/message.dart';
 import 'package:models/email/thread.dart';
 
@@ -83,26 +84,55 @@ class GmailClient extends EmailClient {
     return _createThreadFromJSON(jsonResponse);
   }
 
+  // Right now, this is a very simplistic formatter that only expects emails
+  // addresses in the format of:
+  //    displayname <address>
+  //
+  // TODO(dayang): Trim quotes that wrap display names
+  // https://fuchsia.atlassian.net/browse/SO-48
+  //
+  // TODO(dayang): Handle all cases of RFC email 'mailbox' formats
+  // https://fuchsia.atlassian.net/browse/SO-49
+  static Mailbox _rawAddressToMailbox(String rawString) {
+    RegExp exp = new RegExp(r'(<.*@.*>$)');
+    Match match = exp.firstMatch(rawString);
+    if (match == null) {
+      return new Mailbox(
+        address: rawString,
+      );
+    } else {
+      return new Mailbox(
+        address: rawString.substring(match.start + 1, match.end - 1),
+        displayName: rawString.substring(0, match.start).trim(),
+      );
+    }
+  }
+
   static Message _createMessageFromJSON(dynamic json) {
     String id = json['id'];
 
-    String sender, subject = '';
-    List<String> recipientList = <String>[];
-    List<String> ccList = <String>[];
+    String subject = '';
+    Mailbox sender;
+    List<Mailbox> recipientList = <Mailbox>[];
+    List<Mailbox> ccList = <Mailbox>[];
 
     dynamic headers = json['payload']['headers'];
     for (dynamic header in headers) {
       switch (header['name'].toString().toLowerCase()) {
         case 'from':
-          sender = header['value'].toString();
+          sender = _rawAddressToMailbox(header['value'].toString());
           break;
 
         case 'to':
-          recipientList = header['value'].toString().split(', ');
+          header['value'].toString().split(', ').forEach((String rawAddress) {
+            recipientList.add(_rawAddressToMailbox(rawAddress));
+          });
           break;
 
         case 'cc':
-          ccList = header['value'].toString().split(', ');
+          header['value'].toString().split(', ').forEach((String rawAddress) {
+            ccList.add(_rawAddressToMailbox(rawAddress));
+          });
           break;
 
         case 'subject':

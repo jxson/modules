@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:quiver/core.dart' as quiver;
 import 'package:util/time_util.dart';
 
+import 'mailbox.dart';
+
 /// Represents a single Gmail Message
 /// https://developers.google.com/gmail/api/v1/reference/users/messages
 class Message {
@@ -16,14 +18,14 @@ class Message {
   /// Unique Identifier for given email message
   String id;
 
-  /// List of recipients email message was sent to
-  List<String> recipientList;
+  /// List of recipient mailboxes
+  List<Mailbox> recipientList;
 
-  /// List of users who are CCed in email message
-  List<String> ccList;
+  /// List of mailboxes that are CCed in email message
+  List<Mailbox> ccList;
 
-  /// Email address of sender
-  String sender;
+  /// Mailbox of sender
+  Mailbox sender;
 
   /// URL pointing to Avatar of sender
   String senderProfileUrl;
@@ -45,8 +47,8 @@ class Message {
     this.id,
     this.sender,
     this.senderProfileUrl,
-    this.recipientList: const <String>[],
-    this.ccList: const <String>[],
+    this.recipientList: const <Mailbox>[],
+    this.ccList: const <Mailbox>[],
     this.subject,
     this.text,
     this.timestamp,
@@ -84,8 +86,8 @@ class Message {
       o.id == id &&
       o.sender == sender &&
       o.senderProfileUrl == senderProfileUrl &&
-      const ListEquality<String>().equals(o.recipientList, recipientList) &&
-      const ListEquality<String>().equals(o.ccList, ccList) &&
+      const ListEquality<Mailbox>().equals(o.recipientList, recipientList) &&
+      const ListEquality<Mailbox>().equals(o.ccList, ccList) &&
       o.subject == subject &&
       o.text == text &&
       o.timestamp == timestamp &&
