@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:models/email/message.dart';
-import 'package:widgets/email/editor_action_bar_header.dart';
+import 'package:models/email.dart';
+import 'package:widgets/email.dart';
 
 /// This screen displays an Google Inbox style email editor.
 class EmailEditorScreen extends StatefulWidget {

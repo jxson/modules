@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:models/email/message.dart';
+import 'package:models/email.dart';
 
 /// Renders the content of a [Message]
 // TODO(dayang) Render rich text

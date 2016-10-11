@@ -5,12 +5,8 @@
 import 'package:clients/email_client.dart';
 import 'package:clients/gmail_client.dart';
 import 'package:flutter/material.dart';
-import 'package:models/email/message.dart';
-import 'package:models/email/mock_thread.dart';
-import 'package:models/email/thread.dart';
-import 'package:widgets/email/message_action_bar_footer.dart';
-import 'package:widgets/email/thread_action_bar_header.dart';
-import 'package:widgets/email/thread_view.dart';
+import 'package:models/email.dart';
+import 'package:widgets/email.dart';
 
 /// This screen displays an a single email thread.
 class EmailThreadScreen extends StatefulWidget {

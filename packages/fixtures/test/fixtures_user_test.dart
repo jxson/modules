@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:fixtures/fixtures.dart';
-import 'package:models/user/user.dart';
+import 'package:models/user.dart';
 import 'package:test/test.dart';
 
 void main() {

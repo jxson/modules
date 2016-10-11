@@ -5,11 +5,8 @@
 import 'package:clients/email_client.dart';
 import 'package:clients/gmail_client.dart';
 import 'package:flutter/material.dart';
-import 'package:models/email/mock_thread.dart';
-import 'package:models/email/thread.dart';
-import 'package:widgets/email/thread_list_item.dart';
-import 'package:widgets/email/thread_list_item_single_line.dart';
-import 'package:widgets/email/type_defs.dart';
+import 'package:models/email.dart';
+import 'package:widgets/email.dart';
 
 /// This screen displays an inbox.
 class EmailInboxScreen extends StatefulWidget {

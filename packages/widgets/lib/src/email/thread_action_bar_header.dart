@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:models/email/thread.dart';
+import 'package:models/email.dart';
 
 import 'type_defs.dart';
 

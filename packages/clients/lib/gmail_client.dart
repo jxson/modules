@@ -6,9 +6,7 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 
 import 'package:flutter/http.dart' as http;
-import 'package:models/email/mailbox.dart';
-import 'package:models/email/message.dart';
-import 'package:models/email/thread.dart';
+import 'package:models/email.dart';
 
 import 'email_client.dart';
 

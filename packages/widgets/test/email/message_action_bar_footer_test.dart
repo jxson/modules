@@ -4,9 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:models/email/mailbox.dart';
-import 'package:models/email/message.dart';
-import 'package:widgets/email/message_action_bar_footer.dart';
+import 'package:models/email.dart';
+import 'package:widgets/email.dart';
 
 void main() {
   String profileUrl =

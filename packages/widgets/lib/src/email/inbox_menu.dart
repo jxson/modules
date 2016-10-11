@@ -4,9 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:models/email/folder.dart';
-import 'package:models/email/folder_group.dart';
-import 'package:models/user/user.dart';
+import 'package:models/email.dart';
+import 'package:models/user.dart';
 
 import '../user/alphatar.dart';
 import 'folder_list_item.dart';
