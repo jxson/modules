@@ -84,9 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         : null;
 
-    return new Scaffold(
-      appBar: new AppBar(title: new Text('Login')),
-      body: new Container(
+    return new Container(
         alignment: FractionalOffset.center,
         child: new Column(
           children: <Widget>[
@@ -106,8 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   void _promptAuthUri(String authUri) {

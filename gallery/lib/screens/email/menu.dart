@@ -18,7 +18,6 @@ class EmailMenuScreen extends StatefulWidget {
 }
 
 class _EmailMenuScreenState extends State<EmailMenuScreen> {
-  final GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
   List<FolderGroup> _folderGroups;
   Folder _selectFolder;
   User _user;
@@ -101,18 +100,12 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      key: _key,
-      appBar: new AppBar(
-        title: new Text('Email - Menu'),
-      ),
-      body: new Center(
-        child: new InboxMenu(
-          folderGroups: _folderGroups,
-          onSelectFolder: _handleSelectFolder,
-          selectedFolder: _selectFolder,
-          user: _user,
-        ),
+    return new Center(
+      child: new InboxMenu(
+        folderGroups: _folderGroups,
+        onSelectFolder: _handleSelectFolder,
+        selectedFolder: _selectFolder,
+        user: _user,
       ),
     );
   }

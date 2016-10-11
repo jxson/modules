@@ -16,28 +16,20 @@ class EmailEditorScreen extends StatefulWidget {
 }
 
 class _EmailEditorScreenState extends State<EmailEditorScreen> {
-  final GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     Message message = new Message(text: 'New Message');
-    return new Scaffold(
-      key: _key,
-      appBar: new AppBar(
-        title: new Text('Email - Editor'),
-      ),
-      body: new Center(
-        child: new Column(
-          children: <Widget>[
-            new EditorActionBarHeader(
-              message: message,
-              enableSend: true,
-              onSend: _onPerformMessageAction,
-              onClose: _onPerformMessageAction,
-              onAttach: _onPerformMessageAction,
-            ),
-          ],
-        ),
+    return new Center(
+      child: new Column(
+        children: <Widget>[
+          new EditorActionBarHeader(
+            message: message,
+            enableSend: true,
+            onSend: _onPerformMessageAction,
+            onClose: _onPerformMessageAction,
+            onAttach: _onPerformMessageAction,
+          ),
+        ],
       ),
     );
   }

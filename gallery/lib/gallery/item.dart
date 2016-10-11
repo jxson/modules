@@ -10,7 +10,8 @@ import 'package:meta/meta.dart';
 import 'groups.dart';
 
 /// Used to build the widgets that hold the UI for [GalleryItem] instances.
-typedef Widget GalleryPageBuilder(BuildContext context);
+typedef Widget GalleryPageBuilder(
+    BuildContext context, GalleryItem galleryItem);
 
 /// A [Widget] for gallery list items.
 ///

@@ -13,7 +13,8 @@ import 'screens/email/thread.dart';
 final Map<String, WidgetBuilder> kRoutes =
     new Map<String, WidgetBuilder>.fromIterable(kGalleryCollection,
         key: (GalleryItem item) => item.href,
-        value: (GalleryItem item) => item.builder);
+        value: (GalleryItem item) =>
+            (BuildContext context) => item.builder(context, item));
 
 /// Custom route handling code for passing arguments to sub-screens.
 Route<Null> handleRoute(RouteSettings settings) {
@@ -25,7 +26,8 @@ Route<Null> handleRoute(RouteSettings settings) {
     return new MaterialPageRoute<Null>(
       settings: settings,
       builder: (BuildContext context) {
-        return new EmailInboxScreen(accessToken: accessToken);
+        return galleryScaffoldedScreen(
+            'Inbox', new EmailInboxScreen(accessToken: accessToken));
       },
     );
   } else if (settings.name.startsWith('/email/thread/')) {
@@ -34,9 +36,12 @@ Route<Null> handleRoute(RouteSettings settings) {
     return new MaterialPageRoute<Null>(
       settings: settings,
       builder: (BuildContext context) {
-        return new EmailThreadScreen(
-          accessToken: accessToken,
-          threadId: threadId,
+        return galleryScaffoldedScreen(
+          'Thread',
+          new EmailThreadScreen(
+            accessToken: accessToken,
+            threadId: threadId,
+          ),
         );
       },
     );

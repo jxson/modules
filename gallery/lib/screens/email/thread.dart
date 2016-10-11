@@ -29,8 +29,6 @@ class EmailThreadScreen extends StatefulWidget {
 }
 
 class _EmailThreadScreenState extends State<EmailThreadScreen> {
-  final GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
-
   bool _inProgress = false;
   String _errorMessage;
 
@@ -80,14 +78,8 @@ class _EmailThreadScreenState extends State<EmailThreadScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      key: _key,
-      appBar: new AppBar(
-        title: new Text('Email - Thread'),
-      ),
-      body: new Center(
-        child: _buildBody(context),
-      ),
+    return new Center(
+      child: _buildBody(context),
     );
   }
 
@@ -118,11 +110,15 @@ class _EmailThreadScreenState extends State<EmailThreadScreen> {
       header: new ThreadActionBarHeader(
         thread: _thread,
         onArchive: _handleThreadAction,
-        onClose: _handleThreadAction,
+        onClose: _onClose,
         onMoreActions: _handleThreadAction,
         onDelete: _handleThreadAction,
       ),
     );
+  }
+
+  void _onClose(Thread thread) {
+    Navigator.pop(context);
   }
 
   void _handleSelectMessage(Message message) {
