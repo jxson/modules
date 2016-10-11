@@ -2,9 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:models/email/mailbox.dart';
-import 'package:models/email/message.dart';
-import 'package:models/email/thread.dart';
+import 'package:models/email.dart';
 import 'package:test/test.dart';
 
 void main() {

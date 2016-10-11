@@ -7,9 +7,7 @@ import 'dart:async';
 import 'package:clients/gmail_client.dart';
 import 'package:flutter/http.dart' as http;
 import 'package:mockito/mockito_no_mirrors.dart';
-import 'package:models/email/mailbox.dart';
-import 'package:models/email/message.dart';
-import 'package:models/email/thread.dart';
+import 'package:models/email.dart';
 import 'package:test/test.dart';
 
 class _MockHttpClient extends Mock implements http.Client {}

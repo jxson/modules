@@ -6,8 +6,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:models/email/message.dart';
-import 'package:models/email/thread.dart';
+import 'package:models/email.dart';
 
 /// [ThreadParticipantList] is a [StatelessWidget]
 ///

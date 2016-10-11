@@ -4,10 +4,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:models/email/folder.dart';
-import 'package:models/email/folder_group.dart';
-import 'package:models/user/user.dart';
-import 'package:widgets/email/inbox_menu.dart';
+import 'package:models/email.dart';
+import 'package:models/user.dart';
+import 'package:widgets/email.dart';
 
 void main() {
   testWidgets(

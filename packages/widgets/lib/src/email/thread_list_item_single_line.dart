@@ -4,8 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:models/email/message.dart';
-import 'package:models/email/thread.dart';
+import 'package:models/email.dart';
 
 import '../user/alphatar.dart';
 import 'archive_dismissable_background.dart';

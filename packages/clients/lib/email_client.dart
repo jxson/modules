@@ -4,7 +4,7 @@
 
 import 'dart:async';
 
-import 'package:models/email/thread.dart';
+import 'package:models/email.dart';
 
 /// Defines the APIs for an email service.
 abstract class EmailClient {
