@@ -53,7 +53,7 @@ Future<Null> main(List<String> args) async {
 
     CompilationUnit cu = parseCompilationUnit(src.getText(0));
     error = await processDoubleQuotes(cmd, dartFile, src, cu) || error;
-    error = await processImportDirectives(cmd, dartFile, src, cu) || error;
+    error = await processDirectives(cmd, dartFile, src, cu) || error;
   });
 
   exitCode = error ? 1 : 0;
@@ -148,30 +148,30 @@ class _DoubleQuoteVisitor extends GeneralizingAstVisitor<bool> {
   }
 }
 
-/// Check or fix the import statement ordering issues.
-Future<bool> processImportDirectives(
+/// Check or fix the ordering of import and export directives.
+Future<bool> processDirectives(
   Command cmd,
   File file,
   SourceFile src,
   CompilationUnit cu,
 ) async {
-  _ImportDirectiveVisitor visitor = new _ImportDirectiveVisitor(src);
+  _DirectiveVisitor visitor = new _DirectiveVisitor(src);
   cu.accept(visitor);
 
-  List<ImportDirective> imports = visitor.importDirectives;
-  if (imports.isEmpty) {
+  List<UriBasedDirective> directives = visitor.directives;
+  if (directives.isEmpty) {
     return false;
   }
 
-  imports
-      .sort((ImportDirective i1, ImportDirective i2) => i1.offset - i2.offset);
+  directives.sort(
+      (UriBasedDirective i1, UriBasedDirective i2) => i1.offset - i2.offset);
 
   // Start, end indices of the entire import block.
-  int startIndex = imports.first.offset;
-  int endIndex = imports.last.end;
+  int startIndex = directives.first.offset;
+  int endIndex = directives.last.end;
 
   String actual = src.getText(startIndex, endIndex);
-  String expected = _getOrderedImportDirectives(imports);
+  String expected = _getOrderedDirectives(directives);
 
   if (actual == expected) {
     return false;
@@ -179,19 +179,19 @@ Future<bool> processImportDirectives(
 
   switch (cmd) {
     case Command.check:
-      reportImportDirectives(src, startIndex, endIndex, actual, expected);
+      reportDirectives(src, startIndex, endIndex, actual, expected);
       return true;
 
     case Command.fix:
-      await fixImportDirectives(file, src, startIndex, endIndex, expected);
+      await fixDirectives(file, src, startIndex, endIndex, expected);
       break;
   }
 
   return false;
 }
 
-/// Report import ordering issues.
-void reportImportDirectives(
+/// Report import / export ordering issues.
+void reportDirectives(
   SourceFile src,
   int startIndex,
   int endIndex,
@@ -209,7 +209,7 @@ void reportImportDirectives(
 }
 
 /// Fix the import ordering issues.
-Future<Null> fixImportDirectives(
+Future<Null> fixDirectives(
   File file,
   SourceFile src,
   int startIndex,
@@ -226,23 +226,38 @@ Future<Null> fixImportDirectives(
   await file.writeAsString(code);
 }
 
-String _getOrderedImportDirectives(List<ImportDirective> imports) {
-  Set<ImportDirective> importSet = imports.toSet();
+typedef bool _ConditionFn(UriBasedDirective directive);
 
-  List<String> prefixes = <String>['dart:', 'package:', ''];
-  return prefixes
-      .map((String prefix) {
-        // Get the group of import directives with the prefix, and sort them by
-        // their uri.
-        List<ImportDirective> group = importSet
-            .where((ImportDirective i) => i.uri.stringValue.startsWith(prefix))
-            .toList()
-              ..sort((ImportDirective i1, ImportDirective i2) =>
-                  i1.uri.stringValue.compareTo(i2.uri.stringValue));
+class _Condition<T extends UriBasedDirective> {
+  final String prefix;
+  _Condition(this.prefix);
 
-        // Remove this group from the set, so that import directives are not
-        // duplicated.
-        importSet.removeAll(group);
+  bool func(UriBasedDirective directive) {
+    return directive is T && directive.uri.stringValue.startsWith(prefix);
+  }
+}
+
+String _getOrderedDirectives(List<UriBasedDirective> directives) {
+  Set<UriBasedDirective> directiveSet = directives.toSet();
+
+  List<_ConditionFn> conditions = <_ConditionFn>[
+    new _Condition<ImportDirective>('dart:').func,
+    new _Condition<ImportDirective>('package:').func,
+    new _Condition<ImportDirective>('').func,
+    new _Condition<ExportDirective>('src/').func,
+    new _Condition<ExportDirective>('').func,
+  ];
+
+  return conditions
+      .map((_ConditionFn condition) {
+        // Get the group of directives with the given condition prefix, and sort
+        // them by their uri.
+        List<UriBasedDirective> group = directiveSet.where(condition).toList()
+          ..sort((UriBasedDirective i1, UriBasedDirective i2) =>
+              i1.uri.stringValue.compareTo(i2.uri.stringValue));
+
+        // Remove this group from the set to avoid any duplicates.
+        directiveSet.removeAll(group);
 
         // Join the import directives with a newline character.
         return group.join('\n');
@@ -253,15 +268,25 @@ String _getOrderedImportDirectives(List<ImportDirective> imports) {
       .join('\n\n');
 }
 
-class _ImportDirectiveVisitor extends GeneralizingAstVisitor<bool> {
-  _ImportDirectiveVisitor(this.src);
+class _DirectiveVisitor extends GeneralizingAstVisitor<bool> {
+  _DirectiveVisitor(this.src);
 
   final SourceFile src;
-  final List<ImportDirective> importDirectives = <ImportDirective>[];
+  final List<UriBasedDirective> directives = <UriBasedDirective>[];
 
   @override
   bool visitImportDirective(ImportDirective node) {
-    importDirectives.add(node);
+    super.visitImportDirective(node);
+
+    directives.add(node);
+    return true;
+  }
+
+  @override
+  bool visitExportDirective(ExportDirective node) {
+    super.visitExportDirective(node);
+
+    directives.add(node);
     return true;
   }
 }
