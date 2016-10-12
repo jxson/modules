@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'attachment.dart';
 import 'mailbox.dart';
 import 'message.dart';
 import 'thread.dart';
@@ -39,6 +40,14 @@ class MockThread extends Thread {
             text: 'Woof Woof. I\'m so hungry. You need to feed me!',
             timestamp: new DateTime.now(),
             isRead: true,
+            attachments: <Attachment>[
+              new Attachment(
+                  type: AttachmentType.youtube, content: 'Y8gSKjX-Lig'),
+              new Attachment(
+                  type: AttachmentType.youtube, content: 'XGFQOZ_owtc'),
+              new Attachment(
+                  type: AttachmentType.doc, content: 'Fuchsias are Magenta'),
+            ],
           ),
           new Message(
             id: 'm2',

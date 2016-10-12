@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:quiver/core.dart' as quiver;
 import 'package:util/time_util.dart';
 
+import 'attachment.dart';
 import 'mailbox.dart';
 
 /// Represents a single Gmail Message
@@ -42,6 +43,9 @@ class Message {
   /// True if Email Message has been read
   bool isRead;
 
+  /// Attachments that are associated with given Message
+  List<Attachment> attachments;
+
   /// Constructor
   Message({
     this.id,
@@ -53,6 +57,7 @@ class Message {
     this.text,
     this.timestamp,
     this.isRead,
+    this.attachments: const <Attachment>[],
   });
 
   // TODO(dayang) Generate text snippet preview of conversation. Need to remove

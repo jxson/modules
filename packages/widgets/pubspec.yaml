@@ -5,6 +5,8 @@ dependencies:
     sdk: flutter
   models:
     path: ../models
+  module_toolkit:
+    path: ../module_toolkit
 dev_dependencies:
   test: any
   flutter_test:

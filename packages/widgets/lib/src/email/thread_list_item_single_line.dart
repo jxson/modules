@@ -128,6 +128,9 @@ class ThreadListItemSingleLine extends StatelessWidget {
       ),
     );
 
+    // TODO(dayang): Add 'slots' for attachments
+    // https://fuchsia.atlassian.net/browse/SO-26
+
     //Wrap list item in Dissmissable if onArchive callback is given
     if (onArchive != null) {
       return new Dismissable(

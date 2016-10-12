@@ -5,9 +5,13 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/email.dart';
+import 'package:module_toolkit/embeddable_surface.dart';
+import 'package:module_toolkit/module_capability.dart';
+import 'package:module_toolkit/module_data.dart';
 
 import '../user/alphatar.dart';
 import 'archive_dismissable_background.dart';
+import 'fallback_attachment_preview.dart';
 import 'thread_participant_list.dart';
 import 'type_defs.dart';
 
@@ -111,15 +115,65 @@ class ThreadListItem extends StatelessWidget {
       ],
     );
 
-    final Widget listItem = new Material(
-      color: Colors.white,
-      child: new ListItem(
+    final List<Widget> children = <Widget>[
+      new ListItem(
         enabled: true,
         onTap: _handleSelect,
         isThreeLine: true,
         leading: avatar,
         title: threadTitle,
         subtitle: threadSubtitle,
+      ),
+    ];
+
+    // Add Surfaces for attachment previews
+    if (thread.attachments.isNotEmpty) {
+      List<Widget> attachmentSurfaces = <Widget>[];
+      thread.attachments.forEach((Attachment attachment) {
+        attachmentSurfaces.add(new Container(
+          margin: const EdgeInsets.only(right: 8.0),
+          child: new EmbeddableSurface(
+            boxConstraints: new BoxConstraints(
+              minWidth: 25.0,
+              maxWidth: 100.0,
+              minHeight: 50.0,
+              maxHeight: 50.0,
+            ),
+            data: new ModuleData(
+              type: 'EmailAttachment',
+              payload: attachment,
+            ),
+            capabilities: <ModuleCapability>[
+              ModuleCapability.network,
+              ModuleCapability.click,
+            ],
+            fallbackModule: new FallbackAttachmentPreview(
+              attachment: attachment,
+            ),
+          ),
+        ));
+      });
+      children.add(
+        new Container(
+          height: 66.0,
+          child: new Block(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.only(
+              left: 72.0,
+              right: 16.0,
+              bottom: 16.0,
+            ),
+            children: attachmentSurfaces,
+          ),
+        ),
+      );
+    }
+
+    final Widget listItem = new Material(
+      color: Colors.white,
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
       ),
     );
 

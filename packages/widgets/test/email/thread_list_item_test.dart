@@ -13,9 +13,8 @@ void main() {
   String profileUrl =
       'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
   testWidgets(
-      'Test to see if tapping on a ThreadListItem will call the'
+      'Test to see if tapping on a ThreadListItem will call the '
       'appropiate callback with given Thread', (WidgetTester tester) async {
-    Key threadListItemKey = new UniqueKey();
     Thread thread = new Thread(
       id: '1',
       messages: <Message>[
@@ -45,7 +44,6 @@ void main() {
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
         child: new ThreadListItem(
-          key: threadListItemKey,
           thread: thread,
           onSelect: (Thread t) {
             expect(t, thread);
@@ -56,7 +54,7 @@ void main() {
     }));
 
     expect(taps, 0);
-    await tester.tap(find.byKey(threadListItemKey));
+    await tester.tap(find.byType(ListItem));
     expect(taps, 1);
   });
 

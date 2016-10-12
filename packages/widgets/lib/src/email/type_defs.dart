@@ -6,11 +6,14 @@ import 'package:models/email.dart';
 
 /// Common Type Definitions
 
-/// Callback function signature for an action on a message
+/// Callback function signature for an action on an [Attachment]
+typedef void AttachmentActionCallback(Attachment attachment);
+
+/// Callback function signature for an action on a [Message]
 typedef void MessageActionCallback(Message message);
 
-/// Callback function signature for an action on a thread
+/// Callback function signature for an action on a [Thread]
 typedef void ThreadActionCallback(Thread thread);
 
-/// Callback function signature for an action on a folder
+/// Callback function signature for an action on a [Folder]
 typedef void FolderActionCallback(Folder folder);
