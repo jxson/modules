@@ -11,6 +11,7 @@ import '../src/config.dart';
 import 'groups.dart';
 import 'item.dart';
 
+/// Wraps a gallery item in scaffolding, which includes app bar with title
 StatefulWidget galleryScaffoldedScreen(String title, StatefulWidget content) {
   return new Scaffold(
     appBar: new AppBar(
@@ -74,7 +75,7 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
           String clientSecret = kConfig.get('client_secret');
 
           return galleryScaffoldedScreen(
-              "Login",
+              'Login',
               new LoginScreen(
                 clientId: clientId,
                 clientSecret: clientSecret,
