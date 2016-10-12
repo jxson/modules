@@ -85,26 +85,26 @@ class _LoginScreenState extends State<LoginScreen> {
         : null;
 
     return new Container(
-        alignment: FractionalOffset.center,
-        child: new Column(
-          children: <Widget>[
-            progress,
-            new Flexible(
-              child: new Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new Text(_prompt),
-                  new SizedBox(height: 10.0),
-                  new RaisedButton(
-                    onPressed: onLoginButtonPressed,
-                    child: new Text('Login'),
-                  ),
-                ],
-              ),
+      alignment: FractionalOffset.center,
+      child: new Column(
+        children: <Widget>[
+          progress,
+          new Flexible(
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new Text(_prompt),
+                new SizedBox(height: 10.0),
+                new RaisedButton(
+                  onPressed: onLoginButtonPressed,
+                  child: new Text('Login'),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 
   void _promptAuthUri(String authUri) {
