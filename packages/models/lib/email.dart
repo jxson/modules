@@ -8,3 +8,4 @@ export 'src/email/mailbox.dart';
 export 'src/email/message.dart';
 export 'src/email/mock_thread.dart';
 export 'src/email/thread.dart';
+export 'src/email/attachment.dart';

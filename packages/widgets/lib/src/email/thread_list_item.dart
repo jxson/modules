@@ -5,9 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/email.dart';
-import 'package:module_toolkit/embeddable_surface.dart';
-import 'package:module_toolkit/module_capability.dart';
-import 'package:module_toolkit/module_data.dart';
+import 'package:resolver/resolver.dart';
 
 import '../user/alphatar.dart';
 import 'archive_dismissable_background.dart';
@@ -126,33 +124,35 @@ class ThreadListItem extends StatelessWidget {
       ),
     ];
 
-    // Add Surfaces for attachment previews
-    if (thread.attachments.isNotEmpty) {
-      List<Widget> attachmentSurfaces = <Widget>[];
-      thread.attachments.forEach((Attachment attachment) {
-        attachmentSurfaces.add(new Container(
-          margin: const EdgeInsets.only(right: 8.0),
-          child: new EmbeddableSurface(
-            boxConstraints: new BoxConstraints(
-              minWidth: 25.0,
-              maxWidth: 100.0,
-              minHeight: 50.0,
-              maxHeight: 50.0,
-            ),
-            data: new ModuleData(
-              type: 'EmailAttachment',
-              payload: attachment,
-            ),
-            capabilities: <ModuleCapability>[
-              ModuleCapability.network,
-              ModuleCapability.click,
-            ],
-            fallbackModule: new FallbackAttachmentPreview(
-              attachment: attachment,
-            ),
-          ),
-        ));
-      });
+    BoxConstraints constraints = new BoxConstraints(
+      minWidth: 25.0,
+      maxWidth: 100.0,
+      minHeight: 50.0,
+      maxHeight: 50.0,
+    );
+    List<ResolverCapability> capabilities = <ResolverCapability>[
+      ResolverCapability.gestures,
+    ];
+    List<Widget> attachments = <Widget>[];
+    thread.attachments.forEach((Attachment attachment) {
+      Map<Symbol, dynamic> arguments = new Map<Symbol, dynamic>();
+      arguments[const Symbol("attachment")] = attachment;
+
+      attachments.add(new Container(
+        margin: const EdgeInsets.only(right: 8.0),
+        child: new Resolver.resolve(
+          constraints: constraints,
+          capabilities: capabilities,
+          name: 'examples:youtube',
+          arguments: arguments,
+          fallback: new FallbackAttachmentPreview(
+            attachment: attachment,
+          )
+        )
+      ));
+    });
+
+    if (attachments.isNotEmpty) {
       children.add(
         new Container(
           height: 66.0,
@@ -163,11 +163,9 @@ class ThreadListItem extends StatelessWidget {
               right: 16.0,
               bottom: 16.0,
             ),
-            children: attachmentSurfaces,
-          ),
-        ),
-      );
-    }
+            children: attachments,
+          )));
+      }
 
     final Widget listItem = new Material(
       color: Colors.white,

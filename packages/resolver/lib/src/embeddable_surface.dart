@@ -10,6 +10,8 @@ import 'module_capability.dart';
 import 'module_data.dart';
 import 'module_resolver.dart';
 
+// Maybe: just surface.
+
 /// Represents a embeddable surface that allows a 'parent' module to compose a
 /// 'child' module with specific requirements
 class EmbeddableSurface extends StatefulWidget {
@@ -66,6 +68,8 @@ class _EmbeddableSurfaceState extends State<EmbeddableSurface> {
     });
   }
 
+  // getter for ._size
+
   /// Figure out the final size of the surface container
   ///
   /// If no module is resolved, then set the surface container at the largest
@@ -91,6 +95,8 @@ class _EmbeddableSurfaceState extends State<EmbeddableSurface> {
       );
     }
   }
+
+  // getter for ._child
 
   /// Get the child widget which represents the embedded module.
   /// If no module could be resolved, return the fallbackModule.

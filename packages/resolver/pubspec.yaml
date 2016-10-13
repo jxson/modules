@@ -1,5 +1,5 @@
-name:  module_toolkit
-description: Stuff to help think of widgets as mock modules
+name:  resolver
+description: Find widgets to embed given a specific set of constraints.
 dependencies:
   models:
     path: ../models

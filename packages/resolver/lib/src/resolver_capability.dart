@@ -9,16 +9,14 @@
 /// these 'system calls' to be made.
 ///
 /// This is designed to reflect Fuchsia/Magenta's capability based model
-enum ModuleCapability {
-  /// Child module can have network access
-  network,
-
+enum ResolverCapability {
   /// Child module can do audio playback
   audio,
 
   /// Child module can do video playback
   video,
 
+  // QUESTION: can we leverage gesture definitions?
   /// Child module can have touch/tap/click events
-  click,
+  gestures,
 }
