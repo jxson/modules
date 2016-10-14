@@ -7,4 +7,4 @@ dependencies:
   util:
     path: ../util
 dev_dependencies:
-  test: any
+  test: 0.12.15+4

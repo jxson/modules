@@ -4,8 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:models/email/attachment.dart';
-import 'package:widgets/email/fallback_attachment_preview.dart';
+import 'package:models/email.dart';
+import 'package:widgets/email.dart';
 
 void main() {
   testWidgets(

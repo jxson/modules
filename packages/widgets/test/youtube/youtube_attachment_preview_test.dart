@@ -4,8 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:models/email/attachment.dart';
-import 'package:widgets/youtube/youtube_attachment_preview.dart';
+import 'package:models/email.dart';
+import 'package:widgets/attachment.dart';
 
 void main() {
   testWidgets(
@@ -19,6 +19,9 @@ void main() {
     );
 
     int taps = 0;
+
+    // Map<Symbol, dynamic> arguments = new Map<Symbol, dynamic>();
+    // arguments[const Symbol("attachment")] = attachment;
 
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {

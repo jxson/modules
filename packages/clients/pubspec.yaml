@@ -10,5 +10,5 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: any
+  test: 0.12.15+4
   mockito: ^1.0.1

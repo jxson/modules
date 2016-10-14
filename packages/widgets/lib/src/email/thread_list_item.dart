@@ -130,9 +130,6 @@ class ThreadListItem extends StatelessWidget {
       minHeight: 50.0,
       maxHeight: 50.0,
     );
-    List<ResolverCapability> capabilities = <ResolverCapability>[
-      ResolverCapability.gestures,
-    ];
     List<Widget> attachments = <Widget>[];
     thread.attachments.forEach((Attachment attachment) {
       Map<Symbol, dynamic> arguments = new Map<Symbol, dynamic>();
@@ -140,10 +137,9 @@ class ThreadListItem extends StatelessWidget {
 
       attachments.add(new Container(
         margin: const EdgeInsets.only(right: 8.0),
-        child: new Resolver.resolve(
+        child: new Resolver.surface(
           constraints: constraints,
-          capabilities: capabilities,
-          name: 'examples:youtube',
+          name: 'examples:attachements:youtube-preview',
           arguments: arguments,
           fallback: new FallbackAttachmentPreview(
             attachment: attachment,
