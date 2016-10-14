@@ -2,4 +2,4 @@ _book
 node_modules
 third_party
 coverage
-
+*.mojom.*

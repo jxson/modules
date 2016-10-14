@@ -1,0 +1,3 @@
+name: services
+description: FX services based on mojom interfaces.
+dependencies:

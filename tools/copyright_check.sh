@@ -16,10 +16,10 @@ YEAR=2016
 # Determine the file type.
 FILETYPE=$(basename ${1##*.})
 case "${FILETYPE}" in
-	dart|js)
+	dart|js|mojom)
 		COMMENT_PREFIX="// "
 		;;
-	sh)
+	gn|sh)
 		COMMENT_PREFIX="# "
 		;;
 	*)
