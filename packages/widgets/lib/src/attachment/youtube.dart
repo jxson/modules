@@ -8,6 +8,18 @@ import 'package:models/email.dart';
 
 import 'preview.dart';
 
+class YoutubeAttachment extends StatelessWidget {
+  /// Email [Attachment]
+  Attachment attachment;
+
+  YoutubeAttachment({
+    Key key,
+    @required this.id,
+    @required this.attachment,
+    @required this.onSelect
+  }) : super(key: key);
+}
+
 class YoutubeAttachmentPreview extends StatelessWidget {
   /// Email [Attachment]
   Attachment attachment;

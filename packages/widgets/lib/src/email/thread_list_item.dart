@@ -16,7 +16,7 @@ import 'type_defs.dart';
 /// [ThreadListItem] is a [StatelessWidget]
 ///
 /// An item that represents a single thread in inbox view
-class ThreadListItem extends StatelessWidget {
+class ThreadListItem extends StatefulWidget {
   /// The [Thread] that this List Item should render
   final Thread thread;
 
@@ -42,20 +42,62 @@ class ThreadListItem extends StatelessWidget {
     assert(thread != null);
   }
 
+  @override
+  ThreadListItemState createState() => new ThreadListItemState();
+}
+
+class ThreadListItemState extends State<ThreadListItem> {
+  Map<String, Resolver> resolvers;
+
+  @override
+  void initState() {
+    super.initState();
+
+    resolvers = new Map<String, Resolver>.fromIterable(config.thread.attachments,
+      key: (Attachment attachment) => attachment.id,
+      value: (Attachment attachment) {
+        Resolver resolver = new Resolver(
+          attachment: attachment,
+          name: 'examples:attachments:youtube',
+        )
+
+        // onError: (Error err) => _handleResolverError(err, attachment)
+        // resolver.find().then(() {
+        //   setState(() {
+        //
+        //   })
+        // });
+
+        resolver.load();
+
+        return resolver;
+      },
+    );
+  }
+
+  void _handleResolverError(Error err, Attachment attachment) {
+    print(
+      'Resolver error: $err'
+      '     Caused by: $attachment'
+    );
+  }
+
   void _handleSelect() {
-    if (onSelect != null) {
-      onSelect(thread);
+    if (config.onSelect != null) {
+      config.onSelect(config.thread);
     }
   }
 
   void _handleDismissed(DismissDirection direction) {
-    onArchive(thread);
+    if (config.onArchive != null) {
+      config.onArchive(config.thread);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO(dayang) Save font styles in theme and retrieve from theme
-    final Message lastMessage = thread.messages.last;
+    final Message lastMessage = config.thread.messages.last;
 
     final Widget avatar = new Container(
       child: new Alphatar.withUrl(
@@ -69,7 +111,7 @@ class ThreadListItem extends StatelessWidget {
         new Flexible(
           flex: 1,
           child: new Text(
-            thread.getSubject(),
+            config.thread.getSubject(),
             softWrap: false,
             overflow: TextOverflow.ellipsis,
             style: new TextStyle(
@@ -99,7 +141,7 @@ class ThreadListItem extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new ThreadParticipantList(thread: thread),
+        new ThreadParticipantList(thread: config.thread),
         new Text(
           lastMessage.generateSnippet(),
           softWrap: false,
@@ -131,20 +173,20 @@ class ThreadListItem extends StatelessWidget {
       maxHeight: 50.0,
     );
     List<Widget> attachments = <Widget>[];
-    thread.attachments.forEach((Attachment attachment) {
-      Map<Symbol, dynamic> arguments = new Map<Symbol, dynamic>();
-      arguments[const Symbol("attachment")] = attachment;
+    config.thread.attachments.forEach((Attachment attachment) {
+      Resolver resolver = resolvers[attachment.id];
+      Widget child;
+
+      if (resolver.status == ResolverStatus.NOT_FOUND) {
+        child = new FallbackAttachmentPreview(attachment: attachment);
+      } else {
+        WidgetBuilder builder = resolver.surface(constraints: constraints);
+        child = builder(context);
+      }
 
       attachments.add(new Container(
         margin: const EdgeInsets.only(right: 8.0),
-        child: new Resolver.surface(
-          constraints: constraints,
-          name: 'examples:attachements:youtube-preview',
-          arguments: arguments,
-          fallback: new FallbackAttachmentPreview(
-            attachment: attachment,
-          )
-        )
+        child: child,
       ));
     });
 
@@ -172,9 +214,9 @@ class ThreadListItem extends StatelessWidget {
     );
 
     //Wrap list item in Dissmissable if onArchive callback is given
-    if (onArchive != null) {
+    if (config.onArchive != null) {
       return new Dismissable(
-        key: new Key('${key.toString()}-dismissable'),
+        key: new Key('${config.key.toString()}-dismissable'),
         direction: DismissDirection.horizontal,
         onDismissed: _handleDismissed,
         child: listItem,
