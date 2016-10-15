@@ -1,5 +1,7 @@
 name: util
 description: Utilities
 dependencies:
+  flutter:
+    sdk: flutter
 dev_dependencies:
   test: any
