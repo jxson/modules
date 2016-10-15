@@ -43,6 +43,7 @@ class LoginScreen extends StatefulWidget {
       {Key key,
       @required this.clientId,
       @required this.clientSecret,
+      this.refreshToken,
       this.onLoginSuccess})
       : super(key: key) {
     assert(clientId != null);
@@ -55,6 +56,9 @@ class LoginScreen extends StatefulWidget {
   /// Client Secret value required for OAuth.
   final String clientSecret;
 
+  /// Refresh token to be used.
+  final Future<String> refreshToken;
+
   /// Reference to the [OnLoginSuccess] callback function.
   final OnLoginSuccess onLoginSuccess;
 
@@ -66,9 +70,55 @@ class _LoginScreenState extends State<LoginScreen> {
   static const String baseAuthUri =
       'https://accounts.google.com/o/oauth2/v2/auth';
 
-  bool _loggingIn = false;
-  bool _loginEnabled = true;
-  String _prompt = '';
+  bool _loggingIn;
+  bool _loginEnabled;
+  String _prompt;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (config.refreshToken == null) {
+      _enableLoginUI();
+      return;
+    }
+
+    _loggingIn = true;
+    _loginEnabled = false;
+
+    // If the refresh token is provided, use that token to obtain the auth
+    // credentials.
+    // TODO(youngseokyoon): make it possible to skip the login screen at all.
+    config.refreshToken.then((String refreshToken) {
+      if (!mounted) {
+        return;
+      }
+
+      if (refreshToken != null) {
+        // If the refresh token is provided, try to obtain the access token
+        // using the refresh token.
+        _obtainAuthCredentialsWithRefreshToken(refreshToken)
+            .then((AuthCredentials credentials) {
+          if (!mounted) {
+            return;
+          }
+
+          setState(() {
+            _loggingIn = false;
+            _loginEnabled = false;
+            _prompt = 'Successfully logged in!';
+          });
+          config.onLoginSuccess(credentials);
+        }).catchError((Exception e) {
+          // If the process was not successful, fall back to the normal login.
+          _enableLoginUI();
+        });
+      } else {
+        // If the refresh token is not available, just enable the login feature.
+        _enableLoginUI();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +165,18 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     Clipboard.setClipboardData(new ClipboardData.init(authUri));
+  }
+
+  void _enableLoginUI() {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _loggingIn = false;
+      _loginEnabled = true;
+      _prompt = '';
+    });
   }
 
   Future<Null> _login(
@@ -207,7 +269,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
         await request.response.close();
 
-        return await _obtainAuthCredentials(authCode, redirectionUri);
+        return await _obtainAuthCredentialsWithAuthCode(
+            authCode, redirectionUri);
       } catch (e) {
         request.response.statusCode = 500;
         await request.response.close().catchError((_) {});
@@ -218,8 +281,34 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<AuthCredentials> _obtainAuthCredentialsWithAuthCode(
+    String authCode,
+    String redirectionUri,
+  ) async {
+    Map<String, String> additionalParams = <String, String>{
+      'code': authCode,
+      'redirect_uri': redirectionUri,
+      'grant_type': 'authorization_code',
+    };
+
+    return await _obtainAuthCredentials(additionalParams, null);
+  }
+
+  Future<AuthCredentials> _obtainAuthCredentialsWithRefreshToken(
+    String refreshToken,
+  ) async {
+    Map<String, String> additionalParams = <String, String>{
+      'refresh_token': refreshToken,
+      'grant_type': 'refresh_token',
+    };
+
+    return await _obtainAuthCredentials(additionalParams, refreshToken);
+  }
+
   Future<AuthCredentials> _obtainAuthCredentials(
-      String authCode, String redirectionUri) async {
+    Map<String, String> additionalParams,
+    String refreshToken,
+  ) async {
     Uri tokenUri = new Uri(
       scheme: 'https',
       host: 'www.googleapis.com',
@@ -227,20 +316,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     Map<String, String> body = <String, String>{
-      'code': authCode,
       'client_id': config.clientId,
       'client_secret': config.clientSecret,
-      'redirect_uri': redirectionUri,
-      'grant_type': 'authorization_code',
-    };
+    }..addAll(additionalParams);
 
     http.Response response = await http.post(tokenUri, body: body);
+    if (response.statusCode != 200) {
+      throw new Exception('Failed to obtain the auth credentials.');
+    }
 
     dynamic jsonResponse = JSON.decode(response.body);
     return new AuthCredentials(
       accessToken: jsonResponse['access_token'],
       idToken: jsonResponse['id_token'],
-      refreshToken: jsonResponse['refresh_token'],
+      refreshToken: refreshToken ?? jsonResponse['refresh_token'],
       expiresIn: jsonResponse['expires_in'],
       tokenType: jsonResponse['token_type'],
     );
