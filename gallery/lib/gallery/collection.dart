@@ -13,7 +13,7 @@ import 'groups.dart';
 import 'item.dart';
 
 /// Wraps a gallery item in scaffolding, which includes app bar with title
-StatefulWidget galleryScaffoldedScreen(String title, StatefulWidget content) {
+StatefulWidget galleryScaffoldedScreen(String title, Widget content) {
   return new Scaffold(
     appBar: new AppBar(
       title: new Text(title),
@@ -94,4 +94,12 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
           return new ErrorScreen(e.toString());
         }
       }),
+  new GalleryItem(
+    title: 'Contact - Details',
+    subtitle: 'Contact Details',
+    group: GalleryGroups.screen,
+    href: '/contact/details',
+    builder: (BuildContext context, GalleryItem item) =>
+        galleryScaffoldedScreen(item.title, new ContactDetailsScreen()),
+  ),
 ];

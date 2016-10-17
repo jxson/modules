@@ -28,13 +28,67 @@ class Contact {
   /// Social Networks associated with contact
   List<SocialNetworkEntry> socialNetworks;
 
+  /// URL for background image
+  String backgroundImageUrl;
+
   /// Constructor
   Contact(
       {@required this.user,
-      this.addresses,
-      this.emails,
-      this.phoneNumbers,
-      this.socialNetworks}) {
+      this.addresses: const <AddressEntry>[],
+      this.emails: const <EmailEntry>[],
+      this.phoneNumbers: const <PhoneEntry>[],
+      this.socialNetworks: const <SocialNetworkEntry>[],
+      this.backgroundImageUrl}) {
     assert(this.user != null);
+    this.addresses ??= <AddressEntry>[];
+    this.emails ??= <EmailEntry>[];
+    this.phoneNumbers ??= <PhoneEntry>[];
+    this.socialNetworks ??= <SocialNetworkEntry>[];
+  }
+
+  /// The primary address is the first address in the list of addresses
+  /// Returns null if there is no address for contact
+  AddressEntry get primaryAddress {
+    if (addresses.isEmpty) {
+      return null;
+    } else {
+      return addresses[0];
+    }
+  }
+
+  /// The primary email is the first entry in the list of emails
+  /// Returns null if there is no email for contact
+  EmailEntry get primaryEmail {
+    if (emails.isEmpty) {
+      return null;
+    } else {
+      return emails[0];
+    }
+  }
+
+  /// The primary phone number is the first entry in the list of phone numbers
+  /// Returns null if there is no phone number for contact
+  PhoneEntry get primaryPhoneNumber {
+    if (phoneNumbers.isEmpty) {
+      return null;
+    } else {
+      return phoneNumbers[0];
+    }
+  }
+
+  /// Gets the region preview (city, region) for a given contact
+  /// Uses the primary address to generate the preview
+  /// Returns null if there is no primary address of if there is no city or
+  /// region for the primary address.
+  String get regionPreview {
+    if (primaryAddress == null ||
+        (primaryAddress.city == null && primaryAddress.region == null)) {
+      return null;
+    }
+    if (primaryAddress.city != null && primaryAddress.region != null) {
+      return '${primaryAddress.city}, ${primaryAddress.region}';
+    } else {
+      return primaryAddress.city ?? primaryAddress.region;
+    }
   }
 }
