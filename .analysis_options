@@ -1,5 +1,12 @@
+# The .analysis_options file at the repository root is the source of truth, and
+# the other .analysis_options files under dart packages directories are mere
+# copies of it.
+#
+# The copy happens when you run "make" from the command line.
 analyzer:
   strong-mode: true
+  exclude:
+    - '**.mojom.dart'
 linter:
   rules:
     - always_declare_return_types

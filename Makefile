@@ -28,6 +28,7 @@ FLUTTER_TEST_FLAGS ?=
 
 DART_PACKAGES = $(shell find . -name "pubspec.yaml" ! -wholename "./$(DEPS_DIR)/*" -exec dirname {} \;)
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*" ! -name "*.mojom.dart")
+DART_ANALYSIS_OPTIONS = $(addsuffix /.analysis_options, $(DART_PACKAGES))
 JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
 SH_FILES = $(shell find ./tools -name "*.sh")
 GN_FILES = $(shell find . -name "*.gn" ! -wholename "./$(DEPS_DIR)/*")
@@ -144,6 +145,11 @@ doc:
 	@cd $* && flutter packages get
 	@touch $*
 
+# Each dart package needs the .analysis_options file so that the IDE can run the
+# live analysis with the correct options.
+$(DART_ANALYSIS_OPTIONS): $(DIRNAME)/.analysis_options
+	cp $< $@
+
 # Copy the example config file, if the config file does not exist.
 EXAMPLE_CONFIG_FILE = gallery/lib/src/config.example.dart
 TARGET_CONFIG_FILE = gallery/lib/src/config.dart
@@ -152,7 +158,7 @@ $(TARGET_CONFIG_FILE):
 	cp $(EXAMPLE_CONFIG_FILE) $(TARGET_CONFIG_FILE)
 
 .PHONY: dart-base
-dart-base: $(addsuffix /.packages, $(DART_PACKAGES)) $(TARGET_CONFIG_FILE) mojom-gen
+dart-base: $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS) $(TARGET_CONFIG_FILE) mojom-gen
 	@true
 
 .PHONY: dart-clean
@@ -217,14 +223,24 @@ dart-fmt-extras-check:
 		echo; \
 	fi
 
+# When running dartanalyzer, we need to specify individual dart files instead of
+# passing the entire project directory, because the dartanalyzer CLI does not
+# respect the "excludes" option.
+# See: https://github.com/dart-lang/sdk/issues/26212
 .PHONY: dart-lint
 dart-lint: dart-base
 	@for pkg in $(DART_PACKAGES); do \
 		echo "** Running the dartanalyzer in '$${pkg}' ..."; \
 		pushd $${pkg} > /dev/null; \
-		dartanalyzer --lints --fatal-lints --fatal-warnings \
-			--options $(DIRNAME)/.analysis_options . || exit 1; \
+		files=$$(find . -name "*.dart" ! -wholename "*.mojom.dart"); \
+		if [ "$${files}" ]; then \
+			dartanalyzer --lints --fatal-lints --fatal-warnings \
+				$$files || exit 1; \
+		else \
+			echo "No dart source files found to analyze."; \
+		fi; \
 		popd > /dev/null; \
+		echo; \
 	done
 
 .PHONY: dart-test

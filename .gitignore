@@ -3,3 +3,4 @@ node_modules
 third_party
 coverage
 *.mojom.*
+**/.analysis_options
