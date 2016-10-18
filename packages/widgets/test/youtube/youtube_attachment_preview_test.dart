@@ -15,7 +15,7 @@ void main() {
     Attachment attachment = new Attachment(
       id: '1',
       content: '9DNFzHTUAM4',
-      type: AttachmentType.youtube,
+      mime: '',
     );
 
     int taps = 0;
@@ -28,9 +28,7 @@ void main() {
       return new Material(
         child: new YoutubeAttachmentPreview(
           key: attachmentKey,
-          attachment: attachment,
-          onSelect: (Attachment a) {
-            expect(a, attachment);
+          onSelect: () {
             taps++;
           },
         ),

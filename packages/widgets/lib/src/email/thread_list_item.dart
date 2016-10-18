@@ -57,9 +57,8 @@ class ThreadListItemState extends State<ThreadListItem> {
       key: (Attachment attachment) => attachment.id,
       value: (Attachment attachment) {
         Resolver resolver = new Resolver(
-          attachment: attachment,
-          name: 'examples:attachments:youtube',
-        )
+          attachment: attachment
+        );
 
         // onError: (Error err) => _handleResolverError(err, attachment)
         // resolver.find().then(() {
@@ -68,7 +67,11 @@ class ThreadListItemState extends State<ThreadListItem> {
         //   })
         // });
 
-        resolver.load();
+        resolver.load().then(() {
+          setState(() {
+
+          })
+        });
 
         return resolver;
       },
@@ -174,15 +177,19 @@ class ThreadListItemState extends State<ThreadListItem> {
     );
     List<Widget> attachments = <Widget>[];
     config.thread.attachments.forEach((Attachment attachment) {
-      Resolver resolver = resolvers[attachment.id];
-      Widget child;
+      // Maybe encapsulate this whole thing in a builder/closure?
 
-      if (resolver.status == ResolverStatus.NOT_FOUND) {
-        child = new FallbackAttachmentPreview(attachment: attachment);
-      } else {
-        WidgetBuilder builder = resolver.surface(constraints: constraints);
-        child = builder(context);
-      }
+      Resolver resolver = resolvers[attachment.id];
+      // Widget child = resolver.surface(constraints: constraints)
+
+
+
+      // if (resolver.status == ResolverStatus.NOT_FOUND) {
+      //   child = new FallbackAttachmentPreview(attachment: attachment);
+      // } else {
+      //   WidgetBuilder builder = resolver.surface(constraints: constraints);
+      //   child = builder(context);
+      // }
 
       attachments.add(new Container(
         margin: const EdgeInsets.only(right: 8.0),

@@ -8,41 +8,46 @@ import 'package:models/email.dart';
 
 import 'preview.dart';
 
+typedef AttachmentSelected(Attachment attachment);
+typedef YoutubeAttachmentPreviewSelected();
+
 class YoutubeAttachment extends StatelessWidget {
   /// Email [Attachment]
   Attachment attachment;
+  /// Callback if attachment preview is selected
+  AttachmentPreviewSelected onSelect;
 
   YoutubeAttachment({
     Key key,
-    @required this.id,
     @required this.attachment,
     @required this.onSelect
   }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return new YoutubeAttachmentPreview(id: 'foo', onSelect: _handleSelect);
+  }
+
+  void _handleSelect() {
+    onSelect(attachment);
+  }
 }
 
 class YoutubeAttachmentPreview extends StatelessWidget {
-  /// Email [Attachment]
-  Attachment attachment;
-
   String id;
 
   /// Callback if attachment preview is selected
-  AttachmentPreviewSelected onSelect;
+  YoutubeAttachmentPreviewSelected onSelect;
 
   /// Creates a [YoutubeAttachmentPreview] for a given email attachment
   YoutubeAttachmentPreview({
     Key key,
     @required this.id,
-    @required this.attachment,
     @required this.onSelect
   }) : super(key: key);
 
   static render({ Key key, String id }) {
     return new YoutubeAttachmentPreview(key: key, id: id);
-  }
-
-  void _handleSelect() {
-    onSelect(attachment);
   }
 
   /// Retrieves Youtube thumbnail from the video ID
@@ -55,7 +60,7 @@ class YoutubeAttachmentPreview extends StatelessWidget {
     return new Material(
       color: Colors.white,
       child: new InkWell(
-        onTap: _handleSelect,
+        onTap: onSelect,
         child: new Container(
           child: new Image.network(
             thumbnail,

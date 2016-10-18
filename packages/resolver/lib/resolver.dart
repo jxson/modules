@@ -13,6 +13,9 @@ import 'src/resolver_capability.dart';
 
 export 'src/resolver_capability.dart';
 
+const int _kMinMSDelay = 20;
+const int _kMaxMSDelay = 3 * 1000;
+
 typedef void HandleResolverError(Error error);
 
 enum ResolverStatus {
@@ -26,28 +29,42 @@ class Module {
   String name;
   String mime;
   List<ResolverCapability> capabilities;
-  Function render;
+  WidgetBuilder builder;
 
-  Module({ this.name, this.mime, this.capabilities, this.render });
+  Module({
+    this.name,
+    this.mime,
+    this.capabilities,
+    this.builder,
+  });
 }
 
-final Set<Module> kModules = new Set<Module>;
+final Map<String, Module> _kModules = <String, Module>{
+  'examples:attachement:youtube': new Module(
+    name: 'examples:attachement:youtube',
+    mime: 'application/x.fx.attachment.youtube',
+    capabilities: <ResolverCapability>[
+      ResolverCapability.gestures,
+    ],
+    builder: (BuildContext context) {
 
-kModules.add(new Module(
-  name: 'examples:attachement:youtube',
-  capabilities: const <ResolverCapability>[
-    ResolverCapability.gestures,
-  ],
+    }
+  ),
+  'examples:attachement:pdf': new Module(
+    name: 'examples:attachement:pdf',
+    mime: 'application/pdf',
+    capabilities: <ResolverCapability>[
+      ResolverCapability.gestures,
+    ],
+    builder: (BuildContext context) {
+
+    }
+  ),
   // render: YoutubeAttachment.render,
-);
+};
 
 class Resolver {
-  final Set<Module> _modules = new Set<Module>();
-
   static final Random _rng = new Random();
-  static final int _minDelay = 20;
-  static final int _maxDelay = 3 * 1000;
-
 
   String name;
   // I am not sure that capabilities are useful here since they can't be reinforced. This requirment needs to be tracked through...
@@ -64,9 +81,7 @@ class Resolver {
   });
 
   WidgetBuilder surface({
-    // List<ResolverCapability> capabilities,
     BoxConstraints constraints,
-    // Widget fallback,
   }) {
     return (BuildContext context) {
       return new Surface(constraints: constraints);
@@ -74,39 +89,39 @@ class Resolver {
   }
 
    Future<Null> load() async {
-     int milliseconds = _rng.nextInt(_maxDelay).clamp(_minDelay, _maxDelay);
+     int milliseconds = _rng.nextInt(_kMaxMSDelay).clamp(_kMinMSDelay, _kMaxMSDelay);
      Duration duration = new Duration(milliseconds: milliseconds);
 
      return new Future.delayed(duration, () {
        module = find();
+       if (module == null) {
+         status = ResolverStatus.NOT_FOUND;
+       }
      });
    }
 
    Module find() {
-    return kModules.firstWhere((Module module) {
-      // TODO: If there is no name provided use the capabilities or mime to
-      // fallback on.
-      return module.name == name;
-    }, orElse: () {
-      status = ResolverStatus.NOT_FOUND;
-    });
+    if (_kModules.containsKey(name)) {
+      return _kModules[name];
+    }
 
+    return _kModules.values.reduce((Module previous, Module current) {
+      if (previous == null) {
+        return current;
+      }
+
+      // An example of a finder based on mimes for attachements.
+      // The same could be done with constraints, etc.
+      if (attachment != null && current.mime == attachment.mime) {
+        return current;
+      }
+    });
    }
 }
 
-/// Resolves modules based on the given Module Data, Module Capabilities and
-/// layout BoxConstraints
-///
-/// For now the the ModuleResolver has the simple logic of selectin the
-/// YoutubeAttachmentPreview if the data is an email attachment, and the
-/// attachment itself is a Youtube video.
-///
-/// TODO (dayang): Add some examples of how the resolver might choose between
-/// different modules.
 class Surface extends StatefulWidget {
-  // final Set<Module> modules = new Set<Module>();
-
   BoxConstraints constraints;
+  Resolver resolver;
 
   Surface({
     Key key,
@@ -129,6 +144,8 @@ class _SurfaceState extends State<Surface> {
       config.constraints.maxWidth,
       config.constraints.maxHeight,
     );
+
+    resolver = config.resolver;
   }
 
   @override
@@ -152,7 +169,6 @@ class _SurfaceState extends State<Surface> {
         // Error here, it's impossible to know what to do in this case.
         break;
     }
-
 
     return new Container(
       width: size.width,

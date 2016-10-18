@@ -15,7 +15,7 @@ void main() {
     Attachment attachment = new Attachment(
       id: '1',
       content: 'WhatTheFuchsia?',
-      type: AttachmentType.doc,
+      mime: '',
     );
 
     int taps = 0;

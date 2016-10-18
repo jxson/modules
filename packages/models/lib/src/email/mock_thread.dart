@@ -42,11 +42,11 @@ class MockThread extends Thread {
             isRead: true,
             attachments: <Attachment>[
               new Attachment(
-                  type: AttachmentType.youtube, content: 'Y8gSKjX-Lig'),
+                  mime: '', content: 'Y8gSKjX-Lig'),
               new Attachment(
-                  type: AttachmentType.youtube, content: 'XGFQOZ_owtc'),
+                  mime: '', content: 'XGFQOZ_owtc'),
               new Attachment(
-                  type: AttachmentType.doc, content: 'Fuchsias are Magenta'),
+                  mime: '', content: 'Fuchsias are Magenta'),
             ],
           ),
           new Message(

@@ -2,22 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// Enum Types for Attachment
-/// These current attachments are more for UI prototyping purposes and might
-/// not reflect the final types.
-// TODO(dayang): Update to reflect real MIME types found in email
-// https://fuchsia.atlassian.net/browse/SO-25
-enum AttachmentType {
-  /// Image
-  image,
-
-  /// A document, ex. Google Docs
-  doc,
-
-  /// A youtube video URL
-  youtube,
-}
-
 /// Data model that represents a email attachment.
 /// The current implementation is based on UI requirements and not reflective
 /// of actual email MIME types.
@@ -32,13 +16,14 @@ class Attachment {
   /// https://developers.google.com/gmail/api/v1/reference/users/messages/attachments#resource
   String id;
 
-  /// Type of [Attachment]
-  AttachmentType type;
+  /// Mime type of [Attachment]
+  String mime;
 
   /// Constructor
   Attachment({
+    /// This will need to be an async pipe to access data
     this.content,
     this.id,
-    this.type,
+    this.mime,
   });
 }
