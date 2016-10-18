@@ -9,14 +9,14 @@ You must use the `jiri` CLI to clone a local git repository for CL submissions. 
     curl -s https://raw.githubusercontent.com/fuchsia-mirror/jiri/master/scripts/bootstrap_jiri | bash -s "${FUCHSIA_WORKSPACE}"
 
     # Add `jiri` scripts to your $PATH.
-    export PATH="${FUCHSIA_WORKSPACE}/.jiri_root/scripts:$PATH"
+    export PATH="${FUCHSIA_WORKSPACE}/.jiri_root/bin:$PATH"
 
 **OPTIONAL:** If you don't want to re-export between terminal sessions, add the following to your `~/.bashrc`:
 
     # Add fuchsia's jiri tools to $PATH if they are installed.
     export FUCHSIA_WORKSPACE="${HOME}/fuchsia"
     if [ -d "${FUCHSIA_WORKSPACE}/.jiri_root" ]; then
-      export PATH="${FUCHSIA_WORKSPACE}/.jiri_root/scripts:$PATH"
+      export PATH="${FUCHSIA_WORKSPACE}/.jiri_root/bin:$PATH"
     fi
 
 Once you have a working fucshia workspace you can add the `experience` manifest and clone/update with `jiri update`:
