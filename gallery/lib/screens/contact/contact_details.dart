@@ -14,34 +14,40 @@ class ContactDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new ContactDetails(
-      contact: new Contact(
-        user: new User(
-          name: 'Coco Yang',
-          email: 'coco@cu.te',
-          familyName: 'Yang',
-          givenName: 'Coco',
-          picture:
-              'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
+    Contact contact = new Contact(
+      user: new User(
+        name: 'Coco Yang',
+        email: 'coco@cu.te',
+        familyName: 'Yang',
+        givenName: 'Coco',
+        picture:
+            'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
+      ),
+      addresses: <AddressEntry>[
+        new AddressEntry(
+          city: 'Mountain View',
+          region: 'CA',
+        )
+      ],
+      emails: <EmailEntry>[
+        new EmailEntry(
+          label: 'Work',
+          value: 'coco@cu.te',
         ),
-        addresses: <AddressEntry>[
-          new AddressEntry(
-            city: 'Mountain View',
-            region: 'CA',
-          )
-        ],
-        emails: <EmailEntry>[
-          new EmailEntry(
-            label: 'Work',
-            value: 'coco@cu.te',
-          ),
-        ],
-        phoneNumbers: <PhoneEntry>[
-          new PhoneEntry(
-            label: 'Work',
-            number: '13371337',
-          ),
-        ],
+      ],
+      phoneNumbers: <PhoneEntry>[
+        new PhoneEntry(
+          label: 'Work',
+          number: '13371337',
+        ),
+      ],
+    );
+    // Apply the ContactTheme to the ContactDetails Widget
+    return new Theme(
+      data: contactTheme,
+      isMaterialAppTheme: false,
+      child: new ContactDetails(
+        contact: contact,
       ),
     );
   }

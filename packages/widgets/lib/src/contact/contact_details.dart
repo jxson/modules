@@ -58,7 +58,7 @@ class ContactDetails extends StatelessWidget {
   }
 
   /// Build background image
-  Widget _buildBackgroundImage() {
+  Widget _buildBackgroundImage(ThemeData theme) {
     return new Container(
       height: _kHeaderHeight,
       decoration: new BoxDecoration(
@@ -67,12 +67,8 @@ class ContactDetails extends StatelessWidget {
               ? new NetworkImage(contact.backgroundImageUrl)
               : new NetworkImage(_kDefaultBackgroundImage),
           fit: ImageFit.cover,
-          //TODO(dayang): Leverage ThemeData so that the color theme will
-          // change the highlights for UI elements and also change the color
-          // filter on the background.
-          // https://fuchsia.atlassian.net/browse/SO-43
           colorFilter: new ColorFilter.mode(
-            Colors.orange[300].withAlpha(30),
+            theme.primaryColor.withAlpha(30),
             TransferMode.color,
           ),
         ),
@@ -86,6 +82,7 @@ class ContactDetails extends StatelessWidget {
     VoidCallback onPressed,
     bool disabled,
     String label,
+    ThemeData theme,
   }) {
     return new Container(
       margin: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -99,7 +96,7 @@ class ContactDetails extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: new IconButton(
                 size: 32.0,
-                color: Colors.orange[700],
+                color: theme.buttonColor,
                 icon: new Icon(icon),
                 onPressed: disabled ? null : onPressed,
               ),
@@ -121,7 +118,7 @@ class ContactDetails extends StatelessWidget {
   }
 
   /// Quick Action Buttons (Call, Message, Email)
-  Widget _buildQuickActionButtonRow() {
+  Widget _buildQuickActionButtonRow(ThemeData theme) {
     return new Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: new Row(
@@ -132,18 +129,21 @@ class ContactDetails extends StatelessWidget {
             onPressed: () => _handleCallPhone(contact.primaryPhoneNumber),
             disabled: contact.primaryPhoneNumber == null,
             label: 'Call',
+            theme: theme,
           ),
           _buildQuickActionButton(
             icon: Icons.message,
             onPressed: () => _handleTextPhone(contact.primaryPhoneNumber),
             disabled: contact.primaryPhoneNumber == null,
             label: 'Message',
+            theme: theme,
           ),
           _buildQuickActionButton(
             icon: Icons.email,
             onPressed: () => _handleSendEmail(contact.primaryEmail),
             disabled: contact.primaryEmail == null,
             label: 'Email',
+            theme: theme,
           ),
         ],
       ),
@@ -189,12 +189,13 @@ class ContactDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return new CustomMultiChildLayout(
       delegate: new _ContactLayoutDelegate(),
       children: <Widget>[
         new LayoutId(
           id: _ContactLayoutDelegate.headerBackgroundId,
-          child: _buildBackgroundImage(),
+          child: _buildBackgroundImage(theme),
         ),
         new LayoutId(
           id: _ContactLayoutDelegate.contentId,
@@ -206,7 +207,7 @@ class ContactDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 _buildNameHeader(),
-                _buildQuickActionButtonRow(),
+                _buildQuickActionButtonRow(theme),
               ],
             ),
           ),
@@ -216,7 +217,7 @@ class ContactDetails extends StatelessWidget {
           child: new Container(
             padding: const EdgeInsets.all(1.0),
             decoration: new BoxDecoration(
-              backgroundColor: Colors.orange[700],
+              backgroundColor: theme.primaryColor,
               shape: BoxShape.circle,
             ),
             child: new Alphatar.withUrl(
