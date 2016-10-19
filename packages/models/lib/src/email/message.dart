@@ -9,6 +9,9 @@ import 'package:util/time_util.dart';
 
 import 'mailbox.dart';
 
+const ListEquality<Mailbox> _mailboxListEquality =
+    const ListEquality<Mailbox>(const DefaultEquality<Mailbox>());
+
 /// Represents a single Gmail Message
 /// https://developers.google.com/gmail/api/v1/reference/users/messages
 class Message {
@@ -86,8 +89,8 @@ class Message {
       o.id == id &&
       o.sender == sender &&
       o.senderProfileUrl == senderProfileUrl &&
-      const ListEquality<Mailbox>().equals(o.recipientList, recipientList) &&
-      const ListEquality<Mailbox>().equals(o.ccList, ccList) &&
+      _mailboxListEquality.equals(o.recipientList, recipientList) &&
+      _mailboxListEquality.equals(o.ccList, ccList) &&
       o.subject == subject &&
       o.text == text &&
       o.timestamp == timestamp &&
