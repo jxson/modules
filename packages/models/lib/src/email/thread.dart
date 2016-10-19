@@ -7,6 +7,9 @@ import 'package:quiver/core.dart' as quiver;
 
 import 'message.dart';
 
+const ListEquality<Message> _messageListEquality =
+    const ListEquality<Message>(const DefaultEquality<Message>());
+
 /// Represents a single Gmail Thread
 /// https://developers.google.com/gmail/api/v1/reference/users/threads#resource
 class Thread {
@@ -51,7 +54,7 @@ class Thread {
       o.id == id &&
       o.snippet == snippet &&
       o.historyId == historyId &&
-      const ListEquality<Message>().equals(o.messages, messages);
+      _messageListEquality.equals(o.messages, messages);
 
   @override
   int get hashCode => quiver.hashObjects(<dynamic>[
