@@ -76,7 +76,6 @@ copyright-check:
 	@echo "** Checking the copyright headers ..."
 	@export COPYRIGHT_ERROR=false; \
 	for sf in $(ALL_SOURCE_FILES); do \
-		echo $${sf}; \
 		if ! $$(tools/copyright_check.sh $${sf}); then \
 			export COPYRIGHT_ERROR=true; \
 			echo "Invalid copyright header: '$${sf}'"; \
@@ -222,22 +221,18 @@ dart-fmt-extras-check:
 		echo; \
 	fi
 
-# When running dartanalyzer, we need to specify individual dart files instead of
-# passing the entire project directory, because the dartanalyzer CLI does not
-# respect the "excludes" option.
+# The "services" package contains mojom-generated dart files that would not pass
+# the strong mode analysis. Skip this package for now.
 # See: https://github.com/dart-lang/sdk/issues/26212
 .PHONY: dart-lint
 dart-lint: dart-base
 	@for pkg in $(DART_PACKAGES); do \
+		if [[ "$${pkg}" = */services ]]; then \
+			continue; \
+		fi; \
 		echo "** Running the dartanalyzer in '$${pkg}' ..."; \
 		pushd $${pkg} > /dev/null; \
-		files=$$(find . -name "*.dart" ! -wholename "*.mojom.dart"); \
-		if [ "$${files}" ]; then \
-			dartanalyzer --lints --fatal-lints --fatal-warnings \
-				$$files || exit 1; \
-		else \
-			echo "No dart source files found to analyze."; \
-		fi; \
+		dartanalyzer --lints --fatal-lints --fatal-warnings . || exit 1; \
 		popd > /dev/null; \
 		echo; \
 	done

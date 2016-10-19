@@ -9,5 +9,7 @@ dependencies:
     path: ../packages/clients
   models:
     path: ../packages/models
+  services:
+    path: ../packages/services
   widgets:
     path: ../packages/widgets

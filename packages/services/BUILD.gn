@@ -6,7 +6,6 @@ import("//mojo/public/tools/bindings/mojom.gni")
 
 mojom("services") {
   sources = [
-    "dummy.mojom",
-    "dummy2.mojom",
+    "secure_store.mojom"
   ]
 }

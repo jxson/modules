@@ -1,4 +1,6 @@
 name: services
 description: FX services based on mojom interfaces.
 dependencies:
-  mojo_sdk: ^0.2.32
+  mojo_sdk: ^0.2.31
+  util:
+    path: ../util
