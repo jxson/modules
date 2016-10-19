@@ -1,0 +1,23 @@
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+module secure_store;
+
+// Simple secure store service interface that is assumed to be scoped to the
+// current user and the module who asked for this service.
+//
+// For now, it only has three methods for getting, setting, and deleting values
+// for a certain key.
+interface SecureStore {
+  // Gets the value for the given key. The returned string can be null, if the
+  // value is not set for the given key.
+  Get(string key) => (string? value);
+
+  // Sets the value for the given key.
+  Put(string key, string value);
+
+  // Removes the key and its associated value from the secure store. When the
+  // key does not exist in the store, then this is a no-op.
+  Remove(string key);
+};
