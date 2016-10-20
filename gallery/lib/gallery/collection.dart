@@ -5,7 +5,7 @@
 import 'package:auth/auth_credentials.dart';
 import 'package:auth/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:services/secure_store.dart';
+import 'package:util/local_storage.dart';
 
 import '../screens/index.dart';
 import '../src/config.dart';
@@ -80,9 +80,9 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
               new LoginScreen(
                 clientId: clientId,
                 clientSecret: clientSecret,
-                refreshToken: secureStore.get('refresh_token'),
+                refreshToken: localStorage.get('refresh_token'),
                 onLoginSuccess: (AuthCredentials cred) {
-                  secureStore.put('refresh_token', cred.refreshToken);
+                  localStorage.put('refresh_token', cred.refreshToken);
                   // Navigate to the EmailInboxScreen with the obtained token.
                   Navigator.popAndPushNamed(
                     context,
