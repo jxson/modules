@@ -19,7 +19,7 @@ case "${FILETYPE}" in
 	dart|js|mojom)
 		COMMENT_PREFIX="// "
 		;;
-	gn|sh)
+	gn|sh|yaml)
 		COMMENT_PREFIX="# "
 		;;
 	*)

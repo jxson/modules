@@ -32,7 +32,8 @@ JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! -wholena
 SH_FILES = $(shell find ./tools -name "*.sh")
 GN_FILES = $(shell find . -name "*.gn" ! -wholename "./$(DEPS_DIR)/*")
 MOJOM_FILES = $(shell find . -name "*.mojom" ! -wholename "./$(DEPS_DIR)/*")
-ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES) $(GN_FILES) $(MOJOM_FILES)
+YAML_FILES = $(shell find . -name "*.yaml" ! -wholename "./$(DEPS_DIR)/*")
+ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES) $(GN_FILES) $(MOJOM_FILES) $(YAML_FILES)
 
 MOJOM_DART_OUTPUTS = $(abspath $(addsuffix .dart,$(addprefix $(GEN_DIR)/modules/,$(MOJOM_FILES))))
 MOJOM_DART_SYMLINKS = $(join $(addsuffix lib/, $(dir $(MOJOM_FILES))), $(addsuffix .mojom.dart, $(basename $(notdir $(MOJOM_FILES)))))
@@ -303,6 +304,7 @@ else
 endif
 	@cd .. && packages/gn/gen.py $(GEN_FLAGS) -m "sysui"
 	@cd .. && buildtools/ninja $(NINJA_FLAGS) -C out/debug-x86-64
+	@touch $@
 
 # Build sysroot if needed.
 $(OUT_DIR)/sysroot: $(MAGENTA_BUILD_DIR)/sysroot
