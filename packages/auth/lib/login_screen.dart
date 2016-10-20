@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _loggingIn;
   bool _loginEnabled;
-  String _prompt;
+  String _prompt = '';
 
   @override
   void initState() {
@@ -164,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     }
 
-    Clipboard.setClipboardData(new ClipboardData.init(authUri));
+    Clipboard.setData(new ClipboardData(text: authUri));
   }
 
   void _enableLoginUI() {
