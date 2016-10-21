@@ -29,13 +29,14 @@ class EditorActionBarHeader extends StatelessWidget {
   bool enableSend;
 
   /// Creates a new [EditorActionBarHeader]
-  EditorActionBarHeader(
-      {Key key,
-      this.enableSend: false,
-      @required this.message,
-      @required this.onAttach,
-      @required this.onClose,
-      @required this.onSend})
+  EditorActionBarHeader({
+    Key key,
+    this.enableSend: false,
+    @required this.message,
+    @required this.onAttach,
+    @required this.onClose,
+    @required this.onSend,
+  })
       : super(key: key) {
     assert(this.message != null);
     assert(this.onAttach != null);

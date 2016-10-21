@@ -16,7 +16,10 @@ class ArchiveDismissableBackground extends StatelessWidget {
   DismissDirection direction;
 
   /// Creates a archive background for a [Dismissable]
-  ArchiveDismissableBackground({Key key, @required this.direction})
+  ArchiveDismissableBackground({
+    Key key,
+    @required this.direction,
+  })
       : super(key: key) {
     assert(direction != null);
   }

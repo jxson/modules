@@ -28,12 +28,13 @@ class InboxMenu extends StatelessWidget {
   User user;
 
   /// Creates new [InboxMenu]
-  InboxMenu(
-      {Key key,
-      @required this.folderGroups,
-      @required this.user,
-      this.onSelectFolder,
-      this.selectedFolder})
+  InboxMenu({
+    Key key,
+    @required this.folderGroups,
+    @required this.user,
+    this.onSelectFolder,
+    this.selectedFolder,
+  })
       : super(key: key) {
     assert(folderGroups != null);
     assert(user != null);

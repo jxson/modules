@@ -37,16 +37,17 @@ class ThreadView extends StatelessWidget {
   Widget header;
 
   /// Creates a ThreadView for given [Thread]
-  ThreadView(
-      {Key key,
-      @required this.thread,
-      @required this.onForwardMessage,
-      @required this.onReplyAllMessage,
-      @required this.onReplyMessage,
-      this.footer,
-      this.header,
-      this.onSelectMessage,
-      this.expandedMessageIds})
+  ThreadView({
+    Key key,
+    @required this.thread,
+    @required this.onForwardMessage,
+    @required this.onReplyAllMessage,
+    @required this.onReplyMessage,
+    this.footer,
+    this.header,
+    this.onSelectMessage,
+    this.expandedMessageIds,
+  })
       : super(key: key) {
     assert(thread != null);
     if (expandedMessageIds == null) {

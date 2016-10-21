@@ -24,7 +24,11 @@ class ThreadParticipantList extends StatelessWidget {
   /// Creates a [ThreadParticipantList]
   ///
   /// Requires a [Thread] to render
-  ThreadParticipantList({Key key, @required this.thread}) : super(key: key) {
+  ThreadParticipantList({
+    Key key,
+    @required this.thread,
+  })
+      : super(key: key) {
     assert(thread != null);
   }
 

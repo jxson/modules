@@ -13,7 +13,11 @@ class MessageContent extends StatelessWidget {
   Message message;
 
   /// Creates a new MessageContent widget
-  MessageContent({Key key, @required this.message}) : super(key: key) {
+  MessageContent({
+    Key key,
+    @required this.message,
+  })
+      : super(key: key) {
     assert(message != null);
   }
 

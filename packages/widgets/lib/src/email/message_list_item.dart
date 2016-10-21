@@ -34,14 +34,15 @@ class MessageListItem extends StatelessWidget {
   MessageActionCallback onReply;
 
   /// Creates new MessageListItem
-  MessageListItem(
-      {Key key,
-      @required this.message,
-      @required this.onForward,
-      @required this.onReplyAll,
-      @required this.onReply,
-      this.onHeaderTap,
-      this.isExpanded: false})
+  MessageListItem({
+    Key key,
+    @required this.message,
+    @required this.onForward,
+    @required this.onReplyAll,
+    @required this.onReply,
+    this.onHeaderTap,
+    this.isExpanded: false,
+  })
       : super(key: key) {
     assert(message != null);
   }

@@ -15,7 +15,10 @@ class Mailbox {
   String displayName;
 
   /// Constructor
-  Mailbox({@required this.address, this.displayName}) {
+  Mailbox({
+    @required this.address,
+    this.displayName,
+  }) {
     assert(address != null);
   }
 

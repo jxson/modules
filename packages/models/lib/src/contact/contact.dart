@@ -32,13 +32,14 @@ class Contact {
   String backgroundImageUrl;
 
   /// Constructor
-  Contact(
-      {@required this.user,
-      this.addresses: const <AddressEntry>[],
-      this.emails: const <EmailEntry>[],
-      this.phoneNumbers: const <PhoneEntry>[],
-      this.socialNetworks: const <SocialNetworkEntry>[],
-      this.backgroundImageUrl}) {
+  Contact({
+    @required this.user,
+    this.addresses: const <AddressEntry>[],
+    this.emails: const <EmailEntry>[],
+    this.phoneNumbers: const <PhoneEntry>[],
+    this.socialNetworks: const <SocialNetworkEntry>[],
+    this.backgroundImageUrl,
+  }) {
     assert(this.user != null);
     this.addresses ??= <AddressEntry>[];
     this.emails ??= <EmailEntry>[];
