@@ -31,12 +31,13 @@ class ThreadListItemSingleLine extends StatelessWidget {
   /// Creates a Single Line Thread List Item
   ///
   /// Requires a [Thread] to render
-  ThreadListItemSingleLine(
-      {Key key,
-      @required this.thread,
-      this.onSelect,
-      this.onArchive,
-      this.avatarSize: 40.0})
+  ThreadListItemSingleLine({
+    Key key,
+    @required this.thread,
+    this.onSelect,
+    this.onArchive,
+    this.avatarSize: 40.0,
+  })
       : super(key: key) {
     assert(thread != null);
   }

@@ -30,12 +30,13 @@ class ThreadListItem extends StatelessWidget {
   /// Creates a Thread ListItem
   ///
   /// Requires a [Thread] to render
-  ThreadListItem(
-      {Key key,
-      @required this.thread,
-      this.onSelect,
-      this.onArchive,
-      this.avatarSize: 40.0})
+  ThreadListItem({
+    Key key,
+    @required this.thread,
+    this.onSelect,
+    this.onArchive,
+    this.avatarSize: 40.0,
+  })
       : super(key: key) {
     assert(thread != null);
   }

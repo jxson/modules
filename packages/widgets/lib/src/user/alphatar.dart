@@ -25,7 +25,12 @@ class Alphatar extends StatefulWidget {
   /// Creates a new [Alphatar] with the given [Image].
   ///
   /// Either the avatarImage or the letter must be provided.
-  Alphatar({Key key, this.avatarImage, this.letter, this.size: 40.0})
+  Alphatar({
+    Key key,
+    this.avatarImage,
+    this.letter,
+    this.size: 40.0,
+  })
       : super(key: key) {
     assert(avatarImage != null || letter != null);
   }
@@ -33,8 +38,12 @@ class Alphatar extends StatefulWidget {
   /// Creates a new [Alphatar] with the given URL.
   ///
   /// Either the avatarUrl or the letter must be provided.
-  Alphatar.withUrl(
-      {Key key, @required String avatarUrl, String letter, double size: 40.0})
+  Alphatar.withUrl({
+    Key key,
+    @required String avatarUrl,
+    String letter,
+    double size: 40.0,
+  })
       : this(
           key: key,
           avatarImage: avatarUrl != null

@@ -25,12 +25,13 @@ class MessageActionBarFooter extends StatelessWidget {
   MessageActionCallback onReplyMessage;
 
   /// Constructor to create a [MessageActionBarFooter]
-  MessageActionBarFooter(
-      {Key key,
-      @required this.message,
-      @required this.onForwardMessage,
-      @required this.onReplyAllMessage,
-      @required this.onReplyMessage})
+  MessageActionBarFooter({
+    Key key,
+    @required this.message,
+    @required this.onForwardMessage,
+    @required this.onReplyAllMessage,
+    @required this.onReplyMessage,
+  })
       : super(key: key) {
     assert(message != null);
     assert(onForwardMessage != null);

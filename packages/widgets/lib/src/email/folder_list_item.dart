@@ -43,12 +43,13 @@ class FolderListItem extends StatelessWidget {
   bool selected;
 
   /// Creates new FolderListItem
-  FolderListItem(
-      {Key key,
-      @required this.folder,
-      this.icon,
-      this.onSelect,
-      this.selected: false})
+  FolderListItem({
+    Key key,
+    @required this.folder,
+    this.icon,
+    this.onSelect,
+    this.selected: false,
+  })
       : super(key: key) {
     if (folder.type == 'system') {
       icon ??= _folderIdToIcon[folder.id] ?? Icons.folder;

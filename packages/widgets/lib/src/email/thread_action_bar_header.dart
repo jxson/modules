@@ -29,13 +29,14 @@ class ThreadActionBarHeader extends StatelessWidget {
   /// Creates an action bar header for a [Thread]
   // TODO (dayang) Action callbcks should be optional and corresponding
   // action button should be not shown if a callback is not provided.
-  ThreadActionBarHeader(
-      {Key key,
-      @required this.thread,
-      @required this.onArchive,
-      @required this.onClose,
-      @required this.onDelete,
-      @required this.onMoreActions})
+  ThreadActionBarHeader({
+    Key key,
+    @required this.thread,
+    @required this.onArchive,
+    @required this.onClose,
+    @required this.onDelete,
+    @required this.onMoreActions,
+  })
       : super(key: key) {
     assert(thread != null);
     assert(onArchive != null);
