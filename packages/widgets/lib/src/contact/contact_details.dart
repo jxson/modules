@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import 'package:models/contact.dart';
 
 import '../user/alphatar.dart';
+import 'phone_entry_group.dart';
 import 'type_defs.dart';
 
 const String _kDefaultBackgroundImage =
@@ -33,8 +34,13 @@ class ContactDetails extends StatelessWidget {
   EmailActionCallback onEmail;
 
   /// Constructor
-  ContactDetails(
-      {Key key, @required this.contact, this.onCall, this.onText, this.onEmail})
+  ContactDetails({
+    Key key,
+    @required this.contact,
+    this.onCall,
+    this.onText,
+    this.onEmail,
+  })
       : super(key: key) {
     assert(contact != null);
   }
@@ -187,6 +193,15 @@ class ContactDetails extends StatelessWidget {
     );
   }
 
+  Widget _buildPhoneEntryGroup() {
+    return new Container(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: new PhoneEntryGroup(
+        contact: contact,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -208,6 +223,7 @@ class ContactDetails extends StatelessWidget {
               children: <Widget>[
                 _buildNameHeader(),
                 _buildQuickActionButtonRow(theme),
+                _buildPhoneEntryGroup(),
               ],
             ),
           ),

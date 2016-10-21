@@ -38,7 +38,14 @@ class ContactDetailsScreen extends StatelessWidget {
       phoneNumbers: <PhoneEntry>[
         new PhoneEntry(
           label: 'Work',
-          number: '13371337',
+          number: '1-800-337-1337',
+        ),
+        new PhoneEntry(
+          label: 'Home',
+          number: '1-337-337-0000',
+        ),
+        new PhoneEntry(
+          number: '1-456-337-0000',
         ),
       ],
     );
