@@ -15,7 +15,8 @@ FLUTTER_BIN := $(FLUTTER_DIR)/bin
 DART_BIN := $(FLUTTER_BIN)/cache/dart-sdk/bin
 OUT_DIR := $(abspath $(DIRNAME)/../out)
 GEN_DIR := $(OUT_DIR)/debug-x86-64/gen
-MAGENTA_BUILD_DIR := $(abspath $(DIRNAME)/../magenta/build-magenta-pc-x86-64)
+MAGENTA_DIR := $(abspath $(DIRNAME)/../magenta)
+MAGENTA_BUILD_DIR := $(abspath $(MAGENTA_DIR)/build-magenta-pc-x86-64)
 PATH := $(FLUTTER_BIN):$(DART_BIN):$(PATH)
 
 
@@ -120,6 +121,10 @@ coverage: ## Show coverage for all modules.
 .PHONY: run
 run: dart-base ## Run the gallery flutter app.
 	@cd gallery && flutter run --hot
+
+.PHONY: run-fuchsia
+run-fuchsia: dart-base mojom-gen ## Run magenta in qemu.
+	@cd $(MAGENTA_DIR) && ./scripts/run-magenta-x86-64 -x $(OUT_DIR)/debug-x86-64/user.bootfs -g
 
 # TODO(jxson): Add gitbook as a third-party dependency.
 .PHONY: doc
@@ -302,14 +307,16 @@ ifeq ($(GOMA_INSTALLED), yes)
 else
 	$(warning [WARNING] Goma not installed. Install Goma to get faster distributed builds.)
 endif
-	@cd .. && packages/gn/gen.py $(GEN_FLAGS) -m "sysui"
+	@cd .. && packages/gn/gen.py $(GEN_FLAGS) -m "default,sysui"
 	@cd .. && buildtools/ninja $(NINJA_FLAGS) -C out/debug-x86-64
 	@touch $@
 
 # Build sysroot if needed.
 $(OUT_DIR)/sysroot: $(MAGENTA_BUILD_DIR)/sysroot
 	@cd .. && scripts/build-sysroot.sh -c -t x86_64
+	@touch $@
 
 # Build magenta if needed.
 $(MAGENTA_BUILD_DIR)/sysroot:
 	@cd ../magenta && scripts/build-magenta-x86-64
+	@touch $@
