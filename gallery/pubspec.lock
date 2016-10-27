@@ -37,7 +37,7 @@ packages:
     version: "0.0.21"
   flutter_services:
     description:
-      path: "../../lib/flutter/bin/cache/pkg/flutter_services"
+      path: "../../../lib/flutter/bin/cache/pkg/flutter_services"
       relative: true
     source: path
     version: "0.0.1"
@@ -103,13 +103,13 @@ packages:
     version: "0.21.4"
   sky_engine:
     description:
-      path: "../../lib/flutter/bin/cache/pkg/sky_engine"
+      path: "../../../lib/flutter/bin/cache/pkg/sky_engine"
       relative: true
     source: path
     version: "0.0.99"
   sky_services:
     description:
-      path: "../../lib/flutter/bin/cache/pkg/sky_services"
+      path: "../../../lib/flutter/bin/cache/pkg/sky_services"
       relative: true
     source: path
     version: "0.0.99"

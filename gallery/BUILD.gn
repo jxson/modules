@@ -12,11 +12,11 @@ dart_package("gallery") {
 
   deps = [
     "//lib/flutter/packages/flutter",
-    "//modules/packages/auth",
-    "//modules/packages/clients",
-    "//modules/packages/models",
-    "//modules/packages/util",
-    "//modules/packages/widgets",
+    "//apps/modules/packages/auth",
+    "//apps/modules/packages/clients",
+    "//apps/modules/packages/models",
+    "//apps/modules/packages/util",
+    "//apps/modules/packages/widgets",
   ]
 }
 
@@ -29,10 +29,10 @@ flutter_app("modules_gallery") {
 
   deps = [
     "//lib/flutter/packages/flutter",
-    "//modules/packages/auth",
-    "//modules/packages/clients",
-    "//modules/packages/models",
-    "//modules/packages/util",
-    "//modules/packages/widgets",
+    "//apps/modules/packages/auth",
+    "//apps/modules/packages/clients",
+    "//apps/modules/packages/models",
+    "//apps/modules/packages/util",
+    "//apps/modules/packages/widgets",
   ]
 }

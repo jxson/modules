@@ -11,6 +11,6 @@ dart_package("clients") {
 
   deps = [
     "//lib/flutter/packages/flutter",
-    "//modules/packages/models",
+    "//apps/modules/packages/models",
   ]
 }

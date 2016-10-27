@@ -11,7 +11,7 @@ dart_package("models") {
 
   deps = [
     "//lib/flutter/packages/flutter",
-    "//modules/packages/util",
+    "//apps/modules/packages/util",
     "//third_party/dart-pkg/pub/collection",
     "//third_party/dart-pkg/pub/intl",
     "//third_party/dart-pkg/pub/quiver",
