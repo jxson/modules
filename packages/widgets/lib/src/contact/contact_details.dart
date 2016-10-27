@@ -82,6 +82,30 @@ class ContactDetails extends StatelessWidget {
     );
   }
 
+  /// Builds the centered alphatar section
+  Widget _buildAlphatarSection(ThemeData theme) {
+    return new Positioned(
+      bottom: 0.0,
+      left: 0.0,
+      right:0.0,
+      child: new Center(
+        child: new Container(
+          height: _kAlphatarRadius,
+          padding: const EdgeInsets.all(1.0),
+          decoration: new BoxDecoration(
+            backgroundColor: theme.primaryColor,
+            shape: BoxShape.circle,
+          ),
+          child: new Alphatar.withUrl(
+            avatarUrl: contact.user.picture,
+            size: _kAlphatarRadius,
+            letter: contact.user.name[0],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Build single quick action button
   Widget _buildQuickActionButton({
     IconData icon,
@@ -205,101 +229,26 @@ class ContactDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    return new CustomMultiChildLayout(
-      delegate: new _ContactLayoutDelegate(),
+    return new Block(
       children: <Widget>[
-        new LayoutId(
-          id: _ContactLayoutDelegate.headerBackgroundId,
-          child: _buildBackgroundImage(theme),
+        new Stack(
+          children: <Widget>[
+            new Container(
+              height: _kHeaderHeight + _kAlphatarRadius/2.0,
+            ),
+            _buildBackgroundImage(theme),
+            _buildAlphatarSection(theme),
+          ],
         ),
-        new LayoutId(
-          id: _ContactLayoutDelegate.contentId,
-          child: new Container(
-            padding: new EdgeInsets.only(
-              top: _kAlphatarRadius / 2.0,
-            ),
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                _buildNameHeader(),
-                _buildQuickActionButtonRow(theme),
-                _buildPhoneEntryGroup(),
-              ],
-            ),
-          ),
-        ),
-        new LayoutId(
-          id: _ContactLayoutDelegate.alphatarId,
-          child: new Container(
-            padding: const EdgeInsets.all(1.0),
-            decoration: new BoxDecoration(
-              backgroundColor: theme.primaryColor,
-              shape: BoxShape.circle,
-            ),
-            child: new Alphatar.withUrl(
-              avatarUrl: contact.user.picture,
-              size: _kAlphatarRadius,
-              letter: contact.user.name[0],
-            ),
-          ),
+        new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            _buildNameHeader(),
+            _buildQuickActionButtonRow(theme),
+            _buildPhoneEntryGroup(),
+          ],
         ),
       ],
     );
   }
-}
-
-/// This is the LayoutDelegate that creates the 3 element custom layout:
-/// - Header Area
-/// - Content Area
-/// - Avatar that overlaps and is in the middle of the Header and Content area
-class _ContactLayoutDelegate extends MultiChildLayoutDelegate {
-  static final String headerBackgroundId = 'headerBackground';
-  static final String alphatarId = 'alphatar';
-  static final String contentId = 'content';
-
-  _ContactLayoutDelegate();
-
-  @override
-  void performLayout(Size size) {
-    // Height is fixed for background.
-    // Width should stretch out to the parent
-    Size headerBackgroundSize = layoutChild(
-      headerBackgroundId,
-      new BoxConstraints.tightForFinite(
-        height: _kHeaderHeight,
-        width: size.width,
-      ),
-    );
-
-    // Fixed size for Alphatar
-    Size alphatarRadius = layoutChild(
-      alphatarId,
-      new BoxConstraints.tightFor(
-        width: _kAlphatarRadius,
-        height: _kAlphatarRadius,
-      ),
-    );
-
-    // Content should stretch out to the rest of the parent
-    layoutChild(
-      contentId,
-      new BoxConstraints.tightFor(
-        height: size.height - _kHeaderHeight,
-        width: size.width,
-      ),
-    );
-
-    positionChild(headerBackgroundId, Offset.zero);
-    positionChild(contentId, new Offset(0.0, headerBackgroundSize.height));
-    positionChild(
-      alphatarId,
-      new Offset(
-        headerBackgroundSize.width / 2.0 - alphatarRadius.width / 2.0,
-        headerBackgroundSize.height - alphatarRadius.width / 2.0,
-      ),
-    );
-  }
-
-  @override
-  bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) => false;
 }
