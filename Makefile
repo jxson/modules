@@ -318,7 +318,7 @@ ifeq ($(GOMA_INSTALLED), yes)
 else
 	$(warning [WARNING] Goma not installed. Install Goma to get faster distributed builds.)
 endif
-	@cd $(FUCHSIA_ROOT) && packages/gn/gen.py $(GEN_FLAGS) -m "default,sysui"
+	@cd $(FUCHSIA_ROOT) && packages/gn/gen.py $(GEN_FLAGS)
 	@cd $(FUCHSIA_ROOT) && buildtools/ninja $(NINJA_FLAGS) -C out/debug-x86-64
 	@touch $@
 
