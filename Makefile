@@ -17,7 +17,7 @@ DART_BIN := $(FLUTTER_BIN)/cache/dart-sdk/bin
 OUT_DIR := $(FUCHSIA_ROOT)/out
 GEN_DIR := $(OUT_DIR)/debug-x86-64/gen/apps/modules
 MAGENTA_DIR := $(FUCHSIA_ROOT)/magenta
-MAGENTA_BUILD_DIR := $(MAGENTA_DIR)/build-magenta-pc-x86-64
+MAGENTA_BUILD_DIR := $(OUT_DIR)/build-magenta/build-magenta-pc-x86-64
 PATH := $(FLUTTER_BIN):$(DART_BIN):$(PATH)
 
 
@@ -47,7 +47,17 @@ ifeq ($(wildcard ~/goma/.*),)
 else
 	GOMA_INSTALLED := yes
 	GEN_FLAGS := --goma
-	NINJA_FLAGS := -j1000
+	# macOS needs a lower value of -j parameter, because:
+	#  - all the host binaries are not built with goma
+	#  - macOS has a limit on the number of open file descriptors.
+	#
+	# Use 15 * #cores here, which seems to work well.
+	ifeq ($(shell uname -s),Darwin)
+		NUM_JOBS := $(shell python -c 'import multiprocessing as mp; print(15 * mp.cpu_count())')
+		NINJA_FLAGS := -j$(NUM_JOBS)
+	else
+		NINJA_FLAGS := -j1000
+	endif
 endif
 
 ################################################################################
@@ -125,7 +135,7 @@ run: dart-base ## Run the gallery flutter app.
 
 .PHONY: run-fuchsia
 run-fuchsia: dart-base mojom-gen ## Run magenta in qemu.
-	@cd $(MAGENTA_DIR) && ./scripts/run-magenta-x86-64 -x $(OUT_DIR)/debug-x86-64/user.bootfs -g
+	@cd $(FUCHSIA_ROOT) && ./scripts/run-magenta-x86-64 -x $(OUT_DIR)/debug-x86-64/user.bootfs -g
 
 # TODO(jxson): Add gitbook as a third-party dependency.
 .PHONY: doc
