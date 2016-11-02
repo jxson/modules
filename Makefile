@@ -173,7 +173,7 @@ $(TARGET_CONFIG_FILE):
 	cp $(EXAMPLE_CONFIG_FILE) $(TARGET_CONFIG_FILE)
 
 .PHONY: dart-base
-dart-base: $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS) $(TARGET_CONFIG_FILE) mojom-gen
+dart-base: $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS) $(TARGET_CONFIG_FILE)
 	@true
 
 .PHONY: dart-clean
