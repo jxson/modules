@@ -110,4 +110,12 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     builder: (BuildContext context, GalleryItem item) =>
         galleryScaffoldedScreen(item.title, new YoutubeThumbnailScreen()),
   ),
+  new GalleryItem(
+    title: 'Youtube - Player',
+    subtitle: 'Youtube Player',
+    group: GalleryGroups.screen,
+    href: '/youtube/player',
+    builder: (BuildContext context, GalleryItem item) =>
+        galleryScaffoldedScreen(item.title, new YoutubePlayerScreen()),
+  ),
 ];
