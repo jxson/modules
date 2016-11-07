@@ -7,9 +7,8 @@
 Set<Uri> extractURI(String string) {
   String pattern = r'(?:https?)(?:\S+)';
   RegExp exp = new RegExp(pattern, multiLine: false, caseSensitive: false);
-  Iterable<Match> matches = exp.allMatches(string);
-
-  return matches.map(_mapper);
+  Iterable<Uri> matches = exp.allMatches(string).map(_mapper);
+  return new Set<Uri>.from(matches);
 }
 
 Uri _mapper(Match match) {
