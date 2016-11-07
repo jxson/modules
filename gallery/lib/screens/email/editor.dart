@@ -29,6 +29,18 @@ class _EmailEditorScreenState extends State<EmailEditorScreen> {
             onClose: _onPerformMessageAction,
             onAttach: _onPerformMessageAction,
           ),
+          new RecipientInput(
+            recipientList: <Mailbox>[
+              new Mailbox(
+                displayName: 'Coco',
+                address: 'coco@cu.te',
+              )
+            ],
+            inputLabel: 'To:',
+            onRecipientsChanged: (List<Mailbox> recipients) {
+              print(recipients);
+            },
+          ),
         ],
       ),
     );

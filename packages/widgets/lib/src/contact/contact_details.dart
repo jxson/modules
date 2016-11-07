@@ -87,7 +87,7 @@ class ContactDetails extends StatelessWidget {
     return new Positioned(
       bottom: 0.0,
       left: 0.0,
-      right:0.0,
+      right: 0.0,
       child: new Center(
         child: new Container(
           height: _kAlphatarRadius,
@@ -234,7 +234,7 @@ class ContactDetails extends StatelessWidget {
         new Stack(
           children: <Widget>[
             new Container(
-              height: _kHeaderHeight + _kAlphatarRadius/2.0,
+              height: _kHeaderHeight + _kAlphatarRadius / 2.0,
             ),
             _buildBackgroundImage(theme),
             _buildAlphatarSection(theme),
