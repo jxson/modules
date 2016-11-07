@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 
 import '../screens/index.dart';
+import '../src/config.dart';
 import 'groups.dart';
 import 'item.dart';
 
@@ -87,11 +88,20 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
         galleryScaffoldedScreen(item.title, new YoutubeThumbnailScreen()),
   ),
   new GalleryItem(
-    title: 'Youtube - Player',
-    subtitle: 'Youtube Player',
-    group: GalleryGroups.screen,
-    href: '/youtube/player',
-    builder: (BuildContext context, GalleryItem item) =>
-        galleryScaffoldedScreen(item.title, new YoutubePlayerScreen()),
-  ),
+      title: 'Youtube - Player',
+      subtitle: 'Youtube Player',
+      group: GalleryGroups.screen,
+      href: '/youtube/player',
+      builder: (BuildContext context, GalleryItem item) {
+        try {
+          String apiKey = kConfig.get('youtube_api_key');
+          return galleryScaffoldedScreen(
+              item.title,
+              new YoutubePlayerScreen(
+                apiKey: apiKey,
+              ));
+        } catch (e) {
+          return new ErrorScreen(e.toString());
+        }
+      }),
 ];
