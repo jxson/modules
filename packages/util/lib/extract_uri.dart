@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 /// Extract a [Set] of unique URIs from a string.
-///
 Set<Uri> extractURI(String string) {
   String pattern = r'(?:https?)(?:\S+)';
   RegExp exp = new RegExp(pattern, multiLine: false, caseSensitive: false);
