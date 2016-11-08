@@ -8,11 +8,15 @@ import 'package:util/extract_uri.dart';
 void main() {
   test('extractURI("...")', () {
     String text = 'Checkout these videos!\n'
-      'https://www.youtube.com/watch?v=p8OgWPcNA6o\n'
-      'https://www.youtube.com/watch?v=ZAn3JdtSrnY';
+        'https://www.youtube.com/watch?v=p8OgWPcNA6o\n'
+        'https://www.youtube.com/watch?v=ZAn3JdtSrnY';
     Set<Uri> uris = extractURI(text);
 
-    expect(uris.contains(Uri.parse('https://www.youtube.com/watch?v=ZAn3JdtSrnY')), isTrue);
-    expect(uris.contains(Uri.parse('https://www.youtube.com/watch?v=p8OgWPcNA6o')), isTrue);
+    expect(
+        uris.contains(Uri.parse('https://www.youtube.com/watch?v=ZAn3JdtSrnY')),
+        isTrue);
+    expect(
+        uris.contains(Uri.parse('https://www.youtube.com/watch?v=p8OgWPcNA6o')),
+        isTrue);
   });
 }
