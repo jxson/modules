@@ -14,3 +14,6 @@ typedef void ThreadActionCallback(Thread thread);
 
 /// Callback function signature for an action on a folder
 typedef void FolderActionCallback(Folder folder);
+
+/// Boolean predicate function for a message
+typedef bool MessagePredicate(Message message);

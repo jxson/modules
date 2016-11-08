@@ -8,5 +8,6 @@ export 'email/editor.dart';
 export 'email/inbox.dart';
 export 'email/menu.dart';
 export 'email/thread.dart';
+export 'flux_gallery.dart';
 export 'youtube/player.dart';
 export 'youtube/thumbnail.dart';

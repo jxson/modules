@@ -2,129 +2,84 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:clients/email_client.dart';
-import 'package:clients/gmail_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flux/flutter_flux.dart';
+import 'package:flux/email.dart';
+import 'package:meta/meta.dart';
 import 'package:models/email.dart';
 import 'package:widgets/email.dart';
 
-/// This screen displays an a single email thread.
-class EmailThreadScreen extends StatefulWidget {
-  /// Creates a [EmailThreadScreen] instance.
-  EmailThreadScreen({Key key, this.accessToken, this.threadId})
-      : super(key: key);
-
-  /// Access token for the Gmail API.
-  final String accessToken;
+/// An email thread screen that shows all the messages in a particular email
+/// [Thread], built with the flux pattern.
+class EmailThreadScreen extends StoreWatcher {
+  /// Creates a new [EmailThreadScreen] instance.
+  EmailThreadScreen({
+    Key key,
+    @required this.threadId,
+    this.onThreadClose,
+  })
+      : super(key: key) {
+    assert(threadId != null);
+  }
 
   /// The string ID of the current thread.
   final String threadId;
 
-  @override
-  _EmailThreadScreenState createState() => new _EmailThreadScreenState();
-}
-
-class _EmailThreadScreenState extends State<EmailThreadScreen> {
-  bool _inProgress = false;
-  String _errorMessage;
-
-  Thread _thread;
-  Set<String> _expandedMessages;
-  EmailClient _emailClient;
+  /// The callback function for the thread close button.
+  ///
+  /// If not provided, the behavior defaults to `Navigator.pop(context)`.
+  final ThreadActionCallback onThreadClose;
 
   @override
-  void initState() {
-    super.initState();
-
-    if (config.accessToken != null) {
-      _emailClient = new GmailClient(accessToken: config.accessToken);
-
-      // Get the email threads using the email client.
-      _emailClient.getThread(config.threadId).then((Thread thread) {
-        if (mounted) {
-          setState(() {
-            _inProgress = false;
-            _thread = thread;
-            _initExpandedMessages();
-          });
-        }
-      }).catchError((Exception e) {
-        if (mounted) {
-          setState(() {
-            _inProgress = false;
-            _errorMessage =
-                'Error occurred while retrieving email threads:\n$e';
-          });
-        }
-      });
-
-      _inProgress = true;
-    } else {
-      _thread = new MockThread();
-      _initExpandedMessages();
-    }
-  }
-
-  void _initExpandedMessages() {
-    // Skip expanding the first message to quickly demonstrate both the
-    // collapsed message and the expanded message.
-    _expandedMessages =
-        new Set<String>.from(_thread.messages.skip(1).map((Message m) => m.id));
+  void initStores(ListenToStore listenToStore) {
+    listenToStore(kEmailStoreToken);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return new Center(
-      child: _buildBody(context),
-    );
+  Widget build(BuildContext context, Map<StoreToken, Store> stores) {
+    final EmailStore emailStore = stores[kEmailStoreToken];
+
+    return new Center(child: _buildBody(context, emailStore));
   }
 
-  Widget _buildBody(BuildContext context) {
-    // Just show a progress bar while waiting for the email data.
-    if (_inProgress) {
+  Widget _buildBody(BuildContext context, EmailStore emailStore) {
+    if (emailStore.fetching) {
       return new CircularProgressIndicator();
     }
 
-    // Show the error message, if an error occurred while retrieving email data.
-    if (_errorMessage != null) {
-      return new Text(_errorMessage);
+    if (emailStore.exception != null) {
+      return new Text('Error occurred while retrieving email threads: '
+          '${emailStore.exception}');
+    }
+
+    Thread thread = emailStore.getThreadById(threadId);
+    if (thread == null) {
+      return new Text('Could not find the thread.');
     }
 
     return new ThreadView(
-      thread: _thread,
-      expandedMessageIds: _expandedMessages,
-      onSelectMessage: _handleSelectMessage,
+      thread: thread,
+      messageExpanded: (Message m) => emailStore.isMessageExpanded(m.id),
+      onSelectMessage: (Message m) {
+        emailStore.actions.toggleMessageExpansion(m.id);
+      },
       onForwardMessage: _handleMessageAction,
       onReplyAllMessage: _handleMessageAction,
       onReplyMessage: _handleMessageAction,
       footer: new MessageActionBarFooter(
-        message: _thread.messages.last,
+        message: thread.messages.last,
         onForwardMessage: _handleMessageAction,
         onReplyAllMessage: _handleMessageAction,
         onReplyMessage: _handleMessageAction,
       ),
       header: new ThreadActionBarHeader(
-        thread: _thread,
+        thread: thread,
         onArchive: _handleThreadAction,
-        onClose: _onClose,
+        onClose: onThreadClose ?? (_) => Navigator.pop(context),
         onMoreActions: _handleThreadAction,
         onDelete: _handleThreadAction,
       ),
     );
-  }
-
-  void _onClose(Thread thread) {
-    Navigator.pop(context);
-  }
-
-  void _handleSelectMessage(Message message) {
-    setState(() {
-      if (_expandedMessages.contains(message.id)) {
-        _expandedMessages.remove(message.id);
-      } else {
-        _expandedMessages.add(message.id);
-      }
-    });
   }
 
   void _handleMessageAction(Message message) {

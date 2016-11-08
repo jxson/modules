@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:flux/email.dart';
+import 'package:models/email.dart';
 
 import 'gallery/home.dart';
 import 'routes.dart';
@@ -29,6 +31,21 @@ class AppState extends State<App> {
   /// This state should be kept at this top level, because it needs to be passed
   /// as one of the MaterialApp constructor arguments.
   bool showPerformanceOverlay = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the stores here.
+    // The following line is put here to make sure that the store is initialized
+    // before the updateThreadsAction is dispatched.
+    kEmailStoreToken;
+    kEmailActions.updateThreads(<Thread>[
+      new MockThread(id: 'thread01'),
+      new MockThread(id: 'thread02'),
+      new MockThread(id: 'thread03'),
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {

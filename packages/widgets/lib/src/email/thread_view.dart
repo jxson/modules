@@ -15,7 +15,7 @@ class ThreadView extends StatelessWidget {
   Thread thread;
 
   /// Set of Ids for messages that should be expanded
-  Set<String> expandedMessageIds;
+  MessagePredicate messageExpanded;
 
   /// Callback for when a given message is selected in thread
   MessageActionCallback onSelectMessage;
@@ -46,13 +46,11 @@ class ThreadView extends StatelessWidget {
     this.footer,
     this.header,
     this.onSelectMessage,
-    this.expandedMessageIds,
+    this.messageExpanded,
   })
       : super(key: key) {
     assert(thread != null);
-    if (expandedMessageIds == null) {
-      expandedMessageIds = new Set<String>();
-    }
+    messageExpanded ??= (_) => false;
   }
 
   /// Builds the [Thread] subject line that at the top of the messages
@@ -112,7 +110,7 @@ class ThreadView extends StatelessWidget {
           message: message,
           key: new ObjectKey(message),
           onHeaderTap: onSelectMessage,
-          isExpanded: expandedMessageIds.contains(message.id),
+          isExpanded: messageExpanded(message),
           onForward: onForwardMessage,
           onReply: onReplyMessage,
           onReplyAll: onReplyAllMessage,

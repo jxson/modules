@@ -11,6 +11,10 @@ dependencies:
     path: ../packages/auth
   clients:
     path: ../packages/clients
+  flutter_flux:
+    path: ../../../third_party/dart-pkg/pub/flutter_flux
+  flux:
+    path: ../packages/flux
   models:
     path: ../packages/models
   util:
