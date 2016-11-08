@@ -32,16 +32,28 @@ class GmailClient extends EmailClient {
         _httpClientProvider = httpClientProvider;
 
   @override
-  Future<GetThreadsResponse> getThreads({dynamic args}) async {
+  Future<GmailGetThreadsResponse> getThreads({dynamic args}) async {
     Map<String, String> headers = <String, String>{
       'Authorization': 'Bearer $_accessToken',
     };
+
+    // For now, limit to 20 threads by default.
+    Map<String, dynamic> params = <String, dynamic>{
+      'maxResults': '20',
+    };
+
+    if (args != null && args is Map<String, dynamic>) {
+      args.keys.forEach((String key) {
+        params[key] = args[key];
+      });
+    }
 
     // First, retrieve the thread ids.
     Uri uri = new Uri(
       scheme: 'https',
       host: 'www.googleapis.com',
       path: '/gmail/v1/users/me/threads',
+      queryParameters: params,
     );
 
     http.Response response =

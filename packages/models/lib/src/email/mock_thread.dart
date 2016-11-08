@@ -16,7 +16,7 @@ final String _kYoyoAvatarUrl =
 /// A mock version for [Thread].
 class MockThread extends Thread {
   /// Creates a mock [Thread].
-  MockThread() : super() {
+  MockThread({String id}) : super(id: id) {
     id = id ?? 'thread1';
     messages = messages ??
         <Message>[
