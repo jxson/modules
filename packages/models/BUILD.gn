@@ -10,10 +10,11 @@ dart_package("models") {
   source_dir = "lib"
 
   deps = [
-    "//lib/flutter/packages/flutter",
     "//apps/modules/packages/util",
+    "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/collection",
     "//third_party/dart-pkg/pub/intl",
     "//third_party/dart-pkg/pub/quiver",
+    "//third_party/dart-pkg/pub/xml",
   ]
 }

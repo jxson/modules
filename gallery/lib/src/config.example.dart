@@ -58,4 +58,7 @@ const Map<String, String> _kConfigValues = const <String, String>{
 
   /// API key for Google Services (Map, Youtube...)
   'google_services_api_key': null,
+
+  /// API key for USPS tracking data
+  'usps_api_key': null,
 };

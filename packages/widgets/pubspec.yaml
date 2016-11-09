@@ -10,6 +10,7 @@ dependencies:
     sdk: flutter
   models:
     path: ../models
+  xml: ^2.4.3
 dev_dependencies:
   test: any
   flutter_test:

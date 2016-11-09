@@ -132,4 +132,24 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
       }
     },
   ),
+  new GalleryItem(
+    title: 'USPS - Tracking Status',
+    subtitle: 'UPSP Tracking Status',
+    group: GalleryGroups.screen,
+    href: '/usps/tracking_status',
+    builder: (BuildContext context, GalleryItem item) {
+      try {
+        String uspsApiKey = kConfig.get('usps_api_key');
+        String mapsApiKey = kConfig.get('google_services_api_key');
+        return galleryScaffoldedScreen(
+            item.title,
+            new TrackingStatusScreen(
+              uspsApiKey: uspsApiKey,
+              mapsApiKey: mapsApiKey,
+            ));
+      } catch (e) {
+        return new ErrorScreen(e.toString());
+      }
+    },
+  ),
 ];
