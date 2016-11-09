@@ -27,6 +27,9 @@ class GalleryActions {
   /// Updates the auth credentials to be used for accessing the email server.
   final Action<AuthCredentials> updateCredentials =
       new Action<AuthCredentials>();
+
+  /// Updates the current thread id value.
+  final Action<String> updateThreadId = new Action<String>();
 }
 
 /// A [Store] class for the gallery app which contains the routing information
@@ -56,6 +59,10 @@ class GalleryStore extends Store {
     triggerOnAction(actions.updateCredentials, (AuthCredentials cred) {
       _credentials = cred;
       localStorage.put('refresh_token', cred.refreshToken);
+    });
+
+    triggerOnAction(actions.updateThreadId, (String threadId) {
+      _threadId = threadId;
     });
   }
 

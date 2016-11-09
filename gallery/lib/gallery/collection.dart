@@ -64,6 +64,15 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
         galleryScaffoldedScreen(item.title, new EmailMenuScreen()),
   ),
   new GalleryItem(
+    title: 'Email - Mock Quarterback Module',
+    subtitle:
+        'A screen demonstrating what the email story should look like in modular framework',
+    group: GalleryGroups.screen,
+    href: '/email/quarterback',
+    builder: (BuildContext context, GalleryItem item) =>
+        galleryScaffoldedScreen(item.title, new EmailQuarterbackModule()),
+  ),
+  new GalleryItem(
     title: 'Integrated Email Flow',
     subtitle: 'An integrated flow of email experience using real data',
     group: GalleryGroups.flow,
