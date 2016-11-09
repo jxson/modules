@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   models:
     path: ../models
+  googleapis: any
+  googleapis_auth: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

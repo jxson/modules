@@ -113,6 +113,7 @@ fmt: ## Format everything.
 
 .PHONY: lint
 lint: ## Lint everything.
+	@$(MAKE) copyright-check
 	@$(MAKE) dart-lint
 
 # TODO(youngseokyoon): integrate this with the CI system later.
