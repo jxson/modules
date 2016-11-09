@@ -5,29 +5,27 @@
 import 'dart:async';
 
 import 'package:clients/email.dart';
-import 'package:flutter/http.dart' as http;
+import "package:http/http.dart" as http;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("new Email(...)", () {
+  test("BLAH", () async {
     String identifier = '';
     String secret = '';
     ClientId id = new ClientId(identifier, secret);
     http.Client client = new http.Client();
-    List<String> scopes;
-    obtainAccessCredentialsViaUserConsent(id, scopes, client, prompt);
+    List<String> scopes = [
+      'https://www.googleapis.com/auth/gmail.modify'
+    ];
+
+    await obtainAccessCredentialsViaUserConsent(id, scopes, client, prompt)
+      .then((AccessCredentials credentials) {
+        print('credentials: $credentials');
+        expect(credentials, isNotNull);
+        client.close();
+      });
   });
-
-
-  //   var client = new http.Client();
-  // obtainAccessCredentialsViaUserConsent(id, scopes, client, prompt)
-  //     .then((AccessCredentials credentials) {
-  //   // Access credentials are available in [credentials].
-  //   // ...
-  //   client.close();
-  // });
-  //
 }
 
 void prompt(String url) {

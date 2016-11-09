@@ -13,6 +13,10 @@ dependencies:
     path: ../models
   googleapis: any
   googleapis_auth: any
+dependency_overrides:
+  http:
+    git: https://github.com/jxson/flutter-http.git
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
