@@ -9,10 +9,10 @@ import 'package:quiver/core.dart' as quiver;
 /// Mailbox is the name used in RFC 2822
 class Mailbox {
   /// Email address
-  String address;
+  final String address;
 
   /// Human Friendly Display Name
-  String displayName;
+  final String displayName;
 
   /// Constructor
   Mailbox({
@@ -20,6 +20,34 @@ class Mailbox {
     this.displayName,
   }) {
     assert(address != null);
+  }
+
+  /// Creates a [Mailbox] from a string. (e.g., "John Doe <john.doe@abc.xyz>")
+  //
+  // TODO(dayang): Handle all cases of RFC email 'mailbox' formats
+  // https://fuchsia.atlassian.net/browse/SO-49
+  factory Mailbox.fromString(String rawString) {
+    // Group 0: Entire raw string
+    // Group 1: Display name in case there is an explicit email address given in
+    //          <> brackets. Otherwise, Group 1 is the email address.
+    // Group 2: Email address part including the brackets.
+    // Group 3: Email address part without the brackets.
+    RegExp exp = new RegExp(r'^\s*"*([^"<>]*)"*\s*(<(.*@.*)>)?\s*$');
+    Match match = exp.firstMatch(rawString);
+
+    String address, displayName;
+    if (match == null) {
+      address = rawString.trim();
+    } else if (match.group(3) != null) {
+      displayName = match.group(1).isNotEmpty ? match.group(1).trim() : null;
+      address = match.group(3).trim();
+    } else if (match.group(1) != null) {
+      address = match.group(1).trim();
+    } else {
+      throw new FormatException('Not a valid mailbox format: "$rawString"');
+    }
+
+    return new Mailbox(address: address, displayName: displayName);
   }
 
   /// Text representation that will be typically used in UIs for this Mailbox
