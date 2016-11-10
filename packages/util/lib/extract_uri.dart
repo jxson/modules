@@ -11,6 +11,5 @@ Uri _mapper(Match match) {
 Set<Uri> extractURI(String string) {
   String pattern = r'(?:https?)(?:\S+)';
   RegExp exp = new RegExp(pattern, multiLine: false, caseSensitive: false);
-  Iterable<Uri> matches = exp.allMatches(string).map(_mapper);
-  return new Set<Uri>.from(matches);
+  return new Set<Uri>.from(exp.allMatches(string).map(_mapper));
 }
