@@ -20,9 +20,6 @@ class ThreadActionBarHeader extends StatelessWidget {
   /// Callback for deleting thread
   ThreadActionCallback onDelete;
 
-  /// Callback for 'close' affordance
-  ThreadActionCallback onClose;
-
   /// Callback for 'more-actions/vertical-ellipsis' affordance
   ThreadActionCallback onMoreActions;
 
@@ -33,20 +30,14 @@ class ThreadActionBarHeader extends StatelessWidget {
     Key key,
     @required this.thread,
     @required this.onArchive,
-    @required this.onClose,
     @required this.onDelete,
     @required this.onMoreActions,
   })
       : super(key: key) {
     assert(thread != null);
     assert(onArchive != null);
-    assert(onClose != null);
     assert(onDelete != null);
     assert(onMoreActions != null);
-  }
-
-  void _handleClose() {
-    onClose(thread);
   }
 
   void _handleDelete() {
@@ -66,39 +57,40 @@ class ThreadActionBarHeader extends StatelessWidget {
     return new Row(
       children: <Widget>[
         new Flexible(
-          flex: null,
-          child: new ButtonBar(
-            children: <Widget>[
-              new IconButton(
-                icon: new Icon(Icons.close),
-                onPressed: _handleClose,
-                color: Colors.grey[600],
+          flex: 1,
+          child: new Container(
+            constraints: new BoxConstraints(maxHeight: 86.0),
+            padding: const EdgeInsets.all(16.0),
+            child: new Text(
+              thread.getSubject(),
+              overflow: TextOverflow.ellipsis,
+              style: new TextStyle(
+                fontSize: 18.0,
+                height: 1.5,
+                fontWeight: FontWeight.bold,
               ),
-            ],
+            ),
           ),
         ),
-        new Flexible(
-          flex: 1,
-          child: new ButtonBar(
-            alignment: MainAxisAlignment.end,
-            children: <Widget>[
-              new IconButton(
-                icon: new Icon(Icons.delete),
-                onPressed: _handleDelete,
-                color: Colors.grey[600],
-              ),
-              new IconButton(
-                icon: new Icon(Icons.archive),
-                onPressed: _handleArchive,
-                color: Colors.grey[600],
-              ),
-              new IconButton(
-                icon: new Icon(Icons.more_vert),
-                onPressed: _handleMoreActions,
-                color: Colors.grey[600],
-              )
-            ],
-          ),
+        new ButtonBar(
+          alignment: MainAxisAlignment.end,
+          children: <Widget>[
+            new IconButton(
+              icon: new Icon(Icons.delete),
+              onPressed: _handleDelete,
+              color: Colors.grey[600],
+            ),
+            new IconButton(
+              icon: new Icon(Icons.archive),
+              onPressed: _handleArchive,
+              color: Colors.grey[600],
+            ),
+            new IconButton(
+              icon: new Icon(Icons.more_vert),
+              onPressed: _handleMoreActions,
+              color: Colors.grey[600],
+            )
+          ],
         ),
       ],
     );
