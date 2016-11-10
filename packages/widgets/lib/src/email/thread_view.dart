@@ -53,47 +53,10 @@ class ThreadView extends StatelessWidget {
     messageExpanded ??= (_) => false;
   }
 
-  /// Builds the [Thread] subject line that at the top of the messages
-  /// The subject should be limited to a maximum of two lines of text
-  Widget _buildSubjectLine() {
-    return new Material(
-      color: Colors.white,
-      child: new Container(
-        child: new Row(
-          children: <Widget>[
-            new Flexible(
-              flex: 1,
-              child: new Container(
-                constraints: new BoxConstraints(maxHeight: 86.0),
-                padding: const EdgeInsets.all(16.0),
-                child: new Text(
-                  thread.getSubject(),
-                  style: new TextStyle(
-                    fontSize: 18.0,
-                    height: 1.5,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        decoration: new BoxDecoration(
-          border: new Border(
-            bottom: new BorderSide(
-              color: Colors.grey[200],
-              width: 1.0,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // Add the thread subject line to the beginning of the list of messages.
-    List<Widget> children = <Widget>[_buildSubjectLine()];
+    List<Widget> children = <Widget>[];
 
     // Add the messages.
     thread.messages.forEach((Message message) {
