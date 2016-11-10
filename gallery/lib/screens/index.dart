@@ -10,5 +10,6 @@ export 'email/menu.dart';
 export 'email/quarterback.dart';
 export 'email/thread.dart';
 export 'flux_gallery.dart';
+export 'map/static_map.dart';
 export 'youtube/player.dart';
 export 'youtube/thumbnail.dart';
