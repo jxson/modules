@@ -55,4 +55,7 @@ const Map<String, String> _kConfigValues = const <String, String>{
 
   /// Client secret for the GoogleAPI project.
   'client_secret': null,
+
+  /// API key for Youtube
+  'youtube_api_key': null,
 };

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import 'gallery/collection.dart';
 import 'gallery/item.dart';
-import 'screens/email/inbox.dart';
 import 'screens/email/thread.dart';
 
 /// Constant value for the routes derieved from [kGalleryCollection].
@@ -21,27 +20,14 @@ Route<Null> handleRoute(RouteSettings settings) {
   // TODO(youngseokeoon): parse the parameters in a more structured way.
   // See: https://fuchsia.atlassian.net/browse/SO-12
   List<String> segments = settings.name.split('/');
-  if (settings.name.startsWith('/email/inbox/')) {
-    String accessToken = segments[3];
-    return new MaterialPageRoute<Null>(
-      settings: settings,
-      builder: (BuildContext context) {
-        return galleryScaffoldedScreen(
-            'Inbox', new EmailInboxScreen(accessToken: accessToken));
-      },
-    );
-  } else if (settings.name.startsWith('/email/thread/')) {
-    String accessToken = segments[3];
-    String threadId = segments[4];
+  if (settings.name.startsWith('/email/thread/')) {
+    String threadId = segments[3];
     return new MaterialPageRoute<Null>(
       settings: settings,
       builder: (BuildContext context) {
         return galleryScaffoldedScreen(
           'Thread',
-          new EmailThreadScreen(
-            accessToken: accessToken,
-            threadId: threadId,
-          ),
+          new EmailThreadScreen(threadId: threadId),
         );
       },
     );

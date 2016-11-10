@@ -2,15 +2,14 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-name: widgets
-description: UI widgets for FX
+name: flux
+description: Flux store and action definitions for FX.
 dependencies:
-  intl: ^0.14.0
-  flutter:
-    sdk: flutter
+  auth:
+    path: ../auth
+  clients:
+    path: ../clients
+  flutter_flux:
+    path: ../../../../third_party/dart-pkg/pub/flutter_flux
   models:
     path: ../models
-dev_dependencies:
-  test: any
-  flutter_test:
-    sdk: flutter

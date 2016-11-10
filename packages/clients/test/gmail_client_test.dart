@@ -123,6 +123,7 @@ void main() {
       scheme: 'https',
       host: 'www.googleapis.com',
       path: '/gmail/v1/users/me/threads',
+      queryParameters: <String, dynamic>{'maxResults': '20'},
     );
     _MockHttpResponse responseThreads = new _MockHttpResponse();
     when(responseThreads.body).thenReturn(_listThreadsResponse);

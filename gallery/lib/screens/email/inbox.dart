@@ -2,78 +2,46 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:clients/email_client.dart';
-import 'package:clients/gmail_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flux/flutter_flux.dart';
+import 'package:flux/email.dart';
 import 'package:models/email.dart';
 import 'package:widgets/email.dart';
 
-/// This screen displays an inbox.
-class EmailInboxScreen extends StatefulWidget {
+/// An email inbox screen that shows a list of email threads, built with the
+/// flux pattern.
+class EmailInboxScreen extends StoreWatcher {
+  /// Create a new [EmailInboxScreen] instance.
+  EmailInboxScreen({
+    Key key,
+    this.singleLine: false,
+    this.onThreadSelect,
+  })
+      : super(key: key);
+
   /// Indicates whether single line style should be used for thread list items
   final bool singleLine;
 
-  /// Creates a [EmailInboxScreen] instance.
-  EmailInboxScreen({Key key, this.accessToken, this.singleLine: false})
-      : super(key: key);
-
-  /// Access token for the email API.
-  final String accessToken;
-
-  @override
-  _EmailInboxScreenState createState() => new _EmailInboxScreenState();
-}
-
-class _EmailInboxScreenState extends State<EmailInboxScreen> {
-  bool _inProgress = false;
-  String _errorMessage;
-
-  final List<Thread> _threads = <Thread>[];
-  EmailClient _emailClient;
+  /// Callback for the thread selection.
+  ///
+  /// The behavior defaults to `Navigator.pushNamed()` to the selected email
+  /// thread view.
+  final ThreadActionCallback onThreadSelect;
 
   @override
-  void initState() {
-    super.initState();
-
-    if (config.accessToken != null) {
-      _emailClient = new GmailClient(accessToken: config.accessToken);
-
-      // Get the email threads using the email client.
-      _emailClient.getThreads().then((GetThreadsResponse response) {
-        if (mounted) {
-          setState(() {
-            _inProgress = false;
-            _threads.addAll(response.threads);
-          });
-        }
-      }).catchError((Exception e) {
-        if (mounted) {
-          setState(() {
-            _inProgress = false;
-            _errorMessage =
-                'Error occurred while retrieving email threads:\n$e';
-          });
-        }
-      });
-
-      _inProgress = true;
-    } else {
-      _threads.add(new MockThread());
-      _threads.add(new MockThread());
-    }
+  void initStores(ListenToStore listenToStore) {
+    listenToStore(kEmailStoreToken);
   }
 
   Widget _createThreadListItem(BuildContext context, Thread thread) {
     Key key = new ObjectKey(thread);
 
-    ThreadActionCallback handleSelect = (Thread thread) {
-      Navigator.pushNamed(
-        context,
-        '/email/thread/${config.accessToken}/${thread.id}',
-      );
-    };
+    ThreadActionCallback handleSelect = onThreadSelect ??
+        (Thread thread) {
+          Navigator.pushNamed(context, '/email/thread/${thread.id}');
+        };
 
-    return config.singleLine
+    return singleLine
         ? new ThreadListItemSingleLine(
             key: key,
             thread: thread,
@@ -87,22 +55,23 @@ class _EmailInboxScreenState extends State<EmailInboxScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Just show a progress bar while waiting for the email data.
-    if (_inProgress) {
+  Widget build(BuildContext context, Map<StoreToken, Store> stores) {
+    final EmailStore emailStore = stores[kEmailStoreToken];
+
+    if (emailStore.fetching) {
       return new Center(child: new CircularProgressIndicator());
     }
 
-    // Show the error message, if an error occurred while retrieving email data.
-    if (_errorMessage != null) {
-      return new Text(_errorMessage);
+    if (emailStore.exception != null) {
+      return new Text('Error occurred while retrieving email threads: '
+          '${emailStore.exception}');
     }
 
-    List<Widget> listItems = <Widget>[];
-    _threads.forEach((Thread t) {
-      listItems.add(_createThreadListItem(context, t));
+    List<Widget> threadListItems = <Widget>[];
+    emailStore.threads.forEach((Thread t) {
+      threadListItems.add(_createThreadListItem(context, t));
     });
 
-    return new Block(children: listItems);
+    return new Block(children: threadListItems);
   }
 }

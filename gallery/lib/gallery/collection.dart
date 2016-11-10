@@ -2,10 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:auth/auth_credentials.dart';
-import 'package:auth/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:util/local_storage.dart';
 
 import '../screens/index.dart';
 import '../src/config.dart';
@@ -47,7 +44,8 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     group: GalleryGroups.screen,
     href: '/email/thread',
     builder: (BuildContext context, GalleryItem item) =>
-        galleryScaffoldedScreen(item.title, new EmailThreadScreen()),
+        galleryScaffoldedScreen(
+            item.title, new EmailThreadScreen(threadId: 'thread01')),
   ),
   new GalleryItem(
     title: 'Email - Editor',
@@ -66,34 +64,22 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
         galleryScaffoldedScreen(item.title, new EmailMenuScreen()),
   ),
   new GalleryItem(
-      title: 'Integrated Email Flow',
-      subtitle: 'An integrated flow of email experience using real data',
-      group: GalleryGroups.flow,
-      href: '/flow/email',
-      builder: (BuildContext context, GalleryItem item) {
-        try {
-          String clientId = kConfig.get('client_id');
-          String clientSecret = kConfig.get('client_secret');
-
-          return galleryScaffoldedScreen(
-              'Login',
-              new LoginScreen(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: localStorage.get('refresh_token'),
-                onLoginSuccess: (AuthCredentials cred) {
-                  localStorage.put('refresh_token', cred.refreshToken);
-                  // Navigate to the EmailInboxScreen with the obtained token.
-                  Navigator.popAndPushNamed(
-                    context,
-                    '/email/inbox/${cred.accessToken}',
-                  );
-                },
-              ));
-        } catch (e) {
-          return new ErrorScreen(e.toString());
-        }
-      }),
+    title: 'Email - Mock Quarterback Module',
+    subtitle:
+        'A screen demonstrating what the email story should look like in modular framework',
+    group: GalleryGroups.screen,
+    href: '/email/quarterback',
+    builder: (BuildContext context, GalleryItem item) =>
+        galleryScaffoldedScreen(item.title, new EmailQuarterbackModule()),
+  ),
+  new GalleryItem(
+    title: 'Integrated Email Flow',
+    subtitle: 'An integrated flow of email experience using real data',
+    group: GalleryGroups.flow,
+    href: '/flow/email',
+    builder: (BuildContext context, GalleryItem item) =>
+        galleryScaffoldedScreen(item.title, new FluxGalleryScreen()),
+  ),
   new GalleryItem(
     title: 'Contact - Details',
     subtitle: 'Contact Details',
@@ -111,11 +97,20 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
         galleryScaffoldedScreen(item.title, new YoutubeThumbnailScreen()),
   ),
   new GalleryItem(
-    title: 'Youtube - Player',
-    subtitle: 'Youtube Player',
-    group: GalleryGroups.screen,
-    href: '/youtube/player',
-    builder: (BuildContext context, GalleryItem item) =>
-        galleryScaffoldedScreen(item.title, new YoutubePlayerScreen()),
-  ),
+      title: 'Youtube - Player',
+      subtitle: 'Youtube Player',
+      group: GalleryGroups.screen,
+      href: '/youtube/player',
+      builder: (BuildContext context, GalleryItem item) {
+        try {
+          String apiKey = kConfig.get('youtube_api_key');
+          return galleryScaffoldedScreen(
+              item.title,
+              new YoutubePlayerScreen(
+                apiKey: apiKey,
+              ));
+        } catch (e) {
+          return new ErrorScreen(e.toString());
+        }
+      }),
 ];
