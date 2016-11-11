@@ -19,6 +19,6 @@ all:
 	@make -C ../ all
 
 .PHONY: auth
-auth:
+auth: all
 	@cd tools; \
 	pub run bin/oauth.dart

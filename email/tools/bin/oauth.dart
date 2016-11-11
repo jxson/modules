@@ -19,7 +19,8 @@ Future<Null> main(List<String> args) async {
     'https://www.googleapis.com/auth/gmail.modify'
   ];
 
-  AccessCredentials credentials = await obtainAccessCredentialsViaUserConsent(id, scopes, client, prompt);
+  AccessCredentials credentials =
+      await obtainAccessCredentialsViaUserConsent(id, scopes, client, prompt);
 
   print('SUCCESS $credentials');
   client.close();

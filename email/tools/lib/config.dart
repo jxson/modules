@@ -11,22 +11,35 @@ import 'package:path/path.dart' as path;
 /// TODO(jasoncampbell): add documentation for this!
 class Config {
   static Future<String> get(String key) async {
-
-    String configfile = path.absolute('..', 'config.yaml');
-    String normalized = path.normalize(configfile);
-
-    print('normalized: $normalized');
-
-    File file = new File(normalized);
-
-    print('file: $file');
+    String dirname = path.normalize(path.absolute('..'));
+    String filename = path.join(dirname, 'config.yaml');
+    File file = new File(filename);
 
     if (!(await file.exists())) {
-      throw new StateError('$file does not exist.');
+      await file.writeAsString('');
     }
 
-    dynamic data = yaml.loadYaml('');
+    String contents = await file.readAsString();
+    Map<String, String> map = new Map<String, String>();
 
-    return 'foo';
+    if (contents != '') {
+      dynamic data = yaml.loadYaml(contents);
+      data.forEach((String key, String value) {
+        map[key] = value;
+      });
+    }
+
+    if (map[key] == null) {
+      String message = '''Undefined config value "$key".
+
+Please add an entry for "$key" to the config.yaml file:
+
+    $filename
+
+''';
+      throw new StateError(message);
+    }
+
+    return map[key];
   }
 }
