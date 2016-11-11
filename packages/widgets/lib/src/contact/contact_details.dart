@@ -96,10 +96,9 @@ class ContactDetails extends StatelessWidget {
             backgroundColor: theme.primaryColor,
             shape: BoxShape.circle,
           ),
-          child: new Alphatar.withUrl(
-            avatarUrl: contact.user.picture,
+          child: new Alphatar.fromUser(
+            user: contact.user,
             size: _kAlphatarRadius,
-            letter: contact.user.name[0],
           ),
         ),
       ),

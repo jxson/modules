@@ -10,7 +10,8 @@ dart_package("widgets") {
   source_dir = "lib"
 
   deps = [
-    "//lib/flutter/packages/flutter",
+    "//apps/modules/packages/fixtures",
     "//apps/modules/packages/models",
+    "//lib/flutter/packages/flutter",
   ]
 }
