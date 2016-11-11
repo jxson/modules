@@ -67,7 +67,6 @@ class ThreadActionBarHeader extends StatelessWidget {
               style: new TextStyle(
                 fontSize: 18.0,
                 height: 1.5,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ),
