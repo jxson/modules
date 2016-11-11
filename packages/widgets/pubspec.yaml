@@ -6,6 +6,8 @@ name: widgets
 description: UI widgets for FX
 dependencies:
   intl: ^0.14.0
+  fixtures:
+    path: ../fixtures
   flutter:
     sdk: flutter
   models:

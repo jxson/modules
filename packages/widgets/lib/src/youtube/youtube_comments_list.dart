@@ -159,9 +159,9 @@ class _YoutubeCommentsListState extends State<YoutubeCommentsList> {
           children: <Widget>[
             new Container(
               margin: const EdgeInsets.only(right: 16.0),
-              child: new Alphatar.withUrl(
+              child: new Alphatar.fromNameAndUrl(
+                name: comment.authorDisplayName,
                 avatarUrl: comment.authorProfileImageUrl,
-                letter: comment.authorDisplayName[0],
               ),
             ),
             new Flexible(
