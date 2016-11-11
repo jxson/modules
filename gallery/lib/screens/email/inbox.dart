@@ -20,6 +20,9 @@ enum InboxStyle {
   gridView,
 }
 
+// Inbox header height needs to line up with the ThreadView header
+const double _kInboxHeaderHeight = 73.0;
+
 /// An email inbox screen that shows a list of email threads, built with the
 /// flux pattern.
 class EmailInboxScreen extends StoreWatcher {
@@ -27,14 +30,19 @@ class EmailInboxScreen extends StoreWatcher {
   EmailInboxScreen({
     Key key,
     this.style: InboxStyle.multiLine,
+    this.inboxTitle: 'Inbox',
     this.onThreadSelect,
   })
       : super(key: key) {
     assert(style != null);
+    assert(inboxTitle != null);
   }
 
   /// Indicates whether single line style should be used for thread list items
   final InboxStyle style;
+
+  /// Header Title for this view
+  final String inboxTitle;
 
   /// Callback for the thread selection.
   ///
@@ -95,18 +103,55 @@ class EmailInboxScreen extends StoreWatcher {
       threadListItems.add(_createThreadListItem(context, t));
     });
 
+    // Use a standard Block to vertically place threadItems in the singleLine
+    // and multiLine inbox styles. Use a ThreadGridLayout to place threadItems
+    // for the gridView style inbox.
+    Widget threadList;
     if (style == InboxStyle.gridView) {
-      return new Block(
+      threadList = new Block(
         children: <Widget>[
           new ThreadGridLayout(
             children: threadListItems,
           ),
         ],
       );
+    } else {
+      threadList = new Block(children: threadListItems);
     }
 
-    // Use a standard block to vertically place threadItems in the singleLine
-    // and multiLine inbox styles
-    return new Block(children: threadListItems);
+    // TODO(dayang): Use theme data
+    // https://fuchsia.atlassian.net/browse/SO-43
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        new Container(
+          height: _kInboxHeaderHeight,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          decoration: new BoxDecoration(
+            border: new Border(
+              bottom: new BorderSide(
+                color: Colors.grey[200],
+                width: 1.0,
+              ),
+            ),
+          ),
+          child: new Row(
+            children: <Widget>[
+              new Text(
+                inboxTitle,
+                overflow: TextOverflow.ellipsis,
+                style: new TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+        new Flexible(
+          flex: 1,
+          child: threadList,
+        ),
+      ],
+    );
   }
 }

@@ -33,7 +33,6 @@ class ThreadView extends StatelessWidget {
   Widget footer;
 
   /// Optional header widget that is rendered at the top of the thread
-  // TODO(dayang) make headers sticky, or perhaps make the stickness an option
   Widget header;
 
   /// Creates a ThreadView for given [Thread]
@@ -55,12 +54,15 @@ class ThreadView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Add the thread subject line to the beginning of the list of messages.
-    List<Widget> children = <Widget>[];
+    // Column is used to create the "sticky header"
+    // The first child will be the header, while the last child will
+    // be the scrollable block of MessageListItems (blockChildren)
+    List<Widget> columnChildren = <Widget>[];
+    List<Widget> blockChildren = <Widget>[];
 
     // Add the messages.
     thread.messages.forEach((Message message) {
-      children.add(new Container(
+      blockChildren.add(new Container(
         decoration: new BoxDecoration(
           border: new Border(
             bottom: new BorderSide(
@@ -83,20 +85,23 @@ class ThreadView extends StatelessWidget {
 
     // Append footer widget to end of the list of messages if specified
     if (footer != null) {
-      children.add(footer);
+      blockChildren.add(footer);
     }
 
-    // Prepend header widget to begiining of list of messages if specified
     if (header != null) {
-      children.insert(0, header);
+      columnChildren.add(header);
     }
 
-    // Using a LazyBlock since each EmailListItem might be a different size if
-    // it is expanded.
-    // Using a LazyBlockChildren delegate since the number of emails in a thread
-    // should be 'relatively finite'.
-    return new LazyBlock(
-      delegate: new LazyBlockChildren(children: children),
+    columnChildren.add(new Flexible(
+      flex: 1,
+      child: new Block(
+        children: blockChildren,
+      ),
+    ));
+
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: columnChildren,
     );
   }
 }
