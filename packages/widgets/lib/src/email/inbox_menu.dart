@@ -99,7 +99,10 @@ class InboxMenu extends StatelessWidget {
       child: new ListItem(
         title: new Text(user.name),
         subtitle: new Text(user.email),
-        leading: new Alphatar.fromUser(user: user),
+        leading: new Alphatar.withUrl(
+          avatarUrl: user.picture,
+          letter: user.name[0],
+        ),
       ),
     );
   }
