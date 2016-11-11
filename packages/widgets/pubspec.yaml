@@ -13,5 +13,7 @@ dependencies:
   xml: ^2.4.3
 dev_dependencies:
   test: any
+  fixtures:
+    path: ../fixtures
   flutter_test:
     sdk: flutter
