@@ -155,9 +155,9 @@ class MessageListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget avatar = new Alphatar.fromNameAndUrl(
-      name: message.sender.displayText,
+    final Widget avatar = new Alphatar.withUrl(
       avatarUrl: message.senderProfileUrl,
+      letter: message.sender.displayText[0],
     );
 
     final Widget messageTitle = _buildMessageTitle();

@@ -57,9 +57,9 @@ class ThreadListItemSingleLine extends StatelessWidget {
     final Message lastMessage = thread.messages.last;
 
     final Widget avatar = new Container(
-      child: new Alphatar.fromNameAndUrl(
-        name: lastMessage.sender.displayText,
+      child: new Alphatar.withUrl(
         avatarUrl: lastMessage.senderProfileUrl,
+        letter: lastMessage.sender.displayText[0],
       ),
     );
 
