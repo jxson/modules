@@ -1,0 +1,13 @@
+# Copyright 2016 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+name: http
+description: Temporary work around for https://git.io/vXwai
+
+environment:
+  sdk: '>=1.19.0 <2.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
