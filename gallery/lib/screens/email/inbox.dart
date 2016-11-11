@@ -8,19 +8,33 @@ import 'package:flux/email.dart';
 import 'package:models/email.dart';
 import 'package:widgets/email.dart';
 
+/// Various styles of inboxes
+enum InboxStyle {
+  /// Threads are represented as multi-line items
+  multiLine,
+
+  /// Threads are represeted as single-line items
+  singleLine,
+
+  /// Thread are represented as cards in a grid view
+  gridView,
+}
+
 /// An email inbox screen that shows a list of email threads, built with the
 /// flux pattern.
 class EmailInboxScreen extends StoreWatcher {
   /// Create a new [EmailInboxScreen] instance.
   EmailInboxScreen({
     Key key,
-    this.singleLine: false,
+    this.style: InboxStyle.multiLine,
     this.onThreadSelect,
   })
-      : super(key: key);
+      : super(key: key) {
+    assert(style != null);
+  }
 
   /// Indicates whether single line style should be used for thread list items
-  final bool singleLine;
+  final InboxStyle style;
 
   /// Callback for the thread selection.
   ///
@@ -41,17 +55,26 @@ class EmailInboxScreen extends StoreWatcher {
           Navigator.pushNamed(context, '/email/thread/${thread.id}');
         };
 
-    return singleLine
-        ? new ThreadListItemSingleLine(
-            key: key,
-            thread: thread,
-            onSelect: handleSelect,
-          )
-        : new ThreadListItem(
-            key: key,
-            thread: thread,
-            onSelect: handleSelect,
-          );
+    switch (style) {
+      case InboxStyle.multiLine:
+        return new ThreadListItem(
+          key: key,
+          thread: thread,
+          onSelect: handleSelect,
+        );
+      case InboxStyle.singleLine:
+        return new ThreadListItemSingleLine(
+          key: key,
+          thread: thread,
+          onSelect: handleSelect,
+        );
+      case InboxStyle.gridView:
+        return new ThreadGridItem(
+          key: key,
+          thread: thread,
+          onSelect: handleSelect,
+        );
+    }
   }
 
   @override

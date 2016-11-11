@@ -36,7 +36,16 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     href: '/email/inbox_single',
     builder: (BuildContext context, GalleryItem item) =>
         galleryScaffoldedScreen(
-            item.title, new EmailInboxScreen(singleLine: true)),
+            item.title, new EmailInboxScreen(style: InboxStyle.singleLine)),
+  ),
+  new GalleryItem(
+    title: 'Email - Inbox (Grid View)',
+    subtitle: 'A list view of a Gmail web style inbox.',
+    group: GalleryGroups.screen,
+    href: '/email/inbox_grid',
+    builder: (BuildContext context, GalleryItem item) =>
+        galleryScaffoldedScreen(
+            item.title, new EmailInboxScreen(style: InboxStyle.gridView)),
   ),
   new GalleryItem(
     title: 'Email - Thread',
