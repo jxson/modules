@@ -10,6 +10,8 @@ import '../user/alphatar.dart';
 import 'message_content.dart';
 import 'type_defs.dart';
 
+const Duration _kExpandAnimationDuration = const Duration(milliseconds: 200);
+
 /// [MessageListItem] is a [StatelessWidget]
 ///
 /// An item that represents a single email [Message]
@@ -174,12 +176,29 @@ class MessageListItem extends StatelessWidget {
         title: messageTitle,
         subtitle: messageSubtitle,
       ),
+      new AnimatedCrossFade(
+        firstChild: new Container(),
+        secondChild: new Row(
+          // The AnimatedCrossFade widget is intended to animate between
+          // widgets with the same widget. There will be "jitter" otherwise.
+          // Wrapping the content in a row of Flex=1 will will ensure that the
+          // both widgets stretch the entire space and have the smae width
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Flexible(
+              flex: 1,
+              child: new MessageContent(message: message),
+            ),
+          ],
+        ),
+        firstCurve: new Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
+        secondCurve: new Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
+        sizeCurve: Curves.fastOutSlowIn,
+        crossFadeState:
+            isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        duration: _kExpandAnimationDuration,
+      ),
     ];
-
-    // Add message content if the given item is expanded
-    if (isExpanded) {
-      childWidgets.add(new MessageContent(message: message));
-    }
 
     return new Material(
       color: Colors.white,
