@@ -10,6 +10,7 @@ dependencies:
   quiver: ^0.21.4
   util:
     path: ../util
+  xml: ^2.4.3
 dev_dependencies:
   test: any
   flutter_test:

@@ -94,30 +94,6 @@ class GmailClient extends EmailClient {
     return _createThreadFromJSON(jsonResponse);
   }
 
-  // Right now, this is a very simplistic formatter that only expects emails
-  // addresses in the format of:
-  //    displayname <address>
-  //
-  // TODO(dayang): Trim quotes that wrap display names
-  // https://fuchsia.atlassian.net/browse/SO-48
-  //
-  // TODO(dayang): Handle all cases of RFC email 'mailbox' formats
-  // https://fuchsia.atlassian.net/browse/SO-49
-  static Mailbox _rawAddressToMailbox(String rawString) {
-    RegExp exp = new RegExp(r'(<.*@.*>$)');
-    Match match = exp.firstMatch(rawString);
-    if (match == null) {
-      return new Mailbox(
-        address: rawString,
-      );
-    } else {
-      return new Mailbox(
-        address: rawString.substring(match.start + 1, match.end - 1),
-        displayName: rawString.substring(0, match.start).trim(),
-      );
-    }
-  }
-
   static Message _createMessageFromJSON(dynamic json) {
     String id = json['id'];
 
@@ -130,18 +106,18 @@ class GmailClient extends EmailClient {
     for (dynamic header in headers) {
       switch (header['name'].toString().toLowerCase()) {
         case 'from':
-          sender = _rawAddressToMailbox(header['value'].toString());
+          sender = new Mailbox.fromString(header['value'].toString());
           break;
 
         case 'to':
           header['value'].toString().split(', ').forEach((String rawAddress) {
-            recipientList.add(_rawAddressToMailbox(rawAddress));
+            recipientList.add(new Mailbox.fromString(rawAddress));
           });
           break;
 
         case 'cc':
           header['value'].toString().split(', ').forEach((String rawAddress) {
-            ccList.add(_rawAddressToMailbox(rawAddress));
+            ccList.add(new Mailbox.fromString(rawAddress));
           });
           break;
 

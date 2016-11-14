@@ -75,7 +75,6 @@ class EmailThreadScreen extends StoreWatcher {
       header: new ThreadActionBarHeader(
         thread: thread,
         onArchive: _handleThreadAction,
-        onClose: onThreadClose ?? (_) => Navigator.pop(context),
         onMoreActions: _handleThreadAction,
         onDelete: _handleThreadAction,
       ),

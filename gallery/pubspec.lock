@@ -89,6 +89,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
+  petitparser:
+    description:
+      name: petitparser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.3"
   quiver:
     description:
       name: quiver
@@ -131,5 +137,11 @@ packages:
       relative: true
     source: path
     version: "0.0.0"
+  xml:
+    description:
+      name: xml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.3"
 sdks:
   dart: ">=1.21.0-dev.1.0 <2.0.0"

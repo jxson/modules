@@ -97,20 +97,59 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
         galleryScaffoldedScreen(item.title, new YoutubeThumbnailScreen()),
   ),
   new GalleryItem(
-      title: 'Youtube - Player',
-      subtitle: 'Youtube Player',
-      group: GalleryGroups.screen,
-      href: '/youtube/player',
-      builder: (BuildContext context, GalleryItem item) {
-        try {
-          String apiKey = kConfig.get('youtube_api_key');
-          return galleryScaffoldedScreen(
-              item.title,
-              new YoutubePlayerScreen(
-                apiKey: apiKey,
-              ));
-        } catch (e) {
-          return new ErrorScreen(e.toString());
-        }
-      }),
+    title: 'Youtube - Player',
+    subtitle: 'Youtube Player',
+    group: GalleryGroups.screen,
+    href: '/youtube/player',
+    builder: (BuildContext context, GalleryItem item) {
+      try {
+        String apiKey = kConfig.get('google_services_api_key');
+        return galleryScaffoldedScreen(
+            item.title,
+            new YoutubePlayerScreen(
+              apiKey: apiKey,
+            ));
+      } catch (e) {
+        return new ErrorScreen(e.toString());
+      }
+    },
+  ),
+  new GalleryItem(
+    title: 'Maps - StaticMap',
+    subtitle: 'Static Map',
+    group: GalleryGroups.screen,
+    href: '/map/static',
+    builder: (BuildContext context, GalleryItem item) {
+      try {
+        String apiKey = kConfig.get('google_services_api_key');
+        return galleryScaffoldedScreen(
+            item.title,
+            new StaticMapScreen(
+              apiKey: apiKey,
+            ));
+      } catch (e) {
+        return new ErrorScreen(e.toString());
+      }
+    },
+  ),
+  new GalleryItem(
+    title: 'USPS - Tracking Status',
+    subtitle: 'UPSP Tracking Status',
+    group: GalleryGroups.screen,
+    href: '/usps/tracking_status',
+    builder: (BuildContext context, GalleryItem item) {
+      try {
+        String uspsApiKey = kConfig.get('usps_api_key');
+        String mapsApiKey = kConfig.get('google_services_api_key');
+        return galleryScaffoldedScreen(
+            item.title,
+            new TrackingStatusScreen(
+              uspsApiKey: uspsApiKey,
+              mapsApiKey: mapsApiKey,
+            ));
+      } catch (e) {
+        return new ErrorScreen(e.toString());
+      }
+    },
+  ),
 ];
