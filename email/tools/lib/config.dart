@@ -5,11 +5,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:yaml/yaml.dart' as yaml;
 import 'package:path/path.dart' as path;
+import 'package:yaml/yaml.dart' as yaml;
 
-/// TODO(jasoncampbell): add documentation for this!
+/// Configuration tooling.
 class Config {
+  /// Get a value from the config.yaml file.
   static Future<String> get(String key) async {
     String dirname = path.normalize(path.absolute('..'));
     String filename = path.join(dirname, 'config.yaml');

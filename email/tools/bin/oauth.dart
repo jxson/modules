@@ -5,12 +5,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
-import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import 'package:tools/config.dart';
 
-/// TODO(jasoncampbell): add documentation for this!
 Future<Null> main(List<String> args) async {
   String identifier = await Config.get('oauth_id');
   String secret = await Config.get('oauth_secret');
@@ -22,10 +21,14 @@ Future<Null> main(List<String> args) async {
   ];
 
   AccessCredentials credentials =
-      await obtainAccessCredentialsViaUserConsent(id, scopes, client, prompt);
+      await obtainAccessCredentialsViaUserConsent(id, scopes, client, _prompt);
   client.close();
 
   String source = '''
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart';
 
@@ -64,7 +67,7 @@ AutoRefreshingAuthClient client() {
   print('created: $file');
 }
 
-void prompt(String url) {
+void _prompt(String url) {
   print('Please go to the following URL and grant access:');
   print('  => $url');
   print('');
