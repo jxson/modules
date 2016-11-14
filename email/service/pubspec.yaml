@@ -8,6 +8,13 @@ dependencies:
     sdk: flutter
   googleapis: any
   googleapis_auth: any
+  http: any
 dependency_overrides:
   http:
     path: ../../packages/flutter-http/
+dependencies:
+  test: any
+  googleapis_auth: any
+  googleapis: any
+  flutter_test:
+    sdk: flutter
