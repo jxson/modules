@@ -2,8 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:fixtures/fixtures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:models/user.dart';
 import 'package:widgets/user.dart';
 
 void main() {
@@ -49,5 +51,23 @@ void main() {
 
     expect(find.byType(Image), findsNothing);
     expect(find.text('L'), findsOneWidget);
+  });
+
+  test('Alphtars for the same User should have the same background color.', () {
+    Fixtures fixtures = new Fixtures();
+    User user = fixtures.user();
+
+    Alphatar a1 = new Alphatar.fromUser(user: user);
+    Alphatar a2 = new Alphatar.fromUser(user: user);
+    expect(a1.backgroundColor, equals(a2.backgroundColor));
+  });
+
+  test('Alphtars for the same name should have the same background color.', () {
+    Fixtures fixtures = new Fixtures();
+    String name = fixtures.name();
+
+    Alphatar a1 = new Alphatar.fromName(name: name);
+    Alphatar a2 = new Alphatar.fromName(name: name);
+    expect(a1.backgroundColor, equals(a2.backgroundColor));
   });
 }

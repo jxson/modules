@@ -2,18 +2,19 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-name: widgets
-description: UI widgets for FX
+name: email_service
 dependencies:
-  intl: ^0.14.0
   flutter:
     sdk: flutter
-  models:
-    path: ../models
-  xml: ^2.4.3
-dev_dependencies:
-  test: any
-  fixtures:
-    path: ../fixtures
+  googleapis_auth: ^0.2.3
+  googleapis: ^0.32.0
+  http: ^0.11.3
+dependency_overrides:
+  http:
+    path: ../../packages/flutter-http/
+dependencies:
   flutter_test:
     sdk: flutter
+  test: ^0.12.15
+  googleapis_auth: ^0.2.3
+  googleapis: ^0.32.0

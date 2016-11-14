@@ -2,18 +2,13 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-name: widgets
-description: UI widgets for FX
+name: http
+description: Temporary work around for https://git.io/vXwai
+version: 0.0.1
+
+environment:
+  sdk: '>=1.19.0 <2.0.0'
+
 dependencies:
-  intl: ^0.14.0
   flutter:
-    sdk: flutter
-  models:
-    path: ../models
-  xml: ^2.4.3
-dev_dependencies:
-  test: any
-  fixtures:
-    path: ../fixtures
-  flutter_test:
     sdk: flutter
