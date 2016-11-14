@@ -4,6 +4,7 @@
 
 name: http
 description: Temporary work around for https://git.io/vXwai
+version: 0.0.1
 
 environment:
   sdk: '>=1.19.0 <2.0.0'
