@@ -23,7 +23,7 @@ class Config {
     String contents = await file.readAsString();
     Map<String, String> map = new Map<String, String>();
 
-    if (contents != '') {
+    if (contents.isNotEmpty) {
       dynamic data = yaml.loadYaml(contents);
       data.forEach((String key, String value) {
         map[key] = value;

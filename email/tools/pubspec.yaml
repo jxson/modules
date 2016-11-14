@@ -4,8 +4,8 @@
 
 name: tools
 dependencies:
-  googleapis: any
-  googleapis_auth: any
-  http: any
-  yaml: any
-  path: any
+  googleapis_auth: ^0.2.3
+  googleapis: ^0.32.0
+  http: ^0.11.3
+  path: ^1.4.0
+  yaml: ^2.1.12

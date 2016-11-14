@@ -6,15 +6,15 @@ name: email_service
 dependencies:
   flutter:
     sdk: flutter
-  googleapis: any
-  googleapis_auth: any
-  http: any
+  googleapis_auth: ^0.2.3
+  googleapis: ^0.32.0
+  http: ^0.11.3
 dependency_overrides:
   http:
     path: ../../packages/flutter-http/
 dependencies:
-  test: any
-  googleapis_auth: any
-  googleapis: any
   flutter_test:
     sdk: flutter
+  test: ^0.12.15
+  googleapis_auth: ^0.2.3
+  googleapis: ^0.32.0

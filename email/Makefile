@@ -8,7 +8,6 @@ SHELL := /bin/bash
 
 DIRNAME := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 FUCHSIA_ROOT := $(realpath $(DIRNAME)/../../../)
-DEPS_DIR := third_party
 FLUTTER_DIR := $(FUCHSIA_ROOT)/lib/flutter
 FLUTTER_BIN := $(FLUTTER_DIR)/bin
 DART_BIN := $(FLUTTER_BIN)/cache/dart-sdk/bin
