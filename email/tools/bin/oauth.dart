@@ -57,11 +57,19 @@ AutoRefreshingAuthClient client() {
 }
 ''';
 
-  String dirname = path.normalize(path.absolute('..'));
-  String filename =
-      path.join(dirname, 'service', 'lib', 'src', 'api', 'client.dart');
+  String cwd = path.normalize(path.absolute('..'));
+  String dirname = path.join(cwd, 'service', 'lib', 'src', 'api');
+  Directory directory = new Directory(dirname);
+  if (!(await directory.exists())) {
+    await directory.create(recursive: true);
+  }
 
+  String filename = path.join(dirname, 'client.dart');
   File file = new File(filename);
+  if (!(await file.exists())) {
+    await file.writeAsString('');
+  }
+
   await file.writeAsString(source);
 
   print('created: $file');
