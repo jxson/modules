@@ -12,9 +12,9 @@ dependencies:
 dependency_overrides:
   http:
     path: ../../packages/flutter-http/
-dependencies:
+dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: ^0.12.15
   googleapis_auth: ^0.2.3
   googleapis: ^0.32.0
+  test: ^0.12.15
