@@ -12,6 +12,7 @@ export 'src/email/message_list_item.dart';
 export 'src/email/recipient_input.dart';
 export 'src/email/thread_action_bar_header.dart';
 export 'src/email/thread_grid_item.dart';
+export 'src/email/thread_grid_layout.dart';
 export 'src/email/thread_list_item.dart';
 export 'src/email/thread_list_item_single_line.dart';
 export 'src/email/thread_participant_list.dart';
