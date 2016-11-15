@@ -10,9 +10,9 @@ dart_package("email_service") {
   source_dir = "lib"
 
   deps = [
-    "//lib/flutter/packages/flutter",
-    "//third_party/dart-pkg/pub/googleapis_auth",
-    "//third_party/dart-pkg/pub/googleapis",
     "//apps/modules/packages/flutter-http:http",
+    "//lib/flutter/packages/flutter",
+    "//third_party/dart-pkg/pub/googleapis",
+    "//third_party/dart-pkg/pub/googleapis_auth",
   ]
 }
