@@ -1,3 +1,7 @@
+# Copyright 2016 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
 MAKEFLAGS += --warn-undefined-variables --no-print-directory
 SHELL := /bin/bash
 
@@ -326,3 +330,13 @@ endif
 $(OUT_DIR)/sysroot:
 	$(FUCHSIA_ROOT)/scripts/build-sysroot.sh
 	@touch $@
+
+.PHONY: auth
+auth: email/config.yaml ## Update email auth credentials with a refresh token.
+	@cd email/tools; \
+	pub run bin/oauth.dart
+
+email/config.yaml: email/config.example.yaml
+	@cp $< $@
+	@echo "Config file $< added."
+	@echo "Add missing values and use foo to copy the file to Fuchsia."
