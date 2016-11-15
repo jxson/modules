@@ -2,10 +2,14 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-group("modules") {
+import("//build/dart/dart_package.gni")
+
+dart_package("http") {
+  package_name = "http"
+
+  source_dir = "lib"
+
   deps = [
-    "//apps/modules/email/service:email_service",
-    "//apps/modules/packages/services",
-    "//apps/modules/gallery:modules_gallery",
+    "//lib/flutter/packages/flutter",
   ]
 }
