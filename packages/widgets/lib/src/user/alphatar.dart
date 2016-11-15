@@ -182,7 +182,7 @@ class Alphatar extends StatelessWidget {
         letter ?? '',
         style: new TextStyle(
           color: Colors.white,
-          fontSize: size * 2 / 3,
+          fontSize: size / 2.0,
         ),
       ),
     );
