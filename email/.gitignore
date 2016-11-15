@@ -6,4 +6,3 @@
 packages
 pubspec.lock
 config.yaml
-service/lib/src/api/client.dart
