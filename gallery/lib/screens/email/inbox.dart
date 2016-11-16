@@ -67,27 +67,33 @@ class EmailInboxScreen extends StoreWatcher {
           Navigator.pushNamed(context, '/email/thread/${thread.id}');
         };
 
+    Widget item;
     switch (style) {
       case InboxStyle.multiLine:
-        return new ThreadListItem(
+        item = new ThreadListItem(
           key: key,
           thread: thread,
           onSelect: handleSelect,
           isSelected: selectedThreadId == thread.id,
         );
+        break;
       case InboxStyle.singleLine:
-        return new ThreadListItemSingleLine(
+        item = new ThreadListItemSingleLine(
           key: key,
           thread: thread,
           onSelect: handleSelect,
         );
+        break;
       case InboxStyle.gridView:
-        return new ThreadGridItem(
+        item = new ThreadGridItem(
           key: key,
           thread: thread,
           onSelect: handleSelect,
         );
+        break;
     }
+
+    return item;
   }
 
   @override

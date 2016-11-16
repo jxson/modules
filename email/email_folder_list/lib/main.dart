@@ -74,7 +74,7 @@ void main() {
   );
 
   runApp(new MaterialApp(
-    title: "Email Folder List",
+    title: 'Email Folder List',
     home: new Text('I am the email folder list module!'),
   ));
 }

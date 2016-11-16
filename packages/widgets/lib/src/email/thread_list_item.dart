@@ -11,7 +11,6 @@ import 'archive_dismissable_background.dart';
 import 'thread_participant_list.dart';
 import 'type_defs.dart';
 
-
 final Color _kSelectedBgColor = Colors.blue[200].withOpacity(0.2);
 
 /// [ThreadListItem] is a [StatelessWidget]
