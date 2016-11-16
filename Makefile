@@ -339,4 +339,4 @@ auth: email/config.yaml ## Update email auth credentials with a refresh token.
 email/config.yaml: email/config.example.yaml
 	@cp $< $@
 	@echo "Config file $< added."
-	@echo "Add missing values and use foo to copy the file to Fuchsia."
+	@echo "Add missing values and use ... to copy the file to Fuchsia."
