@@ -3,44 +3,98 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert' show JSON;
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
-import 'package:yaml/yaml.dart' as yaml;
+import './resolve.dart';
 
 /// Configuration tooling.
 class Config {
-  /// Get a value from the config.yaml file.
-  static Future<String> get(String key) async {
-    String dirname = path.normalize(path.absolute('..'));
-    String filename = path.join(dirname, 'config.yaml');
+  /// The path to the config file.
+  static String filename = resolve('config.json');
+
+  /// The OAuth scopes.
+  static List<String> oauthScopes = <String>[
+    'https://www.googleapis.com/auth/gmail.modify'
+  ];
+
+  /// The file object for email/config.json.
+  File file;
+
+  /// The value from oauth_id.
+  String oauthId;
+
+  /// The value from oauth_secret.
+  String oauthSecret;
+
+  /// The value for oauth_token.
+  String oauthToken;
+
+  /// The value for oauth_token_expiry.
+  DateTime oauthTokenExpiry;
+
+  /// The value for oauth_refresh_token.
+  String oauthRefreshToken;
+
+  /// Utilitiy for managing the email/config.json file.
+  Config({
+    this.file,
+    this.oauthId,
+    this.oauthSecret,
+  });
+
+  /// Read the config file and load it's values.
+  static Future<Config> load() async {
     File file = new File(filename);
 
     if (!(await file.exists())) {
-      await file.writeAsString('');
+      throw new StateError('''
+Config file does not exist:
+
+    $file
+      ''');
     }
 
     String contents = await file.readAsString();
-    Map<String, String> map = new Map<String, String>();
+    dynamic data = JSON.decode(contents);
 
-    if (contents.isNotEmpty) {
-      dynamic data = yaml.loadYaml(contents);
-      data.forEach((String key, String value) {
-        map[key] = value;
-      });
-    }
+    if (data['oauth_id'] == null || data['oauth_secret'] == null) {
+      String message = '''
+Config keys for "oauth_id" and "oauth_secret" are required in file:
 
-    if (map[key] == null) {
-      String message = '''Undefined config value "$key".
-
-Please add an entry for "$key" to the config.yaml file:
-
-    $filename
-
-''';
+    $file
+      ''';
       throw new StateError(message);
     }
 
-    return map[key];
+    String oauthId = data['oauth_id'];
+    String oauthSecret = data['oauth_secret'];
+
+    Config config = new Config(
+      file: file,
+      oauthId: oauthId,
+      oauthSecret: oauthSecret,
+    );
+
+    return config;
+  }
+
+  /// Create a [Map] for use in JSON encoding.
+  Map<String, String> toJSON() {
+    Map<String, String> json = new Map<String, String>();
+
+    json['oauth_id'] = oauthId;
+    json['oauth_secret'] = oauthSecret;
+    json['oauth_token'] = oauthToken;
+    json['oauth_token_expiry'] = oauthTokenExpiry.toString();
+    json['oauth_refresh_token'] = oauthRefreshToken;
+
+    return json;
+  }
+
+  /// Save the current configuration values to [this.file].
+  Future<Null> save() async {
+    String data = JSON.encode(this.toJSON());
+    await file.writeAsString(data);
   }
 }
