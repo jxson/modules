@@ -8,6 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/email.dart';
 
+/// Font size of [ThreadParticipantList] when it is used as a subtitle (default)
+const double _kDefaultFontSize = 14.0;
+
+/// Font size of [ThreadParticipantList] when it is used as a title
+const double _kTitleFontSize = 16.0;
+
+const double _kFontHeight = 1.4;
+
 /// [ThreadParticipantList] is a [StatelessWidget]
 ///
 /// A list that renders all the participants in an email thread.
@@ -21,12 +29,17 @@ class ThreadParticipantList extends StatelessWidget {
   /// The [Thread] to render particpants for
   final Thread thread;
 
+  /// Flag for whether the [ThreadParticipantList] is used as the primary title
+  /// line of a thread item
+  final bool isTitle;
+
   /// Creates a [ThreadParticipantList]
   ///
   /// Requires a [Thread] to render
   ThreadParticipantList({
     Key key,
     @required this.thread,
+    this.isTitle: false,
   })
       : super(key: key) {
     assert(thread != null);
@@ -54,15 +67,15 @@ class ThreadParticipantList extends StatelessWidget {
         text: count < participantToUnread.length - 1 ? user + ', ' : user,
         style: new TextStyle(
           fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
-          fontSize: 14.0,
-          height: 1.4,
+          fontSize: isTitle ? _kTitleFontSize : _kDefaultFontSize,
+          height: _kFontHeight,
           color: Colors.black,
         ),
       ));
       count++;
     });
 
-    final Widget participantText = new RichText(
+    Widget participantText = new RichText(
       text: new TextSpan(
         children: participantTextSpanList,
       ),
@@ -70,37 +83,38 @@ class ThreadParticipantList extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
     );
 
-    // Only should message count if thread has more than 1 message
+    // Only show message count if thread has more than 1 message
     if (participantToUnread.length > 1) {
-      return new SizedBox(
-        height: 20.0,
-        child: new CustomMultiChildLayout(
-          delegate: new _ParticipantLayout(),
-          children: <Widget>[
-            new LayoutId(
-              id: 'participantList',
-              child: participantText,
-            ),
-            new LayoutId(
-              id: 'messageCount',
-              child: new Text(
-                ' ${participantTextSpanList.length}',
-                style: new TextStyle(
-                  fontSize: 14.0,
-                  height: 1.4,
-                  color: Colors.grey[500],
-                ),
+      participantText = new CustomMultiChildLayout(
+        delegate: new _ParticipantLayout(),
+        children: <Widget>[
+          new LayoutId(
+            id: 'participantList',
+            child: participantText,
+          ),
+          new LayoutId(
+            id: 'messageCount',
+            child: new Text(
+              ' ${participantTextSpanList.length}',
+              style: new TextStyle(
+                fontSize: 14.0,
+                height: _kFontHeight,
+                color: Colors.grey[500],
               ),
             ),
-          ],
-        ),
-      );
-    } else {
-      return new SizedBox(
-        height: 20.0,
-        child: participantText,
+          ),
+        ],
       );
     }
+
+    // A CustomMultiChildLayout require a parent with non-infinite dimensions
+    // The parent container is set as the total line height of the text
+    return new SizedBox(
+      height: isTitle
+          ? _kTitleFontSize * _kFontHeight
+          : _kDefaultFontSize * _kFontHeight,
+      child: participantText,
+    );
   }
 }
 
@@ -119,7 +133,12 @@ class _ParticipantLayout extends MultiChildLayoutDelegate {
     Size participantListSize = layoutChild(participantList,
         new BoxConstraints(maxWidth: size.width - messageCountSize.width));
     positionChild(participantList, Offset.zero);
-    positionChild(messageCount, new Offset(participantListSize.width, 0.0));
+    positionChild(
+        messageCount,
+        new Offset(
+          participantListSize.width,
+          (size.height - messageCountSize.height) / 2.0,
+        ));
   }
 
   @override
