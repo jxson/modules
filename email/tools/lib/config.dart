@@ -9,6 +9,35 @@ import './resolve.dart';
 
 /// Configuration tooling.
 class Config {
+  String
+
+  static Future<Config> load() async {
+
+    // Config config = await Config.load();
+    // String identifier = config.get('oauth_id');
+    // String secret = config.get('oauth_secret');
+    //
+    // ClientId id = new ClientId(identifier, secret);
+    // http.Client client = new http.Client();
+    // List<String> scopes = <String>[
+    //   'https://www.googleapis.com/auth/gmail.modify'
+    // ];
+    //
+    // AccessCredentials credentials =
+    //     await obtainAccessCredentialsViaUserConsent(id, scopes, client, _prompt);
+    // client.close();
+    //
+    // config.put('oauth_token', credentials.accessToken.data);
+    // config.put('oauth_token_expiry', credentials.accessToken.expiry);
+    // config.put('oauth_refresh_token', credentials.accessToken.expiry);
+    //
+    // await config.save();
+    //
+    // print('updated: ${config.file}');
+
+
+  }
+
   /// Get a value from the config.yaml file.
   static Future<String> get(String key) async {
     String filename = resolve('config.json');
