@@ -3,6 +3,7 @@
 .idea
 .packages
 .pub/
+build/
+ios/.generated/
 packages
 pubspec.lock
-config.json

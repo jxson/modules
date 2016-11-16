@@ -1,0 +1,10 @@
+name: flutter_app
+description: A new flutter project.
+dependencies:
+  email_service:
+    path: ../email_service
+  flutter:
+    sdk: flutter
+dependency_overrides:
+  http:
+    path: ../../packages/flutter-http/

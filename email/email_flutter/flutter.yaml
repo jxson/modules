@@ -1,0 +1,4 @@
+name: email
+uses-material-design: true
+assets:
+  - assets/config.json
