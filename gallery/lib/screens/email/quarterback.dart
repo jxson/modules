@@ -46,6 +46,7 @@ class EmailQuarterbackModule extends StoreWatcher {
           child: new EmailInboxScreen(
             onThreadSelect: (Thread t) =>
                 galleryStore.actions.updateThreadId(t.id),
+            selectedThreadId: galleryStore.threadId,
           ),
         ),
       ),

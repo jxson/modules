@@ -32,6 +32,7 @@ class EmailInboxScreen extends StoreWatcher {
     this.style: InboxStyle.multiLine,
     this.inboxTitle: 'Inbox',
     this.onThreadSelect,
+    this.selectedThreadId,
   })
       : super(key: key) {
     assert(style != null);
@@ -43,6 +44,9 @@ class EmailInboxScreen extends StoreWatcher {
 
   /// Header Title for this view
   final String inboxTitle;
+
+  /// Id of selected thread
+  final String selectedThreadId;
 
   /// Callback for the thread selection.
   ///
@@ -69,6 +73,7 @@ class EmailInboxScreen extends StoreWatcher {
           key: key,
           thread: thread,
           onSelect: handleSelect,
+          isSelected: selectedThreadId == thread.id,
         );
       case InboxStyle.singleLine:
         return new ThreadListItemSingleLine(

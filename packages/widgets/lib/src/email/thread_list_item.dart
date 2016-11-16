@@ -11,6 +11,9 @@ import 'archive_dismissable_background.dart';
 import 'thread_participant_list.dart';
 import 'type_defs.dart';
 
+
+final Color _kSelectedBgColor = Colors.blue[200].withOpacity(0.2);
+
 /// [ThreadListItem] is a [StatelessWidget]
 ///
 /// An item that represents a single thread in inbox view
@@ -27,6 +30,9 @@ class ThreadListItem extends StatelessWidget {
   /// Size of avatar in List item
   final double avatarSize;
 
+  /// Flag for when this ThreadList is "selected"
+  final bool isSelected;
+
   /// Creates a Thread ListItem
   ///
   /// Requires a [Thread] to render
@@ -35,6 +41,7 @@ class ThreadListItem extends StatelessWidget {
     @required this.thread,
     this.onSelect,
     this.onArchive,
+    this.isSelected: false,
     this.avatarSize: 40.0,
   })
       : super(key: key) {
@@ -118,7 +125,7 @@ class ThreadListItem extends StatelessWidget {
     );
 
     final Widget listItem = new Material(
-      color: Colors.white,
+      color: isSelected ? _kSelectedBgColor : Colors.white,
       child: new ListItem(
         enabled: true,
         onTap: _handleSelect,
