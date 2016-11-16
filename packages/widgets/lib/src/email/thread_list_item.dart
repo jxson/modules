@@ -67,15 +67,9 @@ class ThreadListItem extends StatelessWidget {
       children: <Widget>[
         new Flexible(
           flex: 1,
-          child: new Text(
-            thread.getSubject(),
-            softWrap: false,
-            overflow: TextOverflow.ellipsis,
-            style: new TextStyle(
-              fontSize: 16.0,
-              fontWeight:
-                  lastMessage.isRead ? FontWeight.normal : FontWeight.bold,
-            ),
+          child: new ThreadParticipantList(
+            thread: thread,
+            isTitle: true,
           ),
         ),
         new Flexible(
@@ -98,7 +92,18 @@ class ThreadListItem extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new ThreadParticipantList(thread: thread),
+        new Text(
+          thread.getSubject(),
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          style: new TextStyle(
+            fontSize: 14.0,
+            color: lastMessage.isRead ? Colors.grey[500] : Colors.black,
+            height: 1.4,
+            fontWeight:
+                lastMessage.isRead ? FontWeight.normal : FontWeight.bold,
+          ),
+        ),
         new Text(
           lastMessage.generateSnippet(),
           softWrap: false,
