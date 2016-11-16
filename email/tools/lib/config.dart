@@ -5,15 +5,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
-import 'package:yaml/yaml.dart' as yaml;
+import './resolve.dart';
 
 /// Configuration tooling.
 class Config {
   /// Get a value from the config.yaml file.
   static Future<String> get(String key) async {
-    String dirname = path.normalize(path.absolute('..'));
-    String filename = path.join(dirname, 'config.yaml');
+    String filename = resolve('config.json');
     File file = new File(filename);
 
     if (!(await file.exists())) {
@@ -24,10 +22,10 @@ class Config {
     Map<String, String> map = new Map<String, String>();
 
     if (contents.isNotEmpty) {
-      dynamic data = yaml.loadYaml(contents);
-      data.forEach((String key, String value) {
-        map[key] = value;
-      });
+      // dynamic data = yaml.loadYaml(contents);
+      // data.forEach((String key, String value) {
+      //   map[key] = value;
+      // });
     }
 
     if (map[key] == null) {
@@ -44,3 +42,19 @@ Please add an entry for "$key" to the config.yaml file:
     return map[key];
   }
 }
+
+//   String cwd = path.normalize(path.absolute('..'));
+//   String dirname = path.join(cwd, 'service', 'lib', 'src', 'api');
+//   Directory directory = new Directory(dirname);
+//   if (!(await directory.exists())) {
+//     await directory.create(recursive: true);
+//   }
+//
+//   String filename = path.join(dirname, 'client.dart');
+//   File file = new File(filename);
+//   if (!(await file.exists())) {
+//     await file.writeAsString('');
+//   }
+//
+//   await file.writeAsString(source);
+//
