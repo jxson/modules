@@ -11,6 +11,8 @@ import '../user/alphatar.dart';
 import 'folder_list_item.dart';
 import 'type_defs.dart';
 
+const double _kProfileHeaderHeight = 73.0;
+
 /// Renders a Google Gmail style inbox menu.
 /// Contains a user banner followed by a list of [FolderGroup]s.
 /// This widget provides the UI affordances to 'tab' between email folders.
@@ -95,7 +97,8 @@ class InboxMenu extends StatelessWidget {
   /// Builds User Profile 'banner' that is on top of the menu
   Widget _buildUserProfile() {
     return new Container(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      alignment: FractionalOffset.centerLeft,
+      height: _kProfileHeaderHeight,
       child: new ListItem(
         title: new Text(user.name),
         subtitle: new Text(user.email),
