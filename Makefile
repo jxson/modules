@@ -1,3 +1,7 @@
+# Copyright 2016 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
 MAKEFLAGS += --warn-undefined-variables --no-print-directory
 SHELL := /bin/bash
 
@@ -132,6 +136,9 @@ coverage: ## Show coverage for all modules.
 .PHONY: run
 run: dart-base ## Run the gallery flutter app.
 	@cd gallery && flutter run --hot
+
+run-email: dart-base ## Run the email flutter app.
+	@cd email/email_flutter && flutter run --hot
 
 .PHONY: run-fuchsia
 run-fuchsia: dart-base mojom-gen ## Run magenta in qemu.
@@ -326,3 +333,15 @@ endif
 $(OUT_DIR)/sysroot:
 	$(FUCHSIA_ROOT)/scripts/build-sysroot.sh
 	@touch $@
+
+.PHONY: auth
+auth: email/config.json ## Update email auth credentials with a refresh token.
+	@cd email/tools; \
+	pub run bin/oauth.dart
+	@mkdir email/email_flutter/assets
+	@cp email/config.json email/email_flutter/assets/config.json
+
+email/config.json:
+	@echo "{}" >> email/config.json
+	@echo "==> Config file added."
+	@echo "==> Add missing values and run: make auth."

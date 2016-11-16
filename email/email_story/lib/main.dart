@@ -86,7 +86,7 @@ void main() {
   );
 
   runApp(new MaterialApp(
-    title: "Email Quarterback",
+    title: 'Email Quarterback',
     home: new Text('I am the email quarterback module!'),
   ));
 }
