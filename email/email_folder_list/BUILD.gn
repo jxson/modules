@@ -12,7 +12,7 @@ flutter_app("email_folder_list") {
   deps = [
     "//apps/modular/lib/app/dart",
     "//apps/modular/services/application:application_dart",
-    "//apps/modular/services/story:public_dart",
+    "//apps/modular/services/story:story_dart",
     "//apps/modules/packages/models",
     "//apps/modules/packages/widgets",
     "//apps/mozart/lib/flutter",
