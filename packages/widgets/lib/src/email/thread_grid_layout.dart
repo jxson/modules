@@ -16,6 +16,7 @@ class ThreadGridLayout extends StatelessWidget {
   /// List of children widgets, ideally ThreadGridItems
   final List<Widget> children;
 
+  /// ThreadGridLayout
   ThreadGridLayout({
     Key key,
     @required this.children,
