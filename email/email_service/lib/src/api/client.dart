@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:http/http.dart' as http;
+export 'package:flutter/http.dart' show Client;
 
 const List<String> _kScopes = const <String>[
   'https://www.googleapis.com/auth/gmail.modify'
@@ -24,6 +24,6 @@ AutoRefreshingAuthClient client({
   AccessToken accessToken = new AccessToken('Bearer', token, expiry);
   AccessCredentials credentials =
       new AccessCredentials(accessToken, refreshToken, _kScopes);
-  http.Client baseClient = new http.Client();
+  Client baseClient = new Client();
   return autoRefreshingClient(clientId, credentials, baseClient);
 }
