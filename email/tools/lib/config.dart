@@ -3,87 +3,69 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert' show JSON;
 import 'dart:io';
 
 import './resolve.dart';
 
 /// Configuration tooling.
 class Config {
-  String
+  /// The path to the config file.
+  static String filename = resolve('config.json');
+  /// The OAuth scopes.
+  static List<String> oauthScopes = <String>[
+    'https://www.googleapis.com/auth/gmail.modify'
+  ];
+
+  File file;
+  String oauthId;
+  String oauthSecret;
+  String oauthToken;
+  DateTime oauthTokenExpiry;
+  String oauthRefreshToken;
+
+  Config({
+    this.file,
+    this.oauthId,
+    this.oauthSecret,
+  });
 
   static Future<Config> load() async {
-
-    // Config config = await Config.load();
-    // String identifier = config.get('oauth_id');
-    // String secret = config.get('oauth_secret');
-    //
-    // ClientId id = new ClientId(identifier, secret);
-    // http.Client client = new http.Client();
-    // List<String> scopes = <String>[
-    //   'https://www.googleapis.com/auth/gmail.modify'
-    // ];
-    //
-    // AccessCredentials credentials =
-    //     await obtainAccessCredentialsViaUserConsent(id, scopes, client, _prompt);
-    // client.close();
-    //
-    // config.put('oauth_token', credentials.accessToken.data);
-    // config.put('oauth_token_expiry', credentials.accessToken.expiry);
-    // config.put('oauth_refresh_token', credentials.accessToken.expiry);
-    //
-    // await config.save();
-    //
-    // print('updated: ${config.file}');
-
-
-  }
-
-  /// Get a value from the config.yaml file.
-  static Future<String> get(String key) async {
-    String filename = resolve('config.json');
     File file = new File(filename);
 
     if (!(await file.exists())) {
-      await file.writeAsString('');
+      // STATE ERROR
     }
 
     String contents = await file.readAsString();
-    Map<String, String> map = new Map<String, String>();
+    dynamic data = JSON.decode(contents);
+    String oauthId = data['oauth_id'];
+    String oauthSecret = data['oauth_secret'];
 
-    if (contents.isNotEmpty) {
-      // dynamic data = yaml.loadYaml(contents);
-      // data.forEach((String key, String value) {
-      //   map[key] = value;
-      // });
-    }
+    Config config = new Config(
+      file: file,
+      oauthId: oauthId,
+      oauthSecret: oauthSecret,
+    );
 
-    if (map[key] == null) {
-      String message = '''Undefined config value "$key".
+    return config;
+  }
 
-Please add an entry for "$key" to the config.yaml file:
 
-    $filename
+  Map toJSON() {
+    Map<String, String> json = new Map<String, String>();
 
-''';
-      throw new StateError(message);
-    }
+    json['oauth_id'] = oauthId;
+    json['oauth_secret'] = oauthSecret;
+    json['oauth_token'] = oauthToken;
+    json['oauth_token_expiry'] = oauthTokenExpiry.toString();
+    json['oauth_refresh_token'] = oauthRefreshToken;
 
-    return map[key];
+    return json;
+  }
+
+  Future<Null> save() async {
+    String data = JSON.encode(this.toJSON());
+    await file.writeAsString(data);
   }
 }
-
-//   String cwd = path.normalize(path.absolute('..'));
-//   String dirname = path.join(cwd, 'service', 'lib', 'src', 'api');
-//   Directory directory = new Directory(dirname);
-//   if (!(await directory.exists())) {
-//     await directory.create(recursive: true);
-//   }
-//
-//   String filename = path.join(dirname, 'client.dart');
-//   File file = new File(filename);
-//   if (!(await file.exists())) {
-//     await file.writeAsString('');
-//   }
-//
-//   await file.writeAsString(source);
-//

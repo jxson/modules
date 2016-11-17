@@ -3,31 +3,23 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
 import 'package:tools/config.dart';
 
+/// Generate OAuth refesh credentials and save them to email/config.json.
 Future<Null> main(List<String> args) async {
   Config config = await Config.load();
-  String identifier = config.get('oauth_id');
-  String secret = config.get('oauth_secret');
-
-  ClientId id = new ClientId(identifier, secret);
+  ClientId clientId = new ClientId(config.oauthId, config.oauthSecret);
   http.Client client = new http.Client();
-  List<String> scopes = <String>[
-    'https://www.googleapis.com/auth/gmail.modify'
-  ];
-
   AccessCredentials credentials =
-      await obtainAccessCredentialsViaUserConsent(id, scopes, client, _prompt);
+      await obtainAccessCredentialsViaUserConsent(clientId, Config.oauthScopes, client, _prompt);
   client.close();
 
-  config.put('oauth_token', credentials.accessToken.data);
-  config.put('oauth_token_expiry', credentials.accessToken.expiry);
-  config.put('oauth_refresh_token', credentials.accessToken.expiry);
+  config.oauthToken = credentials.accessToken.data;
+  config.oauthTokenExpiry = credentials.accessToken.expiry;
+  config.oauthRefreshToken = credentials.refreshToken;
 
   await config.save();
 
