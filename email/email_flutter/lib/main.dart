@@ -67,7 +67,7 @@ class _MyHomePageState extends State<_MyHomePage> {
       api.GmailApi gmail = new api.GmailApi(client);
       return load(gmail);
     }).catchError((Error error) {
-      print('Error loading config file: ${error.stackTrace}');
+      print('Error loading config file: $error');
     });
 
     super.initState();

@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:googleapis_auth/auth_io.dart';
-export 'package:flutter/http.dart' show Client;
+import 'package:flutter/http.dart' show Client;
 
 const List<String> _kScopes = const <String>[
   'https://www.googleapis.com/auth/gmail.modify'
