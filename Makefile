@@ -332,11 +332,11 @@ $(OUT_DIR)/sysroot:
 	@touch $@
 
 .PHONY: auth
-auth: email/config.yaml ## Update email auth credentials with a refresh token.
+auth: email/config.json ## Update email auth credentials with a refresh token.
 	@cd email/tools; \
 	pub run bin/oauth.dart
 
-email/config.yaml: email/config.example.yaml
-	@cp $< $@
-	@echo "Config file $< added."
-	@echo "Add missing values and use ... to copy the file to Fuchsia."
+email/config.json:
+	@echo "{}" >> email/config.json
+	@echo "==> Config file added."
+	@echo "==> Add missing values and run: make auth."

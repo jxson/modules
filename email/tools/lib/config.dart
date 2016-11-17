@@ -42,15 +42,22 @@ class Config {
     File file = new File(filename);
 
     if (!(await file.exists())) {
-      throw new StateError("Config file does not exist.");
+      throw new StateError('''
+Config file does not exist:
+
+    $file
+      ''');
     }
 
     String contents = await file.readAsString();
     dynamic data = JSON.decode(contents);
 
-    if (data['oauth_id'].isNull || data['oauth_secret'].isNull) {
-      String message =
-        'Config keys for oauth_id and oauth_secret are required.';
+    if (data['oauth_id'] == null || data['oauth_secret'] == null) {
+      String message ='''
+Config keys for "oauth_id" and "oauth_secret" are required in file:
+
+    $file
+      ''';
       throw new StateError(message);
     }
 
