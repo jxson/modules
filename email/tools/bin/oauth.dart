@@ -13,8 +13,8 @@ Future<Null> main(List<String> args) async {
   Config config = await Config.load();
   ClientId clientId = new ClientId(config.oauthId, config.oauthSecret);
   http.Client client = new http.Client();
-  AccessCredentials credentials =
-      await obtainAccessCredentialsViaUserConsent(clientId, Config.oauthScopes, client, _prompt);
+  AccessCredentials credentials = await obtainAccessCredentialsViaUserConsent(
+      clientId, Config.oauthScopes, client, _prompt);
   client.close();
 
   config.oauthToken = credentials.accessToken.data;

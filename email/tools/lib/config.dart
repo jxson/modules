@@ -12,6 +12,7 @@ import './resolve.dart';
 class Config {
   /// The path to the config file.
   static String filename = resolve('config.json');
+
   /// The OAuth scopes.
   static List<String> oauthScopes = <String>[
     'https://www.googleapis.com/auth/gmail.modify'
@@ -19,14 +20,19 @@ class Config {
 
   /// The file object for email/config.json.
   File file;
+
   /// The value from oauth_id.
   String oauthId;
+
   /// The value from oauth_secret.
   String oauthSecret;
+
   /// The value for oauth_token.
   String oauthToken;
+
   /// The value for oauth_token_expiry.
   DateTime oauthTokenExpiry;
+
   /// The value for oauth_refresh_token.
   String oauthRefreshToken;
 
@@ -53,7 +59,7 @@ Config file does not exist:
     dynamic data = JSON.decode(contents);
 
     if (data['oauth_id'] == null || data['oauth_secret'] == null) {
-      String message ='''
+      String message = '''
 Config keys for "oauth_id" and "oauth_secret" are required in file:
 
     $file
