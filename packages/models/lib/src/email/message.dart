@@ -58,11 +58,12 @@ class Message {
     this.isRead,
   });
 
-  // TODO(dayang) Generate text snippet preview of conversation. Need to remove
-  // new line characters for proper formatting.
   /// Generates preview text for message
+  /// Strips all newline characters
+  // TODO(dayang): Trim NewLine characters for other platforms
+  // https://fuchsia.atlassian.net/browse/SO-131
   String generateSnippet() {
-    return text;
+    return text.replaceAll('\n', ' ');
   }
 
   /// Get 'Display Date' for [Message]
