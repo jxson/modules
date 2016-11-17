@@ -11,6 +11,11 @@ dependencies:
   util:
     path: ../util
   xml: ^2.4.3
+  email_service:
+    path: ../../email/email_service
+dependency_overrides:
+  http:
+    path: ../../packages/flutter-http/
 dev_dependencies:
   test: any
   flutter_test:

@@ -11,6 +11,9 @@ dependencies:
   models:
     path: ../models
   xml: ^2.4.3
+dependency_overrides:
+  http:
+    path: ../../packages/flutter-http/
 dev_dependencies:
   test: any
   fixtures:

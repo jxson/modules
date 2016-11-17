@@ -1,3 +1,7 @@
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:convert' show JSON;
 
@@ -83,6 +87,14 @@ class _MyHomePageState extends State<_MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = <Widget>[];
+    _threads.forEach((api.Thread thread) {
+      children.add(new ListItem(
+        title: new Text(thread.id),
+        subtitle: new Text(thread.snippet),
+      ));
+    });
+
     // This method is rerun every time setState is called, for instance
     // as done by the _incrementCounter method above.
     // The Flutter framework has been optimized to make rerunning
@@ -98,12 +110,7 @@ class _MyHomePageState extends State<_MyHomePage> {
       ),
       body: new MaterialList(
         type: MaterialListType.twoLine,
-        children: _threads.map((api.Thread thread) {
-          return new ListItem(
-            title: new Text(thread.id),
-            subtitle: new Text(thread.snippet),
-          );
-        }),
+        children: children,
       ), // This trailing comma tells the Dart formatter to use
       // a style that looks nicer for build methods.
     );
