@@ -10,6 +10,8 @@ import '../user/alphatar.dart';
 import 'thread_participant_list.dart';
 import 'type_defs.dart';
 
+const double _kMaxCardHeight = 200.0;
+
 /// UI widget that represents a single thread in a grid-tile view
 class ThreadGridItem extends StatelessWidget {
   /// The [Thread] to render
@@ -77,6 +79,7 @@ class ThreadGridItem extends StatelessWidget {
   Widget _buildBody() {
     final Message lastMessage = thread.messages.last;
     return new Container(
+      constraints: new BoxConstraints(maxHeight: _kMaxCardHeight),
       padding: const EdgeInsets.only(bottom: 16.0),
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,13 +99,14 @@ class ThreadGridItem extends StatelessWidget {
                 top: 10.0,
               ),
               child: new Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   new ThreadParticipantList(thread: thread),
                   new Container(
                     margin: const EdgeInsets.only(top: 4.0),
                     child: new Text(
-                      lastMessage.generateSnippet(),
+                      lastMessage.text,
                       softWrap: true,
                       style: new TextStyle(
                         fontSize: 14.0,
