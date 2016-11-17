@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 void main() {
-  runApp(new MyApp());
+  runApp(new _MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class _MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,13 @@ class MyApp extends StatelessWidget {
         // reset back to zero -- the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'Email Flutter App'),
+      home: new _MyHomePage(title: 'Email Flutter App'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class _MyHomePage extends StatefulWidget {
+  _MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful,
   // meaning that it has a State object (defined below) that contains
@@ -49,21 +49,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => new _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MyHomePageState extends State<_MyHomePage> {
   List<api.Thread> _threads = new List<api.Thread>();
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that
-      // something has changed in this State, which causes it to rerun
-      // the build method below so that the display can reflect the
-      // updated values. If we changed _counter without calling
-      // setState(), then the build method would not be called again,
-      // and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   void initState() {
@@ -88,7 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<Null> load(api.GmailApi gmail) async {
     api.ListThreadsResponse response = await gmail.users.threads.list('me');
-
     setState(() => _threads = response.threads);
   }
 

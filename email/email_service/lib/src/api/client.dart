@@ -5,11 +5,6 @@
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 
-const String _kOauthID = '';
-const String _kOauthSecret = '';
-const String _kTokenData = '';
-final DateTime _kTokenExpiry = DateTime.parse('2016-11-15 00:21:53.978297Z');
-const String _kRefreshToken = '';
 const List<String> _kScopes = const <String>[
   'https://www.googleapis.com/auth/gmail.modify'
 ];
