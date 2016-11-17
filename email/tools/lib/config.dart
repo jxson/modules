@@ -17,28 +17,43 @@ class Config {
     'https://www.googleapis.com/auth/gmail.modify'
   ];
 
+  /// The file object for email/config.json.
   File file;
+  /// The value from oauth_id.
   String oauthId;
+  /// The value from oauth_secret.
   String oauthSecret;
+  /// The value for oauth_token.
   String oauthToken;
+  /// The value for oauth_token_expiry.
   DateTime oauthTokenExpiry;
+  /// The value for oauth_refresh_token.
   String oauthRefreshToken;
 
+  /// Utilitiy for managing the email/config.json file.
   Config({
     this.file,
     this.oauthId,
     this.oauthSecret,
   });
 
+  /// Read the config file and load it's values.
   static Future<Config> load() async {
     File file = new File(filename);
 
     if (!(await file.exists())) {
-      // STATE ERROR
+      throw new StateError("Config file does not exist.");
     }
 
     String contents = await file.readAsString();
     dynamic data = JSON.decode(contents);
+
+    if (data['oauth_id'].isNull || data['oauth_secret'].isNull) {
+      String message =
+        'Config keys for oauth_id and oauth_secret are required.';
+      throw new StateError(message);
+    }
+
     String oauthId = data['oauth_id'];
     String oauthSecret = data['oauth_secret'];
 
@@ -51,8 +66,8 @@ class Config {
     return config;
   }
 
-
-  Map toJSON() {
+  /// Create a [Map] for use in JSON encoding.
+  Map<String, String> toJSON() {
     Map<String, String> json = new Map<String, String>();
 
     json['oauth_id'] = oauthId;
@@ -64,6 +79,7 @@ class Config {
     return json;
   }
 
+  /// Save the current configuration values to [this.file].
   Future<Null> save() async {
     String data = JSON.encode(this.toJSON());
     await file.writeAsString(data);
