@@ -7,9 +7,15 @@ import 'package:test/test.dart';
 
 void main() {
   test('.generateSnippet() should return text of message', () {
-    String messageText = 'Baku in the Bathroom';
+    String messageText = 'Puppies in Paris';
     Message message = new Message(text: messageText);
     expect(message.generateSnippet(), messageText);
+  });
+
+  test('.generateSnippet() should strip newline characters of message', () {
+    String messageText = 'Puppies\nin Paris';
+    Message message = new Message(text: messageText);
+    expect(message.generateSnippet(), 'Puppies in Paris');
   });
 
   test(
