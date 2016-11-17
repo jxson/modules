@@ -4,12 +4,11 @@
 
 import 'package:email_service/api.dart' as api;
 import 'package:googleapis/gmail/v1.dart';
-import 'package:http/http.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('email.threads()', () async {
-    Client client = api.client();
+    api.Client client = api.client();
     GmailApi gmail = new GmailApi(client);
 
     print('making request');

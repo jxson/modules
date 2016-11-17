@@ -6,9 +6,12 @@ name: email_service
 dependencies:
   flutter:
     sdk: flutter
-  googleapis_auth: ^0.2.3
-  googleapis: ^0.32.0
-  http: ^0.11.3
+  # "//third_party/dart-pkg/manual/googleapis"
+  # "//third_party/dart-pkg/manual/googleapis_auth"
+  googleapis:
+    path: ../../../../third_party/dart-pkg/manual/googleapis
+  googleapis_auth:
+    path: ../../../../third_party/dart-pkg/manual/googleapis_auth
 dependency_overrides:
   http:
     path: ../../packages/flutter-http/

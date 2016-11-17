@@ -1,0 +1,15 @@
+# Copyright 2016 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/dart/dart_package.gni")
+
+flutter_app("email_service") {
+  source_dir = "lib"
+
+  deps = [
+    "//third_party/dart-pkg/manual/googleapis"
+    "//third_party/dart-pkg/manual/googleapis_auth"
+    "//lib/flutter/packages/flutter",
+  ]
+}

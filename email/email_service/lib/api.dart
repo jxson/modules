@@ -4,4 +4,4 @@
 
 export './src/api/client.dart';
 export 'package:googleapis/gmail/v1.dart';
-export 'package:http/http.dart' show Client;
+export 'package:flutter/http.dart' show Client;
