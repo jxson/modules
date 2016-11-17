@@ -75,7 +75,10 @@ class _MyHomePageState extends State<_MyHomePage> {
 
   Future<Null> load(api.GmailApi gmail) async {
     api.ListThreadsResponse response = await gmail.users.threads.list('me');
-    setState(() => _threads = response.threads);
+
+    if (mounted) {
+      setState(() => _threads = response.threads);
+    }
   }
 
   @override

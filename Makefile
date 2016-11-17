@@ -137,7 +137,7 @@ coverage: ## Show coverage for all modules.
 run: dart-base ## Run the gallery flutter app.
 	@cd gallery && flutter run --hot
 
-run-email: dart-base ## Run the gallery flutter app.
+run-email: dart-base ## Run the email flutter app.
 	@cd email/email_flutter && flutter run --hot
 
 .PHONY: run-fuchsia
@@ -338,8 +338,8 @@ $(OUT_DIR)/sysroot:
 auth: email/config.json ## Update email auth credentials with a refresh token.
 	@cd email/tools; \
 	pub run bin/oauth.dart
-	@mkdir email/flutter_app/assets
-	@cp email/config.json email/flutter_app/assets/config.json
+	@mkdir email/email_flutter/assets
+	@cp email/config.json email/email_flutter/assets/config.json
 
 email/config.json:
 	@echo "{}" >> email/config.json

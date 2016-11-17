@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert' show JSON;
+import 'dart:convert';
 import 'dart:io';
 
 import './resolve.dart';
@@ -94,7 +94,9 @@ Config keys for "oauth_id" and "oauth_secret" are required in file:
 
   /// Save the current configuration values to [this.file].
   Future<Null> save() async {
-    String data = JSON.encode(this.toJSON());
+    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+    Map<String, String> json = this.toJSON();
+    String data = encoder.convert(json);
     await file.writeAsString(data);
   }
 }
