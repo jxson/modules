@@ -5,6 +5,7 @@
 group("email") {
   deps = [
     "//apps/modules/email/email_folder_list",
+    "//apps/modules/email/email_service",
     "//apps/modules/email/email_story",
     "//apps/modules/email/user_shell:email_user_shell",
   ]
