@@ -119,36 +119,17 @@ class EmailUserShellApp
   }
 
   void CreateStory(const fidl::String& url) {
-    FTL_LOG(INFO) << "EmailUserShellView::CreateStory() " << url;
+    FTL_LOG(INFO) << "EmailUserShell::CreateStory() " << url;
     story_provider_->CreateStory(url, fidl::GetProxy(&story_controller_));
     story_controller_->GetInfo([this](modular::StoryInfoPtr story_info) {
-      FTL_LOG(INFO) << "EmailUserShellView::CreateStory() Story.Getinfo()"
-                    << " url: " << story_info->url << " id: " << story_info->id
-                    << " story_page_id: "
-                    << modular::to_string(story_info->story_page_id)
-                    << " is_running: " << story_info->is_running;
-
-      // Retain the story info so we can resume it by ID.
-      story_info_ = std::move(story_info);
-
       InitStory();
     });
   }
 
-  void ResumeStory() {
-    FTL_LOG(INFO) << "EmailUserShellView::ResumeStory() "
-                  << " url: " << story_info_->url << " id: " << story_info_->id
-                  << " story_page_id: "
-                  << modular::to_string(story_info_->story_page_id)
-                  << " is_running: " << story_info_->is_running;
-
-    story_provider_->ResumeStoryByInfo(story_info_->Clone(),
-                                       fidl::GetProxy(&story_controller_));
-    InitStory();
-  }
+  void ResumeStory() {}
 
   void InitStory() {
-
+    FTL_LOG(INFO) << "EmailUserShellView::InitStory()";
     fidl::InterfaceHandle<mozart::ViewOwner> story_view;
     story_controller_->Start(fidl::GetProxy(&story_view));
 
@@ -158,15 +139,10 @@ class EmailUserShellApp
     }
   }
 
-  void TearDownStoryController() {
-    story_controller_.reset();
-  }
-
   std::unique_ptr<EmailUserShellView> view_;
 
   modular::StoryProviderPtr story_provider_;
   modular::StoryControllerPtr story_controller_;
-  modular::StoryInfoPtr story_info_;
 
   FTL_DISALLOW_COPY_AND_ASSIGN(EmailUserShellApp);
 };
