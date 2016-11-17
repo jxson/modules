@@ -16,10 +16,8 @@ final String _kYoyoAvatarUrl =
 /// A mock version for [Thread].
 class MockThread extends Thread {
   /// Creates a mock [Thread].
-  MockThread({String id}) : super(id: id) {
-    id = id ?? 'thread1';
-    messages = messages ??
-        <Message>[
+  MockThread({String id})
+      : super(id: id, messages: <Message>[
           new Message(
             id: 'm1',
             sender: new Mailbox(
@@ -77,6 +75,7 @@ class MockThread extends Thread {
             timestamp: new DateTime.now(),
             isRead: false,
           ),
-        ];
+        ]) {
+    id = id ?? 'thread1';
   }
 }

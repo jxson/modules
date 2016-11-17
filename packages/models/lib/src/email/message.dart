@@ -2,7 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert' show UTF8, BASE64;
+
 import 'package:collection/collection.dart';
+import 'package:email_service/api.dart' as api;
 import 'package:intl/intl.dart';
 import 'package:quiver/core.dart' as quiver;
 import 'package:util/time_util.dart';
@@ -15,35 +18,32 @@ const ListEquality<Mailbox> _mailboxListEquality =
 /// Represents a single Gmail Message
 /// https://developers.google.com/gmail/api/v1/reference/users/messages
 class Message {
-  // TODO(dayang) Most of these are 'fake stub' fields that are used for
-  // prototying. We will have to update this once we get real Gmail data.
-
   /// Unique Identifier for given email message
-  String id;
+  final String id;
 
   /// List of recipient mailboxes
-  List<Mailbox> recipientList;
+  final List<Mailbox> recipientList;
 
   /// List of mailboxes that are CCed in email message
-  List<Mailbox> ccList;
+  final List<Mailbox> ccList;
 
   /// Mailbox of sender
-  Mailbox sender;
+  final Mailbox sender;
 
   /// URL pointing to Avatar of sender
-  String senderProfileUrl;
+  final String senderProfileUrl;
 
   /// Subject line of email
-  String subject;
+  final String subject;
 
   /// Main body text of email
-  String text;
+  final String text;
 
   /// Time that Email was received
-  DateTime timestamp;
+  final DateTime timestamp;
 
   /// True if Email Message has been read
-  bool isRead;
+  final bool isRead;
 
   /// Constructor
   Message({
@@ -57,6 +57,66 @@ class Message {
     this.timestamp,
     this.isRead,
   });
+
+  /// Create a [Message] from a Gmail API Message model
+  /// Use plain-text representation (if it isgiven in the message payload)
+  /// otherwise use the Gmail snippet as the message text
+  factory Message.fromGmailApi(api.Message message) {
+    String subject = '';
+    Mailbox sender;
+    String messageText;
+    List<Mailbox> recipientList = <Mailbox>[];
+    List<Mailbox> ccList = <Mailbox>[];
+    bool isRead = !message.labelIds.contains('UNREAD');
+    DateTime timestamp = new DateTime.fromMillisecondsSinceEpoch(
+        int.parse(message.internalDate));
+
+    // Go through message headers and retrieve message information
+    message.payload.headers.forEach((api.MessagePartHeader header) {
+      switch (header.name.toLowerCase()) {
+        case 'from':
+          sender = new Mailbox.fromString(header.value);
+          break;
+        case 'to':
+          header.value.split(', ').forEach((String rawAddress) {
+            recipientList.add(new Mailbox.fromString(rawAddress));
+          });
+          break;
+        case 'cc':
+          header.value.split(', ').forEach((String rawAddress) {
+            ccList.add(new Mailbox.fromString(rawAddress));
+          });
+          break;
+        case 'subject':
+          subject = header.value;
+          break;
+      }
+    });
+
+    // Look for plain-text message representation in the message parts
+    message.payload.parts?.forEach((api.MessagePart messagePart) {
+      if (messagePart.mimeType == 'text/plain') {
+        messageText = UTF8.decode(BASE64.decode(messagePart.body.data));
+      }
+    });
+
+    // Fallback to Gmail generated snippet if not plain-text
+    if (messageText == null) {
+      messageText = message.snippet;
+    }
+
+    return new Message(
+      id: message.id,
+      subject: subject,
+      sender: sender,
+      senderProfileUrl: null,
+      recipientList: recipientList,
+      ccList: ccList,
+      text: messageText,
+      timestamp: timestamp,
+      isRead: isRead,
+    );
+  }
 
   /// Generates preview text for message
   /// Strips all newline characters
