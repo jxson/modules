@@ -137,6 +137,9 @@ coverage: ## Show coverage for all modules.
 run: dart-base ## Run the gallery flutter app.
 	@cd gallery && flutter run --hot
 
+run-email: dart-base ## Run the gallery flutter app.
+	@cd email/email_flutter && flutter run --hot
+
 .PHONY: run-fuchsia
 run-fuchsia: dart-base mojom-gen ## Run magenta in qemu.
 	@cd $(FUCHSIA_ROOT) && ./scripts/run-magenta-x86-64 -x $(OUT_DIR)/debug-x86-64/user.bootfs -g
@@ -335,6 +338,8 @@ $(OUT_DIR)/sysroot:
 auth: email/config.json ## Update email auth credentials with a refresh token.
 	@cd email/tools; \
 	pub run bin/oauth.dart
+	@mkdir email/flutter_app/assets
+	@cp email/config.json email/flutter_app/assets/config.json
 
 email/config.json:
 	@echo "{}" >> email/config.json

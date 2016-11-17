@@ -18,11 +18,17 @@ const List<String> _kScopes = const <String>[
 ///
 /// NOTE: Some special attention may be needed for closing both the returned
 /// client and the baseClient.
-AutoRefreshingAuthClient client() {
-  AccessToken token = new AccessToken('Bearer', _kTokenData, _kTokenExpiry);
+AutoRefreshingAuthClient client({
+  String id,
+  String secret,
+  String token,
+  DateTime expiry,
+  String refreshToken,
+}) {
+  ClientId clientId = new ClientId(id, secret);
+  AccessToken accessToken = new AccessToken('Bearer', token, expiry);
   AccessCredentials credentials =
-      new AccessCredentials(token, _kRefreshToken, _kScopes);
-  ClientId id = new ClientId(_kOauthID, _kOauthSecret);
+      new AccessCredentials(accessToken, refreshToken, _kScopes);
   http.Client baseClient = new http.Client();
-  return autoRefreshingClient(id, credentials, baseClient);
+  return autoRefreshingClient(clientId, credentials, baseClient);
 }
