@@ -99,6 +99,19 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
         .map((gapi.Thread t) => _gmail.users.threads.get('me', t.id)));
     _visibleThreads = new List<Thread>.unmodifiable(
         fullThreads.map((gapi.Thread t) => new Thread.fromGmailApi(t)));
+
+    /// Get Folder Data
+    List<String> foldersWeCareAbout = <String>[
+      'INBOX',
+      'STARRED',
+      'DRAFT',
+      'TRASH',
+    ];
+    List<gapi.Label> fullLabels = await Future.wait(foldersWeCareAbout
+        .map((String folderName) => _gmail.users.labels.get('me', folderName)));
+    _visibleLabels = new List<Folder>.unmodifiable(
+        fullLabels.map((gapi.Label label) => new Folder.fromGmailApi(label)));
+
     _fetching = false;
     trigger();
     return null;
