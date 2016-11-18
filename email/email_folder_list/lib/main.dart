@@ -37,8 +37,8 @@ class ModuleImpl extends Module {
   void initialize(
     InterfaceHandle<Story> storyHandle,
     InterfaceHandle<Link> linkHandle,
-    _,
-    __,
+    InterfaceHandle<ServiceProvider> incoming_services,
+    InterfaceRequest<ServiceProvider> outgoing_services,
   ) {
     _log('ModuleImpl::initialize call');
 

@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
+ChildViewConnection _connFolderList;
 
 void _log(String msg) {
   print('[Email Quarterback Module] $msg');
@@ -37,8 +38,8 @@ class ModuleImpl extends Module {
   void initialize(
     InterfaceHandle<Story> storyHandle,
     InterfaceHandle<Link> linkHandle,
-    _,
-    __,
+    InterfaceHandle<ServiceProvider> incoming_services,
+    InterfaceRequest<ServiceProvider> outgoing_services,
   ) {
     _log('ModuleImpl::initialize call');
 
@@ -47,13 +48,11 @@ class ModuleImpl extends Module {
 
     LinkProxy link = new LinkProxy();
     // TODO(SO-133): Stop this from crashing on Fuchsia
-    //link.ctrl.bind(linkHandle);
+    // link.ctrl.bind(linkHandle);
 
     ModuleControllerProxy moduleController = new ModuleControllerProxy();
     ViewOwnerProxy viewOwner = new ViewOwnerProxy();
 
-    // Start a new module.
-    /* TODO(alangardner): Fix this with updated interface call.
     story.startModule(
       'file:///system/apps/email_folder_list',
       linkHandle,
@@ -62,10 +61,9 @@ class ModuleImpl extends Module {
       moduleController.ctrl.request(),
       viewOwner.ctrl.request(),
     );
-    */
 
-    // TODO(youngseokyoon): Use the viewOwner handle to create a
-    // ChildViewConnection to display the sub-module contents on screen.
+    _connFolderList = new ChildViewConnection(viewOwner.ctrl.unbind());
+    homeKey.currentState?.setState(() {});
   }
 
   @override
@@ -78,6 +76,32 @@ class ModuleImpl extends Module {
     callback();
   }
 }
+
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key key}) : super(key: key);
+  @override
+  HomeScreenState createState() => new HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = <Widget>[
+      new Text('I am the email quarterback module!'),
+    ];
+
+    if (_connFolderList != null) {
+      children.add(new Flexible(
+        flex: 1,
+        child: new ChildView(connection: _connFolderList),
+      ));
+    }
+
+    return new Column(children: children);
+  }
+}
+
+GlobalKey<HomeScreenState> homeKey = new GlobalKey<HomeScreenState>();
 
 /// Main entry point to the quarterback module.
 void main() {
@@ -94,6 +118,6 @@ void main() {
 
   runApp(new MaterialApp(
     title: 'Email Quarterback',
-    home: new Text('I am the email quarterback module!'),
+    home: new HomeScreen(key: homeKey),
   ));
 }
