@@ -5,7 +5,6 @@
 import 'package:email_session/email_session_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flux/flutter_flux.dart';
-import 'package:meta/meta.dart';
 import 'package:models/email.dart';
 import 'package:widgets/email.dart';
 
@@ -15,28 +14,12 @@ class EmailThreadScreen extends StoreWatcher {
   /// Creates a new [EmailThreadScreen] instance.
   EmailThreadScreen({
     Key key,
-    @required this.emailSessionStoreToken,
-    @required this.threadId,
-    this.onThreadClose,
   })
-      : super(key: key) {
-    assert(threadId != null);
-  }
-
-  /// The string ID of the current thread.
-  final String threadId;
-
-  /// Token for the email session store
-  final StoreToken emailSessionStoreToken;
-
-  /// The callback function for the thread close button.
-  ///
-  /// If not provided, the behavior defaults to `Navigator.pop(context)`.
-  final ThreadActionCallback onThreadClose;
+      : super(key: key);
 
   @override
   void initStores(ListenToStore listenToStore) {
-    listenToStore(emailSessionStoreToken);
+    listenToStore(kEmailSessionStoreToken);
   }
 
   @override

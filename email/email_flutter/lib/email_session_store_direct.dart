@@ -13,9 +13,7 @@ import 'package:googleapis/gmail/v1.dart' as gapi;
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
-final Action<Folder> _emailSessionFocusFolder = new Action<Folder>();
-final Action<Thread> _emailSessionFocusThread = new Action<Thread>();
-
+/// An implemenation of EmailSession that fetches data directly over HTTP
 class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   api.GmailApi _gmail;
   User _user;
@@ -26,6 +24,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   List<Error> _currentErrors;
   bool _fetching;
 
+  /// Default constructor, which initializes to empty content.
   EmailSessionStoreDirect() {
     _visibleLabels = new List<Folder>.unmodifiable(<Folder>[]);
     _focusedLabelId = null;
@@ -33,46 +32,54 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     _focusedThreadId = null;
     _currentErrors = new List<Error>.unmodifiable(<Error>[]);
     _fetching = true;
-    triggerOnAction(_emailSessionFocusFolder, (Folder folder) {
+    triggerOnAction(emailSessionFocusFolder, (Folder folder) {
       _focusedLabelId = folder.id;
     });
-    triggerOnAction(_emailSessionFocusThread, (Thread thread) {
+    triggerOnAction(emailSessionFocusThread, (Thread thread) {
       _focusedThreadId = thread.id;
     });
   }
 
+  @override
   User get user {
     return _user;
   }
 
+  @override
   List<Folder> get visibleFolders {
     return _visibleLabels;
   }
 
+  @override
   Folder get focusedFolder {
     return _visibleLabels.firstWhere(
         (Folder folder) => folder.id == _focusedLabelId,
         orElse: () => null);
   }
 
+  @override
   List<Thread> get visibleThreads {
     return _visibleThreads;
   }
 
+  @override
   Thread get focusedThread {
     return _visibleThreads.firstWhere(
         (Thread thread) => thread.id == _focusedThreadId,
         orElse: () => null);
   }
 
+  @override
   List<Error> get currentErrors {
     return _currentErrors;
   }
 
+  @override
   bool get fetching {
     return _fetching;
   }
 
+  /// Asyncrhonously fetch data for the email session from gmail servers
   Future<Null> fetchInitialContentWithGmailApi() async {
     _gmail =
         await rootBundle.loadString('assets/config.json').then((String data) {
@@ -93,7 +100,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
       return null;
     }
     gapi.ListThreadsResponse response = await _gmail.users.threads
-        .list('me', labelIds: ['INBOX'], maxResults: 15);
+        .list('me', labelIds: <String>['INBOX'], maxResults: 15);
     List<gapi.Thread> fullThreads = await Future.wait(response.threads
         .map((gapi.Thread t) => _gmail.users.threads.get('me', t.id)));
     _visibleThreads = new List<Thread>.unmodifiable(

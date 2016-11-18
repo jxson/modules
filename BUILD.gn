@@ -6,6 +6,5 @@ group("modules") {
   deps = [
     "//apps/modules/email",
     "//apps/modules/gallery:modules_gallery",
-    "//apps/modules/packages/services",
   ]
 }
