@@ -46,7 +46,8 @@ class ModuleImpl extends Module {
     story.ctrl.bind(storyHandle);
 
     LinkProxy link = new LinkProxy();
-    link.ctrl.bind(linkHandle);
+    // TODO(SO-133): Stop this from crashing on Fuchsia
+    //link.ctrl.bind(linkHandle);
 
     ModuleControllerProxy moduleController = new ModuleControllerProxy();
     ViewOwnerProxy viewOwner = new ViewOwnerProxy();

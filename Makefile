@@ -338,7 +338,7 @@ $(OUT_DIR)/sysroot:
 auth: email/config.json ## Update email auth credentials with a refresh token.
 	@cd email/tools; \
 	pub run bin/oauth.dart
-	@mkdir email/email_flutter/assets
+	@mkdir -p email/email_flutter/assets
 	@cp email/config.json email/email_flutter/assets/config.json
 
 email/config.json:
