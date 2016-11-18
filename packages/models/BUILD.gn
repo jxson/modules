@@ -10,7 +10,7 @@ dart_package("models") {
   source_dir = "lib"
 
   deps = [
-    "//apps/modules/email/email_service",
+    "//apps/modules/packages/email_api",
     "//apps/modules/packages/util",
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/collection",

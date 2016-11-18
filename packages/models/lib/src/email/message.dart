@@ -5,7 +5,7 @@
 import 'dart:convert' show UTF8, BASE64;
 
 import 'package:collection/collection.dart';
-import 'package:email_service/api.dart' as api;
+import 'package:email_api/api.dart' as api;
 import 'package:intl/intl.dart';
 import 'package:quiver/core.dart' as quiver;
 import 'package:util/extract_uri.dart';

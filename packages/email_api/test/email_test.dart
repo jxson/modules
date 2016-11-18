@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:email_service/api.dart' as api;
+import 'package:email_api/api.dart' as api;
 import 'package:googleapis/gmail/v1.dart';
 import 'package:http/http.dart';
 import 'package:test/test.dart';

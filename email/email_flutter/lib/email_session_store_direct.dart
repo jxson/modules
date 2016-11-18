@@ -5,13 +5,17 @@
 import 'dart:async';
 import 'dart:convert' show JSON;
 
-import 'package:email_service/api.dart' as api;
+import 'package:email_api/api.dart' as api;
 import 'package:email_session/email_session_store.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_flux/flutter_flux.dart';
 import 'package:googleapis/gmail/v1.dart' as gapi;
 import 'package:models/email.dart';
 import 'package:models/user.dart';
+
+
+final Action<Folder> _emailSessionFocusFolder = new Action<Folder>();
+final Action<Thread> _emailSessionFocusThread = new Action<Thread>();
 
 class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   api.GmailApi _gmail;
@@ -30,10 +34,10 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     _focusedThreadId = null;
     _currentErrors = new List<Error>.unmodifiable(<Error>[]);
     _fetching = true;
-    triggerOnAction(emailSessionFocusFolder, (Folder folder) {
+    triggerOnAction(_emailSessionFocusFolder, (Folder folder) {
       _focusedLabelId = folder.id;
     });
-    triggerOnAction(emailSessionFocusThread, (Thread thread) {
+    triggerOnAction(_emailSessionFocusThread, (Thread thread) {
       _focusedThreadId = thread.id;
     });
   }

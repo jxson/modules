@@ -3,8 +3,6 @@
 # found in the LICENSE file.
 
 name: email_service
-dependencies:
-  flutter:
-    sdk: flutter
-  email_api:
-    path: ../../packages/email_api
+uses-material-design: true
+assets:
+  - assets/config.json

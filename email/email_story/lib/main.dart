@@ -48,19 +48,39 @@ class ModuleImpl extends Module {
 
     LinkProxy link = new LinkProxy();
     // TODO(SO-133): Stop this from crashing on Fuchsia
-    // link.ctrl.bind(linkHandle);
+    link.ctrl.bind(linkHandle);
+
+    LinkProxy link2 = new LinkProxy();
+    LinkProxy link3 = new LinkProxy();
+    link.dup(link2.ctrl.request());
+    link.dup(link3.ctrl.request());
 
     ModuleControllerProxy moduleController = new ModuleControllerProxy();
     ViewOwnerProxy viewOwner = new ViewOwnerProxy();
 
     story.startModule(
       'file:///system/apps/email_folder_list',
-      linkHandle,
+      link2.ctrl.unbind(),
       null,
       null,
       moduleController.ctrl.request(),
       viewOwner.ctrl.request(),
     );
+
+    ModuleControllerProxy serviceModuleController = new ModuleControllerProxy();
+    ViewOwnerProxy serviceViewOwner = new ViewOwnerProxy();
+
+    _log('starting email_service');
+    story.startModule(
+      'file:///system/apps/email_service',
+      link3.ctrl.unbind(),
+      null,
+      null,
+      serviceModuleController.ctrl.request(),
+      serviceViewOwner.ctrl.request(),
+    );
+
+    _log('started email_service');
 
     _connFolderList = new ChildViewConnection(viewOwner.ctrl.unbind());
     homeKey.currentState?.setState(() {});
