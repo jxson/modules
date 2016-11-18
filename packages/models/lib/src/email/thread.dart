@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:collection/collection.dart';
-import 'package:email_service/api.dart' as api;
+import 'package:email_api/api.dart' as api;
 import 'package:quiver/core.dart' as quiver;
 
 import 'message.dart';

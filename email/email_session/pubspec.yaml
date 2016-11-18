@@ -4,8 +4,8 @@
 
 name: email_session
 dependencies:
-  email_service:
-    path: ../email_service
+  email_api:
+    path: ../../packages/email_api
   flutter_flux:
     path: ../../../../third_party/dart-pkg/pub/flutter_flux
   googleapis: ^0.32.0

@@ -9,8 +9,8 @@ dependencies:
     path: ../email_list
   email_nav:
     path: ../email_nav
-  email_service:
-    path: ../email_service
+  email_api:
+    path: ../../packages/email_api
   email_session:
     path: ../email_session
   email_thread:
