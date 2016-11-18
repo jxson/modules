@@ -8,6 +8,7 @@ import 'package:collection/collection.dart';
 import 'package:email_service/api.dart' as api;
 import 'package:intl/intl.dart';
 import 'package:quiver/core.dart' as quiver;
+import 'package:util/extract_uri.dart';
 import 'package:util/time_util.dart';
 
 import 'mailbox.dart';
@@ -39,6 +40,9 @@ class Message {
   /// Main body text of email
   final String text;
 
+  /// List of links (URIs) that are found within email
+  final Set<Uri> links;
+
   /// Time that Email was received
   final DateTime timestamp;
 
@@ -54,6 +58,7 @@ class Message {
     this.ccList: const <Mailbox>[],
     this.subject,
     this.text,
+    this.links,
     this.timestamp,
     this.isRead,
   });
@@ -113,6 +118,7 @@ class Message {
       recipientList: recipientList,
       ccList: ccList,
       text: messageText,
+      links: extractURI(messageText),
       timestamp: timestamp,
       isRead: isRead,
     );
