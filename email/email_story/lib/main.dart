@@ -37,6 +37,8 @@ class ModuleImpl extends Module {
   void initialize(
     InterfaceHandle<Story> storyHandle,
     InterfaceHandle<Link> linkHandle,
+    _,
+    __,
   ) {
     _log('ModuleImpl::initialize call');
 
@@ -50,12 +52,16 @@ class ModuleImpl extends Module {
     ViewOwnerProxy viewOwner = new ViewOwnerProxy();
 
     // Start a new module.
+    /* TODO(alangardner): Fix this with updated interface call.
     story.startModule(
       'file:///system/apps/email_folder_list',
       linkHandle,
+      null,
+      null,
       moduleController.ctrl.request(),
       viewOwner.ctrl.request(),
     );
+    */
 
     // TODO(youngseokyoon): Use the viewOwner handle to create a
     // ChildViewConnection to display the sub-module contents on screen.
