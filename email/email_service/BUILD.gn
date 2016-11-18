@@ -2,10 +2,10 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//flutter/build/flutter_app.gni")
+import("//build/dart/dart_package.gni")
 
-flutter_app("email_service") {
-  main_dart = "lib/api.dart"
+dart_package("email_service") {
+  package_name = "email_service"
 
   source_dir = "lib"
 
@@ -13,8 +13,6 @@ flutter_app("email_service") {
     "//apps/modular/lib/app/dart",
     "//apps/modular/services/application:application_dart",
     "//apps/modular/services/story:story_dart",
-    "//apps/modules/packages/models",
-    "//apps/modules/packages/widgets",
     "//apps/mozart/lib/flutter",
     "//apps/mozart/services/views:views_dart",
     "//lib/fidl/dart",
@@ -23,4 +21,3 @@ flutter_app("email_service") {
     "//third_party/dart-pkg/pub/googleapis_auth",
   ]
 }
-
