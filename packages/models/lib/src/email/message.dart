@@ -11,6 +11,7 @@ import 'package:quiver/core.dart' as quiver;
 import 'package:util/extract_uri.dart';
 import 'package:util/time_util.dart';
 
+import 'attachment.dart';
 import 'mailbox.dart';
 
 const ListEquality<Mailbox> _mailboxListEquality =
@@ -43,6 +44,9 @@ class Message {
   /// List of links (URIs) that are found within email
   final Set<Uri> links;
 
+  /// List of attachments for given email
+  final List<Attachment> attachments;
+
   /// Time that Email was received
   final DateTime timestamp;
 
@@ -59,6 +63,7 @@ class Message {
     this.subject,
     this.text,
     this.links,
+    this.attachments,
     this.timestamp,
     this.isRead,
   });
@@ -110,6 +115,20 @@ class Message {
       messageText = message.snippet;
     }
 
+    /// Add any youtube links as attachments
+    List<Attachment> attachments = <Attachment>[];
+    Set<Uri> links = extractURI(messageText);
+    links.forEach((Uri uri) {
+      if (uri.host == 'www.youtube.com' &&
+          uri.path == '/watch' &&
+          uri.queryParameters['v'] != null) {
+        attachments.add(new Attachment(
+          type: AttachmentType.youtubeVideo,
+          value: uri.queryParameters['v'],
+        ));
+      }
+    });
+
     return new Message(
       id: message.id,
       subject: subject,
@@ -118,7 +137,8 @@ class Message {
       recipientList: recipientList,
       ccList: ccList,
       text: messageText,
-      links: extractURI(messageText),
+      links: links,
+      attachments: attachments,
       timestamp: timestamp,
       isRead: isRead,
     );

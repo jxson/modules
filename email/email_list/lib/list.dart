@@ -97,7 +97,7 @@ class EmailInboxScreen extends StoreWatcher {
         );
         break;
       default:
-        throw new Exception("Invalid Inbox style.");
+        throw new Exception('Invalid Inbox style.');
     }
 
     return item;
