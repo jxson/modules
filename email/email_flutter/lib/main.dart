@@ -3,14 +3,21 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert' show JSON;
 
-import 'package:email_service/api.dart' as api;
+import 'package:email_session/email_session_store.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_flux/flutter_flux.dart';
 
-void main() {
+import 'email_session_store_direct.dart';
+import 'quarterback.dart';
+
+Future<Null> main() async {
+  // HACK(alangardner): Must be called before any flux flutter widgets are setup
+  // This sets up a global variable that is accessible to all of the widgets.
+  EmailSessionStoreDirect emailSessionStore = new EmailSessionStoreDirect();
+  kEmailSessionStoreToken = new StoreToken(emailSessionStore);
   runApp(new _MyApp());
+  await emailSessionStore.fetchInitialContentWithGmailApi();
 }
 
 class _MyApp extends StatelessWidget {
@@ -30,89 +37,7 @@ class _MyApp extends StatelessWidget {
         // reset back to zero -- the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new _MyHomePage(title: 'Email Flutter App'),
-    );
-  }
-}
-
-class _MyHomePage extends StatefulWidget {
-  _MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful,
-  // meaning that it has a State object (defined below) that contains
-  // fields that affect how it looks.
-
-  // This class is the configuration for the state. It holds the
-  // values (in this case the title) provided by the parent (in this
-  // case the App widget) and used by the build method of the State.
-  // Fields in a Widget subclass are always marked "final".
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => new _MyHomePageState();
-}
-
-class _MyHomePageState extends State<_MyHomePage> {
-  List<api.Thread> _threads = new List<api.Thread>();
-
-  @override
-  void initState() {
-    rootBundle.loadString('assets/config.json').then((String data) {
-      dynamic map = JSON.decode(data);
-
-      api.Client client = api.client(
-          id: map['oauth_id'],
-          secret: map['oauth_secret'],
-          token: map['oauth_token'],
-          expiry: DateTime.parse(map['oauth_token_expiry']),
-          refreshToken: map['oauth_refresh_token']);
-
-      api.GmailApi gmail = new api.GmailApi(client);
-      return load(gmail);
-    }).catchError((Error error) {
-      print('Error loading config file.');
-    });
-
-    super.initState();
-  }
-
-  Future<Null> load(api.GmailApi gmail) async {
-    api.ListThreadsResponse response = await gmail.users.threads.list('me');
-
-    if (mounted) {
-      setState(() => _threads = response.threads);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> children = <Widget>[];
-    _threads.forEach((api.Thread thread) {
-      children.add(new ListItem(
-        title: new Text(thread.id),
-        subtitle: new Text(thread.snippet),
-      ));
-    });
-
-    // This method is rerun every time setState is called, for instance
-    // as done by the _incrementCounter method above.
-    // The Flutter framework has been optimized to make rerunning
-    // build methods fast, so that you can just rebuild anything that
-    // needs updating rather than having to individually change
-    // instances of widgets.
-    return new Scaffold(
-      appBar: new AppBar(
-        // Here we take the value from the MyHomePage object that
-        // was created by the App.build method, and use it to set
-        // our appbar title.
-        title: new Text(config.title),
-      ),
-      body: new MaterialList(
-        type: MaterialListType.twoLine,
-        children: children,
-      ), // This trailing comma tells the Dart formatter to use
-      // a style that looks nicer for build methods.
+      home: new EmailQuarterbackModule(),
     );
   }
 }

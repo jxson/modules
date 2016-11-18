@@ -2,21 +2,15 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-name: email_flutter
-description: Flutter app to run Email 3 column layout.
+name: email_list
+description: An email thread list
 dependencies:
-  email_list:
-    path: ../email_list
-  email_nav:
-    path: ../email_nav
-  email_service:
-    path: ../email_service
   email_session:
     path: ../email_session
-  email_thread:
-    path: ../email_thread
   flutter:
     sdk: flutter
+  widgets:
+    path: ../../packages/widgets
 dependency_overrides:
   http:
     path: ../../packages/flutter-http/
