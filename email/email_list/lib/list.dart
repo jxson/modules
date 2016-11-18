@@ -31,9 +31,6 @@ class EmailInboxScreen extends StoreWatcher {
     Key key,
     this.style: InboxStyle.multiLine,
     this.inboxTitle: 'Inbox',
-    this.emailSessionStoreToken,
-    this.onThreadSelect,
-    this.selectedThreadId,
   })
       : super(key: key) {
     assert(style != null);
@@ -46,30 +43,14 @@ class EmailInboxScreen extends StoreWatcher {
   /// Header Title for this view
   final String inboxTitle;
 
-  /// Id of selected thread
-  final String selectedThreadId;
-
-  /// Token for the email session store
-  final StoreToken emailSessionStoreToken;
-
-  /// Callback for the thread selection.
-  ///
-  /// The behavior defaults to `Navigator.pushNamed()` to the selected email
-  /// thread view.
-  final ThreadActionCallback onThreadSelect;
-
   @override
   void initStores(ListenToStore listenToStore) {
-    listenToStore(emailSessionStoreToken);
+    listenToStore(kEmailSessionStoreToken);
   }
 
-  Widget _createThreadListItem(BuildContext context, Thread thread) {
+  Widget _createThreadListItem(
+      BuildContext context, Thread thread, bool focused) {
     Key key = new ObjectKey(thread);
-
-    ThreadActionCallback handleSelect = onThreadSelect ??
-        (Thread thread) {
-          Navigator.pushNamed(context, '/email/thread/${thread.id}');
-        };
 
     Widget item;
     // TODO(SO-132): Implement using multiple widgets to allow multiple modules.
@@ -78,22 +59,22 @@ class EmailInboxScreen extends StoreWatcher {
         item = new ThreadListItem(
           key: key,
           thread: thread,
-          onSelect: handleSelect,
-          isSelected: selectedThreadId == thread.id,
+          onSelect: emailSessionFocusThread.call,
+          isSelected: focused,
         );
         break;
       case InboxStyle.singleLine:
         item = new ThreadListItemSingleLine(
           key: key,
           thread: thread,
-          onSelect: handleSelect,
+          onSelect: emailSessionFocusThread.call,
         );
         break;
       case InboxStyle.gridView:
         item = new ThreadGridItem(
           key: key,
           thread: thread,
-          onSelect: handleSelect,
+          onSelect: emailSessionFocusThread.call,
         );
         break;
       default:
@@ -105,7 +86,7 @@ class EmailInboxScreen extends StoreWatcher {
 
   @override
   Widget build(BuildContext context, Map<StoreToken, Store> stores) {
-    final EmailSessionStore emailSession = stores[emailSessionStoreToken];
+    final EmailSessionStore emailSession = stores[kEmailSessionStoreToken];
 
     if (emailSession.fetching) {
       return new Center(child: new CircularProgressIndicator());
@@ -115,12 +96,14 @@ class EmailInboxScreen extends StoreWatcher {
       // TODO(alangardner): Grab more than just the first error.
       Error error = emailSession.currentErrors[0];
       return new Text('Error occurred while retrieving email threads: '
-          '${error}');
+          '$error');
     }
 
+    String focusedThreadId = emailSession.focusedThread?.id;
     List<Widget> threadListItems = <Widget>[];
     emailSession.visibleThreads.forEach((Thread t) {
-      threadListItems.add(_createThreadListItem(context, t));
+      threadListItems
+          .add(_createThreadListItem(context, t, t.id == focusedThreadId));
     });
 
     // Use a standard Block to vertically place threadItems in the singleLine

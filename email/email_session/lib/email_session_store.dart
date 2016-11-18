@@ -35,3 +35,9 @@ abstract class EmailSessionStore implements Store {
 /// The globally available email session store
 /// HACK(alangardner): This needs to be instantiated before any access.
 StoreToken kEmailSessionStoreToken;
+
+/// Make this folder the focused folder
+final Action<Folder> emailSessionFocusFolder = new Action<Folder>();
+
+/// Make this thread the focused thread
+final Action<Thread> emailSessionFocusThread = new Action<Thread>();

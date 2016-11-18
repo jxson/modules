@@ -4,28 +4,19 @@
 
 import 'package:email_list/list.dart';
 import 'package:email_nav/menu.dart';
-import 'package:email_session/email_session_store.dart';
 import 'package:email_thread/thread.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flux/flutter_flux.dart';
-import 'package:models/email.dart';
 
 /// A screen demonstrating what the email quarterback module should look like.
 ///
 /// This screen has three columns as a typical email client in landscape mode:
 /// folder list, thread list, and thread details.
-class EmailQuarterbackModule extends StoreWatcher {
+class EmailQuarterbackModule extends StatelessWidget {
   /// Create a new [EmailQuarterbackModule] instance.
   EmailQuarterbackModule({Key key}) : super(key: key);
 
   @override
-  void initStores(ListenToStore listenToStore) {
-    listenToStore(kEmailSessionStoreToken);
-  }
-
-  @override
-  Widget build(BuildContext context, Map<StoreToken, Store> stores) {
-    EmailSessionStore emailSession = stores[kEmailSessionStoreToken];
+  Widget build(BuildContext context) {
     // The container below should ideally be a ChildView.
     Widget menu = new Container(
       constraints: new BoxConstraints.loose(new Size.fromWidth(280.0)),
@@ -41,11 +32,7 @@ class EmailQuarterbackModule extends StoreWatcher {
           alignment: FractionalOffset.topCenter,
           constraints: new BoxConstraints.loose(new Size.fromWidth(400.0)),
           decoration: new BoxDecoration(backgroundColor: Colors.white),
-          child: new EmailInboxScreen(
-            emailSessionStoreToken: kEmailSessionStoreToken,
-            onThreadSelect: (Thread t) => null, // TODO(alangardner): Implement
-            selectedThreadId: null, // TODO(alangardner): Implement
-          ),
+          child: new EmailInboxScreen(),
         ),
       ),
     );
@@ -54,13 +41,7 @@ class EmailQuarterbackModule extends StoreWatcher {
       flex: 1,
       // The container below should ideally be a ChildView.
       child: new Container(
-        child: emailSession.focusedThread != null
-            ? new EmailThreadScreen(
-                emailSessionStoreToken: kEmailSessionStoreToken,
-                threadId: emailSession.focusedThread.id,
-                onThreadClose: (_) {},
-              )
-            : null,
+        child: new EmailThreadScreen(),
       ),
     );
 
