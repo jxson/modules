@@ -48,7 +48,10 @@ class EmailQuarterbackModule extends StatelessWidget {
     List<Widget> columns = <Widget>[menu, inbox, thread];
     return new Material(
       color: Colors.white,
-      child: new Row(children: columns),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: columns,
+      ),
     );
   }
 }
