@@ -14,7 +14,6 @@ SHELL := /bin/bash
 
 DIRNAME := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 FUCHSIA_ROOT := $(realpath $(DIRNAME)/../..)
-DEPS_DIR := third_party
 FLUTTER_DIR := $(FUCHSIA_ROOT)/lib/flutter
 FLUTTER_BIN := $(FLUTTER_DIR)/bin
 DART_BIN := $(FLUTTER_BIN)/cache/dart-sdk/bin
@@ -24,6 +23,19 @@ MAGENTA_DIR := $(FUCHSIA_ROOT)/magenta
 MAGENTA_BUILD_DIR := $(OUT_DIR)/build-magenta/build-magenta-pc-x86-64
 PATH := $(FLUTTER_BIN):$(DART_BIN):$(PATH)
 
+# Specify GOMA=1 to force use goma, GOMA=0 to force not use goma.
+# Auto-detect if not specified.
+FSET_FLAGS :=
+GOMA ?=
+ifeq ($(GOMA),1)
+	GOMA_FLAGS += --goma
+endif
+ifeq ($(GOMA),0)
+	GOMA_FLAGS += --no-goma
+endif
+
+FENV := source $(FUCHSIA_ROOT)/scripts/env.sh && fset x86-64 $(FSET_FLAGS)
+
 
 ################################################################################
 ## Common variables to use
@@ -31,38 +43,15 @@ gitbook = $(shell which gitbook)
 
 FLUTTER_TEST_FLAGS ?=
 
-DART_PACKAGES = $(shell find . -name "pubspec.yaml" ! -wholename "./$(DEPS_DIR)/*" -exec dirname {} \;)
-DART_FILES = $(shell find . -name "*.dart" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*" ! -name "*.mojom.dart")
+DART_PACKAGES = $(shell find . -name "pubspec.yaml" -exec dirname {} \;)
+DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
 DART_ANALYSIS_OPTIONS = $(addsuffix /.analysis_options, $(DART_PACKAGES))
-JS_FILES = $(shell find . -name "*.js" ! -wholename "./$(DEPS_DIR)/*" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
+JS_FILES = $(shell find . -name "*.js" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
 SH_FILES = $(shell find ./tools -name "*.sh")
-GN_FILES = $(shell find . -name "*.gn" ! -wholename "./$(DEPS_DIR)/*")
-MOJOM_FILES = $(shell find . -name "*.mojom" ! -wholename "./$(DEPS_DIR)/*")
-YAML_FILES = $(shell find . -name "*.yaml" ! -wholename "./$(DEPS_DIR)/*")
-ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES) $(GN_FILES) $(MOJOM_FILES) $(YAML_FILES)
-
-MOJOM_DART_OUTPUTS = $(abspath $(addsuffix .dart,$(addprefix $(GEN_DIR)/,$(MOJOM_FILES))))
-MOJOM_DART_SYMLINKS = $(join $(addsuffix lib/, $(dir $(MOJOM_FILES))), $(addsuffix .mojom.dart, $(basename $(notdir $(MOJOM_FILES)))))
-
-ifeq ($(wildcard ~/goma/.*),)
-	GOMA_INSTALLED := no
-	GEN_FLAGS :=
-	NINJA_FLAGS := -j32
-else
-	GOMA_INSTALLED := yes
-	GEN_FLAGS := --goma
-	# macOS needs a lower value of -j parameter, because:
-	#  - all the host binaries are not built with goma
-	#  - macOS has a limit on the number of open file descriptors.
-	#
-	# Use 15 * #cores here, which seems to work well.
-	ifeq ($(shell uname -s),Darwin)
-		NUM_JOBS := $(shell python -c 'import multiprocessing as mp; print(15 * mp.cpu_count())')
-		NINJA_FLAGS := -j$(NUM_JOBS)
-	else
-		NINJA_FLAGS := -j1000
-	endif
-endif
+GN_FILES = $(shell find . -name "*.gn")
+FIDL_FILES = $(shell find . -name "*.fidl")
+YAML_FILES = $(shell find . -name "*.yaml")
+ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES) $(GN_FILES) $(FIDL_FILES) $(YAML_FILES)
 
 ################################################################################
 ## Common targets
@@ -86,7 +75,6 @@ build:
 .PHONY: clean
 clean:
 	@$(MAKE) dart-clean
-	@$(MAKE) mojom-clean
 
 .PHONY: copyright-check
 copyright-check:
@@ -124,6 +112,7 @@ lint: ## Lint everything.
 presubmit: ## Run the presubmit tests.
 	@$(MAKE) copyright-check
 	@$(MAKE) dart-presubmit
+	@$(MAKE) build-fuchsia
 
 .PHONY: test
 test: ## Run tests for all modules.
@@ -139,10 +128,6 @@ run: dart-base ## Run the gallery flutter app.
 
 run-email: dart-base ## Run the email flutter app.
 	@cd email/email_flutter && flutter run --hot
-
-.PHONY: run-fuchsia
-run-fuchsia: dart-base mojom-gen ## Run magenta in qemu.
-	@cd $(FUCHSIA_ROOT) && ./scripts/run-magenta-x86-64 -x $(OUT_DIR)/debug-x86-64/user.bootfs -g
 
 # TODO(jxson): Add gitbook as a third-party dependency.
 .PHONY: doc
@@ -180,8 +165,12 @@ $(TARGET_CONFIG_FILE):
 	cp $(EXAMPLE_CONFIG_FILE) $(TARGET_CONFIG_FILE)
 
 .PHONY: dart-base
-dart-base: $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS) $(TARGET_CONFIG_FILE)
+dart-base: dart-symlinks $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS) $(TARGET_CONFIG_FILE)
 	@true
+
+.PHONY: dart-symlinks
+dart-symlinks:
+	@$(FUCHSIA_ROOT)/scripts/symlink-dot-packages.py
 
 .PHONY: dart-clean
 dart-clean:
@@ -245,15 +234,9 @@ dart-fmt-extras-check:
 		echo; \
 	fi
 
-# The "services" package contains mojom-generated dart files that would not pass
-# the strong mode analysis. Skip this package for now.
-# See: https://github.com/dart-lang/sdk/issues/26212
 .PHONY: dart-lint
 dart-lint: dart-base
 	@for pkg in $(DART_PACKAGES); do \
-		if [[ "$${pkg}" = */services ]]; then \
-			continue; \
-		fi; \
 		echo "** Running the dartanalyzer in '$${pkg}' ..."; \
 		pushd $${pkg} > /dev/null; \
 		dartanalyzer --lints --fatal-lints --fatal-warnings . || exit 1; \
@@ -282,58 +265,8 @@ dart-presubmit:
 	@$(MAKE) dart-lint
 	@$(MAKE) dart-coverage
 
-
 ################################################################################
-## Mojom binding generation related targets
-.PHONY: mojom-gen
-mojom-gen: $(MOJOM_DART_SYMLINKS)
-	@for symlink in $(MOJOM_DART_SYMLINKS); do \
-		if [ -f "$${symlink}" ]; then \
-			continue; \
-		fi; \
-		if [[ $${symlink} == ./* ]]; then \
-			symlink=$${symlink:2}; \
-		fi; \
-		filename=$$(basename $${symlink}); \
-		srcname=$${filename%.*}; \
-		output=$(GEN_DIR)/$$(dirname $$(dirname $${symlink}))/$${filename}; \
-		if [ ! -f "$${output}" ]; then \
-			echo "Could not find the dart binding generated from '$${srcname}' file."; \
-			echo "Make sure that you included '$${srcname}' in the relevant 'BUILD.gn' file."; \
-			exit 1; \
-		fi; \
-		mkdir -p $$(dirname $${symlink}); \
-		ln -s $${output} $${symlink}; \
-	done
-
-.PHONY: mojom-clean
-mojom-clean:
-	@rm -rf $(GEN_DIR) $(MOJOM_DART_SYMLINKS)
-
-$(MOJOM_DART_SYMLINKS): $(MOJOM_DART_OUTPUTS)
-	@true
-
-# Generate the mojom bindings from the mojom files.
-#
-# NOTE(youngseokyoon): We don't need the .h header files, but this is added here
-# on purpose. By having multiple pattern rule targets on the same line, make
-# tool understands that these multiple files are all generated by running the
-# commands once, rather than having to run this recipe for each target file.
-$(GEN_DIR)/%.dart $(GEN_DIR)%.h: % $(GN_FILES) $(OUT_DIR)/sysroot
-ifeq ($(GOMA_INSTALLED), yes)
-	@~/goma/goma_ctl.py ensure_start
-else
-	$(warning [WARNING] Goma not installed. Install Goma to get faster distributed builds.)
-endif
-	@cd $(FUCHSIA_ROOT) && packages/gn/gen.py $(GEN_FLAGS)
-	@cd $(FUCHSIA_ROOT) && buildtools/ninja $(NINJA_FLAGS) -C out/debug-x86-64
-	@touch $@
-
-# Build sysroot if needed.
-$(OUT_DIR)/sysroot:
-	$(FUCHSIA_ROOT)/scripts/build-sysroot.sh
-	@touch $@
-
+## Email related targets
 .PHONY: auth
 auth: email/config.json ## Update email auth credentials with a refresh token.
 	@cd email/tools; \
@@ -347,3 +280,9 @@ email/config.json:
 	@echo "{}" >> email/config.json
 	@echo "==> Config file added."
 	@echo "==> Add missing values and run: make auth."
+
+################################################################################
+## Fuchsia related targets
+.PHONY: build-fuchsia
+build-fuchsia:
+	@$(FENV) && fbuild
