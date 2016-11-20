@@ -31,7 +31,7 @@ class Folder {
   factory Folder.fromGmailApi(api.Label label) {
     return new Folder(
       id: label.id,
-      name: label.type == 'SYSTEM'
+      name: label.type.toLowerCase() == 'system'
           ? '${label.name[0].toUpperCase()}${label.name.substring(1).toLowerCase()}'
           : label.name,
       unread: label.threadsUnread,

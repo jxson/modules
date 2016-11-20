@@ -9,7 +9,6 @@ import 'package:email_api/api.dart' as api;
 import 'package:email_session/email_session_store.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_flux/flutter_flux.dart';
-import 'package:googleapis/gmail/v1.dart' as gapi;
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
@@ -34,6 +33,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     _fetching = true;
     triggerOnAction(emailSessionFocusFolder, (Folder folder) {
       _focusedLabelId = folder.id;
+      _fetchThreadsForFocusedLabel();
     });
     triggerOnAction(emailSessionFocusThread, (Thread thread) {
       _focusedThreadId = thread.id;
@@ -79,7 +79,23 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     return _fetching;
   }
 
-  /// Asyncrhonously fetch data for the email session from gmail servers
+  /// Retrieve threads currently focused label/folder and replace store with
+  /// those threads
+  Future<Null> _fetchThreadsForFocusedLabel() async {
+    if (_gmail == null) {
+      return null;
+    }
+
+    api.ListThreadsResponse response = await _gmail.users.threads
+        .list('me', labelIds: <String>[_focusedLabelId], maxResults: 15);
+    List<api.Thread> fullThreads = await Future.wait(response.threads
+        .map((api.Thread t) => _gmail.users.threads.get('me', t.id)));
+    _visibleThreads = new List<Thread>.unmodifiable(
+        fullThreads.map((api.Thread t) => new Thread.fromGmailApi(t)));
+    trigger();
+  }
+
+  /// Asynchronously fetch data for the email session from gmail servers
   Future<Null> fetchInitialContentWithGmailApi() async {
     _gmail =
         await rootBundle.loadString('assets/config.json').then((String data) {
@@ -99,24 +115,34 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     if (_gmail == null) {
       return null;
     }
-    gapi.ListThreadsResponse response = await _gmail.users.threads
-        .list('me', labelIds: <String>['INBOX'], maxResults: 15);
-    List<gapi.Thread> fullThreads = await Future.wait(response.threads
-        .map((gapi.Thread t) => _gmail.users.threads.get('me', t.id)));
-    _visibleThreads = new List<Thread>.unmodifiable(
-        fullThreads.map((gapi.Thread t) => new Thread.fromGmailApi(t)));
 
-    /// Get Folder Data
+    // Set 'INBOX' as the default focused label
+    _focusedLabelId = 'INBOX';
+
+    // Fetch Threads
+    await _fetchThreadsForFocusedLabel();
+
+    // Get Folder Data
     List<String> foldersWeCareAbout = <String>[
       'INBOX',
       'STARRED',
       'DRAFT',
       'TRASH',
     ];
-    List<gapi.Label> fullLabels = await Future.wait(foldersWeCareAbout
+    List<api.Label> fullLabels = await Future.wait(foldersWeCareAbout
         .map((String folderName) => _gmail.users.labels.get('me', folderName)));
     _visibleLabels = new List<Folder>.unmodifiable(
-        fullLabels.map((gapi.Label label) => new Folder.fromGmailApi(label)));
+        fullLabels.map((api.Label label) => new Folder.fromGmailApi(label)));
+
+    // Get User Data
+    // TODO(jasoncampbell): Expand scope of OAuth token so we can retrieve the
+    // "plus profile" that has more data
+    // https://fuchsia.atlassian.net/browse/SO-134
+    api.Profile userProfile = await _gmail.users.getProfile('me');
+    _user = new User(
+      name: userProfile.emailAddress,
+      email: userProfile.emailAddress,
+    );
 
     _fetching = false;
     trigger();
