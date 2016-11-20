@@ -18,7 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
-ChildViewConnection _connFolderList;
+ChildViewConnection _connNav;
+ChildViewConnection _connList;
+ChildViewConnection _connThread;
 
 void _log(String msg) {
   print('[Email Quarterback Module] $msg');
@@ -50,39 +52,35 @@ class ModuleImpl extends Module {
     // TODO(SO-133): Stop this from crashing on Fuchsia
     link.ctrl.bind(linkHandle);
 
-    LinkProxy link2 = new LinkProxy();
-    LinkProxy link3 = new LinkProxy();
-    link.dup(link2.ctrl.request());
-    link.dup(link3.ctrl.request());
-
-    ModuleControllerProxy moduleController = new ModuleControllerProxy();
-    ViewOwnerProxy viewOwner = new ViewOwnerProxy();
-
-    story.startModule(
-      'file:///system/apps/email_folder_list',
-      link2.ctrl.unbind(),
-      null,
-      null,
-      moduleController.ctrl.request(),
-      viewOwner.ctrl.request(),
+    // Headless modules.
+    startModule(
+      uri: 'file:///system/apps/email_service',
+      story: story,
+      link: link,
     );
 
-    ModuleControllerProxy serviceModuleController = new ModuleControllerProxy();
-    ViewOwnerProxy serviceViewOwner = new ViewOwnerProxy();
-
-    _log('starting email_service');
-    story.startModule(
-      'file:///system/apps/email_service',
-      link3.ctrl.unbind(),
-      null,
-      null,
-      serviceModuleController.ctrl.request(),
-      serviceViewOwner.ctrl.request(),
+    // UI modules.
+    ViewOwnerProxy navViewOwner = startModule(
+      uri: 'file:///system/apps/email_nav',
+      story: story,
+      link: link,
     );
+    _connNav = new ChildViewConnection(navViewOwner.ctrl.unbind());
 
-    _log('started email_service');
+    ViewOwnerProxy listViewOwner = startModule(
+      uri: 'file:///system/apps/email_list',
+      story: story,
+      link: link,
+    );
+    _connList = new ChildViewConnection(listViewOwner.ctrl.unbind());
 
-    _connFolderList = new ChildViewConnection(viewOwner.ctrl.unbind());
+    ViewOwnerProxy threadViewOwner = startModule(
+      uri: 'file:///system/apps/email_thread',
+      story: story,
+      link: link,
+    );
+    _connThread = new ChildViewConnection(threadViewOwner.ctrl.unbind());
+
     homeKey.currentState?.setState(() {});
   }
 
@@ -106,18 +104,30 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = <Widget>[
-      new Text('I am the email quarterback module!'),
-    ];
+    List<Widget> children = <Widget>[];
 
-    if (_connFolderList != null) {
+    if (_connNav != null) {
       children.add(new Flexible(
         flex: 1,
-        child: new ChildView(connection: _connFolderList),
+        child: new ChildView(connection: _connNav),
       ));
     }
 
-    return new Column(children: children);
+    if (_connList != null) {
+      children.add(new Flexible(
+        flex: 1,
+        child: new ChildView(connection: _connList),
+      ));
+    }
+
+    if (_connThread != null) {
+      children.add(new Flexible(
+        flex: 1,
+        child: new ChildView(connection: _connThread),
+      ));
+    }
+
+    return new Row(children: children);
   }
 }
 
@@ -140,4 +150,29 @@ void main() {
     title: 'Email Quarterback',
     home: new HomeScreen(key: homeKey),
   ));
+}
+
+ViewOwnerProxy startModule({
+  String uri,
+  InterfaceHandle<Story> story,
+  LinkProxy link,
+}) {
+  LinkProxy linkDup = new LinkProxy();
+  link.dup(linkDup.ctrl.request());
+
+  ModuleControllerProxy moduleController = new ModuleControllerProxy();
+  ViewOwnerProxy viewOwner = new ViewOwnerProxy();
+
+  _log('starting: $uri');
+  story.startModule(
+    uri,
+    linkDup.ctrl.unbind(),
+    null,
+    null,
+    moduleController.ctrl.request(),
+    viewOwner.ctrl.request(),
+  );
+  _log('started: $uri');
+
+  return viewOwner;
 }
