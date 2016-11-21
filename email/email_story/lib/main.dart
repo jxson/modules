@@ -215,9 +215,5 @@ void main() {
     Module.serviceName,
   );
 
-  runApp(new MaterialApp(
-    title: 'Email Quarterback',
-    home: new HomeScreen(key: _kHomeKey),
-    theme: new ThemeData(primarySwatch: Colors.blue),
-  ));
+  runApp(new HomeScreen(key: _kHomeKey));
 }
