@@ -23,7 +23,7 @@ class EmailMenuScreen extends StoreWatcher {
   Widget build(BuildContext context, Map<StoreToken, Store> stores) {
     final EmailSessionStore emailSession = stores[kEmailSessionStoreToken];
 
-    if (emailSession.fetching) {
+    if (emailSession.fetchingFolders) {
       return new Center(child: new CircularProgressIndicator());
     }
 

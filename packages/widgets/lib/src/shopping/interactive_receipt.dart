@@ -42,7 +42,6 @@ class InteractiveReceipt extends StatefulWidget {
 
 class _InteractiveReceiptState extends State<InteractiveReceipt>
     with TickerProviderStateMixin {
-
   _InteractiveReceiptState() : super();
 
   AnimationController _controller;

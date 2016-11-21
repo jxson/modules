@@ -30,7 +30,7 @@ class EmailThreadScreen extends StoreWatcher {
   }
 
   Widget _buildBody(BuildContext context, EmailSessionStore emailSession) {
-    if (emailSession.fetching) {
+    if (emailSession.fetchingThreads) {
       return new CircularProgressIndicator();
     }
 
@@ -42,7 +42,7 @@ class EmailThreadScreen extends StoreWatcher {
 
     Thread thread = emailSession.focusedThread;
     if (thread == null) {
-      return new Text('Could not find the thread.');
+      return new Text('No Thread Selected');
     }
 
     return new ThreadView(

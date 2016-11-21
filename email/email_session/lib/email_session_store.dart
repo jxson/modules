@@ -27,8 +27,11 @@ abstract class EmailSessionStore implements Store {
   /// (e.g. Network errors, API errors, etc. )
   List<Error> get currentErrors;
 
-  /// Returns true if currently fetching emails from server
-  bool get fetching;
+  /// Returns true if currently fetching threads from server
+  bool get fetchingThreads;
+
+  /// Returns true if currently fetching folders/labels from server
+  bool get fetchingFolders;
   // TODO(alangardner): Current status? (e.g. loading, etc.)
 }
 
