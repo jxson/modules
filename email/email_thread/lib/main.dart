@@ -112,5 +112,6 @@ void main() {
     title: 'Email Thread Module',
     home: new EmailThreadScreen(),
     theme: new ThemeData(primarySwatch: Colors.blue),
+    debugShowCheckedModeBanner: false,
   ));
 }

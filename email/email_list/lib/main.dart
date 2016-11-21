@@ -124,5 +124,6 @@ void main() {
     title: 'Email List Module',
     home: new EmailListScreen(),
     theme: new ThemeData(primarySwatch: Colors.blue),
+    debugShowCheckedModeBanner: false,
   ));
 }
