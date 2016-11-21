@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
@@ -11,22 +9,58 @@ import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/module_controller.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.mozart.lib.flutter/child_view.dart';
-import 'package:apps.mozart.services.views/view_manager.fidl.dart';
-import 'package:apps.mozart.services.views/view_provider.fidl.dart';
 import 'package:apps.mozart.services.views/view_token.fidl.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
+import 'package:lib.fidl.dart/core.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
-ChildViewConnection _connFolderList;
+
+final String _kEmailServiceUrl = 'file:///system/apps/email_service';
+final String _kEmailNavUrl = 'file:///system/apps/email_nav';
+final String _kEmailListUrl = 'file:///system/apps/email_list';
+final String _kEmailThreadUrl = 'file:///system/apps/email_thread';
+
+final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
+
+ChildViewConnection _connNav;
+ChildViewConnection _connList;
+ChildViewConnection _connThread;
 
 void _log(String msg) {
   print('[Email Quarterback Module] $msg');
 }
 
+/// A wrapper class for duplicating ServiceProvider
+class ServiceProviderWrapper extends ServiceProvider {
+  final ServiceProviderBinding _binding = new ServiceProviderBinding();
+
+  /// The original [ServiceProvider] instance that this class wraps.
+  final ServiceProvider serviceProvider;
+
+  /// Creates a new [ServiceProviderWrapper] with the given [ServiceProvider].
+  ServiceProviderWrapper(this.serviceProvider);
+
+  /// Gets the [InterfaceHandle] for this [ServiceProvider] wrapper.
+  ///
+  /// The returned handle should only be used once.
+  InterfaceHandle<ServiceProvider> getHandle() => _binding.wrap(this);
+
+  @override
+  void connectToService(String serviceName, Channel channel) {
+    serviceProvider.connectToService(serviceName, channel);
+  }
+}
+
 /// An implementation of the [Module] interface.
 class ModuleImpl extends Module {
   final ModuleBinding _binding = new ModuleBinding();
+
+  /// [Story] service provided by the framework.
+  final StoryProxy story = new StoryProxy();
+
+  /// [Link] service provided by the framework.
+  final LinkProxy link = new LinkProxy();
 
   /// Bind an [InterfaceRequest] for a [Module] interface to this object.
   void bind(InterfaceRequest<Module> request) {
@@ -38,52 +72,41 @@ class ModuleImpl extends Module {
   void initialize(
     InterfaceHandle<Story> storyHandle,
     InterfaceHandle<Link> linkHandle,
-    InterfaceHandle<ServiceProvider> incoming_services,
-    InterfaceRequest<ServiceProvider> outgoing_services,
+    InterfaceHandle<ServiceProvider> incomingServices,
+    InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
 
-    StoryProxy story = new StoryProxy();
     story.ctrl.bind(storyHandle);
-
-    LinkProxy link = new LinkProxy();
-    // TODO(SO-133): Stop this from crashing on Fuchsia
     link.ctrl.bind(linkHandle);
 
-    LinkProxy link2 = new LinkProxy();
-    LinkProxy link3 = new LinkProxy();
-    link.dup(link2.ctrl.request());
-    link.dup(link3.ctrl.request());
-
-    ModuleControllerProxy moduleController = new ModuleControllerProxy();
-    ViewOwnerProxy viewOwner = new ViewOwnerProxy();
-
-    story.startModule(
-      'file:///system/apps/email_folder_list',
-      link2.ctrl.unbind(),
-      null,
-      null,
-      moduleController.ctrl.request(),
-      viewOwner.ctrl.request(),
+    // Obtain the email service provider from the email_service module.
+    ServiceProviderProxy emailServices = new ServiceProviderProxy();
+    startModule(
+      url: _kEmailServiceUrl,
+      incomingServices: emailServices.ctrl.request(),
     );
 
-    ModuleControllerProxy serviceModuleController = new ModuleControllerProxy();
-    ViewOwnerProxy serviceViewOwner = new ViewOwnerProxy();
-
-    _log('starting email_service');
-    story.startModule(
-      'file:///system/apps/email_service',
-      link3.ctrl.unbind(),
-      null,
-      null,
-      serviceModuleController.ctrl.request(),
-      serviceViewOwner.ctrl.request(),
+    InterfaceHandle<ViewOwner> navViewOwner = startModule(
+      url: _kEmailNavUrl,
+      outgoingServices: new ServiceProviderWrapper(emailServices).getHandle(),
     );
+    _connNav = new ChildViewConnection(navViewOwner);
+    updateUI();
 
-    _log('started email_service');
+    InterfaceHandle<ViewOwner> listViewOwner = startModule(
+      url: _kEmailListUrl,
+      outgoingServices: new ServiceProviderWrapper(emailServices).getHandle(),
+    );
+    _connList = new ChildViewConnection(listViewOwner);
+    updateUI();
 
-    _connFolderList = new ChildViewConnection(viewOwner.ctrl.unbind());
-    homeKey.currentState?.setState(() {});
+    InterfaceHandle<ViewOwner> threadViewOwner = startModule(
+      url: _kEmailThreadUrl,
+      outgoingServices: new ServiceProviderWrapper(emailServices).getHandle(),
+    );
+    _connThread = new ChildViewConnection(threadViewOwner);
+    updateUI();
   }
 
   @override
@@ -95,33 +118,89 @@ class ModuleImpl extends Module {
     // Invoke the callback to signal that the clean-up process is done.
     callback();
   }
+
+  /// Updates the UI by calling setState on the [HomeScreenState] object.
+  void updateUI() {
+    _kHomeKey.currentState?.setState(() {});
+  }
+
+  /// Start a module and return its [ViewOwner] handle.
+  InterfaceHandle<ViewOwner> startModule({
+    String url,
+    InterfaceHandle<ServiceProvider> outgoingServices,
+    InterfaceRequest<ServiceProvider> incomingServices,
+  }) {
+    ViewOwnerProxy viewOwner = new ViewOwnerProxy();
+
+    _log('Starting sub-module: $url');
+    story.startModule(
+      url,
+      duplicateLink(link),
+      outgoingServices,
+      incomingServices,
+      new ModuleControllerProxy().ctrl.request(), // not used.
+      viewOwner.ctrl.request(),
+    );
+    _log('Started sub-module: $url');
+
+    return viewOwner.ctrl.unbind();
+  }
+
+  /// Obtains a duplicated [InterfaceHandle] for the given [Link] object.
+  InterfaceHandle<Link> duplicateLink(Link link) {
+    LinkProxy linkProxy = new LinkProxy();
+    link.dup(linkProxy.ctrl.request());
+    return linkProxy.ctrl.unbind();
+  }
 }
 
+/// The top level [StatefulWidget].
 class HomeScreen extends StatefulWidget {
+  /// Creates a new [HomeScreen].
   HomeScreen({Key key}) : super(key: key);
+
   @override
   HomeScreenState createState() => new HomeScreenState();
 }
 
+/// The [State] class for the [HomeScreen].
 class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = <Widget>[
-      new Text('I am the email quarterback module!'),
-    ];
+    Widget nav = new Flexible(
+      flex: 2,
+      child: _connNav != null
+          ? new ChildView(connection: _connNav)
+          : new Container(),
+    );
 
-    if (_connFolderList != null) {
-      children.add(new Flexible(
-        flex: 1,
-        child: new ChildView(connection: _connFolderList),
-      ));
-    }
+    Widget list = new Flexible(
+      flex: 3,
+      child: new Container(
+        margin: new EdgeInsets.symmetric(horizontal: 4.0),
+        child: new Material(
+          elevation: 2,
+          child: _connList != null
+              ? new ChildView(connection: _connList)
+              : new Container(),
+        ),
+      ),
+    );
 
-    return new Column(children: children);
+    Widget thread = new Flexible(
+      flex: 4,
+      child: _connThread != null
+          ? new ChildView(connection: _connThread)
+          : new Container(),
+    );
+
+    List<Widget> columns = <Widget>[nav, list, thread];
+    return new Material(
+      color: Colors.white,
+      child: new Row(children: columns),
+    );
   }
 }
-
-GlobalKey<HomeScreenState> homeKey = new GlobalKey<HomeScreenState>();
 
 /// Main entry point to the quarterback module.
 void main() {
@@ -129,7 +208,7 @@ void main() {
 
   /// Add [ModuleImpl] to this application's outgoing ServiceProvider.
   _context.outgoingServices.addServiceForName(
-    (request) {
+    (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
       new ModuleImpl().bind(request);
     },
@@ -138,6 +217,7 @@ void main() {
 
   runApp(new MaterialApp(
     title: 'Email Quarterback',
-    home: new HomeScreen(key: homeKey),
+    home: new HomeScreen(key: _kHomeKey),
+    theme: new ThemeData(primarySwatch: Colors.blue),
   ));
 }

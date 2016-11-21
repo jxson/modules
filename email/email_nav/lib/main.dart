@@ -2,25 +2,20 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
-import 'package:apps.modular.services.story/module_controller.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
-import 'package:apps.mozart.lib.flutter/child_view.dart';
-import 'package:apps.mozart.services.views/view_manager.fidl.dart';
-import 'package:apps.mozart.services.views/view_provider.fidl.dart';
-import 'package:apps.mozart.services.views/view_token.fidl.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
+
+import 'menu.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
 void _log(String msg) {
-  print('[Email Folder List Module] $msg');
+  print('[Email Nav Module] $msg');
 }
 
 /// An implementation of the [Module] interface.
@@ -37,8 +32,8 @@ class ModuleImpl extends Module {
   void initialize(
     InterfaceHandle<Story> storyHandle,
     InterfaceHandle<Link> linkHandle,
-    InterfaceHandle<ServiceProvider> incoming_services,
-    InterfaceRequest<ServiceProvider> outgoing_services,
+    InterfaceHandle<ServiceProvider> incomingServicesHandle,
+    InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
 
@@ -48,7 +43,8 @@ class ModuleImpl extends Module {
     LinkProxy link = new LinkProxy();
     link.ctrl.bind(linkHandle);
 
-    // Do something with the story / link.
+    ServiceProviderProxy serviceProvider = new ServiceProviderProxy();
+    serviceProvider.ctrl.bind(incomingServicesHandle);
   }
 
   @override
@@ -64,19 +60,16 @@ class ModuleImpl extends Module {
 
 /// Main entry point to the email folder list module.
 void main() {
-  _log('Email folder list module started with context: $_context');
+  _log('Email nav module started with context: $_context');
 
   /// Add [ModuleImpl] to this application's outgoing ServiceProvider.
   _context.outgoingServices.addServiceForName(
-    (request) {
+    (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
       new ModuleImpl().bind(request);
     },
     Module.serviceName,
   );
 
-  runApp(new MaterialApp(
-    title: 'Email Folder List',
-    home: new Text('I am the email folder list module!'),
-  ));
+  runApp(new EmailMenuScreen());
 }

@@ -85,8 +85,6 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
     _user = new User(
       name: 'Coco Yang',
       email: 'littlePuppyCoco@puppy.cute',
-      picture:
-          'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
     );
     super.initState();
   }
