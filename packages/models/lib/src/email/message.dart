@@ -115,7 +115,7 @@ class Message {
       messageText = message.snippet;
     }
 
-    /// Add any youtube links as attachments
+    /// Add any youtube and usps links as attachments
     List<Attachment> attachments = <Attachment>[];
     Set<Uri> links = extractURI(messageText);
     links.forEach((Uri uri) {
@@ -125,6 +125,13 @@ class Message {
         attachments.add(new Attachment(
           type: AttachmentType.youtubeVideo,
           value: uri.queryParameters['v'],
+        ));
+      } else if (uri.host == 'tools.usps.com' &&
+          uri.path == '/go/TrackConfirmAction' &&
+          uri.queryParameters['qtc_tLabels1'] != null) {
+        attachments.add(new Attachment(
+          type: AttachmentType.uspsShipping,
+          value: uri.queryParameters['qtc_tLabels1'],
         ));
       }
     });
