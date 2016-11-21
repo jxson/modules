@@ -42,8 +42,6 @@ class InteractiveReceipt extends StatefulWidget {
 
 class _InteractiveReceiptState extends State<InteractiveReceipt>
     with TickerProviderStateMixin {
-  _InteractiveReceiptState() : super();
-
   AnimationController _controller;
   Animation<double> _imageAnimation;
   bool _editMode = false;
@@ -65,6 +63,8 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
         return '32 GB';
       case _StorageSize.s128:
         return '128 GB';
+      default:
+        return '';
     }
   }
 
@@ -74,6 +74,8 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
         return '\$769.00';
       case _StorageSize.s128:
         return '\$869.00';
+      default:
+        return '';
     }
   }
 
@@ -85,6 +87,8 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
         return 'https://lh3.googleusercontent.com/JKkKltrLkFnpNirTEjb8yA5bui0Hv7mPocx8T5Gu6qUiYrlnt1Jcx7ITH9pobnejSp9u';
       case _PhoneColor.blue:
         return 'https://lh3.googleusercontent.com/7cco-0fPUfmv0D0Rk0dCDYYv1QjzncyGEhxN5zFUHKWoIKuxgvrOwAFbAyRkKxLvv6pV';
+      default:
+        return '';
     }
   }
 
@@ -96,6 +100,8 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
         return 'Very Silver';
       case _PhoneColor.blue:
         return 'Really Blue';
+      default:
+        return '';
     }
   }
 
@@ -107,6 +113,8 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
         return Colors.white;
       case _PhoneColor.black:
         return Colors.black;
+      default:
+        return Colors.white;
     }
   }
 
