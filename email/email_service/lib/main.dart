@@ -35,8 +35,8 @@ class ModuleImpl extends Module {
   void initialize(
     InterfaceHandle<Story> storyHandle,
     InterfaceHandle<Link> linkHandle,
-    InterfaceHandle<ServiceProvider> incoming_services,
-    InterfaceRequest<ServiceProvider> outgoing_services,
+    InterfaceHandle<ServiceProvider> incomingServices,
+    InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
 
@@ -60,7 +60,7 @@ Future<Null> main() async {
 
   /// Add [ModuleImpl] to this application's outgoing ServiceProvider.
   _context.outgoingServices.addServiceForName(
-    (InterfaceRequest<dynamic> request) {
+    (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
       new ModuleImpl().bind(request);
     },
@@ -68,7 +68,7 @@ Future<Null> main() async {
   );
 
   _log('Loading config...');
-  String configpath = 'packages/email_service/res/config.json';
+  String configpath = 'assets/config.json';
   String data = await rootBundle.loadString(configpath);
   _log('Parsing config JSON...');
   dynamic map = JSON.decode(data);

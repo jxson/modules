@@ -117,15 +117,9 @@ class InboxMenu extends StatelessWidget {
       children.add(_buildFolderGroupBlock(folderGroup));
     });
 
-    // A lazy block is used since some FolderGroups might not have headers and
-    // so the size is variable.
-    // Ideally this is something that should be handled by a more universal
-    // 'list with (sticky)headers' that is part of the Flutter framework.
     return new Material(
       color: Colors.white,
-      child: new LazyBlock(
-        delegate: new LazyBlockChildren(children: children),
-      ),
+      child: new Block(children: children),
     );
   }
 }

@@ -4,10 +4,8 @@
 
 import("//flutter/build/flutter_app.gni")
 
-flutter_app("email_story") {
+flutter_app("email_thread") {
   main_dart = "lib/main.dart"
-
-  source_dir = "lib"
 
   deps = [
     "//apps/modular/lib/app/dart",

@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -130,8 +131,10 @@ class _ParticipantLayout extends MultiChildLayoutDelegate {
   @override
   void performLayout(Size size) {
     Size messageCountSize = layoutChild(messageCount, new BoxConstraints());
-    Size participantListSize = layoutChild(participantList,
-        new BoxConstraints(maxWidth: size.width - messageCountSize.width));
+    Size participantListSize = layoutChild(
+        participantList,
+        new BoxConstraints(
+            maxWidth: max(0.0, size.width - messageCountSize.width)));
     positionChild(participantList, Offset.zero);
     positionChild(
         messageCount,

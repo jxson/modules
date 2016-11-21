@@ -13,7 +13,6 @@ import 'package:googleapis/gmail/v1.dart' as gapi;
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
-
 final Action<Folder> _emailSessionFocusFolder = new Action<Folder>();
 final Action<Thread> _emailSessionFocusThread = new Action<Thread>();
 
