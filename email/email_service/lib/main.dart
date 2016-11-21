@@ -81,7 +81,7 @@ Future<Null> main() async {
       !map.containsKey('oauth_token') ||
       !map.containsKey('oauth_token_expiry') ||
       !map.containsKey('oauth_refresh_token')) {
-    _log("Warning: The config.json file does not have the expected values.");
+    _log('Warning: The config.json file does not have the expected values.');
     _log('To get the correct values, run "make auth" from the apps/modules '
         'repository.');
   } else {

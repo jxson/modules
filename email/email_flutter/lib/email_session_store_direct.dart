@@ -21,7 +21,8 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   List<Thread> _visibleThreads;
   String _focusedThreadId;
   List<Error> _currentErrors;
-  bool _fetching;
+  bool _fetchingThreads;
+  bool _fetchingFolders;
 
   /// Default constructor, which initializes to empty content.
   EmailSessionStoreDirect() {
@@ -30,7 +31,8 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     _visibleThreads = new List<Thread>.unmodifiable(<Thread>[]);
     _focusedThreadId = null;
     _currentErrors = new List<Error>.unmodifiable(<Error>[]);
-    _fetching = true;
+    _fetchingThreads = true;
+    _fetchingFolders = true;
     triggerOnAction(emailSessionFocusFolder, (Folder folder) {
       _focusedLabelId = folder.id;
       _fetchThreadsForFocusedLabel();
@@ -75,8 +77,13 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   }
 
   @override
-  bool get fetching {
-    return _fetching;
+  bool get fetchingThreads {
+    return _fetchingThreads;
+  }
+
+  @override
+  bool get fetchingFolders {
+    return _fetchingFolders;
   }
 
   /// Retrieve threads currently focused label/folder and replace store with
@@ -86,12 +93,53 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
       return null;
     }
 
+    _focusedThreadId = null;
+    _fetchingThreads = true;
+    trigger();
+
     api.ListThreadsResponse response = await _gmail.users.threads
         .list('me', labelIds: <String>[_focusedLabelId], maxResults: 15);
     List<api.Thread> fullThreads = await Future.wait(response.threads
         .map((api.Thread t) => _gmail.users.threads.get('me', t.id)));
     _visibleThreads = new List<Thread>.unmodifiable(
         fullThreads.map((api.Thread t) => new Thread.fromGmailApi(t)));
+
+    // update fetching status
+    _fetchingThreads = false;
+    trigger();
+  }
+
+  /// Retrieves the "main" folders: Inbox, Starred, Draft, Trash
+  Future<Null> _fetchFolders() async {
+    if (_gmail == null) {
+      return null;
+    }
+
+    _fetchingFolders = true;
+    trigger();
+
+    List<String> foldersWeCareAbout = <String>[
+      'INBOX',
+      'STARRED',
+      'DRAFT',
+      'TRASH',
+    ];
+    List<api.Label> fullLabels = await Future.wait(foldersWeCareAbout
+        .map((String folderName) => _gmail.users.labels.get('me', folderName)));
+    _visibleLabels = new List<Folder>.unmodifiable(
+        fullLabels.map((api.Label label) => new Folder.fromGmailApi(label)));
+
+    // Get User Data
+    // TODO(jasoncampbell): Expand scope of OAuth token so we can retrieve the
+    // "plus profile" that has more data
+    // https://fuchsia.atlassian.net/browse/SO-134
+    api.Profile userProfile = await _gmail.users.getProfile('me');
+    _user = new User(
+      name: userProfile.emailAddress,
+      email: userProfile.emailAddress,
+    );
+
+    _fetchingFolders = false;
     trigger();
   }
 
@@ -119,33 +167,12 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     // Set 'INBOX' as the default focused label
     _focusedLabelId = 'INBOX';
 
+    // Fetch Folders
+    await _fetchFolders();
+
     // Fetch Threads
     await _fetchThreadsForFocusedLabel();
 
-    // Get Folder Data
-    List<String> foldersWeCareAbout = <String>[
-      'INBOX',
-      'STARRED',
-      'DRAFT',
-      'TRASH',
-    ];
-    List<api.Label> fullLabels = await Future.wait(foldersWeCareAbout
-        .map((String folderName) => _gmail.users.labels.get('me', folderName)));
-    _visibleLabels = new List<Folder>.unmodifiable(
-        fullLabels.map((api.Label label) => new Folder.fromGmailApi(label)));
-
-    // Get User Data
-    // TODO(jasoncampbell): Expand scope of OAuth token so we can retrieve the
-    // "plus profile" that has more data
-    // https://fuchsia.atlassian.net/browse/SO-134
-    api.Profile userProfile = await _gmail.users.getProfile('me');
-    _user = new User(
-      name: userProfile.emailAddress,
-      email: userProfile.emailAddress,
-    );
-
-    _fetching = false;
-    trigger();
     return null;
   }
 }
