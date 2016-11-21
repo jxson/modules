@@ -74,19 +74,31 @@ Future<Null> main() async {
   dynamic map = JSON.decode(data);
   _log('JSON: $map');
 
-  api.Client client = api.client(
-      id: map['oauth_id'],
-      secret: map['oauth_secret'],
-      token: map['oauth_token'],
-      expiry: DateTime.parse(map['oauth_token_expiry']),
-      refreshToken: map['oauth_refresh_token']);
+  // If the map doesn't have any of the values, propmt what to do to get the
+  // correct values.
+  if (!map.containsKey('oauth_id') ||
+      !map.containsKey('oauth_secret') ||
+      !map.containsKey('oauth_token') ||
+      !map.containsKey('oauth_token_expiry') ||
+      !map.containsKey('oauth_refresh_token')) {
+    _log("Warning: The config.json file does not have the expected values.");
+    _log('To get the correct values, run "make auth" from the apps/modules '
+        'repository.');
+  } else {
+    api.Client client = api.client(
+        id: map['oauth_id'],
+        secret: map['oauth_secret'],
+        token: map['oauth_token'],
+        expiry: DateTime.parse(map['oauth_token_expiry']),
+        refreshToken: map['oauth_refresh_token']);
 
-  api.GmailApi gmail = new api.GmailApi(client);
-  api.ListThreadsResponse response = await gmail.users.threads
-      .list('me', labelIds: <String>['INBOX'], maxResults: 15);
-  response.threads.forEach((api.Thread thread) {
-    _log('thread: ${thread.id}');
-  });
+    api.GmailApi gmail = new api.GmailApi(client);
+    api.ListThreadsResponse response = await gmail.users.threads
+        .list('me', labelIds: <String>['INBOX'], maxResults: 15);
+    response.threads.forEach((api.Thread thread) {
+      _log('thread: ${thread.id}');
+    });
+  }
 
   runApp(new MaterialApp(
     title: 'Email Service',
