@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:convert' show JSON;
 
+import 'package:config_flutter/config.dart';
 import 'package:email_api/api.dart' as api;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_flux/flutter_flux.dart';
@@ -162,24 +163,14 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
 
   /// Asynchronously fetch data for the email session from gmail servers
   Future<Null> fetchInitialContentWithGmailApi() async {
-    _gmail =
-        await rootBundle.loadString('assets/config.json').then((String data) {
-      dynamic map = JSON.decode(data);
-
-      api.Client client = api.client(
-          id: map['oauth_id'],
-          secret: map['oauth_secret'],
-          token: map['oauth_token'],
-          expiry: DateTime.parse(map['oauth_token_expiry']),
-          refreshToken: map['oauth_refresh_token']);
-
-      return new api.GmailApi(client);
-    }).catchError((Error error) {
-      print('Error loading config file.');
-    });
-    if (_gmail == null) {
-      return null;
-    }
+    Config config = await Config.read('assets/config.json');
+    api.Client client = api.client(
+        id: config.get('oauth_id'),
+        secret: config.get('oauth_secret'),
+        token: config.get('oauth_token'),
+        expiry: DateTime.parse(config.get('oauth_token_expiry')),
+        refreshToken: config.get('oauth_refresh_token'));
+    _gmail = new api.GmailApi(client);
 
     // Set 'INBOX' as the default focused label
     _focusedLabelId = 'INBOX';

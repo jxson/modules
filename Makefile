@@ -284,5 +284,5 @@ email/config.json:
 ################################################################################
 ## Fuchsia related targets
 .PHONY: build-fuchsia
-build-fuchsia:
+build-fuchsia: ## Build Fuchsia.
 	@$(FENV) && fbuild

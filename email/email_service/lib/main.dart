@@ -10,6 +10,7 @@ import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
+import 'package:config_flutter/config.dart';
 import 'package:email_api/api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -61,31 +62,24 @@ Future<Null> main() async {
     Module.serviceName,
   );
 
-  _log('Loading config...');
-  String configpath = 'assets/config.json';
-  String data = await rootBundle.loadString(configpath);
-  _log('Parsing config JSON...');
-  dynamic map = JSON.decode(data);
-  _log('JSON: $map');
+  Config config = await Config.read('assets/config.json');
 
-  // If the map doesn't have any of the values, propmt what to do to get the
-  // correct values.
-  if (!map.containsKey('oauth_id') ||
-      !map.containsKey('oauth_secret') ||
-      !map.containsKey('oauth_token') ||
-      !map.containsKey('oauth_token_expiry') ||
-      !map.containsKey('oauth_refresh_token')) {
-    _log('Warning: The config.json file does not have the expected values.');
+  // Validate configuration for the email_api REST Client.
+  if (!config.has('oauth_id') ||
+      !config.has('oauth_secret') ||
+      !config.has('oauth_token') ||
+      !config.has('oauth_token_expiry') ||
+      !config.has('oauth_refresh_token')) {
+    _log('Warning: The configu file does not have the expected values.');
     _log('To get the correct values, run "make auth" from the apps/modules '
         'repository.');
   } else {
     api.Client client = api.client(
-        id: map['oauth_id'],
-        secret: map['oauth_secret'],
-        token: map['oauth_token'],
-        expiry: DateTime.parse(map['oauth_token_expiry']),
-        refreshToken: map['oauth_refresh_token']);
-
+        id: config.get('oauth_id'),
+        secret: config.get('oauth_secret'),
+        token: config.get('oauth_token'),
+        expiry: DateTime.parse(config.get('oauth_token_expiry')),
+        refreshToken: config.get('oauth_refresh_token'));
     api.GmailApi gmail = new api.GmailApi(client);
     api.ListThreadsResponse response = await gmail.users.threads
         .list('me', labelIds: <String>['INBOX'], maxResults: 15);

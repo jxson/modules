@@ -10,10 +10,11 @@ dart_package("email_session_store") {
   source_dir = "lib"
 
   deps = [
+    "//apps/modules/packages/config_flutter",
     "//apps/modules/packages/email_api",
-    "//third_party/dart-pkg/pub/flutter_flux",
-    "//third_party/dart-pkg/pub/googleapis",
     "//apps/modules/packages/models",
     "//lib/flutter/packages/flutter",
+    "//third_party/dart-pkg/pub/flutter_flux",
+    "//third_party/dart-pkg/pub/googleapis",
   ]
 }
