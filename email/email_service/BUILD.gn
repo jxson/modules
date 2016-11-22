@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 import("//flutter/build/flutter_app.gni")
+import("//lib/fidl/fidl.gni")
 
 flutter_app("email_service") {
   package_name = "email_service"
@@ -19,5 +20,12 @@ flutter_app("email_service") {
     "//apps/mozart/services/views:views_dart",
     "//lib/fidl/dart",
     "//lib/flutter/packages/flutter",
+    "//apps/modules/email/email_service:interfaces_dart",
+  ]
+}
+
+fidl("interfaces") {
+  sources = [
+    "threads.fidl",
   ]
 }
