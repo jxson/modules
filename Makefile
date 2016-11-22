@@ -110,9 +110,9 @@ lint: ## Lint everything.
 # TODO(youngseokyoon): integrate this with the CI system later.
 .PHONY: presubmit
 presubmit: ## Run the presubmit tests.
+	@$(MAKE) build-fuchsia
 	@$(MAKE) copyright-check
 	@$(MAKE) dart-presubmit
-	@$(MAKE) build-fuchsia
 
 .PHONY: test
 test: ## Run tests for all modules.
@@ -165,7 +165,7 @@ $(TARGET_CONFIG_FILE):
 	cp $(EXAMPLE_CONFIG_FILE) $(TARGET_CONFIG_FILE)
 
 .PHONY: dart-base
-dart-base: dart-symlinks $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS) $(TARGET_CONFIG_FILE)
+dart-base: build-fuchsia dart-symlinks $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS) $(TARGET_CONFIG_FILE)
 	@true
 
 .PHONY: dart-symlinks
