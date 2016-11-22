@@ -5,8 +5,8 @@
 name: email_thread
 description: An email thread details
 dependencies:
-  email_session:
-    path: ../email_session
+  email_session_store:
+    path: ../../packages/email_session_store
   flutter:
     sdk: flutter
   widgets:

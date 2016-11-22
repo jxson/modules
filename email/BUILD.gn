@@ -7,6 +7,7 @@ group("email") {
     "//apps/modules/email/email_list",
     "//apps/modules/email/email_nav",
     "//apps/modules/email/email_service",
+    "//apps/modules/email/email_session",
     "//apps/modules/email/email_story",
     "//apps/modules/email/email_thread",
     "//apps/modules/email/user_shell:email_user_shell",

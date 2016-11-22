@@ -2,18 +2,24 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//build/dart/dart_package.gni")
+import("//flutter/build/flutter_app.gni")
 
-dart_package("email_session") {
+flutter_app("email_session") {
   package_name = "email_session"
 
   source_dir = "lib"
+  main_dart = "lib/main.dart"
 
   deps = [
-    "//apps/modules/packages/email_api",
-    "//third_party/dart-pkg/pub/flutter_flux",
-    "//third_party/dart-pkg/pub/googleapis",
+
+    "//apps/modular/services/application:application_dart",
+    "//apps/modular/services/story:story_dart",
+    "//apps/modules/packages/email_session_api",
     "//apps/modules/packages/models",
+    "//apps/mozart/lib/flutter",
+    "//apps/mozart/services/views:views_dart",
+    "//lib/fidl/dart",
     "//lib/flutter/packages/flutter",
+    "//third_party/dart-pkg/pub/googleapis",
   ]
 }

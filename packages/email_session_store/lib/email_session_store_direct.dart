@@ -6,11 +6,12 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 
 import 'package:email_api/api.dart' as api;
-import 'package:email_session/email_session_store.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_flux/flutter_flux.dart';
 import 'package:models/email.dart';
 import 'package:models/user.dart';
+
+import 'email_session_store.dart';
 
 /// An implemenation of EmailSession that fetches data directly over HTTP
 class EmailSessionStoreDirect extends Store implements EmailSessionStore {

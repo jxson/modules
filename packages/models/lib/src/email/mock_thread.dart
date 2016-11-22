@@ -50,7 +50,7 @@ class MockThread extends Thread {
                 displayName: 'David Yang',
               )
             ],
-            senderProfileUrl: _kYoyoAvatarUrl,
+            senderProfileUrl: null, // _kYoyoAvatarUrl,
             subject: 'Feed Me!!!',
             text: 'Dude, same here. I\'m starving!',
             timestamp: new DateTime.now(),
@@ -68,7 +68,7 @@ class MockThread extends Thread {
                 displayName: 'David Yang',
               )
             ],
-            senderProfileUrl: _kCocoAvatarUrl,
+            senderProfileUrl: null, // _kCocoAvatarUrl,
             subject: 'Feed Me!!!',
             text: 'Okay David, I know you are busy...but I\'m your dog! '
                 'You gotta share the grub!',

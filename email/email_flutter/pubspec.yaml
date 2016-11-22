@@ -11,8 +11,8 @@ dependencies:
     path: ../email_nav
   email_api:
     path: ../../packages/email_api
-  email_session:
-    path: ../email_session
+  email_session_store:
+    path: ../../packages/email_session_store
   email_thread:
     path: ../email_thread
   flutter:

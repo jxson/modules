@@ -4,11 +4,11 @@
 
 import 'dart:async';
 
-import 'package:email_session/email_session_store.dart';
+import 'package:email_session_store/email_session_store.dart';
+import 'package:email_session_store/email_session_store_direct.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flux/flutter_flux.dart';
 
-import 'email_session_store_direct.dart';
 import 'quarterback.dart';
 
 Future<Null> main() async {
