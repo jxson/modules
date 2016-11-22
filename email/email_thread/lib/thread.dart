@@ -47,13 +47,8 @@ class EmailThreadScreen extends StoreWatcher {
 
     return new ThreadView(
       thread: thread,
-      messageExpanded: (Message m) => true,
-      // TODO(alangardner): implement
-      // (Message m) => emailStore.isMessageExpanded(m.id),
-      onSelectMessage: (Message m) {
-        // TODO(alangardner): Fire action to expand message
-        //emailStore.actions.toggleMessageExpansion(m.id);
-      },
+      messageExpanded: (Message m) => emailSession.messageIsExpanded(m),
+      onSelectMessage: emailSessionToggleMessageExpand.call,
       onForwardMessage: _handleMessageAction,
       onReplyAllMessage: _handleMessageAction,
       onReplyMessage: _handleMessageAction,

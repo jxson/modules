@@ -31,8 +31,9 @@ class Thread {
     this.id,
     this.snippet,
     this.historyId,
-    this.messages,
-  });
+    List<Message> messages,
+  })
+      : messages = new List<Message>.unmodifiable(messages);
 
   /// Create a [Thread] from a Gmail API Thread model
   factory Thread.fromGmailApi(api.Thread thread) {

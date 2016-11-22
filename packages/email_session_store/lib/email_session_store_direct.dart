@@ -22,6 +22,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   List<Thread> _visibleThreads;
   String _focusedThreadId;
   List<Error> _currentErrors;
+  List<String> _expandedMessageIds;
   bool _fetchingThreads;
   bool _fetchingFolders;
 
@@ -34,6 +35,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     _currentErrors = new List<Error>.unmodifiable(<Error>[]);
     _fetchingThreads = true;
     _fetchingFolders = true;
+    _expandedMessageIds = <String>[];
     triggerOnAction(emailSessionFocusFolder, (Folder folder) {
       _focusedLabelId = folder.id;
       _fetchThreadsForFocusedLabel();
@@ -41,6 +43,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     triggerOnAction(emailSessionFocusThread, (Thread thread) {
       _focusedThreadId = thread.id;
     });
+    triggerOnAction(emailSessionToggleMessageExpand, _toggleMessageExpand);
   }
 
   @override
@@ -78,6 +81,11 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   }
 
   @override
+  bool messageIsExpanded(Message message) {
+    return _expandedMessageIds.contains(message.id);
+  }
+
+  @override
   bool get fetchingThreads {
     return _fetchingThreads;
   }
@@ -85,6 +93,14 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   @override
   bool get fetchingFolders {
     return _fetchingFolders;
+  }
+
+  void _toggleMessageExpand(Message message) {
+    if (_expandedMessageIds.contains(message.id)) {
+      _expandedMessageIds.remove(message.id);
+    } else {
+      _expandedMessageIds.add(message.id);
+    }
   }
 
   /// Retrieve threads currently focused label/folder and replace store with
