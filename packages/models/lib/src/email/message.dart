@@ -69,7 +69,8 @@ class Message {
   });
 
   /// Create a [Message] from a Gmail API Message model
-  /// Use plain-text representation (if it isgiven in the message payload)
+  ///
+  /// Use plain-text representation (if it is given in the message payload)
   /// otherwise use the Gmail snippet as the message text
   factory Message.fromGmailApi(api.Message message) {
     String subject = '';
@@ -152,11 +153,10 @@ class Message {
   }
 
   /// Generates preview text for message
+  ///
   /// Strips all newline characters
-  // TODO(dayang): Trim NewLine characters for other platforms
-  // https://fuchsia.atlassian.net/browse/SO-131
   String generateSnippet() {
-    return text.replaceAll('\n', ' ');
+    return text.replaceAll('\r\n', ' ').replaceAll('\n', ' ');
   }
 
   /// Get 'Display Date' for [Message]
