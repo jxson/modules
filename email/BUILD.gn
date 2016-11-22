@@ -10,5 +10,8 @@ group("email") {
     "//apps/modules/email/email_story",
     "//apps/modules/email/email_thread",
     "//apps/modules/email/user_shell:email_user_shell",
+    "//apps/modules/email/youtube_story",
+    "//apps/modules/email/youtube_thumbnail",
+    "//apps/modules/email/youtube_video",
   ]
 }

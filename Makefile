@@ -271,7 +271,7 @@ dart-presubmit:
 auth: email/config.json ## Update email auth credentials with a refresh token.
 	@cd email/tools; \
 	pub run bin/oauth.dart
-	@for dir in email/email_flutter/assets email/email_service/assets; do \
+	@for dir in email/email_flutter/assets email/email_service/assets email/youtube_video/assets; do \
 		mkdir -p $${dir}; \
 		cp email/config.json $${dir}/config.json; \
 	done

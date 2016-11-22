@@ -36,11 +36,15 @@ class Config {
   /// The value for oauth_refresh_token.
   String oauthRefreshToken;
 
+  /// The value for youtube API key.
+  String youtubeApiKey;
+
   /// Utilitiy for managing the email/config.json file.
   Config({
     this.file,
     this.oauthId,
     this.oauthSecret,
+    this.youtubeApiKey,
   });
 
   /// Read the config file and load it's values.
@@ -67,13 +71,11 @@ Config keys for "oauth_id" and "oauth_secret" are required in file:
       throw new StateError(message);
     }
 
-    String oauthId = data['oauth_id'];
-    String oauthSecret = data['oauth_secret'];
-
     Config config = new Config(
       file: file,
-      oauthId: oauthId,
-      oauthSecret: oauthSecret,
+      oauthId: data['oauth_id'],
+      oauthSecret: data['oauth_secret'],
+      youtubeApiKey: data['youtube_api_key'],
     );
 
     return config;
@@ -88,6 +90,7 @@ Config keys for "oauth_id" and "oauth_secret" are required in file:
     json['oauth_token'] = oauthToken;
     json['oauth_token_expiry'] = oauthTokenExpiry.toString();
     json['oauth_refresh_token'] = oauthRefreshToken;
+    json['youtube_api_key'] = youtubeApiKey;
 
     return json;
   }
