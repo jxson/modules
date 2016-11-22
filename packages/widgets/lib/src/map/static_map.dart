@@ -26,30 +26,40 @@ class StaticMap extends StatelessWidget {
   StaticMap({
     Key key,
     @required this.apiKey,
-    @required this.location,
-    this.zoom: 5,
-    this.width: 300.0,
-    this.height: 300.0,
-  })
-      : super(key: key) {
+    this.location,
+    int zoom,
+    double width,
+    double height,
+  })  : zoom = zoom ?? 5,
+      width = width ?? 300.0,
+      height = height ?? 300.0,
+      super(key: key) {
     assert(location != null);
     assert(apiKey != null);
   }
 
   @override
   Widget build(BuildContext context) {
-    String mapUrl = 'https://maps.googleapis.com/maps/api/staticmap?'
-        'center=$location&scale=2'
-        '&zoom=$zoom&size=${width.round()}x${height.round()}'
-        '&maptype=roadmap&markers=color:red%7Clabel:P%7C'
-        '${Uri.encodeQueryComponent(location)}'
-        '&key=$apiKey';
-    return new Image.network(
-      mapUrl,
-      height: height,
-      width: width,
-      gaplessPlayback: true,
-      fit: ImageFit.cover,
-    );
+    if (location == null || location.isEmpty) {
+      return new Container(
+        decoration: new BoxDecoration(backgroundColor: Colors.blueGrey[300]),
+        child: new Center(child: new Text('No Maps')),
+      );
+    } else {
+      // TODO (dayang): Move back to a HTTPS once it become stable
+      String mapUrl = 'http://maps.googleapis.com/maps/api/staticmap?'
+          'center=$location&scale=2'
+          '&zoom=$zoom&size=${width.round()}x${height.round()}'
+          '&maptype=roadmap&markers=color:red%7Clabel:P%7C'
+          '${Uri.encodeQueryComponent(location)}'
+          '&key=$apiKey';
+      return new Image.network(
+        mapUrl,
+        height: height,
+        width: width,
+        gaplessPlayback: true,
+        fit: ImageFit.cover,
+      );
+    }
   }
 }
