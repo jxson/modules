@@ -5,6 +5,8 @@
 # The copy happens when you run "make" from the command line.
 analyzer:
   strong-mode: false
+  language:
+    enableSuperMixins: true
   exclude:
     - '**.mojom.dart'
 linter:
