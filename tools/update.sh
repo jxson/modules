@@ -19,7 +19,7 @@ PREFIX="${REPO_DIR}/email"
 
 # If config.json files are missing create empty ones so the build doesn't
 # break.
-for name in email_flutter email_service youtube_video; do
+for name in email_flutter email_service map usps youtube_video ; do
   CONFIG="${PREFIX}/${name}/assets/config.json"
   if [ ! -f "${CONFIG}" ]; then
     mkdir -p "$( dirname ${CONFIG} )"

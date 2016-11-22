@@ -2,33 +2,51 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
+import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
-import 'package:widgets/youtube.dart';
+import 'package:widgets/map.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
 final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 
-// This module expects to obtain the youtube video id string through the link
+// This module expects to obtain the location string through the link
 // provided from the parent, in the following document id / property key.
-// TODO(youngseokyoon): add this information to the module manifest.
-final String _kYoutubeDocId = 'youtube-doc';
-final String _kYoutubeVideoIdKey = 'youtube-video-id';
+final String _kMapDocId = 'map-doc';
+final String _kMapLocationKey = 'map-location-key';
+final String _kMapHeightKey = 'map-height-key';
+final String _kMapWidthKey = 'map-width-key';
+final String _kMapZoomkey = 'map-zoom-key';
+
+/// The location string.
+String _mapLocation;
+
+/// Height for map, this should most likely match the height of the child view
+/// of the map module
+double _mapHeight;
+
+/// Width for map
+double _mapWidth;
+
+/// Zoom level for map
+int _mapZoom;
 
 ModuleImpl _module;
 
-// The youtube video id.
-String _videoId;
+/// The api for Google Static Maps
+String _apiKey;
 
 void _log(String msg) {
-  print('[youtube_thumbnail] $msg');
+  print('[map] $msg');
 }
 
 /// An implementation of the [LinkWatcher] interface.
@@ -40,18 +58,28 @@ class LinkWatcherImpl extends LinkWatcher {
   /// The returned handle should only be used once.
   InterfaceHandle<LinkWatcher> getHandle() => _binding.wrap(this);
 
+  /// Correctly close the Link Binding
+  void close() => _binding.close();
+
   @override
   void notify(Map<String, Document> docs) {
     _log('LinkWatcherImpl::notify call');
 
-    Document youtubeDoc = docs[_kYoutubeDocId];
-    if (youtubeDoc == null || youtubeDoc.properties == null) {
-      _log('No youtube doc found.');
+    Document mapDoc = docs[_kMapDocId];
+    if (mapDoc == null || mapDoc.properties == null) {
+      _log('No map doc found.');
       return;
     }
 
-    _videoId = youtubeDoc.properties[_kYoutubeVideoIdKey]?.stringValue;
-    _log('_videoId: $_videoId');
+    _mapLocation = mapDoc.properties[_kMapLocationKey]?.stringValue;
+    _mapHeight = mapDoc.properties[_kMapHeightKey]?.floatValue;
+    _mapWidth = mapDoc.properties[_kMapWidthKey]?.floatValue;
+    _mapZoom = mapDoc.properties[_kMapZoomkey]?.intValue;
+
+    _log('_location: $_mapLocation');
+    _log('_mapHeight: $_mapHeight');
+    _log('_mapWidth: $_mapWidth');
+    _log('_mapZoom: $_mapZoom');
     _kHomeKey.currentState?.updateUI();
   }
 }
@@ -60,8 +88,10 @@ class LinkWatcherImpl extends LinkWatcher {
 class ModuleImpl extends Module {
   final ModuleBinding _binding = new ModuleBinding();
 
-  /// The [LinkProxy] from which this module gets the youtube video id.
+  /// The [LinkProxy] from which this module gets the map parameters.
   final LinkProxy link = new LinkProxy();
+
+  final LinkWatcherImpl _linkWatcher = new LinkWatcherImpl();
 
   /// Bind an [InterfaceRequest] for a [Module] interface to this object.
   void bind(InterfaceRequest<Module> request) {
@@ -79,12 +109,13 @@ class ModuleImpl extends Module {
 
     // Bind the link handle and register the link watcher.
     link.ctrl.bind(linkHandle);
-    link.watchAll(new LinkWatcherImpl().getHandle());
+    link.watchAll(_linkWatcher.getHandle());
   }
 
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
+    _linkWatcher.close();
     link.ctrl.close();
     callback();
   }
@@ -106,10 +137,13 @@ class HomeScreenState extends State<HomeScreen> {
     return new Container(
       alignment: FractionalOffset.center,
       constraints: const BoxConstraints.expand(),
-      child: _videoId != null
-          ? new YoutubeThumbnail(
-              videoId: _videoId,
-              onSelect: (String id) => _log('Thumbnail Selected: $id'),
+      child: _mapLocation != null && _apiKey != null
+          ? new StaticMap(
+              location: _mapLocation,
+              zoom: _mapZoom,
+              width: _mapWidth,
+              height: _mapHeight,
+              apiKey: _apiKey,
             )
           : new CircularProgressIndicator(),
     );
@@ -119,6 +153,17 @@ class HomeScreenState extends State<HomeScreen> {
   void updateUI() {
     _log('updateUI call');
     setState(() {});
+  }
+}
+
+Future<Null> _readAPIKey() async {
+  Config config = await Config.read('assets/config.json');
+  String googleApiKey = config.get('usps_api_key');
+  if (googleApiKey == null) {
+    _log('"google_api_key" value is not specified in config.json.');
+  } else {
+    _apiKey = googleApiKey;
+    _kHomeKey.currentState?.updateUI();
   }
 }
 
@@ -140,8 +185,10 @@ void main() {
     Module.serviceName,
   );
 
+  _readAPIKey();
+
   runApp(new MaterialApp(
-    title: 'Youtube Thumbnail',
+    title: 'Map',
     home: new HomeScreen(key: _kHomeKey),
     theme: new ThemeData(primarySwatch: Colors.blue),
     debugShowCheckedModeBanner: false,

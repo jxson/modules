@@ -10,11 +10,12 @@ import 'package:meta/meta.dart';
 import 'package:models/usps.dart';
 import 'package:xml/xml.dart' as xml;
 
-import '../map/static_map.dart';
-
 final String _kApiBaseUrl = 'production.shippingapis.com';
 
 final String _kApiRestOfUrl = 'ShippingApi.dll';
+
+/// Callback function signature for selecting a location to focus on
+typedef void LocationSelectCallback(String location);
 
 /// Represents the state of data loading
 enum LoadingState {
@@ -33,22 +34,21 @@ class TrackingStatus extends StatefulWidget {
   /// API key for USPS APIs
   final String apiKey;
 
-  /// API key for Google Maps
-  final String mapsApiKey;
-
   /// USPS tracking code for given package
   final String trackingCode;
+
+  /// Callback for selecting a location
+  final LocationSelectCallback onLocationSelect;
 
   /// Constructor
   TrackingStatus({
     Key key,
     @required this.apiKey,
     @required this.trackingCode,
-    @required this.mapsApiKey,
+    this.onLocationSelect,
   })
       : super(key: key) {
     assert(apiKey != null);
-    assert(mapsApiKey != null);
     assert(trackingCode != null);
   }
 
@@ -62,9 +62,6 @@ class _TrackingStatusState extends State<TrackingStatus> {
 
   /// Loading State for Tracking Data
   LoadingState _loadingState = LoadingState.inProgress;
-
-  /// Current location to show on map
-  String _currentLocation;
 
   /// Make request to USPS API to retrieve tracking data for given tracking code
   Future<List<TrackingEntry>> _getTrackingData() async {
@@ -105,7 +102,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
           } else {
             _loadingState = LoadingState.completed;
             _trackingEntries = entries;
-            _currentLocation = entries.first?.fullLocation;
+            config.onLocationSelect(entries.first?.fullLocation);
           }
         });
       }
@@ -118,25 +115,10 @@ class _TrackingStatusState extends State<TrackingStatus> {
     });
   }
 
-  Widget _buildMap() {
-    return new Container(
-      height: 200.0,
-      child: new StaticMap(
-        apiKey: config.mapsApiKey,
-        location: _currentLocation,
-        zoom: 10,
-        height: 200.0,
-        width: 1200.0,
-      ),
-    );
-  }
-
   Widget _buildTrackingEntry(TrackingEntry entry) {
     return new InkWell(
       onTap: () {
-        setState(() {
-          _currentLocation = entry.fullLocation;
-        });
+        config.onLocationSelect(entry.fullLocation);
       },
       child: new Container(
         padding: const EdgeInsets.symmetric(
@@ -245,12 +227,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
         );
         break;
       case LoadingState.completed:
-        entryList = new Column(
-          children: <Widget>[
-            _buildMap(),
-            _buildTrackingEntryList(),
-          ],
-        );
+        entryList = _buildTrackingEntryList();
         break;
       case LoadingState.failed:
         entryList = new Container(
