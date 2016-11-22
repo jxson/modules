@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:convert' show JSON;
+import 'dart:async';
 
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
@@ -12,7 +12,6 @@ import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:lib.fidl.dart/bindings.dart';
 import 'package:widgets/youtube.dart';
 
@@ -127,7 +126,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 }
 
-void _readAPIKey() {
+Future<Null> _readAPIKey() async {
   Config config = await Config.read('assets/config.json');
   String googleApiKey = config.get('google_api_key');
   if (googleApiKey == null) {

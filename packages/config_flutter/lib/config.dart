@@ -4,11 +4,11 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:config/config.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+/// Config implementation for flutter environment.
 class Config extends BaseConfig {
   /// Convienence method for creating a config object by loading a
   /// configuration file at [src].

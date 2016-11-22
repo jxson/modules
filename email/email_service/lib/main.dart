@@ -3,18 +3,19 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert' show JSON;
 
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
+import 'package:apps.modules.email.email_service/threads.fidl.dart' as es;
 import 'package:config_flutter/config.dart';
 import 'package:email_api/api.dart' as api;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:lib.fidl.dart/bindings.dart';
+
+import 'src/threads_impl.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
@@ -25,6 +26,9 @@ void _log(String msg) {
 /// An implementation of the [Module] interface.
 class ModuleImpl extends Module {
   final ModuleBinding _binding = new ModuleBinding();
+
+  /// A [ServiceProvider] implementation to be used as the outgoing services.
+  final ServiceProviderImpl outgoingServices = new ServiceProviderImpl();
 
   /// Bind an [InterfaceRequest] for a [Module] interface to this object.
   void bind(InterfaceRequest<Module> request) {
@@ -37,9 +41,20 @@ class ModuleImpl extends Module {
     InterfaceHandle<Story> storyHandle,
     InterfaceHandle<Link> linkHandle,
     InterfaceHandle<ServiceProvider> incomingServices,
-    InterfaceRequest<ServiceProvider> outgoingServices,
+    InterfaceRequest<ServiceProvider> outgoingServicesRequest,
   ) {
     _log('ModuleImpl::initialize call');
+
+    // Register the service provider which can serve the `Threads` service.
+    outgoingServices
+      ..addServiceForName(
+        (InterfaceRequest<es.Threads> request) {
+          _log('Received binding request for Threads');
+          new ThreadsImpl().bind(request);
+        },
+        es.Threads.serviceName,
+      )
+      ..bind(outgoingServicesRequest);
   }
 
   @override
