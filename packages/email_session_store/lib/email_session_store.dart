@@ -33,6 +33,10 @@ abstract class EmailSessionStore implements Store {
   /// Returns true if currently fetching folders/labels from server
   bool get fetchingFolders;
   // TODO(alangardner): Current status? (e.g. loading, etc.)
+
+  /// Returns true if message should be expanded in the threadListView
+  /// TODO(dayang): Make idempotent in the future
+  bool messageIsExpanded(Message message);
 }
 
 /// The globally available email session store
@@ -44,3 +48,6 @@ final Action<Folder> emailSessionFocusFolder = new Action<Folder>();
 
 /// Make this thread the focused thread
 final Action<Thread> emailSessionFocusThread = new Action<Thread>();
+
+/// Toggle the expansion of a message in a thread view
+final Action<Message> emailSessionToggleMessageExpand = new Action<Message>();

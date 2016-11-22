@@ -42,7 +42,7 @@ class Message {
   final String text;
 
   /// List of links (URIs) that are found within email
-  final Set<Uri> links;
+  final List<Uri> links;
 
   /// List of attachments for given email
   final List<Attachment> attachments;
@@ -58,15 +58,21 @@ class Message {
     this.id,
     this.sender,
     this.senderProfileUrl,
-    this.recipientList: const <Mailbox>[],
-    this.ccList: const <Mailbox>[],
     this.subject,
     this.text,
-    this.links,
-    this.attachments,
     this.timestamp,
     this.isRead,
-  });
+    List<Uri> links,
+    List<Attachment> attachments,
+    List<Mailbox> recipientList,
+    List<Mailbox> ccList,
+  })
+      : links = new List<Uri>.unmodifiable(links ?? <Uri>[]),
+        attachments =
+            new List<Attachment>.unmodifiable(attachments ?? <Attachment>[]),
+        recipientList =
+            new List<Mailbox>.unmodifiable(recipientList ?? <Mailbox>[]),
+        ccList = new List<Mailbox>.unmodifiable(ccList ?? <Mailbox>[]);
 
   /// Create a [Message] from a Gmail API Message model
   ///
@@ -118,7 +124,7 @@ class Message {
 
     /// Add any youtube and usps links as attachments
     List<Attachment> attachments = <Attachment>[];
-    Set<Uri> links = extractURI(messageText);
+    List<Uri> links = extractURI(messageText).toList();
     links.forEach((Uri uri) {
       if (uri.host == 'www.youtube.com' &&
           uri.path == '/watch' &&
