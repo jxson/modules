@@ -7,12 +7,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:config/config.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
-/// Configuration interface for CLI tools.
 class Config extends BaseConfig {
-  /// The file for reading and saving configuration values.
-  File file;
-
   /// Convienence method for creating a config object by loading a
   /// configuration file at [src].
   static Future<Config> read(String src) async {
@@ -22,27 +19,9 @@ class Config extends BaseConfig {
   }
 
   @override
-  Future<Null> load(String filename) async {
-    this.file = new File(filename);
-
-    if (!(await file.exists())) {
-      throw new StateError('''
-Config file does not exist:
-
-    $file
-      ''');
-    }
-
-    String data = await file.readAsString();
+  Future<Null> load(String src) async {
+    String data = await rootBundle.loadString(src);
     dynamic json = JSON.decode(data);
     json.forEach((String key, String value) => this.put(key, value));
-  }
-
-  /// Save the current configuration values to [this.file].
-  Future<Null> save() async {
-    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-    Map<String, String> json = this.toJSON();
-    String data = encoder.convert(json);
-    await this.file.writeAsString(data);
   }
 }

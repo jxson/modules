@@ -10,6 +10,7 @@ import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
+import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:lib.fidl.dart/bindings.dart';
@@ -127,25 +128,14 @@ class HomeScreenState extends State<HomeScreen> {
 }
 
 void _readAPIKey() {
-  // Read the API key from the rootBundle.
-  _log('Loading config...');
-  String configpath = 'assets/config.json';
-  rootBundle.loadString(configpath).then((String data) {
-    _log('Parsing config JSON...');
-    dynamic map = JSON.decode(data);
-    _log('JSON: $map');
-
-    String youtubeApiKey = map['youtube_api_key'];
-    if (youtubeApiKey != null) {
-      _log('youtube_api_key: $youtubeApiKey');
-      _apiKey = youtubeApiKey;
-      _kHomeKey.currentState?.updateUI();
-    } else {
-      _log('"youtube_api_key" value is not specified in config.json.');
-    }
-  }).catchError((Exception e) {
-    _log('Error occurred while reading the config.json file: $e');
-  });
+  Config config = await Config.read('assets/config.json');
+  String googleApiKey = config.get('google_api_key');
+  if (googleApiKey == null) {
+    _log('"google_api_key" value is not specified in config.json.');
+  } else {
+    _apiKey = googleApiKey;
+    _kHomeKey.currentState?.updateUI();
+  }
 }
 
 /// Main entry point to the email folder list module.

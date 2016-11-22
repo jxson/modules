@@ -2,11 +2,12 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-name: tools
+name: config_flutter
+description: Flutter Config implementation.
+version: 0.0.1
+
 dependencies:
-  googleapis_auth: ^0.2.3
-  googleapis: ^0.32.0
-  http: ^0.11.3
-  path: ^1.4.0
   config:
-    path: ../../packages/config
+    path: ../config
+  flutter:
+    sdk: flutter

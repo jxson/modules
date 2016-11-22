@@ -7,20 +7,32 @@ import 'dart:async';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 import 'package:tools/config.dart';
+import 'package:tools/resolve.dart';
 
 /// Generate OAuth refesh credentials and save them to email/config.json.
 Future<Null> main(List<String> args) async {
-  Config config = await Config.load();
-  ClientId clientId = new ClientId(config.oauthId, config.oauthSecret);
+  String filename = resolve('config.json');
+  Config config = await Config.read(filename);
+
+  if (config.has('oauth_id') == false || config.has('oauth_secret') == false) {
+    String message = '''
+Config keys for "oauth_id" and "oauth_secret" are required in file:
+
+  $filename
+    ''';
+    throw new StateError(message);
+  }
+
+  ClientId clientId =
+      new ClientId(config.get('oauth_id'), config.get('oauth_secret'));
   http.Client client = new http.Client();
   AccessCredentials credentials = await obtainAccessCredentialsViaUserConsent(
-      clientId, Config.oauthScopes, client, _prompt);
+      clientId, config.scopes, client, _prompt);
   client.close();
 
-  config.oauthToken = credentials.accessToken.data;
-  config.oauthTokenExpiry = credentials.accessToken.expiry;
-  config.oauthRefreshToken = credentials.refreshToken;
-
+  config.put('oauth_token', credentials.accessToken.data);
+  config.put('oauth_token_expiry', credentials.accessToken.expiry.toString());
+  config.put('oauth_refresh_token', credentials.refreshToken);
   await config.save();
 
   print('updated: ${config.file}');

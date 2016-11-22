@@ -11,6 +11,7 @@ flutter_app("youtube_video") {
     "//apps/modular/lib/app/dart",
     "//apps/modular/services/application:application_dart",
     "//apps/modular/services/story:story_dart",
+    "//apps/modules/packages/config_flutter",
     "//apps/modules/packages/models",
     "//apps/modules/packages/widgets",
     "//apps/mozart/lib/flutter",
