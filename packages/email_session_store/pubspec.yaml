@@ -2,17 +2,17 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-name: email_session
+name: email_session_store
+description: Action and store interface definition for the email session store.
 dependencies:
   email_api:
-    path: ../../packages/email_api
+    path: ../email_api
+  flutter:
+    sdk: flutter
   flutter_flux:
     path: ../../../../third_party/dart-pkg/pub/flutter_flux
-  googleapis: ^0.32.0
   models:
-    path: ../../packages/models
+    path: ../models
 dependency_overrides:
   http:
     path: ../../packages/flutter-http/
-dev_dependencies:
-  test: ^0.12.15
