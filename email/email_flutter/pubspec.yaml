@@ -5,18 +5,12 @@
 name: email_flutter
 description: Flutter app to run Email 3 column layout.
 dependencies:
-  email_list:
-    path: ../email_list
-  email_nav:
-    path: ../email_nav
-  email_api:
-    path: ../../packages/email_api
   email_session_store:
     path: ../../packages/email_session_store
-  email_thread:
-    path: ../email_thread
   flutter:
     sdk: flutter
+  widgets:
+    path: ../../packages/widgets
 dependency_overrides:
   http:
     path: ../../packages/flutter-http/

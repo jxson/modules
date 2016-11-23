@@ -6,6 +6,8 @@ name: widgets
 description: UI widgets for FX
 dependencies:
   intl: ^0.14.0
+  email_session_store:
+    path: ../email_session_store
   flutter:
     sdk: flutter
   models:
