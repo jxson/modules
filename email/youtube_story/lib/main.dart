@@ -98,31 +98,29 @@ class ModuleImpl extends Module {
     InterfaceHandle<ServiceProvider> outgoingServices,
     InterfaceRequest<ServiceProvider> incomingServices,
   }) {
-    ViewOwnerProxy viewOwner = new ViewOwnerProxy();
-    ModuleControllerProxy moduleController = new ModuleControllerProxy();
+    InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
+    InterfacePair<ModuleController> moduleControllerPair =
+        new InterfacePair<ModuleController>();
 
     _log('Starting sub-module: $url');
     story.startModule(
       url,
-      duplicateLink(link),
+      duplicateLink(),
       outgoingServices,
       incomingServices,
-      moduleController.ctrl.request(),
-      viewOwner.ctrl.request(),
+      moduleControllerPair.passRequest(),
+      viewOwnerPair.passRequest(),
     );
     _log('Started sub-module: $url');
 
-    // Close this to prevent leaks.
-    moduleController.ctrl.close();
-
-    return viewOwner.ctrl.unbind();
+    return viewOwnerPair.passHandle();
   }
 
   /// Obtains a duplicated [InterfaceHandle] for the given [Link] object.
-  InterfaceHandle<Link> duplicateLink(Link link) {
-    LinkProxy linkProxy = new LinkProxy();
-    link.dup(linkProxy.ctrl.request());
-    return linkProxy.ctrl.unbind();
+  InterfaceHandle<Link> duplicateLink() {
+    InterfacePair<Link> linkPair = new InterfacePair<Link>();
+    link.dup(linkPair.passRequest());
+    return linkPair.passHandle();
   }
 }
 
