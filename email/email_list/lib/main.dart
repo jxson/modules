@@ -15,7 +15,7 @@ import 'package:widgets/email.dart';
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
 void _log(String msg) {
-  print('[Email List Module] $msg');
+  print('[email_list] $msg');
 }
 
 /// An implementation of the [Module] interface.
@@ -36,24 +36,11 @@ class ModuleImpl extends Module {
     InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
-
-    StoryProxy story = new StoryProxy();
-    story.ctrl.bind(storyHandle);
-
-    LinkProxy link = new LinkProxy();
-    link.ctrl.bind(linkHandle);
-
-    ServiceProviderProxy serviceProvider = new ServiceProviderProxy();
-    serviceProvider.ctrl.bind(incomingServicesHandle);
   }
 
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
-
-    // Do some clean up here.
-
-    // Invoke the callback to signal that the clean-up process is done.
     callback();
   }
 }

@@ -89,6 +89,7 @@ class ModuleImpl extends Module {
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
+    link.ctrl.close();
     callback();
   }
 }
