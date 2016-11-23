@@ -28,7 +28,7 @@ ChildViewConnection _connList;
 ChildViewConnection _connThread;
 
 void _log(String msg) {
-  print('[Email Quarterback Module] $msg');
+  print('[email_story] $msg');
 }
 
 /// A wrapper class for duplicating ServiceProvider
@@ -62,6 +62,9 @@ class ModuleImpl extends Module {
   /// [Link] service provided by the framework.
   final LinkProxy link = new LinkProxy();
 
+  /// [ServiceProvider] obtained
+  final ServiceProviderProxy emailServices = new ServiceProviderProxy();
+
   /// Bind an [InterfaceRequest] for a [Module] interface to this object.
   void bind(InterfaceRequest<Module> request) {
     _binding.bind(this, request);
@@ -81,7 +84,6 @@ class ModuleImpl extends Module {
     link.ctrl.bind(linkHandle);
 
     // Obtain the email service provider from the email_service module.
-    ServiceProviderProxy emailServices = new ServiceProviderProxy();
     startModule(
       url: _kEmailServiceUrl,
       incomingServices: emailServices.ctrl.request(),
@@ -112,16 +114,15 @@ class ModuleImpl extends Module {
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
-
-    // Do some clean up here.
-
-    // Invoke the callback to signal that the clean-up process is done.
+    story.ctrl.close();
+    link.ctrl.close();
+    emailServices.ctrl.close();
     callback();
   }
 
   /// Updates the UI by calling setState on the [HomeScreenState] object.
   void updateUI() {
-    _kHomeKey.currentState?.setState(() {});
+    _kHomeKey.currentState?.updateUI();
   }
 
   /// Start a module and return its [ViewOwner] handle.
@@ -131,6 +132,7 @@ class ModuleImpl extends Module {
     InterfaceRequest<ServiceProvider> incomingServices,
   }) {
     ViewOwnerProxy viewOwner = new ViewOwnerProxy();
+    ModuleControllerProxy moduleController = new ModuleControllerProxy();
 
     _log('Starting sub-module: $url');
     story.startModule(
@@ -138,10 +140,13 @@ class ModuleImpl extends Module {
       duplicateLink(link),
       outgoingServices,
       incomingServices,
-      new ModuleControllerProxy().ctrl.request(), // not used.
+      moduleController.ctrl.request(),
       viewOwner.ctrl.request(),
     );
     _log('Started sub-module: $url');
+
+    // Close this to prevent leaks.
+    moduleController.ctrl.close();
 
     return viewOwner.ctrl.unbind();
   }
@@ -199,6 +204,11 @@ class HomeScreenState extends State<HomeScreen> {
       color: Colors.white,
       child: new Row(children: columns),
     );
+  }
+
+  /// Convenient method for other entities to call setState to cause UI updates.
+  void updateUI() {
+    setState(() {});
   }
 }
 

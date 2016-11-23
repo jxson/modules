@@ -16,7 +16,7 @@ import 'package:widgets/email.dart';
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
 void _log(String msg) {
-  print('[Email Nav Module] $msg');
+  print('[email_nav] $msg');
 }
 
 /// An implementation of the [Module] interface.
@@ -37,15 +37,6 @@ class ModuleImpl extends Module {
     InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
-
-    StoryProxy story = new StoryProxy();
-    story.ctrl.bind(storyHandle);
-
-    LinkProxy link = new LinkProxy();
-    link.ctrl.bind(linkHandle);
-
-    ServiceProviderProxy serviceProvider = new ServiceProviderProxy();
-    serviceProvider.ctrl.bind(incomingServicesHandle);
   }
 
   @override

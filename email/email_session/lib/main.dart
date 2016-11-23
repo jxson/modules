@@ -36,17 +36,11 @@ class ModuleImpl extends Module {
     InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
-
-    // Do something with the story / link.
   }
 
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
-
-    // Do some clean up here.
-
-    // Invoke the callback to signal that the clean-up process is done.
     callback();
   }
 }

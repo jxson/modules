@@ -87,6 +87,8 @@ class ModuleImpl extends Module {
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
+    story.ctrl.close();
+    link.ctrl.close();
     callback();
   }
 
@@ -97,6 +99,7 @@ class ModuleImpl extends Module {
     InterfaceRequest<ServiceProvider> incomingServices,
   }) {
     ViewOwnerProxy viewOwner = new ViewOwnerProxy();
+    ModuleControllerProxy moduleController = new ModuleControllerProxy();
 
     _log('Starting sub-module: $url');
     story.startModule(
@@ -104,10 +107,13 @@ class ModuleImpl extends Module {
       duplicateLink(link),
       outgoingServices,
       incomingServices,
-      new ModuleControllerProxy().ctrl.request(), // not used.
+      moduleController.ctrl.request(),
       viewOwner.ctrl.request(),
     );
     _log('Started sub-module: $url');
+
+    // Close this to prevent leaks.
+    moduleController.ctrl.close();
 
     return viewOwner.ctrl.unbind();
   }
