@@ -7,7 +7,8 @@ import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
-import 'package:apps.modules.email.email_service/threads.fidl.dart' as es;
+import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
+import 'package:email_session_client/client.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 import 'package:models/email.dart';
@@ -29,8 +30,14 @@ class ModuleImpl extends Module {
   /// [ServiceProvider] given from the parent module.
   final ServiceProviderProxy incomingServices = new ServiceProviderProxy();
 
-  /// [Threads] service obtained from the incoming [ServiceProvider].
-  final es.ThreadsProxy threadsService = new es.ThreadsProxy();
+  /// [EmailSession] service obtained from the incoming [ServiceProvider].
+  final es.EmailSessionProxy emailSessionService = new es.EmailSessionProxy();
+
+  /// [Link] for watching the[EmailSession] state.
+  final LinkProxy emailSessionLinkProxy = new LinkProxy();
+
+  /// [EmailSessionLinkStore] for observing the email session state.
+  EmailSessionLinkStore emailSessionStore;
 
   /// Bind an [InterfaceRequest] for a [Module] interface to this object.
   void bind(InterfaceRequest<Module> request) {
@@ -51,21 +58,24 @@ class ModuleImpl extends Module {
     // serve the `Threads` interface. Use `connectToService` function to get the
     // actual `Threads` interface.
     incomingServices.ctrl.bind(incomingServicesHandle);
-    connectToService(incomingServices, threadsService.ctrl);
+    connectToService(incomingServices, emailSessionService.ctrl);
 
-    // Call the function defined in threads.fidl, and print the received value.
-    threadsService.inbox(0, (List<es.Thread> threads) {
-      _log('Received threads from the email service');
-      threads.forEach((es.Thread t) {
-        _log('id: ${t.id}');
-      });
+    emailSessionLinkProxy.ctrl.bind(linkHandle);
+    emailSessionStore = new EmailSessionLinkStore(emailSessionLinkProxy);
+    emailSessionStore.listen((EmailSessionLinkStore store) {
+      _log('GOT CHANGE TO MAX: ${store.fake}');
     });
+
+    // Call the function defined in email_session.fidl.
+    _log('Calling fakeAction(0)');
+    emailSessionService.fakeAction(0);
   }
 
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
-    threadsService.ctrl.close();
+    emailSessionLinkProxy.ctrl.unbind();
+    emailSessionService.ctrl.close();
     incomingServices.ctrl.close();
     callback();
   }
