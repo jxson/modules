@@ -27,6 +27,8 @@ flutter_app("modules_gallery") {
 
   package_name = "gallery"
 
+  manifest = "flutter.yaml"
+
   source_dir = "lib"
 
   deps = [

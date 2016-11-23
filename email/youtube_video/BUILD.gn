@@ -7,6 +7,8 @@ import("//flutter/build/flutter_app.gni")
 flutter_app("youtube_video") {
   main_dart = "lib/main.dart"
 
+  manifest = "flutter.yaml"
+
   deps = [
     "//apps/modular/lib/app/dart",
     "//apps/modular/services/application:application_dart",

@@ -9,7 +9,10 @@ flutter_app("email_service") {
   package_name = "email_service"
 
   source_dir = "lib"
+
   main_dart = "lib/main.dart"
+
+  manifest = "flutter.yaml"
 
   deps = [
     "//apps/modular/lib/app/dart",
