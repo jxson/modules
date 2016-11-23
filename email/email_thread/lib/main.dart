@@ -14,8 +14,10 @@ import 'package:widgets/email.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
+ModuleImpl _module;
+
 void _log(String msg) {
-  print('[Email Thread Module] $msg');
+  print('[email_thread] $msg');
 }
 
 /// An implementation of the [Module] interface.
@@ -90,7 +92,12 @@ void main() {
   _context.outgoingServices.addServiceForName(
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
-      new ModuleImpl().bind(request);
+      if (_module != null) {
+        _log('Module interface can only be provided once. Rejecting request.');
+        request.channel.close();
+        return;
+      }
+      _module = new ModuleImpl()..bind(request);
     },
     Module.serviceName,
   );

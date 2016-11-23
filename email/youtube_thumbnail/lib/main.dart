@@ -22,6 +22,8 @@ final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 final String _kYoutubeDocId = 'youtube-doc';
 final String _kYoutubeVideoIdKey = 'youtube-video-id';
 
+ModuleImpl _module;
+
 // The youtube video id.
 String _videoId;
 
@@ -128,7 +130,12 @@ void main() {
   _context.outgoingServices.addServiceForName(
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
-      new ModuleImpl().bind(request);
+      if (_module != null) {
+        _log('Module interface can only be provided once. Rejecting request.');
+        request.channel.close();
+        return;
+      }
+      _module = new ModuleImpl()..bind(request);
     },
     Module.serviceName,
   );
