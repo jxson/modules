@@ -33,6 +33,8 @@ final String _kChildUrl = 'file:///system/apps/youtube_thumbnail';
 // The youtube video id.
 final String _kVideoId = 'p336IIjZCl8';
 
+ModuleImpl _module;
+
 ChildViewConnection _conn;
 
 void _log(String msg) {
@@ -160,7 +162,12 @@ void main() {
   _context.outgoingServices.addServiceForName(
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
-      new ModuleImpl().bind(request);
+      if (_module != null) {
+        _log('Module interface can only be provided once. Rejecting request.');
+        request.channel.close();
+        return;
+      }
+      _module = new ModuleImpl()..bind(request);
     },
     Module.serviceName,
   );

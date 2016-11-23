@@ -23,6 +23,8 @@ final String _kEmailThreadUrl = 'file:///system/apps/email_thread';
 
 final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 
+ModuleImpl _module;
+
 ChildViewConnection _connNav;
 ChildViewConnection _connList;
 ChildViewConnection _connThread;
@@ -46,6 +48,9 @@ class ServiceProviderWrapper extends ServiceProvider {
   /// The returned handle should only be used once.
   InterfaceHandle<ServiceProvider> getHandle() => _binding.wrap(this);
 
+  /// Closes the binding.
+  void close() => _binding.close();
+
   @override
   void connectToService(String serviceName, Channel channel) {
     serviceProvider.connectToService(serviceName, channel);
@@ -64,6 +69,11 @@ class ModuleImpl extends Module {
 
   /// [ServiceProvider] obtained
   final ServiceProviderProxy emailServices = new ServiceProviderProxy();
+
+  /// A list used for holding references to the [ServiceProviderWrapper]
+  /// objects for the lifetime of this module.
+  final List<ServiceProviderWrapper> serviceProviders =
+      <ServiceProviderWrapper>[];
 
   /// Bind an [InterfaceRequest] for a [Module] interface to this object.
   void bind(InterfaceRequest<Module> request) {
@@ -94,21 +104,21 @@ class ModuleImpl extends Module {
 
     InterfaceHandle<ViewOwner> navViewOwner = startModule(
       url: _kEmailNavUrl,
-      outgoingServices: new ServiceProviderWrapper(emailServices).getHandle(),
+      outgoingServices: duplicateServiceProvider(emailServices),
     );
     _connNav = new ChildViewConnection(navViewOwner);
     updateUI();
 
     InterfaceHandle<ViewOwner> listViewOwner = startModule(
       url: _kEmailListUrl,
-      outgoingServices: new ServiceProviderWrapper(emailServices).getHandle(),
+      outgoingServices: duplicateServiceProvider(emailServices),
     );
     _connList = new ChildViewConnection(listViewOwner);
     updateUI();
 
     InterfaceHandle<ViewOwner> threadViewOwner = startModule(
       url: _kEmailThreadUrl,
-      outgoingServices: new ServiceProviderWrapper(emailServices).getHandle(),
+      outgoingServices: duplicateServiceProvider(emailServices),
     );
     _connThread = new ChildViewConnection(threadViewOwner);
     updateUI();
@@ -120,6 +130,7 @@ class ModuleImpl extends Module {
     story.ctrl.close();
     link.ctrl.close();
     emailServices.ctrl.close();
+    serviceProviders.forEach((ServiceProviderWrapper s) => s.close());
     callback();
   }
 
@@ -157,6 +168,13 @@ class ModuleImpl extends Module {
     InterfacePair<Link> linkPair = new InterfacePair<Link>();
     link.dup(linkPair.passRequest());
     return linkPair.passHandle();
+  }
+
+  /// Duplicates a [ServiceProvider] and returns its handle.
+  InterfaceHandle<ServiceProvider> duplicateServiceProvider(ServiceProvider s) {
+    ServiceProviderWrapper dup = new ServiceProviderWrapper(s);
+    serviceProviders.add(dup);
+    return dup.getHandle();
   }
 }
 
@@ -221,7 +239,12 @@ void main() {
   _context.outgoingServices.addServiceForName(
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
-      new ModuleImpl().bind(request);
+      if (_module != null) {
+        _log('Module interface can only be provided once. Rejecting request.');
+        request.channel.close();
+        return;
+      }
+      _module = new ModuleImpl()..bind(request);
     },
     Module.serviceName,
   );

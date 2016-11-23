@@ -14,6 +14,8 @@ import 'package:lib.fidl.dart/bindings.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
+ModuleImpl _module;
+
 void _log(String msg) {
   print('[email_session] $msg');
 }
@@ -53,7 +55,12 @@ Future<Null> main() async {
   _context.outgoingServices.addServiceForName(
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
-      new ModuleImpl().bind(request);
+      if (_module != null) {
+        _log('Module interface can only be provided once. Rejecting request.');
+        request.channel.close();
+        return;
+      }
+      _module = new ModuleImpl()..bind(request);
     },
     Module.serviceName,
   );
