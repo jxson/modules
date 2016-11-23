@@ -19,6 +19,7 @@ final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 final String _kEmailServiceUrl = 'file:///system/apps/email_service';
 final String _kEmailNavUrl = 'file:///system/apps/email_nav';
 final String _kEmailListUrl = 'file:///system/apps/email_list';
+final String _kEmailListGridUrl = 'file:///system/apps/email_list_grid';
 final String _kEmailThreadUrl = 'file:///system/apps/email_thread';
 
 final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
@@ -27,6 +28,7 @@ ModuleImpl _module;
 
 ChildViewConnection _connNav;
 ChildViewConnection _connList;
+ChildViewConnection _connListGrid;
 ChildViewConnection _connThread;
 
 void _log(String msg) {
@@ -122,6 +124,14 @@ class ModuleImpl extends Module {
     );
     _connThread = new ChildViewConnection(threadViewOwner);
     updateUI();
+
+    // NOTE(youngseokyoon): Start this module ahead of time, even though it's
+    // not used right away. This should be better for performance.
+    InterfaceHandle<ViewOwner> listGridViewOwner = startModule(
+      url: _kEmailListGridUrl,
+      outgoingServices: duplicateServiceProvider(emailServices),
+    );
+    _connListGrid = new ChildViewConnection(listGridViewOwner);
   }
 
   @override
@@ -189,15 +199,37 @@ class HomeScreen extends StatefulWidget {
 
 /// The [State] class for the [HomeScreen].
 class HomeScreenState extends State<HomeScreen> {
+  bool _grid = false;
+
   @override
   Widget build(BuildContext context) {
     Widget nav = new Flexible(
       flex: 2,
-      child: _connNav != null
-          ? new ChildView(connection: _connNav)
-          : new Container(),
+      child: new Column(
+        children: <Widget>[
+          new Container(
+            alignment: FractionalOffset.topLeft,
+            padding: const EdgeInsets.only(left: 10.0, top: 10.0),
+            child: new FloatingActionButton(
+              child: new Icon(_grid ? Icons.list : Icons.grid_on),
+              onPressed: () {
+                setState(() {
+                  _grid = !_grid;
+                });
+              },
+            ),
+          ),
+          new Flexible(
+            flex: 1,
+            child: _connNav != null
+                ? new ChildView(connection: _connNav)
+                : new Container(),
+          ),
+        ],
+      ),
     );
 
+    ChildViewConnection connList = _grid ? _connListGrid : _connList;
     Widget list = new Flexible(
       flex: 3,
       child: new Container(
@@ -205,7 +237,7 @@ class HomeScreenState extends State<HomeScreen> {
         child: new Material(
           elevation: 2,
           child: _connList != null
-              ? new ChildView(connection: _connList)
+              ? new ChildView(connection: connList)
               : new Container(),
         ),
       ),
