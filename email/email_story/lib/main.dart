@@ -17,6 +17,7 @@ import 'package:lib.fidl.dart/core.dart';
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
 final String _kEmailServiceUrl = 'file:///system/apps/email_service';
+final String _kEmailSessionUrl = 'file:///system/apps/email_session';
 final String _kEmailNavUrl = 'file:///system/apps/email_nav';
 final String _kEmailListUrl = 'file:///system/apps/email_list';
 final String _kEmailListGridUrl = 'file:///system/apps/email_list_grid';
@@ -69,8 +70,9 @@ class ModuleImpl extends Module {
   /// [Link] service provided by the framework.
   final LinkProxy link = new LinkProxy();
 
-  /// [ServiceProvider] obtained
-  final ServiceProviderProxy emailServices = new ServiceProviderProxy();
+  /// [ServiceProviderProxy] between email session and UI modules.
+  final ServiceProviderProxy emailSessionProvider =
+      new ServiceProviderProxy();
 
   /// A list used for holding references to the [ServiceProviderWrapper]
   /// objects for the lifetime of this module.
@@ -95,10 +97,19 @@ class ModuleImpl extends Module {
     story.ctrl.bind(storyHandle);
     link.ctrl.bind(linkHandle);
 
+    // Binding between email service and email session.
+    InterfacePair<ServiceProvider> emailServiceBinding =
+        new InterfacePair<ServiceProvider>();
+
     // Obtain the email service provider from the email_service module.
     startModule(
       url: _kEmailServiceUrl,
-      incomingServices: emailServices.ctrl.request(),
+      incomingServices: emailServiceBinding.passRequest(),
+    );
+    startModule(
+      url: _kEmailSessionUrl,
+      outgoingServices: emailServiceBinding.passHandle(),
+      incomingServices: emailSessionProvider.ctrl.request(),
     );
 
     // TODO(youngseokyoon): start email_session here, and only pass the
@@ -106,21 +117,21 @@ class ModuleImpl extends Module {
 
     InterfaceHandle<ViewOwner> navViewOwner = startModule(
       url: _kEmailNavUrl,
-      outgoingServices: duplicateServiceProvider(emailServices),
+      outgoingServices: duplicateServiceProvider(emailSessionProvider),
     );
     _connNav = new ChildViewConnection(navViewOwner);
     updateUI();
 
     InterfaceHandle<ViewOwner> listViewOwner = startModule(
       url: _kEmailListUrl,
-      outgoingServices: duplicateServiceProvider(emailServices),
+      outgoingServices: duplicateServiceProvider(emailSessionProvider),
     );
     _connList = new ChildViewConnection(listViewOwner);
     updateUI();
 
     InterfaceHandle<ViewOwner> threadViewOwner = startModule(
       url: _kEmailThreadUrl,
-      outgoingServices: duplicateServiceProvider(emailServices),
+      outgoingServices: duplicateServiceProvider(emailSessionProvider),
     );
     _connThread = new ChildViewConnection(threadViewOwner);
     updateUI();
@@ -129,7 +140,7 @@ class ModuleImpl extends Module {
     // not used right away. This should be better for performance.
     InterfaceHandle<ViewOwner> listGridViewOwner = startModule(
       url: _kEmailListGridUrl,
-      outgoingServices: duplicateServiceProvider(emailServices),
+      outgoingServices: duplicateServiceProvider(emailSessionProvider),
     );
     _connListGrid = new ChildViewConnection(listGridViewOwner);
   }
@@ -139,7 +150,7 @@ class ModuleImpl extends Module {
     _log('ModuleImpl::stop call');
     story.ctrl.close();
     link.ctrl.close();
-    emailServices.ctrl.close();
+    emailSessionProvider.ctrl.close();
     serviceProviders.forEach((ServiceProviderWrapper s) => s.close());
     callback();
   }
@@ -181,7 +192,8 @@ class ModuleImpl extends Module {
   }
 
   /// Duplicates a [ServiceProvider] and returns its handle.
-  InterfaceHandle<ServiceProvider> duplicateServiceProvider(ServiceProvider s) {
+  InterfaceHandle<ServiceProvider> duplicateServiceProvider(
+      ServiceProvider s) {
     ServiceProviderWrapper dup = new ServiceProviderWrapper(s);
     serviceProviders.add(dup);
     return dup.getHandle();
@@ -272,7 +284,8 @@ void main() {
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
       if (_module != null) {
-        _log('Module interface can only be provided once. Rejecting request.');
+        _log(
+            'Module interface can only be provided once. Rejecting request.');
         request.channel.close();
         return;
       }
