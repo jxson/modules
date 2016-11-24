@@ -71,8 +71,7 @@ class ModuleImpl extends Module {
   final LinkProxy link = new LinkProxy();
 
   /// [ServiceProviderProxy] between email session and UI modules.
-  final ServiceProviderProxy emailSessionProvider =
-      new ServiceProviderProxy();
+  final ServiceProviderProxy emailSessionProvider = new ServiceProviderProxy();
 
   /// A list used for holding references to the [ServiceProviderWrapper]
   /// objects for the lifetime of this module.
@@ -192,8 +191,7 @@ class ModuleImpl extends Module {
   }
 
   /// Duplicates a [ServiceProvider] and returns its handle.
-  InterfaceHandle<ServiceProvider> duplicateServiceProvider(
-      ServiceProvider s) {
+  InterfaceHandle<ServiceProvider> duplicateServiceProvider(ServiceProvider s) {
     ServiceProviderWrapper dup = new ServiceProviderWrapper(s);
     serviceProviders.add(dup);
     return dup.getHandle();
@@ -284,8 +282,7 @@ void main() {
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
       if (_module != null) {
-        _log(
-            'Module interface can only be provided once. Rejecting request.');
+        _log('Module interface can only be provided once. Rejecting request.');
         request.channel.close();
         return;
       }

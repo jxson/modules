@@ -34,12 +34,12 @@ class EmailMenuScreen extends StoreWatcher {
           '$error');
     }
 
-    LabelGroup primaryFolders = new LabelGroup(
+    LabelGroup primaryLabels = new LabelGroup(
       labels: emailSession.visibleLabels,
     );
 
     return new InboxMenu(
-      labelGroups: <LabelGroup>[primaryFolders],
+      labelGroups: <LabelGroup>[primaryLabels],
       onSelectLabel: emailSessionFocusLabel.call,
       selectedLabel: emailSession.focusedLabel,
       user: emailSession.user,

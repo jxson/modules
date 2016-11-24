@@ -9,11 +9,11 @@ import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
-import 'package:apps.modules.email.email_session/email_session.fidl.dart'
-    as es;
+import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 
+import 'src/email_session_doc.dart';
 import 'src/email_session_impl.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
@@ -50,14 +50,20 @@ class ModuleImpl extends Module {
 
     emailSessionLinkProxy.ctrl.bind(linkHandle);
 
+    EmailSessionDoc sessionState = new EmailSessionDoc.withMockData();
+    // TODO(alangardner): Fetch real data from email_service
+
     _serviceProviderImpl.addServiceForName(
       (InterfaceRequest<es.EmailSession> request) {
         _log('Received binding request for EmailSession');
-        new EmailSessionImpl(emailSessionLinkProxy).bind(request);
+        new EmailSessionImpl(emailSessionLinkProxy, sessionState).bind(request);
       },
       es.EmailSession.serviceName,
     );
     _serviceProviderImpl.bind(outgoingServices);
+
+    // Initial write of current state.
+    sessionState.writeToLink(emailSessionLinkProxy);
   }
 
   @override
@@ -78,8 +84,7 @@ Future<Null> main() async {
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
       if (_module != null) {
-        _log(
-            'Module interface can only be provided once. Rejecting request.');
+        _log('Module interface can only be provided once. Rejecting request.');
         request.channel.close();
         return;
       }

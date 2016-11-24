@@ -8,7 +8,9 @@ import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
+import 'package:email_session_store/email_session_store.dart';
 import 'package:lib.fidl.dart/bindings.dart';
+import 'package:models/email.dart';
 
 import 'email_session_link_store.dart';
 
@@ -46,6 +48,16 @@ void addEmailSessionModule(
     },
     Module.serviceName,
   );
+}
+
+/// Listens to actions to relay their commands over the service interface.
+void _setupActionRelay(es.EmailSession emailSession) {
+  emailSessionFocusLabel.listen((Label folder) {
+    emailSession.focusLabel(folder.id);
+  });
+  emailSessionFocusThread.listen((Thread thread) {
+    emailSession.focusThread(thread.id);
+  });
 }
 
 ///  A [Module] that encapsulates binding to EmailSession service and link
@@ -93,6 +105,7 @@ class EmailSessionModule extends Module {
     _incomingServices.ctrl.bind(incomingServicesHandle);
     connectToService(_incomingServices, _emailSessionService.ctrl);
     _emailSessionLinkProxy.ctrl.bind(linkHandle);
+    _setupActionRelay(_emailSessionService);
     _initCallback(_emailSessionService,
         new EmailSessionLinkStore(_emailSessionLinkProxy));
   }

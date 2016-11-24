@@ -9,6 +9,7 @@ import 'package:flutter_flux/flutter_flux.dart';
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
+import 'email_session_doc.dart';
 import 'link_object_cache.dart';
 
 void _log(String msg) {
@@ -17,8 +18,8 @@ void _log(String msg) {
 
 dynamic _parser(String docid, Document doc) {
   _log('Parsing document $docid');
-  if (docid == 'docid') {
-    return doc.properties['max'].intValue;
+  if (docid == EmailSessionDoc.docid) {
+    return new EmailSessionDoc.fromLinkDocument(doc);
   }
   return null;
 }
@@ -26,6 +27,8 @@ dynamic _parser(String docid, Document doc) {
 /// Store for viewing email session state
 class EmailSessionLinkStore extends Store implements EmailSessionStore {
   LinkObjectCache _cache;
+  EmailSessionDoc _doc = new EmailSessionDoc();
+  List<Label> _visibleLabels = new List<Label>.unmodifiable(<Label>[]);
 
   /// Constructs a new Store to read the email session from the link
   EmailSessionLinkStore(Link link) {
@@ -33,79 +36,33 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
   }
 
   void _onUpdate(LinkObjectCache cache) {
+    EmailSessionDoc doc = cache[EmailSessionDoc.docid];
+    if (_doc == null) {
+      _log('ERROR: nul document for some reason.');
+      return;
+    }
+    _doc = doc;
+    _visibleLabels = new List<Label>.unmodifiable(_doc?.labels ?? <Label>[]);
     trigger();
   }
 
-  // TODO(alangardner): Implement
+  // TODO(alangardner): Implement. This is only a mock.
   @override
   User get user => new User(
         name: 'Coco Yang',
         email: 'littlePuppyCoco@puppy.cute',
       );
 
-  // TODO(alangardner): Implement
   @override
-  List<Label> get visibleLabels => <Label>[
-        new Label(
-          id: 'INBOX',
-          name: 'Inbox',
-          unread: 10,
-          type: 'system',
-        ),
-        new Label(
-          id: 'STARRED',
-          name: 'Starred',
-          unread: 5,
-          type: 'system',
-        ),
-        new Label(
-          id: 'DRAFT',
-          name: 'Starred',
-          unread: 0,
-          type: 'system',
-        ),
-        new Label(
-          id: 'TRASH',
-          name: 'Trash',
-          unread: 0,
-          type: 'system',
-        ),
-        new Label(
-          id: 'TODO',
-          name: 'Todo',
-          unread: 2,
-          type: 'user',
-        ),
-        new Label(
-          id: 'COMPLETED',
-          name: 'Completed',
-          unread: 2,
-          type: 'user',
-        ),
-        new Label(
-          id: 'JIRA',
-          name: 'Jira',
-          unread: 0,
-          type: 'user',
-        ),
-        new Label(
-          id: 'GERRIT',
-          name: 'Gerrit',
-          unread: 0,
-          type: 'user',
-        ),
-      ];
+  List<Label> get visibleLabels => _visibleLabels;
 
-  // TODO(alangardner): Implement
   @override
-  Label get focusedLabel => new Label(
-        id: 'INBOX',
-        name: 'Inbox',
-        unread: 10,
-        type: 'system',
-      );
+  Label get focusedLabel => _doc?.focusedLabelId == null
+      ? null
+      : visibleLabels.firstWhere((Label f) => _doc.focusedLabelId == f.id,
+          orElse: null);
 
-  // TODO(alangardner): Implement
+  // TODO(alangardner): Implement. This is only a mock.
   @override
   List<Thread> get visibleThreads => <Thread>[
         new MockThread(id: '1'),
@@ -113,23 +70,24 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
         new MockThread(id: '3')
       ];
 
-  // TODO(alangardner): Implement
+  // TODO(alangardner): Implement. This is only a mock.
   @override
   Thread get focusedThread => new MockThread(id: '1');
 
-  // TODO(alangardner): Implement
+  // TODO(alangardner): Implement. This is only a mock.
   @override
   List<Error> get currentErrors => <Error>[];
 
-  // TODO(alangardner): Implement
+  // TODO(alangardner): Implement. This is only a mock.
   @override
   bool get fetchingThreads => false;
 
-  // TODO(alangardner): Implement
+  // TODO(alangardner): Implement. This is only a mock.
   @override
   bool get fetchingLabels => false;
 
-  // TODO(alangardner): Implement
+  // TODO(alangardner): Implement. This is only a mock.
+  // TODO(alangardner): This should probably be in a separate store.
   @override
   bool messageIsExpanded(Message message) => true;
 }
