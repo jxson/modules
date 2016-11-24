@@ -8,7 +8,6 @@ import 'package:email_session_client/client.dart';
 import 'package:email_session_store/email_session_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flux/flutter_flux.dart';
-import 'package:models/email.dart';
 import 'package:widgets/email.dart';
 
 const String _moduleName = 'email_list';
@@ -19,55 +18,6 @@ void _log(String msg) {
   print('[$_moduleName] $msg');
 }
 
-/// Temporary widget class for the list module.
-class EmailListScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Material(
-      child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new Container(
-            height: 73.0,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            decoration: new BoxDecoration(
-              border: new Border(
-                bottom: new BorderSide(
-                  color: Colors.grey[200],
-                  width: 1.0,
-                ),
-              ),
-            ),
-            child: new Row(
-              children: <Widget>[
-                new Text(
-                  'Inbox',
-                  overflow: TextOverflow.ellipsis,
-                  style: new TextStyle(
-                    fontSize: 18.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          new Flexible(
-            flex: 1,
-            child: _buildThreadList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildThreadList() {
-    return new Block(children: <Widget>[
-      new ThreadListItem(thread: new MockThread()),
-      new ThreadListItem(thread: new MockThread()),
-      new ThreadListItem(thread: new MockThread()),
-    ]);
-  }
-}
-
 void _created(EmailSessionModule module) {
   _module = module;
 }
@@ -75,6 +25,13 @@ void _created(EmailSessionModule module) {
 void _initialize(es.EmailSession service, EmailSessionLinkStore store) {
   // HACK: Global reference must be set before store is accessed by widgets.
   kEmailSessionStoreToken = new StoreToken(store);
+
+  runApp(new MaterialApp(
+    title: 'Email List Module',
+    home: new EmailInboxScreen(),
+    theme: new ThemeData(primarySwatch: Colors.blue),
+    debugShowCheckedModeBanner: false,
+  ));
 }
 
 void _stop(void callback()) {
@@ -85,10 +42,4 @@ void _stop(void callback()) {
 void main() {
   _log('Email list module started with context: $_context');
   addEmailSessionModule(_context, _moduleName, _created, _initialize, _stop);
-  runApp(new MaterialApp(
-    title: 'Email List Module',
-    home: new EmailListScreen(),
-    theme: new ThemeData(primarySwatch: Colors.blue),
-    debugShowCheckedModeBanner: false,
-  ));
 }
