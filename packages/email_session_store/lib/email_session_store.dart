@@ -12,10 +12,10 @@ abstract class EmailSessionStore implements Store {
   User get user;
 
   /// Lables that are currently visible and should be displayed.
-  List<Folder> get visibleFolders;
+  List<Label> get visibleLabels;
 
-  /// The currently selected folder that has focus, if any.
-  Folder get focusedFolder;
+  /// The currently selected label that has focus, if any.
+  Label get focusedLabel;
 
   /// Threads that are currently visible and should be displayed, if any
   List<Thread> get visibleThreads;
@@ -30,8 +30,8 @@ abstract class EmailSessionStore implements Store {
   /// Returns true if currently fetching threads from server
   bool get fetchingThreads;
 
-  /// Returns true if currently fetching folders/labels from server
-  bool get fetchingFolders;
+  /// Returns true if currently fetching labels from server
+  bool get fetchingLabels;
   // TODO(alangardner): Current status? (e.g. loading, etc.)
 
   /// Returns true if message should be expanded in the threadListView
@@ -43,8 +43,8 @@ abstract class EmailSessionStore implements Store {
 /// HACK(alangardner): This needs to be instantiated before any access.
 StoreToken kEmailSessionStoreToken;
 
-/// Make this folder the focused folder
-final Action<Folder> emailSessionFocusFolder = new Action<Folder>();
+/// Make this label the focused label
+final Action<Label> emailSessionFocusLabel = new Action<Label>();
 
 /// Make this thread the focused thread
 final Action<Thread> emailSessionFocusThread = new Action<Thread>();

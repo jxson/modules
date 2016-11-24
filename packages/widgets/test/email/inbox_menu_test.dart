@@ -10,20 +10,20 @@ import 'package:widgets/email.dart';
 
 void main() {
   testWidgets(
-      'Test to see if tapping on a FolderListItem inside a FolderGroupList '
+      'Test to see if tapping on a LabelListItem inside a LabelGroupList '
       'will call the appropiate callback', (WidgetTester tester) async {
-    FolderGroup folderGroup1 = new FolderGroup(
-      folders: <Folder>[
-        new Folder(name: 'Primary'),
-        new Folder(name: 'Archived'),
+    LabelGroup labelGroup1 = new LabelGroup(
+      labels: <Label>[
+        new Label(name: 'Primary'),
+        new Label(name: 'Archived'),
       ],
     );
-    FolderGroup folderGroup2 = new FolderGroup(
+    LabelGroup labelGroup2 = new LabelGroup(
       name: 'Labels',
-      folders: <Folder>[
-        new Folder(name: 'Advertisements'),
-        new Folder(name: 'Travel'),
-        new Folder(name: 'Finance'),
+      labels: <Label>[
+        new Label(name: 'Advertisements'),
+        new Label(name: 'Travel'),
+        new Label(name: 'Finance'),
       ],
     );
     User user = new User(
@@ -39,9 +39,9 @@ void main() {
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
         child: new InboxMenu(
-          folderGroups: <FolderGroup>[folderGroup1, folderGroup2],
-          onSelectFolder: (Folder f) {
-            expect(f, folderGroup2.folders[0]);
+          labelGroups: <LabelGroup>[labelGroup1, labelGroup2],
+          onSelectLabel: (Label f) {
+            expect(f, labelGroup2.labels[0]);
             taps++;
           },
           user: user,

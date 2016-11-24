@@ -16,17 +16,17 @@ Map<String, IconData> _folderIdToIcon = <String, IconData>{
   'DRAFT': Icons.drafts,
 };
 
-/// List item that represents a single Gmail style [Folder]
-class FolderListItem extends StatelessWidget {
-  /// Given [Folder] that this [FolderListItem] is associated with
-  Folder folder;
+/// List item that represents a single Gmail style [Label]
+class LabelListItem extends StatelessWidget {
+  /// Given [Label] that this [LabelListItem] is associated with
+  Label label;
 
   /// [IconData] for [Icon] that represents the given folder
   ///
-  /// For Folders of type 'system' (from Gmail), the following priority
+  /// For Labels of type 'system' (from Gmail), the following priority
   /// determines the Icon:
   ///   1. Icon specified in constructor parameter
-  ///   2. Icon based on FolderIdToIcon mapping
+  ///   2. Icon based on LabelIdToIcon mapping
   ///   3. Default folder icon (Icons.folder)
   ///
   /// For folders that aren't of type system, the following priority determines
@@ -36,32 +36,32 @@ class FolderListItem extends StatelessWidget {
   IconData icon;
 
   /// Callback if folder is selected
-  FolderActionCallback onSelect;
+  LabelActionCallback onSelect;
 
   /// True if the folder is 'selected', this will highlight the item with a
   /// grey background.
   bool selected;
 
-  /// Creates new FolderListItem
-  FolderListItem({
+  /// Creates new LabelListItem
+  LabelListItem({
     Key key,
-    @required this.folder,
+    @required this.label,
     this.icon,
     this.onSelect,
     this.selected: false,
   })
       : super(key: key) {
-    if (folder.type == 'system') {
-      icon ??= _folderIdToIcon[folder.id] ?? Icons.folder;
+    if (label.type == 'system') {
+      icon ??= _folderIdToIcon[label.id] ?? Icons.folder;
     } else {
       icon ??= Icons.folder;
     }
-    assert(folder != null);
+    assert(label != null);
   }
 
   void _handleSelect() {
     if (onSelect != null) {
-      onSelect(folder);
+      onSelect(label);
     }
   }
 
@@ -78,10 +78,10 @@ class FolderListItem extends StatelessWidget {
           color: Colors.grey[600],
           size: 20.0,
         ),
-        title: new Text(folder.name),
-        trailing: folder.unread > 0
+        title: new Text(label.name),
+        trailing: label.unread > 0
             ? new Text(
-                '${folder.unread}',
+                '${label.unread}',
                 style: new TextStyle(color: Colors.grey[600]),
               )
             : null,

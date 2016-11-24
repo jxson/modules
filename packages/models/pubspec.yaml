@@ -11,8 +11,6 @@ dependencies:
   util:
     path: ../util
   xml: ^2.4.3
-  email_api:
-    path: ../email_api
 dependency_overrides:
   http:
     path: ../flutter-http/

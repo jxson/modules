@@ -30,10 +30,11 @@ class StaticMap extends StatelessWidget {
     int zoom,
     double width,
     double height,
-  })  : zoom = zoom ?? 5,
-      width = width ?? 300.0,
-      height = height ?? 300.0,
-      super(key: key) {
+  })
+      : zoom = zoom ?? 5,
+        width = width ?? 300.0,
+        height = height ?? 300.0,
+        super(key: key) {
     assert(location != null);
     assert(apiKey != null);
   }

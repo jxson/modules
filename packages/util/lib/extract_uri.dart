@@ -7,9 +7,9 @@ Uri _mapper(Match match) {
   return Uri.parse(url);
 }
 
-/// Extract a [Set] of unique URIs from a string.
-Set<Uri> extractURI(String string) {
+/// Extract a [List] of unique URIs from a string.
+List<Uri> extractURI(String string) {
   String pattern = r'(?:https?)(?:\S+)';
   RegExp exp = new RegExp(pattern, multiLine: false, caseSensitive: false);
-  return new Set<Uri>.from(exp.allMatches(string).map(_mapper));
+  return new List<Uri>.from(exp.allMatches(string).map(_mapper));
 }

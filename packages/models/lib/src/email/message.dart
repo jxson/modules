@@ -2,13 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:convert' show UTF8, BASE64;
-
 import 'package:collection/collection.dart';
-import 'package:email_api/api.dart' as api;
 import 'package:intl/intl.dart';
 import 'package:quiver/core.dart' as quiver;
-import 'package:util/extract_uri.dart';
 import 'package:util/time_util.dart';
 
 import 'attachment.dart';
@@ -73,90 +69,6 @@ class Message {
         recipientList =
             new List<Mailbox>.unmodifiable(recipientList ?? <Mailbox>[]),
         ccList = new List<Mailbox>.unmodifiable(ccList ?? <Mailbox>[]);
-
-  /// Create a [Message] from a Gmail API Message model
-  ///
-  /// Use plain-text representation (if it is given in the message payload)
-  /// otherwise use the Gmail snippet as the message text
-  factory Message.fromGmailApi(api.Message message) {
-    String subject = '';
-    Mailbox sender;
-    String messageText;
-    List<Mailbox> recipientList = <Mailbox>[];
-    List<Mailbox> ccList = <Mailbox>[];
-    bool isRead = !message.labelIds.contains('UNREAD');
-    DateTime timestamp = new DateTime.fromMillisecondsSinceEpoch(
-        int.parse(message.internalDate));
-
-    // Go through message headers and retrieve message information
-    message.payload.headers.forEach((api.MessagePartHeader header) {
-      switch (header.name.toLowerCase()) {
-        case 'from':
-          sender = new Mailbox.fromString(header.value);
-          break;
-        case 'to':
-          header.value.split(', ').forEach((String rawAddress) {
-            recipientList.add(new Mailbox.fromString(rawAddress));
-          });
-          break;
-        case 'cc':
-          header.value.split(', ').forEach((String rawAddress) {
-            ccList.add(new Mailbox.fromString(rawAddress));
-          });
-          break;
-        case 'subject':
-          subject = header.value;
-          break;
-      }
-    });
-
-    // Look for plain-text message representation in the message parts
-    message.payload.parts?.forEach((api.MessagePart messagePart) {
-      if (messagePart.mimeType == 'text/plain') {
-        messageText = UTF8.decode(BASE64.decode(messagePart.body.data));
-      }
-    });
-
-    // Fallback to Gmail generated snippet if not plain-text
-    if (messageText == null) {
-      messageText = message.snippet;
-    }
-
-    /// Add any youtube and usps links as attachments
-    List<Attachment> attachments = <Attachment>[];
-    List<Uri> links = extractURI(messageText).toList();
-    links.forEach((Uri uri) {
-      if (uri.host == 'www.youtube.com' &&
-          uri.path == '/watch' &&
-          uri.queryParameters['v'] != null) {
-        attachments.add(new Attachment(
-          type: AttachmentType.youtubeVideo,
-          value: uri.queryParameters['v'],
-        ));
-      } else if (uri.host == 'tools.usps.com' &&
-          uri.path == '/go/TrackConfirmAction' &&
-          uri.queryParameters['qtc_tLabels1'] != null) {
-        attachments.add(new Attachment(
-          type: AttachmentType.uspsShipping,
-          value: uri.queryParameters['qtc_tLabels1'],
-        ));
-      }
-    });
-
-    return new Message(
-      id: message.id,
-      subject: subject,
-      sender: sender,
-      senderProfileUrl: null,
-      recipientList: recipientList,
-      ccList: ccList,
-      text: messageText,
-      links: links,
-      attachments: attachments,
-      timestamp: timestamp,
-      isRead: isRead,
-    );
-  }
 
   /// Generates preview text for message
   ///

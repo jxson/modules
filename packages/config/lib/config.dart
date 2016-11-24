@@ -11,6 +11,8 @@ abstract class BaseConfig {
   /// SEE: https://developers.google.com/identity/protocols/googlescopes
   List<String> scopes = <String>[
     'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/youtube.readonly',
   ];
 
@@ -33,6 +35,30 @@ abstract class BaseConfig {
   /// Add or update a config value.
   void put(String key, String value) {
     _data[key] = value;
+  }
+
+  /// Validates the config against [keys]. Will throw an infomrative
+  /// [StateError] if any of the given keys are missing.
+  void validate(List<String> keys) {
+    bool isValid = true;
+    List<String> message = <String>[
+      'Config is missing one or more required keys:',
+      '',
+    ];
+
+    keys.forEach((String key) {
+      if (!has(key) || get(key) == null) {
+        isValid = false;
+      }
+
+      message.add('* $key');
+    });
+
+    message.add('');
+
+    if (!isValid) {
+      throw new StateError(message.join('\n'));
+    }
   }
 
   /// Create a [Map] for use in JSON encoding.

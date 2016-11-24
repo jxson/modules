@@ -39,7 +39,6 @@ final String _kMapModuleUrl = 'file:///system/apps/map';
 
 ModuleImpl _module;
 
-
 // TODO(dayang): Remove when we have a parent module passes in a this through
 // the link.
 /// A USPS tracking code for a given package

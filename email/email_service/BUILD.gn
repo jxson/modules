@@ -20,7 +20,7 @@ flutter_app("email_service") {
     "//apps/modular/services/story:story_dart",
     "//apps/modules/email/email_service:interfaces_dart",
     "//apps/modules/packages/email_api",
-    "//apps/modules/packages/config_flutter",
+    "//apps/modules/packages/models",
     "//apps/mozart/lib/flutter",
     "//apps/mozart/services/views:views_dart",
     "//lib/fidl/dart",
