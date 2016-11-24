@@ -3,11 +3,9 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert' show JSON;
 
 import 'package:config_flutter/config.dart';
 import 'package:email_api/api.dart' as api;
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_flux/flutter_flux.dart';
 import 'package:models/email.dart';
 import 'package:models/user.dart';
