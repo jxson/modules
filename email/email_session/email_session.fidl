@@ -6,6 +6,11 @@ module email_session;
 
 [ServiceName="modules.EmailSession"]
 interface EmailSession {
-  // Temporary method.
-  FakeAction(int64 max);
+
+  // Instruct session to focus on displaying contents of folder with given id.
+  FocusLabel(string labelId);
+
+  // Instruct session to focus on displaying details of thread with given id.
+  FocusThread(string threadId);
+
 };

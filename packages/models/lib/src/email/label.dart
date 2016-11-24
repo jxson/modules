@@ -24,4 +24,31 @@ class Label {
     this.unread: 0,
     this.type,
   });
+
+  /// Create a [Label] from JSON.
+  factory Label.fromJSON(Map<String, String> json) {
+    String id = json['id'];
+    String name = json['name'];
+    String unread = json['unread'];
+    String type = json['type'];
+
+    return new Label(
+      id: id,
+      name: name,
+      unread: int.parse(unread),
+      type: type,
+    );
+  }
+
+  /// Make it JSON.
+  Map<String, String> toJSON() {
+    Map<String, String> json = new Map<String, String>();
+
+    json['id'] = id;
+    json['name'] = name;
+    json['unread'] = unread.toString();
+    json['type'] = type;
+
+    return json;
+  }
 }
