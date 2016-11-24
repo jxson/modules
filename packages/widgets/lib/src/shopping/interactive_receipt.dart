@@ -22,6 +22,9 @@ enum _StorageSize {
 /// Animation duration for image resize
 const Duration _kAnimationDuration = const Duration(milliseconds: 300);
 
+/// Duration for confirmation snackbar
+const Duration _kSnackBarDisplayDuration = const Duration(milliseconds: 2500);
+
 /// UI Widget that represents an interactive receipt that is meant to replace
 /// a standard email receipt.
 ///
@@ -42,6 +45,7 @@ class InteractiveReceipt extends StatefulWidget {
 
 class _InteractiveReceiptState extends State<InteractiveReceipt>
     with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   AnimationController _controller;
   Animation<double> _imageAnimation;
   bool _editMode = false;
@@ -205,12 +209,11 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                 }).toList(),
               ),
             ),
-            // Confirm Button
             new Container(
               margin: const EdgeInsets.only(top: 4.0),
               child: new FlatButton(
                 child: new Text(
-                  'DONE',
+                  'Submit Modification',
                   style: new TextStyle(
                     color: Colors.blue[600],
                   ),
@@ -219,6 +222,14 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                   setState(() {
                     _editMode = false;
                     _controller.reverse();
+                    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                      duration: _kSnackBarDisplayDuration,
+                      backgroundColor: Colors.green[500],
+                      content: new Text(
+                        'Your order has been successfully modified',
+                        textAlign: TextAlign.center,
+                      ),
+                    ));
                   });
                 },
               ),
@@ -376,12 +387,25 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                       backgroundColor: Colors.grey[300],
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 36.0),
-                    child: new Text(
-                      'Thanks for shopping with A+ Mobile',
-                      style: new TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.grey[700],
-                      ),
+                    child: new Column(
+                      children: <Widget>[
+                        new Text(
+                          'Thanks for shopping with A+ Mobile',
+                          style: new TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        new Container(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: new Text(
+                            'You have 7 hours to modify your order',
+                            style: new TextStyle(
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -406,21 +430,25 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
 
   @override
   Widget build(BuildContext context) {
-    return new Block(
-      children: <Widget>[
-        new Container(
-          decoration: new BoxDecoration(
-            backgroundColor: Colors.grey[100],
+    return new Scaffold(
+      key: _scaffoldKey,
+      body: new Block(
+        children: <Widget>[
+          new Container(
+            decoration: new BoxDecoration(
+              backgroundColor: Colors.grey[100],
+            ),
+            padding: const EdgeInsets.only(bottom: 32.0),
+            child: new Stack(
+                alignment: FractionalOffset.topLeft,
+                children: <Widget>[
+                  _buildBrandHeader(),
+                  _buildMainItemCard(),
+                ]),
           ),
-          padding: const EdgeInsets.only(bottom: 32.0),
-          child:
-              new Stack(alignment: FractionalOffset.topLeft, children: <Widget>[
-            _buildBrandHeader(),
-            _buildMainItemCard(),
-          ]),
-        ),
-        new AdditionalItems(),
-      ],
+          new AdditionalItems(),
+        ],
+      ),
     );
   }
 }
