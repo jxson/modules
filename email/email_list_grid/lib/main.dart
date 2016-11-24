@@ -3,48 +3,20 @@
 // found in the LICENSE file.
 
 import 'package:apps.modular.lib.app.dart/app.dart';
-import 'package:apps.modular.services.application/service_provider.fidl.dart';
-import 'package:apps.modular.services.story/link.fidl.dart';
-import 'package:apps.modular.services.story/module.fidl.dart';
-import 'package:apps.modular.services.story/story.fidl.dart';
+import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
+import 'package:email_session_client/client.dart';
+import 'package:email_session_store/email_session_store.dart';
 import 'package:flutter/material.dart';
-import 'package:lib.fidl.dart/bindings.dart';
+import 'package:flutter_flux/flutter_flux.dart';
 import 'package:models/email.dart';
 import 'package:widgets/email.dart';
 
+const String _moduleName = 'email_grid_list';
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
-
-ModuleImpl _module;
+EmailSessionModule _module;
 
 void _log(String msg) {
-  print('[email_list_grid] $msg');
-}
-
-/// An implementation of the [Module] interface.
-class ModuleImpl extends Module {
-  final ModuleBinding _binding = new ModuleBinding();
-
-  /// Bind an [InterfaceRequest] for a [Module] interface to this object.
-  void bind(InterfaceRequest<Module> request) {
-    _binding.bind(this, request);
-  }
-
-  /// Implementation of the Initialize(Story story, Link link) method.
-  @override
-  void initialize(
-    InterfaceHandle<Story> storyHandle,
-    InterfaceHandle<Link> linkHandle,
-    InterfaceHandle<ServiceProvider> incomingServicesHandle,
-    InterfaceRequest<ServiceProvider> outgoingServices,
-  ) {
-    _log('ModuleImpl::initialize call');
-  }
-
-  @override
-  void stop(void callback()) {
-    _log('ModuleImpl::stop call');
-    callback();
-  }
+  print('[$_moduleName] $msg');
 }
 
 /// Temporary widget class for the email list module.
@@ -67,24 +39,23 @@ class EmailGridScreen extends StatelessWidget {
   }
 }
 
-/// Main entry point to the email folder list module.
+void _created(EmailSessionModule module) {
+  _module = module;
+}
+
+void _initialize(es.EmailSession service, EmailSessionLinkStore store) {
+  // HACK: Global reference must be set before store is accessed by widgets.
+  kEmailSessionStoreToken = new StoreToken(store);
+}
+
+void _stop(void callback()) {
+  callback();
+}
+
+/// Main entry point to the email list grid module.
 void main() {
-  _log('Email list module started with context: $_context');
-
-  /// Add [ModuleImpl] to this application's outgoing ServiceProvider.
-  _context.outgoingServices.addServiceForName(
-    (InterfaceRequest<Module> request) {
-      _log('Received binding request for Module');
-      if (_module != null) {
-        _log('Module interface can only be provided once. Rejecting request.');
-        request.channel.close();
-        return;
-      }
-      _module = new ModuleImpl()..bind(request);
-    },
-    Module.serviceName,
-  );
-
+  _log('Email grid list module started with context: $_context');
+  addEmailSessionModule(_context, _moduleName, _created, _initialize, _stop);
   runApp(new MaterialApp(
     title: 'Email List Grid Module',
     home: new EmailGridScreen(),

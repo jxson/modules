@@ -3,82 +3,21 @@
 // found in the LICENSE file.
 
 import 'package:apps.modular.lib.app.dart/app.dart';
-import 'package:apps.modular.services.application/service_provider.fidl.dart';
-import 'package:apps.modular.services.story/link.fidl.dart';
-import 'package:apps.modular.services.story/module.fidl.dart';
-import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
 import 'package:email_session_client/client.dart';
+import 'package:email_session_store/email_session_store.dart';
 import 'package:flutter/material.dart';
-import 'package:lib.fidl.dart/bindings.dart';
+import 'package:flutter_flux/flutter_flux.dart';
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 import 'package:widgets/email.dart';
 
+const String _moduleName = 'email_nav';
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
-
-ModuleImpl _module;
+EmailSessionModule _module;
 
 void _log(String msg) {
-  print('[email_nav] $msg');
-}
-
-/// An implementation of the [Module] interface.
-class ModuleImpl extends Module {
-  final ModuleBinding _binding = new ModuleBinding();
-
-  /// [ServiceProvider] given from the parent module.
-  final ServiceProviderProxy incomingServices = new ServiceProviderProxy();
-
-  /// [EmailSession] service obtained from the incoming [ServiceProvider].
-  final es.EmailSessionProxy emailSessionService = new es.EmailSessionProxy();
-
-  /// [Link] for watching the[EmailSession] state.
-  final LinkProxy emailSessionLinkProxy = new LinkProxy();
-
-  /// [EmailSessionLinkStore] for observing the email session state.
-  EmailSessionLinkStore emailSessionStore;
-
-  /// Bind an [InterfaceRequest] for a [Module] interface to this object.
-  void bind(InterfaceRequest<Module> request) {
-    _binding.bind(this, request);
-  }
-
-  /// Implementation of the Initialize(Story story, Link link) method.
-  @override
-  void initialize(
-    InterfaceHandle<Story> storyHandle,
-    InterfaceHandle<Link> linkHandle,
-    InterfaceHandle<ServiceProvider> incomingServicesHandle,
-    InterfaceRequest<ServiceProvider> outgoingServices,
-  ) {
-    _log('ModuleImpl::initialize call');
-
-    // This `serviceProvider` is originally from the `email_service`, which can
-    // serve the `Threads` interface. Use `connectToService` function to get the
-    // actual `Threads` interface.
-    incomingServices.ctrl.bind(incomingServicesHandle);
-    connectToService(incomingServices, emailSessionService.ctrl);
-
-    emailSessionLinkProxy.ctrl.bind(linkHandle);
-    emailSessionStore = new EmailSessionLinkStore(emailSessionLinkProxy);
-    emailSessionStore.listen((EmailSessionLinkStore store) {
-      _log('GOT CHANGE TO MAX: ${store.fake}');
-    });
-
-    // Call the function defined in email_session.fidl.
-    _log('Calling fakeAction(0)');
-    emailSessionService.fakeAction(0);
-  }
-
-  @override
-  void stop(void callback()) {
-    _log('ModuleImpl::stop call');
-    emailSessionLinkProxy.ctrl.unbind();
-    emailSessionService.ctrl.close();
-    incomingServices.ctrl.close();
-    callback();
-  }
+  print('[$_moduleName] $msg');
 }
 
 /// Temporary email menu screen to be displayed on the email_nav module on
@@ -183,23 +122,32 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
   }
 }
 
-/// Main entry point to the email folder list module.
+void _created(EmailSessionModule module) {
+  _module = module;
+}
+
+void _initialize(es.EmailSession service, EmailSessionLinkStore store) {
+  // HACK: Global reference must be set before store is accessed by widgets.
+  kEmailSessionStoreToken = new StoreToken(store);
+
+  // Listen for changes to the email session
+  store.listen((EmailSessionLinkStore store) {
+    _log('GOT CHANGE TO MAX: ${store.fake}');
+  });
+
+  // Call the function defined in email_session.fidl.
+  _log('Calling fakeAction(0)');
+  service.fakeAction(0);
+}
+
+void _stop(void callback()) {
+  _log('Stop callback called.');
+  callback();
+}
+
+/// Main entry point to the email nav module.
 void main() {
   _log('Email nav module started with context: $_context');
-
-  /// Add [ModuleImpl] to this application's outgoing ServiceProvider.
-  _context.outgoingServices.addServiceForName(
-    (InterfaceRequest<Module> request) {
-      _log('Received binding request for Module');
-      if (_module != null) {
-        _log('Module interface can only be provided once. Rejecting request.');
-        request.channel.close();
-        return;
-      }
-      _module = new ModuleImpl()..bind(request);
-    },
-    Module.serviceName,
-  );
-
+  addEmailSessionModule(_context, 'email_nav', _created, _initialize, _stop);
   runApp(new EmailMenuScreen());
 }

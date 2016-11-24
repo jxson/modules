@@ -3,3 +3,4 @@
 // found in the LICENSE file.
 
 export 'src/email_session_link_store.dart';
+export 'src/email_session_module.dart';
