@@ -10,10 +10,10 @@ import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.modules.email.email_service/threads.fidl.dart' as es;
-import 'package:config_flutter/config.dart';
-import 'package:email_api/api.dart' as api;
+import 'package:email_api/email_api.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
+import 'package:models/email.dart';
 
 import 'src/threads_impl.dart';
 
@@ -84,31 +84,15 @@ Future<Null> main() async {
     Module.serviceName,
   );
 
-  Config config = await Config.read('assets/config.json');
+  EmailAPI api = await EmailAPI.fromConfig('assets/config.json');
+  List<Thread> threads = await api.threads(
+    labels: <String>['INBOX'],
+    max: 15,
+  );
 
-  // Validate configuration for the email_api REST Client.
-  if (!config.has('oauth_id') ||
-      !config.has('oauth_secret') ||
-      !config.has('oauth_token') ||
-      !config.has('oauth_token_expiry') ||
-      !config.has('oauth_refresh_token')) {
-    _log('Warning: The configu file does not have the expected values.');
-    _log('To get the correct values, run "make auth" from the apps/modules '
-        'repository.');
-  } else {
-    api.Client client = api.client(
-        id: config.get('oauth_id'),
-        secret: config.get('oauth_secret'),
-        token: config.get('oauth_token'),
-        expiry: DateTime.parse(config.get('oauth_token_expiry')),
-        refreshToken: config.get('oauth_refresh_token'));
-    api.GmailApi gmail = new api.GmailApi(client);
-    api.ListThreadsResponse response = await gmail.users.threads
-        .list('me', labelIds: <String>['INBOX'], maxResults: 15);
-    response.threads.forEach((api.Thread thread) {
-      _log('thread: ${thread.id}');
-    });
-  }
+  threads.forEach((Thread thread) {
+    _log('thread: ${thread.id}');
+  });
 
   runApp(new MaterialApp(
     title: 'Email Service',

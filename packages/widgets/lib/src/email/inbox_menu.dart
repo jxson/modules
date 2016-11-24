@@ -8,23 +8,23 @@ import 'package:models/email.dart';
 import 'package:models/user.dart';
 
 import '../user/alphatar.dart';
-import 'folder_list_item.dart';
+import 'label_list_item.dart';
 import 'type_defs.dart';
 
 const double _kProfileHeaderHeight = 73.0;
 
 /// Renders a Google Gmail style inbox menu.
-/// Contains a user banner followed by a list of [FolderGroup]s.
+/// Contains a user banner followed by a list of [LabelGroup]s.
 /// This widget provides the UI affordances to 'tab' between email folders.
 class InboxMenu extends StatelessWidget {
-  /// List of [FolderGroup]s to render
-  List<FolderGroup> folderGroups;
+  /// List of [LabelGroup]s to render
+  List<LabelGroup> labelGroups;
 
   /// Callback if a folder is selected
-  FolderActionCallback onSelectFolder;
+  LabelActionCallback onSelectLabel;
 
   /// The selected folder. There can only be one currently selected folder
-  Folder selectedFolder;
+  Label selectedLabel;
 
   /// The [User] that is currently logged in
   User user;
@@ -32,23 +32,23 @@ class InboxMenu extends StatelessWidget {
   /// Creates new [InboxMenu]
   InboxMenu({
     Key key,
-    @required this.folderGroups,
+    @required this.labelGroups,
     @required this.user,
-    this.onSelectFolder,
-    this.selectedFolder,
+    this.onSelectLabel,
+    this.selectedLabel,
   })
       : super(key: key) {
-    assert(folderGroups != null);
+    assert(labelGroups != null);
     assert(user != null);
   }
 
-  void _handleSelectFolder(Folder folder) {
-    if (onSelectFolder != null) {
-      onSelectFolder(folder);
+  void _handleSelectFolder(Label folder) {
+    if (onSelectLabel != null) {
+      onSelectLabel(folder);
     }
   }
 
-  Widget _buildFolderGroupBlock(FolderGroup folderGroup) {
+  Widget _buildLabelGroupBlock(LabelGroup folderGroup) {
     List<Widget> children = <Widget>[];
 
     // Add folder group title to children if needed.
@@ -70,10 +70,10 @@ class InboxMenu extends StatelessWidget {
       ));
     }
 
-    folderGroup.folders.forEach((Folder folder) {
-      children.add(new FolderListItem(
-        folder: folder,
-        selected: folder == selectedFolder,
+    folderGroup.labels.forEach((Label folder) {
+      children.add(new LabelListItem(
+        label: folder,
+        selected: folder == selectedLabel,
         onSelect: _handleSelectFolder,
       ));
     });
@@ -113,8 +113,8 @@ class InboxMenu extends StatelessWidget {
 
     children.add(_buildUserProfile());
 
-    folderGroups.forEach((FolderGroup folderGroup) {
-      children.add(_buildFolderGroupBlock(folderGroup));
+    labelGroups.forEach((LabelGroup folderGroup) {
+      children.add(_buildLabelGroupBlock(folderGroup));
     });
 
     return new Material(

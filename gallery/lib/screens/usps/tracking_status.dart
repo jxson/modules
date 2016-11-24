@@ -29,7 +29,6 @@ class TrackingStatusScreen extends StatelessWidget {
           child: new TrackingStatus(
             trackingCode: '9374889676090175041871',
             apiKey: uspsApiKey,
-            mapsApiKey: mapsApiKey,
           ),
         ),
       ],

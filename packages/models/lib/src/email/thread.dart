@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:collection/collection.dart';
-import 'package:email_api/api.dart' as api;
 import 'package:quiver/core.dart' as quiver;
 
 import 'message.dart';
@@ -34,20 +33,6 @@ class Thread {
     List<Message> messages,
   })
       : messages = new List<Message>.unmodifiable(messages);
-
-  /// Create a [Thread] from a Gmail API Thread model
-  factory Thread.fromGmailApi(api.Thread thread) {
-    List<Message> messages = <Message>[];
-    thread.messages.forEach((api.Message message) {
-      messages.add(new Message.fromGmailApi(message));
-    });
-    return new Thread(
-      id: thread.id,
-      snippet: thread.snippet,
-      historyId: thread.historyId,
-      messages: messages,
-    );
-  }
 
   /// Gets the subject of the thread
   /// For now, this will return the subject of the first message of the thread

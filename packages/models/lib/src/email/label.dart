@@ -2,11 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:email_api/api.dart' as api;
-
 /// Represents a Gmail folder.
 /// The main inbox (primary) and various labels can be thought of as folders.
-class Folder {
+class Label {
   /// ID for folder. Mainly for Gmail use.
   final String id;
 
@@ -20,22 +18,10 @@ class Folder {
   final String type;
 
   /// Constructor
-  Folder({
+  Label({
     this.id,
     this.name,
     this.unread: 0,
     this.type,
   });
-
-  /// Create a [Folder] from a Gmail API Label model
-  factory Folder.fromGmailApi(api.Label label) {
-    return new Folder(
-      id: label.id,
-      name: label.type.toLowerCase() == 'system'
-          ? '${label.name[0].toUpperCase()}${label.name.substring(1).toLowerCase()}'
-          : label.name,
-      unread: label.threadsUnread,
-      type: label.type,
-    );
-  }
 }

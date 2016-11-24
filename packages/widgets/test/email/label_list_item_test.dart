@@ -9,22 +9,22 @@ import 'package:widgets/email.dart';
 
 void main() {
   testWidgets(
-      'Test to see if tapping on a FolderListItem will call the'
-      'appropiate callback with given Folder', (WidgetTester tester) async {
+      'Test to see if tapping on a LabelListItem will call the'
+      'appropiate callback with given Label', (WidgetTester tester) async {
     Key folderListItemKey = new UniqueKey();
-    Folder folder = new Folder(name: 'Inbox');
+    Label label = new Label(name: 'Inbox');
 
     int taps = 0;
 
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
-        child: new FolderListItem(
+        child: new LabelListItem(
           key: folderListItemKey,
-          folder: folder,
+          label: label,
           icon: Icons.inbox,
-          onSelect: (Folder f) {
-            expect(f, folder);
+          onSelect: (Label f) {
+            expect(f, label);
             taps++;
           },
         ),
@@ -37,11 +37,11 @@ void main() {
   });
 
   testWidgets(
-      'Test to see if an icon from the FolderIdToIcon mapping is used if no '
+      'Test to see if an icon from the LabelIdToIcon mapping is used if no '
       'folder icon is explicity given and icon is of type system',
       (WidgetTester tester) async {
     Key folderListItemKey = new UniqueKey();
-    Folder folder = new Folder(
+    Label label = new Label(
       name: 'Inbox',
       type: 'system',
       id: 'INBOX',
@@ -50,9 +50,9 @@ void main() {
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
-        child: new FolderListItem(
+        child: new LabelListItem(
           key: folderListItemKey,
-          folder: folder,
+          label: label,
         ),
       );
     }));
@@ -65,10 +65,10 @@ void main() {
 
   testWidgets(
       'Test to see if a default folder icon is used if there is no '
-      'FolderToIcon mapping, no folder icon is explicity given and folder is '
+      'LabelToIcon mapping, no folder icon is explicity given and folder is '
       'of type system', (WidgetTester tester) async {
     Key folderListItemKey = new UniqueKey();
-    Folder folder = new Folder(
+    Label label = new Label(
       name: 'Junk',
       type: 'system',
       id: 'JUNK',
@@ -77,9 +77,9 @@ void main() {
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
-        child: new FolderListItem(
+        child: new LabelListItem(
           key: folderListItemKey,
-          folder: folder,
+          label: label,
         ),
       );
     }));
@@ -94,7 +94,7 @@ void main() {
       'Test to see if default folder icon is folder is not of type system and '
       'no folder icon is explicity given', (WidgetTester tester) async {
     Key folderListItemKey = new UniqueKey();
-    Folder folder = new Folder(
+    Label label = new Label(
       name: 'Inbox',
       type: 'system',
       id: 'INBOX',
@@ -103,9 +103,9 @@ void main() {
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
-        child: new FolderListItem(
+        child: new LabelListItem(
           key: folderListItemKey,
-          folder: folder,
+          label: label,
         ),
       );
     }));

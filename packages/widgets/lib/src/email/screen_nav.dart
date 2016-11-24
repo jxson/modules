@@ -23,7 +23,7 @@ class EmailMenuScreen extends StoreWatcher {
   Widget build(BuildContext context, Map<StoreToken, Store> stores) {
     final EmailSessionStore emailSession = stores[kEmailSessionStoreToken];
 
-    if (emailSession.fetchingFolders) {
+    if (emailSession.fetchingLabels) {
       return new Center(child: new CircularProgressIndicator());
     }
 
@@ -34,14 +34,14 @@ class EmailMenuScreen extends StoreWatcher {
           '$error');
     }
 
-    FolderGroup primaryFolders = new FolderGroup(
-      folders: emailSession.visibleFolders,
+    LabelGroup primaryFolders = new LabelGroup(
+      labels: emailSession.visibleLabels,
     );
 
     return new InboxMenu(
-      folderGroups: <FolderGroup>[primaryFolders],
-      onSelectFolder: emailSessionFocusFolder.call,
-      selectedFolder: emailSession.focusedFolder,
+      labelGroups: <LabelGroup>[primaryFolders],
+      onSelectLabel: emailSessionFocusLabel.call,
+      selectedLabel: emailSession.focusedLabel,
       user: emailSession.user,
     );
   }
