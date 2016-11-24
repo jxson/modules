@@ -15,6 +15,7 @@ dart_package("client") {
     "//apps/modular/lib/app/dart",
     "//third_party/dart-pkg/pub/flutter_flux",
     "//third_party/dart-pkg/pub/googleapis",
+    "//apps/modules/packages/email_session_store",
     "//apps/modules/packages/models",
     "//lib/flutter/packages/flutter",
     "//apps/modules/email/email_session:interfaces_dart",
@@ -36,6 +37,7 @@ flutter_app("email_session") {
   deps = [
     "//apps/modular/services/application:application_dart",
     "//apps/modular/services/story:story_dart",
+    "//apps/modules/packages/email_session_store",
     "//apps/modules/packages/models",
     "//apps/mozart/lib/flutter",
     "//apps/mozart/services/views:views_dart",

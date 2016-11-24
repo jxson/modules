@@ -42,7 +42,7 @@ class InboxMenu extends StatelessWidget {
     assert(user != null);
   }
 
-  void _handleSelectFolder(Label folder) {
+  void _handleSelectLabel(Label folder) {
     if (onSelectLabel != null) {
       onSelectLabel(folder);
     }
@@ -74,7 +74,7 @@ class InboxMenu extends StatelessWidget {
       children.add(new LabelListItem(
         label: folder,
         selected: folder == selectedLabel,
-        onSelect: _handleSelectFolder,
+        onSelect: _handleSelectLabel,
       ));
     });
 
