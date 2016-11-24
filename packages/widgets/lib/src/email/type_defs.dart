@@ -13,7 +13,7 @@ typedef void MessageActionCallback(Message message);
 typedef void ThreadActionCallback(Thread thread);
 
 /// Callback function signature for an action on a folder
-typedef void FolderActionCallback(Folder folder);
+typedef void LabelActionCallback(Label folder);
 
 /// Boolean predicate function for a message
 typedef bool MessagePredicate(Message message);

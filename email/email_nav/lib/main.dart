@@ -82,34 +82,34 @@ class EmailMenuScreen extends StatefulWidget {
 }
 
 class _EmailMenuScreenState extends State<EmailMenuScreen> {
-  List<FolderGroup> _folderGroups;
-  Folder _selectFolder;
+  List<LabelGroup> _labelGroups;
+  Label _selectLabel;
   User _user;
 
   @override
   void initState() {
-    _folderGroups = <FolderGroup>[
-      new FolderGroup(
-        folders: <Folder>[
-          new Folder(
+    _labelGroups = <LabelGroup>[
+      new LabelGroup(
+        labels: <Label>[
+          new Label(
             id: 'INBOX',
             name: 'Inbox',
             unread: 10,
             type: 'system',
           ),
-          new Folder(
+          new Label(
             id: 'STARRED',
             name: 'Starred',
             unread: 5,
             type: 'system',
           ),
-          new Folder(
+          new Label(
             id: 'DRAFT',
             name: 'Starred',
             unread: 0,
             type: 'system',
           ),
-          new Folder(
+          new Label(
             id: 'TRASH',
             name: 'Trash',
             unread: 0,
@@ -117,28 +117,28 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
           ),
         ],
       ),
-      new FolderGroup(
-        name: 'Work Folders',
-        folders: <Folder>[
-          new Folder(
+      new LabelGroup(
+        name: 'Work Labels',
+        labels: <Label>[
+          new Label(
             id: 'TODO',
             name: 'Todo',
             unread: 2,
             type: 'user',
           ),
-          new Folder(
+          new Label(
             id: 'COMPLETED',
             name: 'Completed',
             unread: 2,
             type: 'user',
           ),
-          new Folder(
+          new Label(
             id: 'JIRA',
             name: 'Jira',
             unread: 0,
             type: 'user',
           ),
-          new Folder(
+          new Label(
             id: 'GERRIT',
             name: 'Gerrit',
             unread: 0,
@@ -154,9 +154,9 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
     super.initState();
   }
 
-  void _handleSelectFolder(Folder folder) {
+  void _handleSelectLabel(Label folder) {
     setState(() {
-      _selectFolder = folder;
+      _selectLabel = folder;
     });
   }
 
@@ -164,9 +164,9 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
   Widget build(BuildContext context) {
     return new Center(
       child: new InboxMenu(
-        folderGroups: _folderGroups,
-        onSelectFolder: _handleSelectFolder,
-        selectedFolder: _selectFolder,
+        labelGroups: _labelGroups,
+        onSelectLabel: _handleSelectLabel,
+        selectedLabel: _selectLabel,
         user: _user,
       ),
     );

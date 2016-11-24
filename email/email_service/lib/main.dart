@@ -11,7 +11,6 @@ import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.modules.email.email_service/threads.fidl.dart' as es;
 import 'package:config_flutter/config.dart';
-import 'package:email_api/api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 
@@ -95,19 +94,6 @@ Future<Null> main() async {
     _log('Warning: The configu file does not have the expected values.');
     _log('To get the correct values, run "make auth" from the apps/modules '
         'repository.');
-  } else {
-    api.Client client = api.client(
-        id: config.get('oauth_id'),
-        secret: config.get('oauth_secret'),
-        token: config.get('oauth_token'),
-        expiry: DateTime.parse(config.get('oauth_token_expiry')),
-        refreshToken: config.get('oauth_refresh_token'));
-    api.GmailApi gmail = new api.GmailApi(client);
-    api.ListThreadsResponse response = await gmail.users.threads
-        .list('me', labelIds: <String>['INBOX'], maxResults: 15);
-    response.threads.forEach((api.Thread thread) {
-      _log('thread: ${thread.id}');
-    });
   }
 
   runApp(new MaterialApp(
