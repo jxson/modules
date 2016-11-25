@@ -158,10 +158,11 @@ class HomeScreenState extends State<HomeScreen> {
 
 Future<Null> _readAPIKey() async {
   Config config = await Config.read('assets/config.json');
-  String googleApiKey = config.get('usps_api_key');
+  String googleApiKey = config.get('google_api_key');
   if (googleApiKey == null) {
     _log('"google_api_key" value is not specified in config.json.');
   } else {
+    _log('"google_api_key" has been retrieved from config.json');
     _apiKey = googleApiKey;
     _kHomeKey.currentState?.updateUI();
   }
