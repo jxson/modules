@@ -8,15 +8,15 @@ import 'package:models/user.dart';
 import 'package:widgets/email.dart';
 
 /// This screen displays an inbox.
-class EmailMenuScreen extends StatefulWidget {
-  /// Creates a [EmailMenuScreen] instance.
-  EmailMenuScreen({Key key}) : super(key: key);
+class EmailNavScreen extends StatefulWidget {
+  /// Creates a [EmailNavScreen] instance.
+  EmailNavScreen({Key key}) : super(key: key);
 
   @override
-  _EmailMenuScreenState createState() => new _EmailMenuScreenState();
+  _EmailNavScreenState createState() => new _EmailNavScreenState();
 }
 
-class _EmailMenuScreenState extends State<EmailMenuScreen> {
+class _EmailNavScreenState extends State<EmailNavScreen> {
   List<LabelGroup> _labelGroups;
   Label _selectLabel;
   User _user;
@@ -100,7 +100,7 @@ class _EmailMenuScreenState extends State<EmailMenuScreen> {
   @override
   Widget build(BuildContext context) {
     return new Center(
-      child: new InboxMenu(
+      child: new LabelList(
         labelGroups: _labelGroups,
         onSelectLabel: _handleSelectLabel,
         selectedLabel: _selectLabel,

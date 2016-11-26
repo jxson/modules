@@ -18,8 +18,8 @@ class GalleryActions {
   /// Pops the route.
   final Action<Null> popRoute = new Action<Null>();
 
-  /// Navigates to the email inbox view.
-  final Action<Null> navigateToInboxView = new Action<Null>();
+  /// Navigates to the email list view.
+  final Action<Null> navigateToListView = new Action<Null>();
 
   /// Navigates to the email thread view of the given thread id.
   final Action<String> navigateToThreadView = new Action<String>();
@@ -47,8 +47,8 @@ class GalleryStore extends Store {
       _routeStack.removeLast();
     });
 
-    triggerOnAction(actions.navigateToInboxView, (_) {
-      _routeStack.add('/email/inbox');
+    triggerOnAction(actions.navigateToListView, (_) {
+      _routeStack.add('/email/list');
     });
 
     triggerOnAction(actions.navigateToThreadView, (String threadId) {

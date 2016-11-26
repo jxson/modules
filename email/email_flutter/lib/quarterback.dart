@@ -18,7 +18,7 @@ class EmailQuarterbackModule extends StatelessWidget {
     // The container below should ideally be a ChildView.
     Widget menu = new Container(
       constraints: new BoxConstraints.loose(new Size.fromWidth(280.0)),
-      child: new EmailMenuScreen(),
+      child: new EmailNavScreen(),
     );
 
     Widget inbox = new Container(
@@ -30,7 +30,7 @@ class EmailQuarterbackModule extends StatelessWidget {
           alignment: FractionalOffset.topCenter,
           constraints: new BoxConstraints.loose(new Size.fromWidth(400.0)),
           decoration: new BoxDecoration(backgroundColor: Colors.white),
-          child: new EmailInboxScreen(),
+          child: new EmailListScreen(),
         ),
       ),
     );

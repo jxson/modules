@@ -38,7 +38,7 @@ void main() {
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
-        child: new InboxMenu(
+        child: new LabelList(
           labelGroups: <LabelGroup>[labelGroup1, labelGroup2],
           onSelectLabel: (Label f) {
             expect(f, labelGroup2.labels[0]);

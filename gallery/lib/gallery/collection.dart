@@ -22,30 +22,30 @@ StatefulWidget galleryScaffoldedScreen(String title, Widget content) {
 /// Holds a list of all [GalleryItem] instances.
 final List<GalleryItem> kGalleryCollection = <GalleryItem>[
   new GalleryItem(
-    title: 'Email - Inbox',
+    title: 'Email - List',
     subtitle: 'A list view of a Gmail mobile style inbox.',
     group: GalleryGroups.screen,
-    href: '/email/inbox',
+    href: '/email/list',
     builder: (BuildContext context, GalleryItem item) =>
-        galleryScaffoldedScreen(item.title, new EmailInboxScreen()),
+        galleryScaffoldedScreen(item.title, new EmailListScreen()),
   ),
   new GalleryItem(
-    title: 'Email - Inbox (Single Line)',
+    title: 'Email - List (Single Line)',
     subtitle: 'A list view of a Gmail web style inbox.',
     group: GalleryGroups.screen,
-    href: '/email/inbox_single',
+    href: '/email/list_single',
     builder: (BuildContext context, GalleryItem item) =>
         galleryScaffoldedScreen(
-            item.title, new EmailInboxScreen(style: InboxStyle.singleLine)),
+            item.title, new EmailListScreen(style: InboxStyle.singleLine)),
   ),
   new GalleryItem(
-    title: 'Email - Inbox (Grid View)',
+    title: 'Email - List (Grid View)',
     subtitle: 'A list view of a Gmail web style inbox.',
     group: GalleryGroups.screen,
-    href: '/email/inbox_grid',
+    href: '/email/list_grid',
     builder: (BuildContext context, GalleryItem item) =>
         galleryScaffoldedScreen(
-            item.title, new EmailInboxScreen(style: InboxStyle.gridView)),
+            item.title, new EmailListScreen(style: InboxStyle.gridView)),
   ),
   new GalleryItem(
     title: 'Email - Thread',
@@ -65,12 +65,12 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
         galleryScaffoldedScreen(item.title, new EmailEditorScreen()),
   ),
   new GalleryItem(
-    title: 'Email - Menu',
+    title: 'Email - Nav',
     subtitle: 'A Google Gmail style main menu',
     group: GalleryGroups.screen,
-    href: '/email/menu',
+    href: '/email/nav',
     builder: (BuildContext context, GalleryItem item) =>
-        galleryScaffoldedScreen(item.title, new EmailMenuScreen()),
+        galleryScaffoldedScreen(item.title, new EmailNavScreen()),
   ),
   new GalleryItem(
     title: 'Email - Mock Quarterback Module',

@@ -33,12 +33,12 @@ class FluxGalleryScreen extends StoreWatcher {
             onLoginSuccess: (AuthCredentials cred) {
               kGalleryActions.updateCredentials(cred);
               kEmailActions.fetchThreads(cred);
-              kGalleryActions.navigateToInboxView();
+              kGalleryActions.navigateToListView();
             },
           );
 
-        case '/email/inbox':
-          return new EmailInboxScreen(onThreadSelect: (Thread t) {
+        case '/email/list':
+          return new EmailListScreen(onThreadSelect: (Thread t) {
             kGalleryActions.navigateToThreadView(t.id);
           });
 

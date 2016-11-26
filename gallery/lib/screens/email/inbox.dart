@@ -25,9 +25,9 @@ const double _kInboxHeaderHeight = 73.0;
 
 /// An email inbox screen that shows a list of email threads, built with the
 /// flux pattern.
-class EmailInboxScreen extends StoreWatcher {
-  /// Create a new [EmailInboxScreen] instance.
-  EmailInboxScreen({
+class EmailListScreen extends StoreWatcher {
+  /// Create a new [EmailListScreen] instance.
+  EmailListScreen({
     Key key,
     this.style: InboxStyle.multiLine,
     this.inboxTitle: 'Inbox',
