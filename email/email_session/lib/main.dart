@@ -30,6 +30,9 @@ class ModuleImpl extends Module {
 
   final ServiceProviderImpl _serviceProviderImpl = new ServiceProviderImpl();
 
+  /// A set for holding references to the created [EmailSessionImpl] instances.
+  final Set<EmailSessionImpl> _emailSessions = new Set<EmailSessionImpl>();
+
   /// [Link] for watching the[EmailSession] state.
   final LinkProxy emailSessionLinkProxy = new LinkProxy();
 
@@ -56,7 +59,10 @@ class ModuleImpl extends Module {
     _serviceProviderImpl.addServiceForName(
       (InterfaceRequest<es.EmailSession> request) {
         _log('Received binding request for EmailSession');
-        new EmailSessionImpl(emailSessionLinkProxy, sessionState).bind(request);
+        _emailSessions.add(new EmailSessionImpl(
+          emailSessionLinkProxy,
+          sessionState,
+        )..bind(request));
       },
       es.EmailSession.serviceName,
     );
@@ -69,6 +75,7 @@ class ModuleImpl extends Module {
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
+    _emailSessions.forEach((EmailSessionImpl e) => e.close());
     _serviceProviderImpl.close();
     emailSessionLinkProxy.ctrl.unbind();
     callback();

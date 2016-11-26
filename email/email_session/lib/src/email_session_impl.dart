@@ -27,6 +27,9 @@ class EmailSessionImpl extends es.EmailSession {
     // TODO(alangardner): Make initial calls to email service here.
   }
 
+  /// Close the binding
+  void close() => _binding.close();
+
   @override
   void focusLabel(String folderId) {
     _log('focusLabel($folderId)');

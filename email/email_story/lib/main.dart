@@ -217,39 +217,41 @@ class HomeScreenState extends State<HomeScreen> {
       flex: 2,
       child: new Column(
         children: <Widget>[
-          new Container(
-            alignment: FractionalOffset.topLeft,
-            padding: const EdgeInsets.only(left: 10.0, top: 10.0),
-            child: new FloatingActionButton(
-              child: new Icon(_grid ? Icons.list : Icons.grid_on),
-              onPressed: () {
-                setState(() {
-                  _grid = !_grid;
-                });
-              },
-            ),
-          ),
           new Flexible(
             flex: 1,
             child: _connNav != null
                 ? new ChildView(connection: _connNav)
                 : new Container(),
           ),
+          // TODO(youngseokyoon): Restore the FAB for switching modules once the
+          // hit-test problem is resolved.
+          //
+          // new Container(
+          //   alignment: FractionalOffset.topLeft,
+          //   padding: const EdgeInsets.all(10.0),
+          //   child: new FloatingActionButton(
+          //     elevation: 0,
+          //     child: new Icon(_grid ? Icons.list : Icons.grid_on),
+          //     onPressed: () {
+          //       setState(() {
+          //         _grid = !_grid;
+          //       });
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );
 
+    // TODO(youngseokyoon): Restore the elevation and margins once the hit-test
+    // problem is resolved.
     ChildViewConnection connList = _grid ? _connListGrid : _connList;
     Widget list = new Flexible(
       flex: 3,
       child: new Container(
-        margin: new EdgeInsets.symmetric(horizontal: 4.0),
-        child: new Material(
-          elevation: 2,
-          child: _connList != null
-              ? new ChildView(connection: connList)
-              : new Container(),
-        ),
+        child: _connList != null
+            ? new ChildView(connection: connList)
+            : new Container(),
       ),
     );
 
