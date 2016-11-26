@@ -75,7 +75,8 @@ Future<Null> main() async {
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
       if (_module != null) {
-        _log('Module interface can only be provided once. Rejecting request.');
+        _log(
+            'Module interface can only be provided once. Rejecting request.');
         request.channel.close();
         return;
       }
@@ -86,7 +87,7 @@ Future<Null> main() async {
 
   EmailAPI api = await EmailAPI.fromConfig('assets/config.json');
   List<Thread> threads = await api.threads(
-    labels: <String>['INBOX'],
+    labelId: 'INBOX',
     max: 15,
   );
 

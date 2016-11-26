@@ -122,7 +122,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
 
     EmailAPI email = await api();
     _visibleThreads = await email.threads(
-      labels: <String>[_focusedLabelId],
+      labelId: _focusedLabelId,
       max: 15,
     );
 

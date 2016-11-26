@@ -4,12 +4,17 @@
 
 module email_service;
 
+import "apps/modules/email/email_service/messages.fidl";
+
 struct Thread {
   string id;
+  string snippet;
+  string history_id;
+  array<Message> messages;
 };
 
 [ServiceName="modules.ThreadsService"]
 interface Threads {
   // Temporary method.
-  Inbox(int64 max) => (array<Thread> threads);
+  List(string LabelID, int64 max) => (array<Thread> threads);
 };
