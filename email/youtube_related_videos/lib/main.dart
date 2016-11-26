@@ -34,7 +34,7 @@ String _videoId;
 String _apiKey;
 
 void _log(String msg) {
-  print('[youtube_video] $msg');
+  print('[youtube_related_videos] $msg');
 }
 
 /// An implementation of the [LinkWatcher] interface.
@@ -120,7 +120,7 @@ class HomeScreenState extends State<HomeScreen> {
       constraints: const BoxConstraints.expand(),
       child: new Material(
         child: _videoId != null && _apiKey != null
-            ? new YoutubeVideo(
+            ? new YoutubeRelatedVideos(
                 videoId: _videoId,
                 apiKey: _apiKey,
               )
@@ -168,7 +168,7 @@ void main() {
   _readAPIKey();
 
   runApp(new MaterialApp(
-    title: 'Youtube Story',
+    title: 'Youtube Related Videos',
     home: new HomeScreen(key: _kHomeKey),
     theme: new ThemeData(primarySwatch: Colors.blue),
     debugShowCheckedModeBanner: false,

@@ -15,6 +15,7 @@ group("email") {
     "//apps/modules/email/map",
     "//apps/modules/email/user_shell:email_user_shell",
     "//apps/modules/email/usps",
+    "//apps/modules/email/youtube_related_videos",
     "//apps/modules/email/youtube_story",
     "//apps/modules/email/youtube_thumbnail",
     "//apps/modules/email/youtube_video",

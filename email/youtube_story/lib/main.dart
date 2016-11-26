@@ -2,11 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// This is a temporary top-level module for testing the other two youtube
-// modules (youtube_thumbnail, youtube_video) with a pre-populated video id.
-// You can run this by modifying the module url in the dummy_user_shell or
-// email_user_shell to be "file:///system/apps/youtube_story".
-// TODO(youngseokyoon): Remove this module later.
+/// This is a top-level module to contain the standalone youtube experience
 
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
@@ -28,14 +24,16 @@ final String _kYoutubeDocId = 'youtube-doc';
 final String _kYoutubeVideoIdKey = 'youtube-video-id';
 
 final String _kChildUrl = 'file:///system/apps/youtube_thumbnail';
-// final String _kChildUrl = 'file:///system/apps/youtube_video';
+final String _kVideoPlayerUrl = 'file:///system/apps/youtube_video';
+final String _kRelatedVideoUrl = 'file:///system/apps/youtube_related_videos';
 
 // The youtube video id.
 final String _kVideoId = 'p336IIjZCl8';
 
 ModuleImpl _module;
 
-ChildViewConnection _conn;
+ChildViewConnection _videoPlayerConn;
+ChildViewConnection _relatedVideoConn;
 
 void _log(String msg) {
   print('[youtube_story] $msg');
@@ -82,7 +80,10 @@ class ModuleImpl extends Module {
     });
 
     // Spawn the child.
-    _conn = new ChildViewConnection(startModule(url: _kChildUrl));
+    _videoPlayerConn =
+        new ChildViewConnection(startModule(url: _kVideoPlayerUrl));
+    _relatedVideoConn =
+        new ChildViewConnection(startModule(url: _kRelatedVideoUrl));
     _kHomeKey.currentState?.updateUI();
   }
 
@@ -142,9 +143,23 @@ class HomeScreenState extends State<HomeScreen> {
     return new Container(
       alignment: FractionalOffset.center,
       constraints: const BoxConstraints.expand(),
-      child: _conn != null
-          ? new ChildView(connection: _conn)
-          : new CircularProgressIndicator(),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Flexible(
+            flex: 3,
+            child: _videoPlayerConn != null
+                ? new ChildView(connection: _videoPlayerConn)
+                : new CircularProgressIndicator(),
+          ),
+          new Flexible(
+            flex: 2,
+            child: _relatedVideoConn != null
+                ? new ChildView(connection: _relatedVideoConn)
+                : new CircularProgressIndicator(),
+          ),
+        ],
+      ),
     );
   }
 
