@@ -13,7 +13,7 @@ import 'email_session_doc.dart';
 import 'link_object_cache.dart';
 
 void _log(String msg) {
-  print('[email_session] $msg');
+  print('[email_session:LinkStore] $msg');
 }
 
 dynamic _parser(String docid, Document doc) {
@@ -35,10 +35,17 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
     _cache = new LinkObjectCache(link, _parser, this._onUpdate);
   }
 
+  @override
+  void dispose() {
+    _cache.close();
+    super.dispose();
+  }
+
   void _onUpdate(LinkObjectCache cache) {
+    _log('_onUpdate call');
     EmailSessionDoc doc = cache[EmailSessionDoc.docid];
     if (_doc == null) {
-      _log('ERROR: nul document for some reason.');
+      _log('ERROR: null document for some reason.');
       return;
     }
     _doc = doc;
@@ -78,13 +85,11 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
   @override
   List<Error> get currentErrors => <Error>[];
 
-  // TODO(alangardner): Implement. This is only a mock.
   @override
-  bool get fetchingThreads => false;
+  bool get fetchingLabels => _doc?.fetchingLabels ?? false;
 
-  // TODO(alangardner): Implement. This is only a mock.
   @override
-  bool get fetchingLabels => false;
+  bool get fetchingThreads => _doc?.fetchingThreads ?? false;
 
   // TODO(alangardner): Implement. This is only a mock.
   // TODO(alangardner): This should probably be in a separate store.

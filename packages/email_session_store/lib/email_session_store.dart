@@ -27,12 +27,12 @@ abstract class EmailSessionStore implements Store {
   /// (e.g. Network errors, API errors, etc. )
   List<Error> get currentErrors;
 
-  /// Returns true if currently fetching threads from server
-  bool get fetchingThreads;
-
   /// Returns true if currently fetching labels from server
   bool get fetchingLabels;
   // TODO(alangardner): Current status? (e.g. loading, etc.)
+
+  /// Returns true if currently fetching threads from server
+  bool get fetchingThreads;
 
   /// Returns true if message should be expanded in the threadListView
   /// TODO(dayang): Make idempotent in the future

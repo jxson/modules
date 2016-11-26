@@ -20,13 +20,16 @@ class LinkObjectCache extends LinkWatcher {
   final Map<String, Document> _currentDocs;
   final Map<String, dynamic> _parsedObjects;
 
-  /// Build a Link storye
+  /// Build a Link store
   LinkObjectCache(this._link, this._parser, this._callback)
       : _currentDocs = <String, Document>{},
         _parsedObjects = <String, dynamic>{} {
     _link.watch(_binding.wrap(this));
     _link.query(this.notify);
   }
+
+  /// Closes the binding
+  void close() => _binding.close();
 
   void _update() {
     // TODO(alangardner): Later parse only the changes

@@ -28,6 +28,10 @@ void _log(String msg) {
 class ModuleImpl extends Module {
   final ModuleBinding _binding = new ModuleBinding();
 
+  /// A [ServiceProvider] provided from the parent module.
+  final ServiceProviderProxy _incomingServices = new ServiceProviderProxy();
+
+  /// A [ServiceProvider] implementation for exposing [EmailSession] service.
   final ServiceProviderImpl _serviceProviderImpl = new ServiceProviderImpl();
 
   /// A set for holding references to the created [EmailSessionImpl] instances.
@@ -53,8 +57,9 @@ class ModuleImpl extends Module {
 
     emailSessionLinkProxy.ctrl.bind(linkHandle);
 
+    _incomingServices.ctrl.bind(incomingServices);
+
     EmailSessionDoc sessionState = new EmailSessionDoc.withMockData();
-    // TODO(alangardner): Fetch real data from email_service
 
     _serviceProviderImpl.addServiceForName(
       (InterfaceRequest<es.EmailSession> request) {
@@ -62,7 +67,9 @@ class ModuleImpl extends Module {
         _emailSessions.add(new EmailSessionImpl(
           emailSessionLinkProxy,
           sessionState,
-        )..bind(request));
+        )
+          ..bind(request)
+          ..initialize(_incomingServices));
       },
       es.EmailSession.serviceName,
     );
@@ -75,9 +82,10 @@ class ModuleImpl extends Module {
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
+    _incomingServices.ctrl.close();
     _emailSessions.forEach((EmailSessionImpl e) => e.close());
     _serviceProviderImpl.close();
-    emailSessionLinkProxy.ctrl.unbind();
+    emailSessionLinkProxy.ctrl.close();
     callback();
   }
 }
