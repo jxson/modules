@@ -4,6 +4,9 @@
 
 /// Represents Video Data from a single Youtube video
 class VideoData {
+  /// ID of video
+  final String id;
+
   /// Title of video
   final String title;
 
@@ -27,6 +30,7 @@ class VideoData {
 
   /// Constructor
   VideoData({
+    this.id,
     this.title,
     this.description,
     this.channelTitle,
@@ -38,14 +42,30 @@ class VideoData {
 
   /// Constructs [VideoData] model from Youtube api json data
   factory VideoData.fromJson(dynamic json) {
+    // Check for ID and Snippet
+    assert(json['id'] != null);
+    assert(json['id']['videoId'] != null);
+    assert(json['snippet'] != null);
+
+    int viewCount;
+    int likeCount;
+    int dislikeCount;
+
+    if (json.containsKey('statistics')) {
+      viewCount = int.parse(json['statistics']['viewCount']);
+      likeCount = int.parse(json['statistics']['likeCount']);
+      dislikeCount = int.parse(json['statistics']['dislikeCount']);
+    }
+
     return new VideoData(
+      id: json['id']['videoId'],
       title: json['snippet']['title'],
       description: json['snippet']['description'],
       publishedAt: DateTime.parse(json['snippet']['publishedAt']),
       channelTitle: json['snippet']['channelTitle'],
-      viewCount: int.parse(json['statistics']['viewCount']),
-      likeCount: int.parse(json['statistics']['likeCount']),
-      dislikeCount: int.parse(json['statistics']['dislikeCount']),
+      viewCount: viewCount,
+      likeCount: likeCount,
+      dislikeCount: dislikeCount,
     );
   }
 }
