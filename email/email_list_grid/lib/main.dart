@@ -28,7 +28,7 @@ void _initialize(es.EmailSession service, EmailSessionLinkStore store) {
 
   runApp(new MaterialApp(
     title: 'Email List Grid Module',
-    home: new EmailInboxScreen(style: InboxStyle.gridView),
+    home: new EmailListScreen(style: InboxStyle.gridView),
     theme: new ThemeData(primarySwatch: Colors.blue),
     debugShowCheckedModeBanner: false,
   ));

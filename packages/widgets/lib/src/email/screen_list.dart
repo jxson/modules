@@ -25,9 +25,9 @@ const double _kInboxHeaderHeight = 73.0;
 
 /// An email inbox screen that shows a list of email threads, built with the
 /// flux pattern.
-class EmailInboxScreen extends StoreWatcher {
-  /// Create a new [EmailInboxScreen] instance.
-  EmailInboxScreen({
+class EmailListScreen extends StoreWatcher {
+  /// Create a new [EmailListScreen] instance.
+  EmailListScreen({
     Key key,
     this.style: InboxStyle.multiLine,
     this.inboxTitle: 'Inbox',
@@ -111,12 +111,8 @@ class EmailInboxScreen extends StoreWatcher {
     // for the gridView style inbox.
     Widget threadList;
     if (style == InboxStyle.gridView) {
-      threadList = new Block(
-        children: <Widget>[
-          new ThreadGridLayout(
-            children: threadListItems,
-          ),
-        ],
+      threadList = new ThreadGridLayout(
+        children: threadListItems,
       );
     } else {
       threadList = new Block(children: threadListItems);

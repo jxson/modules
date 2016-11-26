@@ -28,7 +28,7 @@ void _initialize(es.EmailSession service, EmailSessionLinkStore store) {
 
   runApp(new MaterialApp(
     title: 'Email List Module',
-    home: new EmailInboxScreen(),
+    home: new EmailListScreen(),
     theme: new ThemeData(primarySwatch: Colors.blue),
     debugShowCheckedModeBanner: false,
   ));

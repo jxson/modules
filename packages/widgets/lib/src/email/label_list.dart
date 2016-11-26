@@ -16,7 +16,7 @@ const double _kProfileHeaderHeight = 73.0;
 /// Renders a Google Gmail style inbox menu.
 /// Contains a user banner followed by a list of [LabelGroup]s.
 /// This widget provides the UI affordances to 'tab' between email folders.
-class InboxMenu extends StatelessWidget {
+class LabelList extends StatelessWidget {
   /// List of [LabelGroup]s to render
   List<LabelGroup> labelGroups;
 
@@ -29,8 +29,8 @@ class InboxMenu extends StatelessWidget {
   /// The [User] that is currently logged in
   User user;
 
-  /// Creates new [InboxMenu]
-  InboxMenu({
+  /// Creates new [LabelList]
+  LabelList({
     Key key,
     @required this.labelGroups,
     @required this.user,

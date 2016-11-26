@@ -10,9 +10,9 @@ import 'package:widgets/email.dart';
 
 /// An email menu/folder screen that shows a list of folders, built with the
 /// flux pattern.
-class EmailMenuScreen extends StoreWatcher {
-  /// Creates a new [EmailMenuScreen] instance
-  EmailMenuScreen({Key key}) : super(key: key);
+class EmailNavScreen extends StoreWatcher {
+  /// Creates a new [EmailNavScreen] instance
+  EmailNavScreen({Key key}) : super(key: key);
 
   @override
   void initStores(ListenToStore listenToStore) {
@@ -38,7 +38,7 @@ class EmailMenuScreen extends StoreWatcher {
       labels: emailSession.visibleLabels,
     );
 
-    return new InboxMenu(
+    return new LabelList(
       labelGroups: <LabelGroup>[primaryLabels],
       onSelectLabel: emailSessionFocusLabel.call,
       selectedLabel: emailSession.focusedLabel,

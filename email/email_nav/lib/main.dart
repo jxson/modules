@@ -26,7 +26,7 @@ void _initialize(es.EmailSession service, EmailSessionLinkStore store) {
   // HACK: Global reference must be set before store is accessed by widgets.
   kEmailSessionStoreToken = new StoreToken(store);
 
-  runApp(new EmailMenuScreen());
+  runApp(new EmailNavScreen());
 }
 
 void _stop(void callback()) {
