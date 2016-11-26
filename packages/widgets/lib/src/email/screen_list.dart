@@ -120,37 +120,39 @@ class EmailListScreen extends StoreWatcher {
 
     // TODO(dayang): Use theme data
     // https://fuchsia.atlassian.net/browse/SO-43
-    return new Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        new Container(
-          height: _kInboxHeaderHeight,
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          decoration: new BoxDecoration(
-            border: new Border(
-              bottom: new BorderSide(
-                color: Colors.grey[200],
-                width: 1.0,
-              ),
-            ),
-          ),
-          child: new Row(
-            children: <Widget>[
-              new Text(
-                inboxTitle,
-                overflow: TextOverflow.ellipsis,
-                style: new TextStyle(
-                  fontSize: 18.0,
+    return new Material(
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Container(
+            height: _kInboxHeaderHeight,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            decoration: new BoxDecoration(
+              border: new Border(
+                bottom: new BorderSide(
+                  color: Colors.grey[200],
+                  width: 1.0,
                 ),
               ),
-            ],
+            ),
+            child: new Row(
+              children: <Widget>[
+                new Text(
+                  inboxTitle,
+                  overflow: TextOverflow.ellipsis,
+                  style: new TextStyle(
+                    fontSize: 18.0,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        new Flexible(
-          flex: 1,
-          child: threadList,
-        ),
-      ],
+          new Flexible(
+            flex: 1,
+            child: threadList,
+          ),
+        ],
+      ),
     );
   }
 }
