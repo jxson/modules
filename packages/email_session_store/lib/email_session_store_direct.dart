@@ -20,8 +20,8 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   String _focusedThreadId;
   List<Error> _currentErrors;
   List<String> _expandedMessageIds;
-  bool _fetchingThreads;
   bool _fetchingLabels;
+  bool _fetchingThreads;
   EmailAPI _api;
 
   /// Default constructor, which initializes to empty content.
@@ -31,8 +31,8 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     _visibleThreads = new List<Thread>.unmodifiable(<Thread>[]);
     _focusedThreadId = null;
     _currentErrors = new List<Error>.unmodifiable(<Error>[]);
-    _fetchingThreads = true;
     _fetchingLabels = true;
+    _fetchingThreads = true;
     _expandedMessageIds = <String>[];
     triggerOnAction(emailSessionFocusLabel, (Label folder) {
       _focusedLabelId = folder.id;
@@ -96,13 +96,13 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
   }
 
   @override
-  bool get fetchingThreads {
-    return _fetchingThreads;
+  bool get fetchingLabels {
+    return _fetchingLabels;
   }
 
   @override
-  bool get fetchingLabels {
-    return _fetchingLabels;
+  bool get fetchingThreads {
+    return _fetchingThreads;
   }
 
   void _toggleMessageExpand(Message message) {

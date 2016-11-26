@@ -80,6 +80,9 @@ class EmailSessionModule extends Module {
   /// [Link] for watching the[EmailSession] state.
   final LinkProxy _emailSessionLinkProxy = new LinkProxy();
 
+  /// [EmailSessionLinkStore] associated with this [Module].
+  EmailSessionLinkStore _store;
+
   /// Construct
   /// Name of this module, and the initialization function that will be called back.
   EmailSessionModule(this.name, this._initCallback, this._stopCallback);
@@ -90,7 +93,7 @@ class EmailSessionModule extends Module {
   }
 
   void _log(String msg) {
-    print('[$this.name] $msg');
+    print('[${this.name}] $msg');
   }
 
   /// Implementation of the Initialize(Story story, Link link) method.
@@ -106,14 +109,15 @@ class EmailSessionModule extends Module {
     connectToService(_incomingServices, _emailSessionService.ctrl);
     _emailSessionLinkProxy.ctrl.bind(linkHandle);
     _setupActionRelay(_emailSessionService);
-    _initCallback(_emailSessionService,
-        new EmailSessionLinkStore(_emailSessionLinkProxy));
+    _store = new EmailSessionLinkStore(_emailSessionLinkProxy);
+    _initCallback(_emailSessionService, _store);
   }
 
   @override
   void stop(void callback()) {
     _log('EmailSessionModuleInit::stop call');
     _stopCallback(() {
+      _store.dispose();
       _emailSessionLinkProxy.ctrl.unbind();
       _emailSessionService.ctrl.close();
       _incomingServices.ctrl.close();

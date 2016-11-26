@@ -47,11 +47,23 @@ class EmailSessionDoc {
   /// Focused label property name
   static const String focusedLabelIdProp = 'focusedLabelId';
 
+  /// Fetching labels property name
+  static const String fetchingLabelsProp = 'fetchingLabels';
+
+  /// Fetching threads property name
+  static const String fetchingThreadsProp = 'fetchingThreads';
+
   /// Available labels
   List<Label> labels;
 
   /// Currently focused label id
   String focusedLabelId;
+
+  /// Indicates whether the labels are currently being fetched
+  bool fetchingLabels;
+
+  /// Indicates whether the threads are currently being fetched
+  bool fetchingThreads;
 
   /// Default Constructor
   EmailSessionDoc();
@@ -60,13 +72,17 @@ class EmailSessionDoc {
   EmailSessionDoc.withMockData() {
     labels = _mockLabels;
     focusedLabelId = 'INBOX';
+    fetchingLabels = false;
+    fetchingThreads = false;
   }
 
   /// Construct from data in link document.
   EmailSessionDoc.fromLinkDocument(Document doc) {
     labels =
         _fromJSON(JSON.decode(doc.properties[visibleLabelsProp]?.stringValue));
-    focusedLabelId = doc.properties[focusedLabelId]?.stringValue;
+    focusedLabelId = doc.properties[focusedLabelIdProp]?.stringValue;
+    fetchingLabels = _readBool(doc, fetchingLabelsProp);
+    fetchingThreads = _readBool(doc, fetchingThreadsProp);
   }
 
   /// Write state to link
@@ -76,8 +92,15 @@ class EmailSessionDoc {
         visibleLabelsProp: new Value()
           ..stringValue = JSON.encode(_toJSON(labels)),
         focusedLabelIdProp: new Value()..stringValue = focusedLabelId,
+        fetchingLabelsProp: new Value()..intValue = fetchingLabels ? 1 : 0,
+        fetchingThreadsProp: new Value()..intValue = fetchingThreads ? 1 : 0,
       })
     });
+  }
+
+  bool _readBool(Document doc, String prop) {
+    int val = doc.properties[prop]?.intValue;
+    return val != null ? val > 0 : false;
   }
 }
 
