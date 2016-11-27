@@ -12,5 +12,4 @@ interface EmailSession {
 
   // Instruct session to focus on displaying details of thread with given id.
   FocusThread(string threadId);
-
 };

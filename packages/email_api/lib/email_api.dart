@@ -31,13 +31,14 @@ class EmailAPI {
   gmail.GmailApi _gmail;
 
   /// The [EmailAPI] constructor.
-  EmailAPI(
-      {@required String id,
-      @required String secret,
-      @required String token,
-      @required DateTime expiry,
-      @required String refreshToken,
-      @required this.scopes}) {
+  EmailAPI({
+    @required String id,
+    @required String secret,
+    @required String token,
+    @required DateTime expiry,
+    @required String refreshToken,
+    @required this.scopes,
+  }) {
     assert(id != null);
     assert(secret != null);
     assert(token != null);
@@ -88,7 +89,7 @@ class EmailAPI {
   }
 
   /// Get a [Label] from the Gmail REST API.
-  Future<Label> label(String id) async {
+  Future<Label> _label(String id) async {
     assert(id != null);
 
     gmail.Label label = await _gmail.users.labels.get('me', id);
@@ -124,7 +125,7 @@ class EmailAPI {
     gmail.ListLabelsResponse response = await _gmail.users.labels.list('me');
     Iterable<Future<Label>> requests = response.labels.map((gmail.Label label) {
       return new Future<Label>(() async {
-        return await this.label(label.id);
+        return await this._label(label.id);
       });
     });
 
@@ -157,11 +158,11 @@ class EmailAPI {
   }
 
   /// Get a [Thread] from the Gmail REST API.
-  Future<Thread> thread(String id) async {
+  Future<Thread> _thread(String id) async {
     gmail.Thread t = await _gmail.users.threads.get('me', id);
     List<Message> messages =
         await Future.wait(t.messages.map((gmail.Message m) {
-      return this.message(m);
+      return this._message(m);
     }));
 
     return new Thread(
@@ -174,19 +175,19 @@ class EmailAPI {
 
   /// Get a list of [Thread]s from the Gmail REST API.
   Future<List<Thread>> threads({
-    List<String> labels,
-    int max,
+    String labelId = 'INBOX',
+    int max = 15,
   }) async {
     gmail.ListThreadsResponse response = await _gmail.users.threads.list(
       'me',
-      labelIds: labels,
+      labelIds: <String>[labelId],
       maxResults: max,
     );
 
     Iterable<Future<Thread>> requests =
         response.threads.map((gmail.Thread thread) {
       return new Future<Thread>(() async {
-        return await this.thread(thread.id);
+        return await this._thread(thread.id);
       });
     });
 
@@ -197,7 +198,7 @@ class EmailAPI {
   }
 
   /// Get a [Message]s from the Gmail REST API.
-  Future<Message> message(gmail.Message message) async {
+  Future<Message> _message(gmail.Message message) async {
     String subject;
     Mailbox sender;
     List<Mailbox> to = <Mailbox>[];

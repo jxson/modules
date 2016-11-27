@@ -70,6 +70,69 @@ class Message {
             new List<Mailbox>.unmodifiable(recipientList ?? <Mailbox>[]),
         ccList = new List<Mailbox>.unmodifiable(ccList ?? <Mailbox>[]);
 
+  /// Create a message from JSON.
+  factory Message.fromJson(Map<String, dynamic> json) {
+    int ms = json['timestamp'];
+    DateTime _timestamp = new DateTime.fromMillisecondsSinceEpoch(ms);
+
+    Iterable<Uri> links =
+        json['links']?.map((String link) => Uri.parse(link));
+
+    Iterable<Attachment> attachments = json['attachments']
+        ?.map((Map<String, String> a) => new Attachment.fromJson(a));
+
+    Iterable<Mailbox> to =
+        json['to']?.map((Map<String, String> u) => new Mailbox.fromJson(u));
+
+    Iterable<Mailbox> cc =
+        json['cc']?.map((Map<String, String> u) => new Mailbox.fromJson(u));
+
+    return new Message(
+      id: json['id'],
+      sender: new Mailbox.fromJson(json['sender']),
+      senderProfileUrl: json['senderProfileUrl'],
+      subject: json['subject'],
+      text: json['text'],
+      timestamp: _timestamp,
+      isRead: json['isRead'],
+      links: links != null ? links.toList() : const <Uri>[],
+      attachments: attachments != null ? attachments.toList() : const <Uri>[],
+      recipientList: to != null ? to.toList() : const <Mailbox>[],
+      ccList: cc != null ? cc.toList() : const <Mailbox>[],
+    );
+  }
+
+  /// Thread representation appropriate for JSON encoding.
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = new Map<String, dynamic>();
+    // TODO(jxson): MailBox models should be moved to User models, MailBox
+    // representation should then user the standard User model for it's
+    // backing data.
+
+    json['id'] = id;
+    json['sender'] = sender.toJson();
+    json['senderProfileUrl'] = senderProfileUrl;
+    json['subject'] = subject;
+    json['text'] = text;
+    json['timestamp'] = timestamp.millisecondsSinceEpoch;
+    json['isRead'] = isRead;
+    json['links'] = links.map((Uri l) => l.toString()).toList();
+    json['to'] = recipientList.map((Mailbox r) => r.toJson()).toList();
+    json['cc'] = ccList.map((Mailbox r) => r.toJson()).toList();
+    json['attachments'] =
+        attachments.map((Attachment a) => a.toJson()).toList();
+
+    return json;
+  }
+
+  // Message, as a [String].
+  @override
+  String toString() {
+    return "Message("
+        "id: $id"
+        ")";
+  }
+
   /// Generates preview text for message
   ///
   /// Strips all newline characters

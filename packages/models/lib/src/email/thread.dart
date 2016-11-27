@@ -34,6 +34,41 @@ class Thread {
   })
       : messages = new List<Message>.unmodifiable(messages);
 
+  /// Create a [Thread] from JSON.
+  factory Thread.fromJson(Map<String, dynamic> json) {
+    return new Thread(
+      id: json['id'],
+      snippet: json['snippet'],
+      historyId: json['historyId'],
+      messages: json['messages'].map((Map<String, dynamic> m) {
+        return new Message.fromJson(m);
+      }).toList(),
+    );
+  }
+
+  @override
+  String toString() {
+    return "Thread("
+        "id: $id"
+        "snippet: $snippet"
+        "historyId: $historyId"
+        "messages: $messages"
+        ")";
+  }
+
+  /// Thread representation appropriate for JSON encoding.
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = new Map<String, dynamic>();
+
+    json['id'] = id;
+    json['snippet'] = snippet;
+    json['historyId'] = historyId;
+    json['messages'] =
+        messages.map((Message message) => message.toJson()).toList();
+
+    return json;
+  }
+
   /// Gets the subject of the thread
   /// For now, this will return the subject of the first message of the thread
   /// If there is no subject specified, a default of '(no subject)' will be set
