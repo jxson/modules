@@ -41,11 +41,14 @@ class EmailSessionDoc {
   /// EmailSession doc id
   static const String docid = 'emailSession';
 
-  /// Visible Labels property name
+  /// Visible labels property name
   static const String visibleLabelsProp = 'visibleLabels';
 
   /// Focused label property name
   static const String focusedLabelIdProp = 'focusedLabelId';
+
+  /// Focused thread property name
+  static const String focusedThreadIdProp = 'focusedThreadId';
 
   /// Fetching labels property name
   static const String fetchingLabelsProp = 'fetchingLabels';
@@ -54,10 +57,13 @@ class EmailSessionDoc {
   static const String fetchingThreadsProp = 'fetchingThreads';
 
   /// Available labels
-  List<Label> labels;
+  List<Label> visibleLabels;
 
   /// Currently focused label id
   String focusedLabelId;
+
+  /// Currently focused thread id
+  String focusedThreadId;
 
   /// Indicates whether the labels are currently being fetched
   bool fetchingLabels;
@@ -70,7 +76,8 @@ class EmailSessionDoc {
 
   /// Fill with mock data
   EmailSessionDoc.withMockData() {
-    labels = _mockLabels;
+    visibleLabels = _mockLabels;
+    focusedThreadId = '1';
     focusedLabelId = 'INBOX';
     fetchingLabels = false;
     fetchingThreads = false;
@@ -78,22 +85,43 @@ class EmailSessionDoc {
 
   /// Construct from data in link document.
   EmailSessionDoc.fromLinkDocument(Document doc) {
-    labels =
+    visibleLabels =
         _fromJSON(JSON.decode(doc.properties[visibleLabelsProp]?.stringValue));
     focusedLabelId = doc.properties[focusedLabelIdProp]?.stringValue;
+    focusedThreadId = doc.properties[focusedThreadIdProp]?.stringValue;
     fetchingLabels = _readBool(doc, fetchingLabelsProp);
     fetchingThreads = _readBool(doc, fetchingThreadsProp);
   }
 
   /// Write state to link
   void writeToLink(Link link) {
+    // NOTE(youngseokyoon): In the current framework design, Value object
+    // themselves are nullable, but their internal values aren't.
+    // (see: //apps/modular/services/document_store/document.fidl)
+    //
+    // In other words, if we do this below:
+    //
+    //     focusedLabelId: new Value()..stringValue = null,
+    //
+    // it will silently fail at FIDL layer and break things.
     link.setAllDocuments(<String, Document>{
       docid: new Document.init(docid, <String, Value>{
-        visibleLabelsProp: new Value()
-          ..stringValue = JSON.encode(_toJSON(labels)),
-        focusedLabelIdProp: new Value()..stringValue = focusedLabelId,
-        fetchingLabelsProp: new Value()..intValue = fetchingLabels ? 1 : 0,
-        fetchingThreadsProp: new Value()..intValue = fetchingThreads ? 1 : 0,
+        visibleLabelsProp: visibleLabels != null
+            ? (new Value()..stringValue = JSON.encode(_toJSON(visibleLabels)))
+            : null,
+        focusedLabelId: focusedLabelId != null
+            ? (new Value()..stringValue = focusedLabelId)
+            : null,
+        focusedLabelIdProp: focusedLabelId != null
+            ? (new Value()..stringValue = focusedLabelId)
+            : null,
+        focusedThreadIdProp: focusedThreadId != null
+            ? (new Value()..stringValue = focusedThreadId)
+            : null,
+        fetchingLabelsProp: new Value()
+          ..intValue = (fetchingLabels ?? false) ? 1 : 0,
+        fetchingThreadsProp: new Value()
+          ..intValue = (fetchingThreads ?? false) ? 1 : 0,
       })
     });
   }
