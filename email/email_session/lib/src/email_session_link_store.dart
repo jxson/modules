@@ -29,10 +29,12 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
   LinkObjectCache _cache;
   EmailSessionDoc _doc = new EmailSessionDoc();
   List<Label> _visibleLabels = const <Label>[];
+  List<String> _expandedMessageIds = <String>[];
 
   /// Constructs a new Store to read the email session from the link
   EmailSessionLinkStore(Link link) {
     _cache = new LinkObjectCache(link, _parser, this._onUpdate);
+    triggerOnAction(emailSessionToggleMessageExpand, _toggleMessageExpand);
   }
 
   @override
@@ -98,8 +100,17 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
   @override
   bool get fetchingThreads => _doc?.fetchingThreads ?? false;
 
-  // TODO(alangardner): Implement. This is only a mock.
+  // NOTE: This is local to each module, and not shared.
   // TODO(alangardner): This should probably be in a separate store.
   @override
-  bool messageIsExpanded(Message message) => true;
+  bool messageIsExpanded(Message message) =>
+      _expandedMessageIds.contains(message.id);
+
+  void _toggleMessageExpand(Message message) {
+    if (_expandedMessageIds.contains(message.id)) {
+      _expandedMessageIds.remove(message.id);
+    } else {
+      _expandedMessageIds.add(message.id);
+    }
+  }
 }
