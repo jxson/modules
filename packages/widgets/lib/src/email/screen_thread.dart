@@ -42,7 +42,9 @@ class EmailThreadScreen extends StoreWatcher {
 
     Thread thread = emailSession.focusedThread;
     if (thread == null) {
-      return new Text('No Thread Selected');
+      // TODO(youngseokyoon): handle this situation better?
+      print('[screen_thread.dart] No focused thread. Drawing an empty screen.');
+      return new Container();
     }
 
     return new ThreadView(

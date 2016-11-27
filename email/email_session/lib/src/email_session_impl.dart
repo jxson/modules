@@ -69,7 +69,8 @@ class EmailSessionImpl extends es.EmailSession {
   @override
   void focusThread(String threadId) {
     _log('focusThread($threadId)');
-    // TODO(alangardner): Implement
+    // TODO(youngseokyoon): Verify the thread id exists before setting this
+    _doc.focusedThreadId = threadId;
     _update();
   }
 

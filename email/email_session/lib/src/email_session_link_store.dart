@@ -28,7 +28,7 @@ dynamic _parser(String docid, Document doc) {
 class EmailSessionLinkStore extends Store implements EmailSessionStore {
   LinkObjectCache _cache;
   EmailSessionDoc _doc = new EmailSessionDoc();
-  List<Label> _visibleLabels = new List<Label>.unmodifiable(<Label>[]);
+  List<Label> _visibleLabels = const <Label>[];
 
   /// Constructs a new Store to read the email session from the link
   EmailSessionLinkStore(Link link) {
@@ -49,7 +49,8 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
       return;
     }
     _doc = doc;
-    _visibleLabels = new List<Label>.unmodifiable(_doc?.labels ?? <Label>[]);
+    _visibleLabels =
+        new List<Label>.unmodifiable(_doc?.visibleLabels ?? <Label>[]);
     trigger();
   }
 
@@ -66,20 +67,26 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
   @override
   Label get focusedLabel => _doc?.focusedLabelId == null
       ? null
-      : visibleLabels.firstWhere((Label f) => _doc.focusedLabelId == f.id,
-          orElse: null);
+      : visibleLabels.firstWhere(
+          (Label l) => _doc.focusedLabelId == l.id,
+          orElse: () => null,
+        );
 
   // TODO(alangardner): Implement. This is only a mock.
   @override
   List<Thread> get visibleThreads => <Thread>[
         new MockThread(id: '1'),
         new MockThread(id: '2'),
-        new MockThread(id: '3')
+        new MockThread(id: '3'),
       ];
 
-  // TODO(alangardner): Implement. This is only a mock.
   @override
-  Thread get focusedThread => new MockThread(id: '1');
+  Thread get focusedThread => _doc?.focusedThreadId == null
+      ? null
+      : visibleThreads.firstWhere(
+          (Thread t) => _doc.focusedThreadId == t.id,
+          orElse: () => null,
+        );
 
   // TODO(alangardner): Implement. This is only a mock.
   @override
