@@ -50,6 +50,22 @@ class Mailbox {
     return new Mailbox(address: address, displayName: displayName);
   }
 
+  /// Create an instance from JSON.
+  factory Mailbox.fromJson(Map<String, String> json) {
+    return new Mailbox(
+      displayName: json['name'],
+      address: json['email'],
+    );
+  }
+
+  /// JSON representation.
+  Map<String, String> toJson() {
+    return <String, String>{
+      'name': displayName,
+      'email': address,
+    };
+  }
+
   /// Text representation that will be typically used in UIs for this Mailbox
   /// Show the [displayName] if given, otherwise just fallback to the [address]
   String get displayText => displayName ?? address;

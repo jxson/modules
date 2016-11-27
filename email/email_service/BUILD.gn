@@ -30,9 +30,7 @@ flutter_app("email_service") {
 
 fidl("interfaces") {
   sources = [
-    "attachments.fidl",
     "labels.fidl",
-    "messages.fidl",
     "threads.fidl",
     "users.fidl",
   ]

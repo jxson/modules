@@ -4,13 +4,9 @@
 
 module email_service;
 
-import "apps/modules/email/email_service/messages.fidl";
-
 struct Thread {
   string id;
-  string snippet;
-  string history_id;
-  array<Message> messages;
+  string json_payload;
 };
 
 [ServiceName="modules.ThreadsService"]
