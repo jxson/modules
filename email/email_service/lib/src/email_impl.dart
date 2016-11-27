@@ -19,12 +19,13 @@ class EmailServiceImpl extends es.EmailService {
 
   /// Binds this implementation to the incoming [bindings.InterfaceRequest].
   ///
-  /// This should only be called once. In other words, a new [EmailImpl]
+  /// This should only be called once. In other words, a new [EmailServiceImpl]
   /// object needs to be created per interface request.
   void bind(bindings.InterfaceRequest<es.EmailService> request) {
     _binding.bind(this, request);
   }
 
+  /// Close the binding
   void close() => _binding.close();
 
   @override

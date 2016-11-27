@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-import 'package:models/user.dart';
 import 'package:fixtures/fixtures.dart';
+import 'package:models/user.dart';
 import 'package:test/test.dart';
 
 void main() {

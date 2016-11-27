@@ -175,8 +175,8 @@ class EmailAPI {
 
   /// Get a list of [Thread]s from the Gmail REST API.
   Future<List<Thread>> threads({
-    String labelId = 'INBOX',
-    int max = 15,
+    String labelId: 'INBOX',
+    int max: 15,
   }) async {
     gmail.ListThreadsResponse response = await _gmail.users.threads.list(
       'me',

@@ -75,8 +75,7 @@ class Message {
     int ms = json['timestamp'];
     DateTime _timestamp = new DateTime.fromMillisecondsSinceEpoch(ms);
 
-    Iterable<Uri> links =
-        json['links']?.map((String link) => Uri.parse(link));
+    Iterable<Uri> links = json['links']?.map((String link) => Uri.parse(link));
 
     Iterable<Attachment> attachments = json['attachments']
         ?.map((Map<String, String> a) => new Attachment.fromJson(a));
@@ -128,9 +127,9 @@ class Message {
   // Message, as a [String].
   @override
   String toString() {
-    return "Message("
-        "id: $id"
-        ")";
+    return 'Message('
+        'id: $id"'
+        ')';
   }
 
   /// Generates preview text for message
