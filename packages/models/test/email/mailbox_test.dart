@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
+
 import 'package:models/email.dart';
 import 'package:test/test.dart';
 
@@ -82,5 +84,19 @@ void main() {
       address: 'coco@cu.te',
     );
     expect(mailbox1 == mailbox2, false);
+  });
+
+  test('Mailbox JSON encode/decode', () {
+    Mailbox mailbox = new Mailbox(
+      displayName: 'Coco',
+      address: 'coco@cu.te',
+    );
+
+    String encoded = JSON.encode(mailbox);
+    Map<String, dynamic> json = JSON.decode(encoded);
+    Mailbox hydrated = new Mailbox.fromJson(json);
+
+    expect(hydrated.displayName, equals(mailbox.displayName));
+    expect(hydrated.address, equals(mailbox.address));
   });
 }

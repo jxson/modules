@@ -9,13 +9,13 @@ import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
-import 'package:apps.modules.email.email_service/threads.fidl.dart' as es;
+import 'package:apps.modules.email.email_service/email.fidl.dart' as es;
 import 'package:email_api/email_api.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 import 'package:models/email.dart';
 
-import 'src/threads_impl.dart';
+import 'src/email_impl.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
@@ -50,11 +50,11 @@ class ModuleImpl extends Module {
     // Register the service provider which can serve the `Threads` service.
     outgoingServices
       ..addServiceForName(
-        (InterfaceRequest<es.Threads> request) {
+        (InterfaceRequest<es.EmailService> request) {
           _log('Received binding request for Threads');
-          new ThreadsImpl().bind(request);
+          new EmailImpl().bind(request);
         },
-        es.Threads.serviceName,
+        es.EmailService.serviceName,
       )
       ..bind(outgoingServicesRequest);
   }
@@ -86,7 +86,7 @@ Future<Null> main() async {
 
   EmailAPI api = await EmailAPI.fromConfig('assets/config.json');
   List<Thread> threads = await api.threads(
-    labels: <String>['INBOX'],
+    labelId: 'INBOX',
     max: 15,
   );
 

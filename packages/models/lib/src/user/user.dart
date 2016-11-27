@@ -45,4 +45,26 @@ class User {
     givenName ??= names.first;
     familyName ??= names.last;
   }
+
+  /// Construct a new User from JSON.
+  factory User.fromJson(Map<String, String> json) {
+    return new User(
+      id: json['id'],
+      email: json['email'],
+      name: json['name'],
+      picture: json['picture'],
+    );
+  }
+
+  /// User as JSON.
+  Map<String, String> toJson() {
+    Map<String, String> json = new Map<String, String>();
+
+    json['id'] = id;
+    json['email'] = email;
+    json['name'] = name;
+    json['picture'] = picture;
+
+    return json;
+  }
 }
