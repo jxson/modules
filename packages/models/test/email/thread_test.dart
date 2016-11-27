@@ -155,8 +155,8 @@ void main() {
     expect(message, isNotNull);
     expect(message.sender.displayName, equals('Coco Yang'));
     expect(message.sender.address, equals('cocoyang@cu.te'));
-    expect(message.text,
-        equals("Woof Woof. I'm so hungry. You need to feed me!"));
+    expect(
+        message.text, equals("Woof Woof. I'm so hungry. You need to feed me!"));
     expect(message.timestamp, equals(timestamp));
     expect(message.isRead, isTrue);
 

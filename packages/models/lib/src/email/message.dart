@@ -75,8 +75,7 @@ class Message {
     int ms = json['timestamp'];
     DateTime _timestamp = new DateTime.fromMillisecondsSinceEpoch(ms);
 
-    Iterable<Uri> links =
-        json['links']?.map((String link) => Uri.parse(link));
+    Iterable<Uri> links = json['links']?.map((String link) => Uri.parse(link));
 
     Iterable<Attachment> attachments = json['attachments']
         ?.map((Map<String, String> a) => new Attachment.fromJson(a));

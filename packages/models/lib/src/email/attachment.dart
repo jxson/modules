@@ -29,6 +29,7 @@ class Attachment {
     this.id,
   });
 
+  /// Construct a new [Attachment] from JSON.
   factory Attachment.fromJson(Map<String, String> json) {
     int type = int.parse(json['type']);
 

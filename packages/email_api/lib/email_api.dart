@@ -123,8 +123,7 @@ class EmailAPI {
   /// those in [_kLabelSortOrder].
   Future<List<Label>> labels({bool all: false}) async {
     gmail.ListLabelsResponse response = await _gmail.users.labels.list('me');
-    Iterable<Future<Label>> requests =
-        response.labels.map((gmail.Label label) {
+    Iterable<Future<Label>> requests = response.labels.map((gmail.Label label) {
       return new Future<Label>(() async {
         return await this._label(label.id);
       });

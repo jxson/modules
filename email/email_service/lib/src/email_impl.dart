@@ -6,12 +6,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:apps.modules.email.email_service/email.fidl.dart' as es;
-import 'package:lib.fidl.dart/bindings.dart' as bindings;
 import 'package:email_api/email_api.dart';
+import 'package:lib.fidl.dart/bindings.dart' as bindings;
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
-// import '../fidls.dart' as fidl;
 import 'api.dart';
 
 /// Implementation for email_service.
