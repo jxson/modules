@@ -50,10 +50,17 @@ Future<Null> main(List<String> args) async {
       await dartFile.readAsString(),
       url: relativePath,
     );
-
-    CompilationUnit cu = parseCompilationUnit(src.getText(0));
-    error = await processDoubleQuotes(cmd, dartFile, src, cu) || error;
-    error = await processDirectives(cmd, dartFile, src, cu) || error;
+    try {
+      CompilationUnit cu = parseCompilationUnit(src.getText(0));
+      error = await processDoubleQuotes(cmd, dartFile, src, cu) || error;
+      error = await processDirectives(cmd, dartFile, src, cu) || error;
+    } on AnalyzerErrorGroup catch (e) {
+      stderr.writeln('Unable to parse file "$relativePath".');
+      for (AnalyzerError e in e.errors) {
+        stderr.writeln(e.toString());
+      }
+      exit(1);
+    }
   });
 
   exitCode = error ? 1 : 0;

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// This is a top-level module to contain the standalone youtube experience
-
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.document_store/document.fidl.dart';

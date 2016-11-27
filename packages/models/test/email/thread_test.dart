@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'dart:convert';
+
 import 'package:models/email.dart';
 import 'package:test/test.dart';
 
@@ -152,8 +153,8 @@ void main() {
     expect(message, isNotNull);
     expect(message.sender.displayName, equals('Coco Yang'));
     expect(message.sender.address, equals('cocoyang@cu.te'));
-    expect(message.text,
-        equals("Woof Woof. I'm so hungry. You need to feed me!"));
+    expect(
+        message.text, equals("Woof Woof. I'm so hungry. You need to feed me!"));
     expect(message.timestamp, equals(timestamp));
     expect(message.isRead, isTrue);
 

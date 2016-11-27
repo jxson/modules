@@ -48,12 +48,12 @@ class Thread {
 
   @override
   String toString() {
-    return "Thread("
-        "id: $id"
-        "snippet: $snippet"
-        "historyId: $historyId"
-        "messages: $messages"
-        ")";
+    return 'Thread('
+        'id: $id"'
+        'snippet: $snippet"'
+        'historyId: $historyId"'
+        'messages: $messages"'
+        ')';
   }
 
   /// Thread representation appropriate for JSON encoding.
