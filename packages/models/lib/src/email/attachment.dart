@@ -28,4 +28,24 @@ class Attachment {
     this.value,
     this.id,
   });
+
+  /// Construct a new [Attachment] from JSON.
+  factory Attachment.fromJson(Map<String, String> json) {
+    int type = int.parse(json['type']);
+
+    return new Attachment(
+      id: json['id'],
+      value: json['value'],
+      type: AttachmentType.values[type],
+    );
+  }
+
+  /// JSON representation.
+  Map<String, String> toJson() {
+    return <String, String>{
+      'id': id,
+      'type': type.index.toString(),
+      'value': value,
+    };
+  }
 }

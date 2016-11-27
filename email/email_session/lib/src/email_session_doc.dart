@@ -86,7 +86,7 @@ class EmailSessionDoc {
   /// Construct from data in link document.
   EmailSessionDoc.fromLinkDocument(Document doc) {
     visibleLabels =
-        _fromJSON(JSON.decode(doc.properties[visibleLabelsProp]?.stringValue));
+        _fromJson(JSON.decode(doc.properties[visibleLabelsProp]?.stringValue));
     focusedLabelId = doc.properties[focusedLabelIdProp]?.stringValue;
     focusedThreadId = doc.properties[focusedThreadIdProp]?.stringValue;
     fetchingLabels = _readBool(doc, fetchingLabelsProp);
@@ -107,7 +107,7 @@ class EmailSessionDoc {
     link.setAllDocuments(<String, Document>{
       docid: new Document.init(docid, <String, Value>{
         visibleLabelsProp: visibleLabels != null
-            ? (new Value()..stringValue = JSON.encode(_toJSON(visibleLabels)))
+            ? (new Value()..stringValue = JSON.encode(_toJson(visibleLabels)))
             : null,
         focusedLabelId: focusedLabelId != null
             ? (new Value()..stringValue = focusedLabelId)
@@ -132,12 +132,12 @@ class EmailSessionDoc {
   }
 }
 
-List<Label> _fromJSON(Map<String, List<Map<String, String>>> json) {
+List<Label> _fromJson(Map<String, List<Map<String, String>>> json) {
   List<Label> labels = <Label>[];
 
   if (json.containsKey('labels')) {
     json['labels'].forEach((Map<String, String> value) {
-      labels.add(new Label.fromJSON(value));
+      labels.add(new Label.fromJson(value));
     });
   }
 
@@ -145,13 +145,13 @@ List<Label> _fromJSON(Map<String, List<Map<String, String>>> json) {
 }
 
 /// Convert the collection into a JSON object.
-Map<String, List<Map<String, String>>> _toJSON(List<Label> labels) {
+Map<String, List<Map<String, String>>> _toJson(List<Label> labels) {
   Map<String, List<Map<String, String>>> json =
       new Map<String, List<Map<String, String>>>();
 
   if (labels != null) {
     json['labels'] = labels.map((Label label) {
-      return label.toJSON();
+      return label.toJson();
     }).toList();
   }
 

@@ -26,7 +26,7 @@ class Label {
   });
 
   /// Create a [Label] from JSON.
-  factory Label.fromJSON(Map<String, String> json) {
+  factory Label.fromJson(Map<String, String> json) {
     String id = json['id'];
     String name = json['name'];
     String unread = json['unread'];
@@ -41,7 +41,7 @@ class Label {
   }
 
   /// Make it JSON.
-  Map<String, String> toJSON() {
+  Map<String, String> toJson() {
     Map<String, String> json = new Map<String, String>();
 
     json['id'] = id;

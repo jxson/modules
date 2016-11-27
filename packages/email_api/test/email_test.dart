@@ -49,8 +49,7 @@ void main() {
   }, skip: 'takes 1s');
 
   test('api.threads()', () async {
-    List<Thread> threads =
-        await api.threads(labels: <String>['INBOX'], max: 15);
+    List<Thread> threads = await api.threads(labelId: 'INBOX', max: 15);
     threads.forEach((Thread thread) {
       print('===> Thread: $thread');
       print('= * id: ${thread.id}');

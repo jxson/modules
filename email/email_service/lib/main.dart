@@ -9,13 +9,13 @@ import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
-import 'package:apps.modules.email.email_service/threads.fidl.dart' as es;
+import 'package:apps.modules.email.email_service/email.fidl.dart' as es;
 import 'package:email_api/email_api.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 import 'package:models/email.dart';
 
-import 'src/threads_impl.dart';
+import 'src/email_impl.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
@@ -31,6 +31,8 @@ class ModuleImpl extends Module {
 
   /// A [ServiceProvider] implementation to be used as the outgoing services.
   final ServiceProviderImpl outgoingServices = new ServiceProviderImpl();
+
+  final EmailServiceImpl _emailServiceImpl = new EmailServiceImpl();
 
   /// Bind an [InterfaceRequest] for a [Module] interface to this object.
   void bind(InterfaceRequest<Module> request) {
@@ -50,11 +52,11 @@ class ModuleImpl extends Module {
     // Register the service provider which can serve the `Threads` service.
     outgoingServices
       ..addServiceForName(
-        (InterfaceRequest<es.Threads> request) {
+        (InterfaceRequest<es.EmailService> request) {
           _log('Received binding request for Threads');
-          new ThreadsImpl().bind(request);
+          _emailServiceImpl.bind(request);
         },
-        es.Threads.serviceName,
+        es.EmailService.serviceName,
       )
       ..bind(outgoingServicesRequest);
   }
@@ -62,6 +64,7 @@ class ModuleImpl extends Module {
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
+    _emailServiceImpl.close();
     callback();
   }
 }
@@ -75,7 +78,8 @@ Future<Null> main() async {
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
       if (_module != null) {
-        _log('Module interface can only be provided once. Rejecting request.');
+        _log(
+            'Module interface can only be provided once. Rejecting request.');
         request.channel.close();
         return;
       }
@@ -86,7 +90,7 @@ Future<Null> main() async {
 
   EmailAPI api = await EmailAPI.fromConfig('assets/config.json');
   List<Thread> threads = await api.threads(
-    labels: <String>['INBOX'],
+    labelId: 'INBOX',
     max: 15,
   );
 
