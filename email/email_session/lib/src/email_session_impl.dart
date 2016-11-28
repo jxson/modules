@@ -19,7 +19,7 @@ void _log(String msg) {
 
 /// Implementation of EmailSession service
 class EmailSessionImpl extends es.EmailSession {
-  final es.EmailSessionBinding _binding = new es.EmailSessionBinding();
+  final List<es.EmailSessionBinding> _bindings = <es.EmailSessionBinding>[];
   final Link _link;
   final EmailSessionDoc _doc;
 
@@ -31,7 +31,7 @@ class EmailSessionImpl extends es.EmailSession {
 
   /// Bind this object to the request
   void bind(InterfaceRequest<es.EmailSession> request) {
-    _binding.bind(this, request);
+    _bindings.add(new es.EmailSessionBinding()..bind(this, request));
   }
 
   /// Initializes the email session.
@@ -46,7 +46,7 @@ class EmailSessionImpl extends es.EmailSession {
   /// Closes the bindings.
   void close() {
     _email.ctrl.close();
-    _binding.close();
+    _bindings.forEach((es.EmailSessionBinding binding) => binding.close());
   }
 
   @override
