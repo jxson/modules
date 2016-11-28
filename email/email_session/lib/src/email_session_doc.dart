@@ -12,28 +12,32 @@ List<Label> _mockLabels = <Label>[
   new Label(
     id: 'INBOX',
     name: 'Inbox',
-    unread: 10,
+    unread: 5,
     type: 'system',
   ),
   new Label(
     id: 'STARRED',
     name: 'Starred',
-    unread: 10,
+    unread: 0,
     type: 'system',
   ),
   new Label(
     id: 'DRAFT',
     name: 'Drafts',
-    unread: 10,
+    unread: 18,
     type: 'system',
   ),
   new Label(
     id: 'TRASH',
     name: 'Trash',
-    unread: 10,
+    unread: 1,
     type: 'system',
   ),
 ];
+
+/// Temp convenience method for generating mock threads
+List<Thread> mockThreads(int size) => new List<Thread>.generate(
+    size, (int index) => new MockThread(id: index.toString()));
 
 /// Captures the state of an email session.
 /// Can be serialized to Links to be shared with other modules.
@@ -46,6 +50,9 @@ class EmailSessionDoc {
 
   /// Focused label property name
   static const String focusedLabelIdProp = 'focusedLabelId';
+
+  /// Visible labels property name
+  static const String visibleThreadsProp = 'visibleThreads';
 
   /// Focused thread property name
   static const String focusedThreadIdProp = 'focusedThreadId';
@@ -62,6 +69,9 @@ class EmailSessionDoc {
   /// Currently focused label id
   String focusedLabelId;
 
+  /// The currently visible threads.
+  List<Thread> visibleThreads;
+
   /// Currently focused thread id
   String focusedThreadId;
 
@@ -77,17 +87,20 @@ class EmailSessionDoc {
   /// Fill with mock data
   EmailSessionDoc.withMockData() {
     visibleLabels = _mockLabels;
-    focusedThreadId = '1';
-    focusedLabelId = 'INBOX';
+    visibleThreads = mockThreads(_mockLabels[0].unread);
+    focusedThreadId = visibleThreads[0].id;
+    focusedLabelId = _mockLabels[0].id;
     fetchingLabels = false;
     fetchingThreads = false;
   }
 
   /// Construct from data in link document.
   EmailSessionDoc.fromLinkDocument(Document doc) {
-    visibleLabels =
-        _fromJson(JSON.decode(doc.properties[visibleLabelsProp]?.stringValue));
+    visibleLabels = _labelsFromJson(
+        JSON.decode(doc.properties[visibleLabelsProp]?.stringValue));
     focusedLabelId = doc.properties[focusedLabelIdProp]?.stringValue;
+    visibleThreads = _threadsFromJson(
+        JSON.decode(doc.properties[visibleThreadsProp]?.stringValue));
     focusedThreadId = doc.properties[focusedThreadIdProp]?.stringValue;
     fetchingLabels = _readBool(doc, fetchingLabelsProp);
     fetchingThreads = _readBool(doc, fetchingThreadsProp);
@@ -107,13 +120,15 @@ class EmailSessionDoc {
     link.setAllDocuments(<String, Document>{
       docid: new Document.init(docid, <String, Value>{
         visibleLabelsProp: visibleLabels != null
-            ? (new Value()..stringValue = JSON.encode(_toJson(visibleLabels)))
-            : null,
-        focusedLabelId: focusedLabelId != null
-            ? (new Value()..stringValue = focusedLabelId)
+            ? (new Value()
+              ..stringValue = JSON.encode(_labelsToJson(visibleLabels)))
             : null,
         focusedLabelIdProp: focusedLabelId != null
             ? (new Value()..stringValue = focusedLabelId)
+            : null,
+        visibleThreadsProp: visibleThreads != null
+            ? (new Value()
+              ..stringValue = JSON.encode(_threadsToJson(visibleThreads)))
             : null,
         focusedThreadIdProp: focusedThreadId != null
             ? (new Value()..stringValue = focusedThreadId)
@@ -132,7 +147,7 @@ class EmailSessionDoc {
   }
 }
 
-List<Label> _fromJson(Map<String, List<Map<String, String>>> json) {
+List<Label> _labelsFromJson(Map<String, List<Map<String, String>>> json) {
   List<Label> labels = <Label>[];
 
   if (json.containsKey('labels')) {
@@ -145,12 +160,38 @@ List<Label> _fromJson(Map<String, List<Map<String, String>>> json) {
 }
 
 /// Convert the collection into a JSON object.
-Map<String, List<Map<String, String>>> _toJson(List<Label> labels) {
+Map<String, List<Map<String, String>>> _labelsToJson(List<Label> labels) {
   Map<String, List<Map<String, String>>> json =
       new Map<String, List<Map<String, String>>>();
 
   if (labels != null) {
     json['labels'] = labels.map((Label label) {
+      return label.toJson();
+    }).toList();
+  }
+
+  return json;
+}
+
+List<Thread> _threadsFromJson(Map<String, List<Map<String, String>>> json) {
+  List<Thread> threads = <Thread>[];
+
+  if (json.containsKey('threads')) {
+    json['threads'].forEach((Map<String, String> value) {
+      threads.add(new Thread.fromJson(value));
+    });
+  }
+
+  return threads;
+}
+
+/// Convert the collection into a JSON object.
+Map<String, List<Map<String, String>>> _threadsToJson(List<Thread> labels) {
+  Map<String, List<Map<String, String>>> json =
+      new Map<String, List<Map<String, String>>>();
+
+  if (labels != null) {
+    json['threads'] = labels.map((Thread label) {
       return label.toJson();
     }).toList();
   }

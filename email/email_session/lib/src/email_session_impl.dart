@@ -10,6 +10,7 @@ import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modules.email.email_service/email.fidl.dart' as service;
 import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
 import 'package:lib.fidl.dart/bindings.dart';
+import 'package:models/email.dart';
 
 import 'email_session_doc.dart';
 
@@ -50,15 +51,19 @@ class EmailSessionImpl extends es.EmailSession {
   }
 
   @override
-  void focusLabel(String folderId) {
-    _log('focusLabel($folderId)');
+  void focusLabel(String labelId) {
+    _log('focusLabel($labelId)');
     // TODO(alangardner): Verify the label exists before setting this
-    _doc.focusedLabelId = folderId;
+    _doc.focusedLabelId = labelId;
 
     // TODO(youngseokyoon): make a call to email_service here to fetch relevant
     // threads. For now, just fake it with a timer.
     _doc.fetchingThreads = true;
-    new Timer(new Duration(seconds: 3), () {
+
+    new Timer(new Duration(milliseconds: 300), () {
+      Label currentLabel = _doc.visibleLabels
+          .firstWhere((Label l) => l.id == _doc.focusedLabelId);
+      _doc.visibleThreads = mockThreads(currentLabel.unread);
       _doc.fetchingThreads = false;
       _update();
     });
