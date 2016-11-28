@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flux/email.dart';
 import 'package:models/email.dart';
 
+import 'gallery/embedded_child_builders.dart';
 import 'gallery/home.dart';
 import 'routes.dart';
 
 void main() {
+  addEmbeddedChildBuilders();
   runApp(new App());
 }
 

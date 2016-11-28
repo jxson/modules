@@ -21,3 +21,5 @@ export 'src/email/thread_list_item_single_line.dart';
 export 'src/email/thread_participant_list.dart';
 export 'src/email/thread_view.dart';
 export 'src/email/type_defs.dart';
+
+export 'common.dart';

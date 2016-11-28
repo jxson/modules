@@ -37,6 +37,18 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.0"
+  config:
+    description:
+      path: "../packages/config"
+      relative: true
+    source: path
+    version: "0.0.0"
+  config_flutter:
+    description:
+      path: "../packages/config_flutter"
+      relative: true
+    source: path
+    version: "0.0.1"
   convert:
     description:
       name: convert
@@ -52,6 +64,12 @@ packages:
   email_api:
     description:
       path: "../packages/email_api"
+      relative: true
+    source: path
+    version: "0.0.0"
+  email_session_store:
+    description:
+      path: "../packages/email_session_store"
       relative: true
     source: path
     version: "0.0.0"
