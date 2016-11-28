@@ -111,9 +111,6 @@ class ModuleImpl extends Module {
       incomingServices: emailSessionProvider.ctrl.request(),
     );
 
-    // TODO(youngseokyoon): start email_session here, and only pass the
-    // email services to the email_session, but not to the other UI modules.
-
     InterfaceHandle<ViewOwner> navViewOwner = startModule(
       url: _kEmailNavUrl,
       outgoingServices: duplicateServiceProvider(emailSessionProvider),
