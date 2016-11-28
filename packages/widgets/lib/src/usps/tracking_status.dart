@@ -14,6 +14,10 @@ final String _kApiBaseUrl = 'production.shippingapis.com';
 
 final String _kApiRestOfUrl = 'ShippingApi.dll';
 
+const TextStyle _entryTextStyle = const TextStyle(
+  fontSize: 12.0,
+);
+
 /// Callback function signature for selecting a location to focus on
 typedef void LocationSelectCallback(String location);
 
@@ -60,6 +64,8 @@ class _TrackingStatusState extends State<TrackingStatus> {
   /// Tracking Entries retrieved from the USPS API
   List<TrackingEntry> _trackingEntries;
 
+  TrackingEntry _selectedEntry;
+
   /// Loading State for Tracking Data
   LoadingState _loadingState = LoadingState.inProgress;
 
@@ -91,6 +97,13 @@ class _TrackingStatusState extends State<TrackingStatus> {
     }
   }
 
+  void _handleEntrySelect(TrackingEntry entry) {
+    setState(() {
+      _selectedEntry = entry;
+    });
+    config.onLocationSelect?.call(entry.fullLocation);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -102,7 +115,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
           } else {
             _loadingState = LoadingState.completed;
             _trackingEntries = entries;
-            config.onLocationSelect?.call(entries.first?.fullLocation);
+            _handleEntrySelect(entries.first);
           }
         });
       }
@@ -116,43 +129,61 @@ class _TrackingStatusState extends State<TrackingStatus> {
   }
 
   Widget _buildTrackingEntry(TrackingEntry entry) {
-    return new InkWell(
-      onTap: () {
-        config.onLocationSelect?.call(entry.fullLocation);
-      },
-      child: new Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24.0,
-          vertical: 12.0,
-        ),
-        child: new Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            new Flexible(
-              flex: 2,
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Text(entry.date),
-                  new Text(entry.time),
-                ],
+    return new Material(
+      color: entry == _selectedEntry ? Colors.grey[200] : Colors.white,
+      child: new InkWell(
+        onTap: () {
+          _handleEntrySelect(entry);
+        },
+        child: new Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24.0,
+            vertical: 12.0,
+          ),
+          child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Flexible(
+                flex: 2,
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Text(
+                      entry.date,
+                      style: _entryTextStyle,
+                    ),
+                    new Text(
+                      entry.time,
+                      style: _entryTextStyle,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            new Flexible(
-              flex: 2,
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Text(entry.city),
-                  new Text('${entry.state}, ${entry.zipCode}'),
-                ],
+              new Flexible(
+                flex: 2,
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Text(
+                      entry.city,
+                      style: _entryTextStyle,
+                    ),
+                    new Text(
+                      '${entry.state}, ${entry.zipCode}',
+                      style: _entryTextStyle,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            new Flexible(
-              flex: 3,
-              child: new Text(entry.entryDetails),
-            ),
-          ],
+              new Flexible(
+                flex: 3,
+                child: new Text(
+                  entry.entryDetails,
+                  style: _entryTextStyle,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
