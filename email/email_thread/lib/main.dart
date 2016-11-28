@@ -75,15 +75,12 @@ void _addEmbeddedChildBuilders() {
         }),
       });
 
-      InterfacePair<Link> dupLink = new InterfacePair<Link>();
-      link.dup(dupLink.passRequest());
-
       ModuleControllerProxy moduleController = new ModuleControllerProxy();
       InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
 
       _module.story.startModule(
         kUSPSModuleUrl,
-        dupLink.passHandle(),
+        link.ctrl.unbind(),
         null,
         null,
         moduleController.ctrl.request(),
@@ -97,7 +94,6 @@ void _addEmbeddedChildBuilders() {
         widgetBuilder: (_) => new ChildView(connection: conn),
         disposer: () {
           moduleController.stop(() {
-            link.ctrl.close();
             viewOwner.close();
             // NOTE(youngseokyoon): Not sure if it is safe to close the module
             // controller within a callback passed to module controller, so do
