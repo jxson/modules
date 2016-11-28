@@ -81,7 +81,7 @@ class ThreadParticipantList extends StatelessWidget {
         children: participantTextSpanList,
       ),
       softWrap: false,
-      overflow: TextOverflow.ellipsis,
+      overflow: TextOverflow.fade,
     );
 
     // Only show message count if thread has more than 1 message
@@ -95,12 +95,15 @@ class ThreadParticipantList extends StatelessWidget {
           ),
           new LayoutId(
             id: 'messageCount',
-            child: new Text(
-              ' ${participantTextSpanList.length}',
-              style: new TextStyle(
-                fontSize: 14.0,
-                height: _kFontHeight,
-                color: Colors.grey[500],
+            child: new Container(
+              margin: const EdgeInsets.only(left: 4.0),
+              child: new Text(
+                ' ${participantTextSpanList.length}',
+                style: new TextStyle(
+                  fontSize: 14.0,
+                  height: _kFontHeight,
+                  color: Colors.grey[500],
+                ),
               ),
             ),
           ),
