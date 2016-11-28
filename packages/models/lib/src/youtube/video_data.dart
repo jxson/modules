@@ -44,7 +44,8 @@ class VideoData {
   factory VideoData.fromJson(dynamic json) {
     // Check for ID and Snippet
     assert(json['id'] != null);
-    assert(json['id']['videoId'] != null);
+    assert(json['id'] is String ||
+        json['id'] is Map<String, dynamic> && json['id']['videoId'] is String);
     assert(json['snippet'] != null);
 
     int viewCount;
@@ -58,7 +59,7 @@ class VideoData {
     }
 
     return new VideoData(
-      id: json['id']['videoId'],
+      id: json['id'] is String ? json['id'] : json['id']['videoId'],
       title: json['snippet']['title'],
       description: json['snippet']['description'],
       publishedAt: DateTime.parse(json['snippet']['publishedAt']),
