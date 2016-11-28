@@ -7,10 +7,7 @@ import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
-import 'package:apps.modular.services.story/module_controller.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
-import 'package:apps.mozart.lib.flutter/child_view.dart';
-import 'package:apps.mozart.services.views/view_token.fidl.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 import 'package:widgets/music.dart';
@@ -25,7 +22,7 @@ final String _kMusicAlbumIdKey = 'music-album-id';
 // The album id
 // TODO(dayang): this is hardcoded for now, ideally whoever launches this story
 // should set the album id
-final String _albumId = 'p336IIjZCl8';
+String _albumId = 'p336IIjZCl8';
 
 ModuleImpl _module;
 
