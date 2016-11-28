@@ -3,173 +3,115 @@
 // found in the LICENSE file.
 import 'dart:convert';
 
+import 'package:fixtures/fixtures.dart';
 import 'package:models/email.dart';
+import 'package:models/user.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test(
-      'getSubject() should return message of the first subject in the'
-      'thread', () {
-    Thread thread = new Thread(
-      id: '1',
-      messages: <Message>[
-        new Message(
-          sender: new Mailbox(
-            address: 'cocoyang@cu.te',
-            displayName: 'Coco Yang',
-          ),
-          recipientList: <Mailbox>[
-            new Mailbox(
-              address: 'david@ya.ng',
-              displayName: 'David Yang',
-            )
-          ],
-          subject: 'Feed Me!!!',
-          text: "Woof Woof. I'm so hungry. You need to feed me!",
-          timestamp: new DateTime.now(),
-          isRead: true,
-        ),
-        new Message(
-          sender: new Mailbox(
-            address: 'cocoyang@cu.te',
-            displayName: 'Coco Yang',
-          ),
-          recipientList: <Mailbox>[
-            new Mailbox(
-              address: 'david@ya.ng',
-              displayName: 'David Yang',
-            )
-          ],
-          subject: 'PLEAZE Feed Me!!!',
-          text: "Woof Woof. I'm so hungry. You need to feed me!",
-          timestamp: new DateTime.now(),
-          isRead: true,
-        ),
-      ],
-    );
-    expect(thread.getSubject(), 'Feed Me!!!');
-  });
+  Fixtures fixtures = new Fixtures();
 
-  test(
-      'getSubject() should default to (No Subject) if subject is null'
-      'for first message of thread', () {
-    Thread thread = new Thread(
-      id: '1',
-      messages: <Message>[
-        new Message(
-          sender: new Mailbox(
-            address: 'cocoyang@cu.te',
-            displayName: 'Coco Yang',
-          ),
-          recipientList: <Mailbox>[
-            new Mailbox(
-              address: 'david@ya.ng',
-              displayName: 'David Yang',
-            )
-          ],
-          subject: null,
-          text: "Woof Woof. I'm so hungry. You need to feed me!",
-          timestamp: new DateTime.now(),
-          isRead: true,
-        ),
-      ],
-    );
-    expect(thread.getSubject(), '(No Subject)');
-  });
+  group('thread.getSubject()', () {
+    User sender = fixtures.user(name: 'Coco Yang');
+    List<User> to = <User>[fixtures.user(name: 'David Yang')];
 
-  test(
-      'getSubject() should default to (No Subject) if subject is a empty string'
-      'for first message of thread', () {
-    Thread thread = new Thread(
-      id: '1',
-      messages: <Message>[
-        new Message(
-          sender: new Mailbox(
-            address: 'cocoyang@cu.te',
-            displayName: 'Coco Yang',
-          ),
-          recipientList: <Mailbox>[
-            new Mailbox(
-              address: 'david@ya.ng',
-              displayName: 'David Yang',
-            )
-          ],
-          subject: '',
-          text: "Woof Woof. I'm so hungry. You need to feed me!",
-          timestamp: new DateTime.now(),
-          isRead: true,
-        ),
-      ],
-    );
-    expect(thread.getSubject(), '(No Subject)');
-  });
+    test('populated message subject', () {
+      Thread thread = fixtures.thread(<Message>[
+        fixtures.message(
+            sender: sender,
+            to: to,
+            subject: 'Feed Me!!!',
+            text: 'Woof Woof. I\'m so hungry. You need to feed me!'),
+        fixtures.message(
+            sender: sender,
+            to: to,
+            subject: 'PLEAZE Feed Me!!!',
+            text: 'Woof Woof. I\'m so hungry. You need to feed me!'),
+      ]);
 
-  test('thread.toJson()', () {
-    int ms = new DateTime.now().millisecondsSinceEpoch;
-    DateTime timestamp = new DateTime.fromMillisecondsSinceEpoch(ms);
-    Thread thread = new Thread(
-      id: '1',
-      messages: <Message>[
-        new Message(
-            sender: new Mailbox(
-              address: 'cocoyang@cu.te',
-              displayName: 'Coco Yang',
-            ),
-            recipientList: <Mailbox>[
-              new Mailbox(
-                address: 'david@ya.ng',
-                displayName: 'David Yang',
-              )
-            ],
-            ccList: <Mailbox>[
-              new Mailbox(
-                address: 'jason@example.org',
-                displayName: 'Jason',
-              )
-            ],
+      expect(thread.getSubject(), 'Feed Me!!!');
+    });
+
+    test('null message subject', () {
+      Thread thread = fixtures.thread(<Message>[
+        fixtures.message(
+            sender: sender,
+            to: to,
             subject: null,
-            text: "Woof Woof. I'm so hungry. You need to feed me!",
-            timestamp: timestamp,
-            isRead: true,
-            attachments: <Attachment>[
-              new Attachment(
-                id: 'foo',
-                value: 'bar',
-                type: AttachmentType.youtubeVideo,
-              )
-            ]),
-      ],
-    );
+            text: 'Woof Woof. I\'m so hungry. You need to feed me!'),
+      ]);
 
-    String payload = JSON.encode(thread);
-    Map<String, dynamic> json = JSON.decode(payload);
-    Thread hydrated = new Thread.fromJson(json);
+      expect(thread.getSubject(), '(No Subject)');
+    });
 
-    expect(hydrated.id, equals(thread.id));
-    expect(hydrated.snippet, equals(thread.snippet));
-    expect(hydrated.historyId, equals(thread.historyId));
+    test('empty message subject', () {
+      Thread thread = fixtures.thread(<Message>[
+        fixtures.message(
+            sender: sender,
+            to: to,
+            subject: '',
+            text: 'Woof Woof. I\'m so hungry. You need to feed me!'),
+      ]);
 
-    Message message = hydrated.messages[0];
-    expect(message, isNotNull);
-    expect(message.sender.displayName, equals('Coco Yang'));
-    expect(message.sender.address, equals('cocoyang@cu.te'));
-    expect(
-        message.text, equals("Woof Woof. I'm so hungry. You need to feed me!"));
-    expect(message.timestamp, equals(timestamp));
-    expect(message.isRead, isTrue);
+      expect(thread.getSubject(), '(No Subject)');
+    });
+  });
 
-    Attachment attachment = message.attachments[0];
-    expect(attachment, isNotNull);
-    expect(attachment.type, equals(AttachmentType.youtubeVideo));
+  group('JSON encode/decode', () {
+    Fixtures fixtures = new Fixtures();
 
-    Mailbox to = message.recipientList[0];
-    expect(to, isNotNull);
-    expect(to.displayName, equals('David Yang'));
-    expect(to.address, equals('david@ya.ng'));
+    test('message with attachments', () {
+      int ms = new DateTime.now().millisecondsSinceEpoch;
+      DateTime timestamp = new DateTime.fromMillisecondsSinceEpoch(ms);
+      User coco = fixtures.user(name: 'Coco Yang');
+      User david = fixtures.user(name: 'David Yang');
+      User jason = fixtures.user(name: 'Jason C');
+      Thread thread = fixtures.thread(<Message>[
+        fixtures.message(
+          sender: coco,
+          to: <User>[david],
+          cc: <User>[jason],
+          text: "Woof Woof. I'm so hungry. You need to feed me!",
+          timestamp: timestamp,
+          isRead: true,
+          attachments: <Attachment>[
+            fixtures.attachment(
+              type: AttachmentType.youtubeVideo,
+            ),
+          ],
+        ),
+      ]);
 
-    Mailbox cc = message.ccList[0];
-    expect(cc, isNotNull);
-    expect(cc.displayName, equals('Jason'));
-    expect(cc.address, equals('jason@example.org'));
+      String payload = JSON.encode(thread);
+      Map<String, dynamic> json = JSON.decode(payload);
+      Thread hydrated = new Thread.fromJson(json);
+
+      expect(hydrated.id, equals(thread.id));
+      expect(hydrated.snippet, equals(thread.snippet));
+      expect(hydrated.historyId, equals(thread.historyId));
+
+      Message message = hydrated.messages[0];
+      expect(message, isNotNull);
+      expect(message.sender.displayName, equals(coco.name));
+      expect(message.sender.address, equals(coco.email));
+      expect(message.text,
+          equals("Woof Woof. I'm so hungry. You need to feed me!"));
+      expect(message.timestamp, equals(timestamp));
+      expect(message.isRead, isTrue);
+
+      Attachment attachment = message.attachments[0];
+      expect(attachment, isNotNull);
+      expect(attachment.type, equals(AttachmentType.youtubeVideo));
+
+      Mailbox to = message.recipientList[0];
+      expect(to, isNotNull);
+      expect(to.displayName, equals(david.name));
+      expect(to.address, equals(david.email));
+
+      Mailbox cc = message.ccList[0];
+      expect(cc, isNotNull);
+      expect(cc.displayName, equals(jason.name));
+      expect(cc.address, equals(jason.email));
+    });
   });
 }

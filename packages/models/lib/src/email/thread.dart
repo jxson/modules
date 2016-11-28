@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 import 'package:quiver/core.dart' as quiver;
 
 import 'message.dart';
@@ -30,7 +31,7 @@ class Thread {
     this.id,
     this.snippet,
     this.historyId,
-    List<Message> messages,
+    @required List<Message> messages,
   })
       : messages = new List<Message>.unmodifiable(messages);
 

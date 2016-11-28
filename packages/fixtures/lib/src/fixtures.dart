@@ -196,4 +196,89 @@ class Fixtures {
       ),
     ];
   }
+
+  /// Generate [Attachement] objects.
+  Attachment attachment({
+    String id,
+    AttachmentType type,
+    String value,
+  }) {
+    int seq = _sequence('attachement');
+    id ??= 'attachement-$seq';
+
+    switch (type) {
+      case AttachmentType.youtubeVideo:
+        value ??= '0pfUC55a3Jc';
+        break;
+      case AttachmentType.uspsShipping:
+        value ??= '9374889676090175041871';
+        break;
+    }
+
+    return new Attachment(
+      id: id,
+      value: value ?? 'example-value',
+      type: type ?? AttachmentType.youtubeVideo,
+    );
+  }
+
+  /// Generate a [Message].
+  Message message({
+    User sender,
+    String subject,
+    String text,
+    bool isRead,
+    List<User> to,
+    List<User> cc,
+    DateTime timestamp,
+    List<Attachment> attachments,
+  }) {
+    sender ??= user();
+
+    if (to == null || to.isEmpty) {
+      to = <User>[user()];
+    }
+
+    return new Message(
+      id: id('message'),
+      sender: new Mailbox(
+        address: sender.email,
+        displayName: sender.name,
+      ),
+      senderProfileUrl: null,
+      recipientList: to?.map((User recipient) => recipient.mailbox)?.toList(),
+      ccList: cc?.map((User recipient) => recipient.mailbox)?.toList(),
+      subject: subject,
+      text: text,
+      timestamp: timestamp ?? new DateTime.now(),
+      isRead: isRead ?? false,
+      attachments: attachments,
+    );
+  }
+
+  /// Generate a [Thread].
+  Thread thread([List<Message> messages]) {
+    // TODO(jasoncampbell): randomize the number of messages once content can
+    // be generated.
+    messages ??= <Message>[
+      message(),
+    ];
+
+    return new Thread(
+      id: id('thread'),
+      historyId: id('history'),
+      snippet: 'Example snippet',
+      messages: messages,
+    );
+  }
+
+  /// Generates sequenced String ids based on key.
+  ///
+  ///     // The id value will be 'foo-1'
+  ///     String id = fixtures.id('foo');
+  ///
+  String id(String key) {
+    int seq = _sequence(key);
+    return '$key-$seq';
+  }
 }

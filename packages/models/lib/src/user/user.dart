@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:meta/meta.dart';
+import '../email/mailbox.dart';
 
 /// Represents a Google User Account
 /// Fields are based off the data from the Google Identity API:
@@ -28,6 +29,8 @@ class User {
 
   /// Location that user is associated with
   String locale;
+
+  Mailbox _mailbox;
 
   /// Constructor to create a new user
   User(
@@ -66,5 +69,14 @@ class User {
     json['picture'] = picture;
 
     return json;
+  }
+
+  Mailbox get mailbox {
+    _mailbox ??= new Mailbox(
+      displayName: name,
+      address: email,
+    );
+
+    return _mailbox;
   }
 }
