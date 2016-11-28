@@ -58,6 +58,8 @@ class ModuleImpl extends Module {
   }
 }
 
+ModuleImpl moduleImpl = new ModuleImpl();
+
 /// Main entry point to the color module.
 void main() {
   _log('Color module started with context: $_context');
@@ -66,7 +68,7 @@ void main() {
   _context.outgoingServices.addServiceForName(
     (InterfaceRequest<Module> request) {
       _log('Received binding request for Module');
-      new ModuleImpl().bind(request);
+      moduleImpl.bind(request);
     },
     Module.serviceName,
   );
