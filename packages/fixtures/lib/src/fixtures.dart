@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:models/email.dart';
 import 'package:models/user.dart';
 import 'package:uuid/uuid.dart';
 
@@ -141,5 +142,34 @@ class Fixtures {
         'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
     return new User(
         id: id, name: name, email: email, locale: 'en', picture: avatar);
+  }
+
+  List<Label> labels() {
+    return <Label>[
+      new Label(
+        id: 'INBOX',
+        name: 'Inbox',
+        unread: 10,
+        type: 'system',
+      ),
+      new Label(
+        id: 'STARRED',
+        name: 'Starred',
+        unread: 10,
+        type: 'system',
+      ),
+      new Label(
+        id: 'DRAFT',
+        name: 'Drafts',
+        unread: 10,
+        type: 'system',
+      ),
+      new Label(
+        id: 'TRASH',
+        name: 'Trash',
+        unread: 10,
+        type: 'system',
+      ),
+    ];
   }
 }
