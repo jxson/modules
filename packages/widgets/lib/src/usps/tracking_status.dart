@@ -102,7 +102,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
           } else {
             _loadingState = LoadingState.completed;
             _trackingEntries = entries;
-            config.onLocationSelect(entries.first?.fullLocation);
+            config.onLocationSelect?.call(entries.first?.fullLocation);
           }
         });
       }
@@ -118,7 +118,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
   Widget _buildTrackingEntry(TrackingEntry entry) {
     return new InkWell(
       onTap: () {
-        config.onLocationSelect(entry.fullLocation);
+        config.onLocationSelect?.call(entry.fullLocation);
       },
       child: new Container(
         padding: const EdgeInsets.symmetric(

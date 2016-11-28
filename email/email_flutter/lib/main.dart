@@ -9,6 +9,7 @@ import 'package:email_session_store/email_session_store_direct.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flux/flutter_flux.dart';
 
+import 'embedded_child_builders.dart';
 import 'quarterback.dart';
 
 Future<Null> main() async {
@@ -16,6 +17,7 @@ Future<Null> main() async {
   // This sets up a global variable that is accessible to all of the widgets.
   EmailSessionStoreDirect emailSessionStore = new EmailSessionStoreDirect();
   kEmailSessionStoreToken = new StoreToken(emailSessionStore);
+  await addEmbeddedChildBuilders();
   runApp(new _MyApp());
   await emailSessionStore.fetchInitialContentWithGmailApi();
 }

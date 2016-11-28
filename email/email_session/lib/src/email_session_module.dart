@@ -77,6 +77,11 @@ class EmailSessionModule extends Module {
   /// [EmailSession] service obtained from the incoming [ServiceProvider].
   final es.EmailSessionProxy _emailSessionService = new es.EmailSessionProxy();
 
+  /// [Story] service given by the framework.
+  ///
+  /// This can be used to spawn new sub-modules and control their lifecycles.
+  final StoryProxy story = new StoryProxy();
+
   /// [Link] for watching the[EmailSession] state.
   final LinkProxy _emailSessionLinkProxy = new LinkProxy();
 
@@ -105,6 +110,7 @@ class EmailSessionModule extends Module {
     InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('EmailSessionModuleInit::initialize call');
+    story.ctrl.bind(storyHandle);
     _incomingServices.ctrl.bind(incomingServicesHandle);
     connectToService(_incomingServices, _emailSessionService.ctrl);
     _emailSessionLinkProxy.ctrl.bind(linkHandle);
