@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:widgets/map.dart';
 import 'package:widgets/usps.dart';
 
 import '../src/config.dart';
@@ -25,9 +26,21 @@ void addEmbeddedChildBuilders() {
         );
       },
     );
+
+    String googleApiKey = kConfig.get('google_api_key');
+    kEmbeddedChildProvider.addEmbeddedChildBuilder('map', (dynamic args) {
+      return new EmbeddedChild(
+        widgetBuilder: (BuildContext context) => new StaticMap(
+              location: args,
+              apiKey: googleApiKey,
+            ),
+        // Flutter version doesn't need a specific disposer.
+        disposer: () {},
+      );
+    });
   } catch (e) {
     // TODO(youngseokyoon): use the config_flutter package instead for getting
-    // the 'usps_api_key' value.
+    // the api key values.
     // https://fuchsia.atlassian.net/browse/SO-140
     print('Warning: $e');
   }

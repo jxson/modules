@@ -48,8 +48,6 @@ String _trackingCode = '9374889676090175041871';
 /// The api key for the USPS tracking service
 String _apiKey;
 
-ChildViewConnection _conn;
-
 void _log(String msg) {
   print('[usps] $msg');
 }
@@ -119,34 +117,6 @@ class ModuleImpl extends Module {
     // We wont know the location until the USPS logic runs and fetches the
     // locations
     updateLocation('');
-
-    // Spawn the child.
-    _conn = new ChildViewConnection(startModule(url: _kMapModuleUrl));
-    _kHomeKey.currentState?.updateUI();
-  }
-
-  /// Start a module and return its [ViewOwner] handle.
-  InterfaceHandle<ViewOwner> startModule({
-    String url,
-    InterfaceHandle<ServiceProvider> outgoingServices,
-    InterfaceRequest<ServiceProvider> incomingServices,
-  }) {
-    InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
-    InterfacePair<ModuleController> moduleControllerPair =
-        new InterfacePair<ModuleController>();
-
-    _log('Starting sub-module: $url');
-    story.startModule(
-      url,
-      duplicateLink(),
-      outgoingServices,
-      incomingServices,
-      moduleControllerPair.passRequest(),
-      viewOwnerPair.passRequest(),
-    );
-    _log('Started sub-module: $url');
-
-    return viewOwnerPair.passHandle();
   }
 
   /// Update Document store with location
@@ -201,28 +171,17 @@ class HomeScreenState extends State<HomeScreen> {
         decoration: new BoxDecoration(
           backgroundColor: Colors.white,
         ),
-        child: new Column(
-          children: <Widget>[
-            new SizedBox(
-              height: 200.0,
-              width: 600.0,
-              child: _conn != null
-                  ? new ChildView(connection: _conn)
-                  : new CircularProgressIndicator(),
-            ),
-            new Flexible(
-              flex: 1,
-              child: _trackingCode != null && _apiKey != null
-                  ? new TrackingStatus(
-                      trackingCode: _trackingCode,
-                      apiKey: _apiKey,
-                      onLocationSelect: (String location) {
-                        _log('selecting location: $location');
-                        _module.updateLocation(location);
-                      })
-                  : new CircularProgressIndicator(),
-            ),
-          ],
+        child: new Container(
+          constraints: const BoxConstraints.expand(),
+          child: _trackingCode != null && _apiKey != null
+              ? new TrackingStatus(
+                  trackingCode: _trackingCode,
+                  apiKey: _apiKey,
+                  onLocationSelect: (String location) {
+                    _log('selecting location: $location');
+                    _module.updateLocation(location);
+                  })
+              : new CircularProgressIndicator(),
         ),
       ),
     );
@@ -262,10 +221,52 @@ void main() {
 
   _readAPIKey();
 
+  _addEmbeddedChildBuilders();
+
   runApp(new MaterialApp(
     title: 'USPS Tracking',
     home: new HomeScreen(key: _kHomeKey),
     theme: new ThemeData(primarySwatch: Colors.blue),
     debugShowCheckedModeBanner: false,
   ));
+}
+
+/// Adds all the [EmbeddedChildBuilder]s that this module supports.
+void _addEmbeddedChildBuilders() {
+  // USPS Tracking.
+  kEmbeddedChildProvider.addEmbeddedChildBuilder(
+    'map',
+    (dynamic args) {
+      // Initialize the sub-module.
+      ModuleControllerProxy moduleController = new ModuleControllerProxy();
+      InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
+
+      _module.story.startModule(
+        _kMapModuleUrl,
+        _module.duplicateLink(),
+        null,
+        null,
+        moduleController.ctrl.request(),
+        viewOwnerPair.passRequest(),
+      );
+
+      InterfaceHandle<ViewOwner> viewOwner = viewOwnerPair.passHandle();
+      ChildViewConnection conn = new ChildViewConnection(viewOwner);
+
+      return new EmbeddedChild(
+        widgetBuilder: (_) => new ChildView(connection: conn),
+        disposer: () {
+          moduleController.stop(() {
+            viewOwner.close();
+            // NOTE(youngseokyoon): Not sure if it is safe to close the module
+            // controller within a callback passed to module controller, so do
+            // it in the next idle cycle.
+            scheduleMicrotask(() {
+              moduleController.ctrl.close();
+            });
+          });
+        },
+      );
+    },
+  );
 }

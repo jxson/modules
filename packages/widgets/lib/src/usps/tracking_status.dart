@@ -10,6 +10,8 @@ import 'package:meta/meta.dart';
 import 'package:models/usps.dart';
 import 'package:xml/xml.dart' as xml;
 
+import '../common/embedded_child.dart';
+
 final String _kApiBaseUrl = 'production.shippingapis.com';
 
 final String _kApiRestOfUrl = 'ShippingApi.dll';
@@ -17,6 +19,8 @@ final String _kApiRestOfUrl = 'ShippingApi.dll';
 const TextStyle _entryTextStyle = const TextStyle(
   fontSize: 12.0,
 );
+
+const double _kMapHeight = 200.0;
 
 /// Callback function signature for selecting a location to focus on
 typedef void LocationSelectCallback(String location);
@@ -69,6 +73,8 @@ class _TrackingStatusState extends State<TrackingStatus> {
   /// Loading State for Tracking Data
   LoadingState _loadingState = LoadingState.inProgress;
 
+  EmbeddedChild _embeddedMap;
+
   /// Make request to USPS API to retrieve tracking data for given tracking code
   Future<List<TrackingEntry>> _getTrackingData() async {
     Map<String, String> params = <String, String>{};
@@ -107,6 +113,9 @@ class _TrackingStatusState extends State<TrackingStatus> {
   @override
   void initState() {
     super.initState();
+
+    _embeddedMap = kEmbeddedChildProvider.buildEmbeddedChild('map', '');
+
     _getTrackingData().then((List<TrackingEntry> entries) {
       if (mounted) {
         setState(() {
@@ -126,6 +135,12 @@ class _TrackingStatusState extends State<TrackingStatus> {
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _embeddedMap?.dispose();
+    super.dispose();
   }
 
   Widget _buildTrackingEntry(TrackingEntry entry) {
@@ -189,7 +204,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
     );
   }
 
-  Widget _buildTrackingEntryList() {
+  Widget _buildTrackingEntryList(BuildContext context) {
     TextStyle headerStyle = new TextStyle(
       color: Colors.white,
       fontSize: 16.0,
@@ -197,6 +212,10 @@ class _TrackingStatusState extends State<TrackingStatus> {
     );
 
     List<Widget> children = <Widget>[];
+    children.add(new SizedBox(
+      height: _kMapHeight,
+      child: _embeddedMap.widgetBuilder(context),
+    ));
     children.add(new Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 24.0,
@@ -258,7 +277,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
         );
         break;
       case LoadingState.completed:
-        entryList = _buildTrackingEntryList();
+        entryList = _buildTrackingEntryList(context);
         break;
       case LoadingState.failed:
         entryList = new Container(
