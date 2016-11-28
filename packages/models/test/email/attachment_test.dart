@@ -4,16 +4,16 @@
 
 import 'dart:convert';
 
+import 'package:fixtures/fixtures.dart';
 import 'package:models/email.dart';
 import 'package:test/test.dart';
 
 void main() {
+  Fixtures fixtures = new Fixtures();
+
   test('Attachment JSON encode/decode', () {
-    Attachment attachment = new Attachment(
-      id: 'foo',
-      value: 'bar',
-      type: AttachmentType.youtubeVideo,
-    );
+    Attachment attachment = fixtures.attachment();
+
     String encoded = JSON.encode(attachment);
     Map<String, dynamic> json = JSON.decode(encoded);
     Attachment hydrated = new Attachment.fromJson(json);
