@@ -34,11 +34,11 @@ class ModuleImpl extends Module {
   /// A [ServiceProvider] implementation for exposing [EmailSession] service.
   final ServiceProviderImpl _serviceProviderImpl = new ServiceProviderImpl();
 
-  /// A set for holding references to the created [EmailSessionImpl] instances.
-  final Set<EmailSessionImpl> _emailSessions = new Set<EmailSessionImpl>();
-
   /// [Link] for watching the[EmailSession] state.
   final LinkProxy emailSessionLinkProxy = new LinkProxy();
+
+  /// A [EmailSessionImpl] instance.
+  EmailSessionImpl _emailSessionImpl;
 
   /// Bind an [InterfaceRequest] for a [Module] interface to this object.
   void bind(InterfaceRequest<Module> request) {
@@ -61,15 +61,15 @@ class ModuleImpl extends Module {
 
     EmailSessionDoc sessionState = new EmailSessionDoc.withMockData();
 
+    _emailSessionImpl = new EmailSessionImpl(
+      emailSessionLinkProxy,
+      sessionState,
+    )..initialize(_incomingServices);
+
     _serviceProviderImpl.addServiceForName(
       (InterfaceRequest<es.EmailSession> request) {
         _log('Received binding request for EmailSession');
-        _emailSessions.add(new EmailSessionImpl(
-          emailSessionLinkProxy,
-          sessionState,
-        )
-          ..bind(request)
-          ..initialize(_incomingServices));
+        _emailSessionImpl.bind(request);
       },
       es.EmailSession.serviceName,
     );
@@ -83,7 +83,7 @@ class ModuleImpl extends Module {
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
     _incomingServices.ctrl.close();
-    _emailSessions.forEach((EmailSessionImpl e) => e.close());
+    _emailSessionImpl?.close();
     _serviceProviderImpl.close();
     emailSessionLinkProxy.ctrl.close();
     callback();
