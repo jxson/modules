@@ -4,17 +4,15 @@
 
 import 'dart:convert';
 
+import 'package:fixtures/fixtures.dart';
 import 'package:models/email.dart';
 import 'package:test/test.dart';
 
 void main() {
+  Fixtures fixtures = new Fixtures();
+
   test('Label JSON encode/decode', () {
-    Label label = new Label(
-      id: 'INBOX',
-      name: 'Inbox',
-      unread: 867,
-      type: 'system',
-    );
+    Label label = fixtures.label();
 
     String encoded = JSON.encode(label);
     Map<String, dynamic> json = JSON.decode(encoded);
