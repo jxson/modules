@@ -134,6 +134,8 @@ class ModuleImpl extends Module {
 
     // NOTE(youngseokyoon): Start this module ahead of time, even though it's
     // not used right away. This should be better for performance.
+    // TODO(youngseokyoon): Make grid module scrollable
+    // https://fuchsia.atlassian.net/browse/SO-141
     InterfaceHandle<ViewOwner> listGridViewOwner = startModule(
       url: _kEmailListGridUrl,
       outgoingServices: duplicateServiceProvider(emailSessionProvider),
@@ -220,35 +222,35 @@ class HomeScreenState extends State<HomeScreen> {
                 ? new ChildView(connection: _connNav)
                 : new Container(),
           ),
-          // TODO(youngseokyoon): Restore the FAB for switching modules once the
-          // hit-test problem is resolved.
-          //
-          // new Container(
-          //   alignment: FractionalOffset.topLeft,
-          //   padding: const EdgeInsets.all(10.0),
-          //   child: new FloatingActionButton(
-          //     elevation: 0,
-          //     child: new Icon(_grid ? Icons.list : Icons.grid_on),
-          //     onPressed: () {
-          //       setState(() {
-          //         _grid = !_grid;
-          //       });
-          //     },
-          //   ),
-          // ),
+          new Container(
+            padding: new EdgeInsets.all(10.0),
+            child: new Align(
+              alignment: FractionalOffset.bottomLeft,
+              child: new FloatingActionButton(
+                child: new Icon(_grid ? Icons.list : Icons.grid_on),
+                onPressed: () {
+                  setState(() {
+                    _grid = !_grid;
+                  });
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );
 
-    // TODO(youngseokyoon): Restore the elevation and margins once the hit-test
-    // problem is resolved.
     ChildViewConnection connList = _grid ? _connListGrid : _connList;
     Widget list = new Flexible(
       flex: 3,
       child: new Container(
-        child: _connList != null
-            ? new ChildView(connection: connList)
-            : new Container(),
+        padding: new EdgeInsets.symmetric(horizontal: 4.0),
+        child: new Material(
+          elevation: 2,
+          child: _connList != null
+              ? new ChildView(connection: connList)
+              : new Container(),
+        ),
       ),
     );
 
