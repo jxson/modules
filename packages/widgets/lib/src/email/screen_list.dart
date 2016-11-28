@@ -115,7 +115,8 @@ class EmailListScreen extends StoreWatcher {
         children: threadListItems,
       );
     } else {
-      threadList = new Block(children: threadListItems);
+      threadList = new LazyBlock(
+          delegate: new LazyBlockChildren(children: threadListItems));
     }
 
     // TODO(dayang): Use theme data
