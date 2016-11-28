@@ -74,13 +74,8 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
           orElse: () => null,
         );
 
-  // TODO(alangardner): Implement. This is only a mock.
   @override
-  List<Thread> get visibleThreads => <Thread>[
-        new MockThread(id: '1'),
-        new MockThread(id: '2'),
-        new MockThread(id: '3'),
-      ];
+  List<Thread> get visibleThreads => _doc?.visibleThreads ?? <Thread>[];
 
   @override
   Thread get focusedThread => _doc?.focusedThreadId == null
