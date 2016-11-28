@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:math';
+
+import 'package:models/email.dart';
 import 'package:models/user.dart';
 import 'package:uuid/uuid.dart';
 
@@ -32,6 +35,7 @@ class FixturesError extends StateError {
 class Fixtures {
   final Set<String> _names = new Set<String>();
   final Map<String, Sequence> _sequences = new Map<String, Sequence>();
+  final Random _rng = new Random();
   static final String _uuidUser =
       _uuid.v5(Uuid.NAMESPACE_URL, namespace('users'));
 
@@ -141,5 +145,55 @@ class Fixtures {
         'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
     return new User(
         id: id, name: name, email: email, locale: 'en', picture: avatar);
+  }
+
+  /// Genrate a random [int] no greater than [max].
+  int number([int max]) {
+    return _rng.nextInt(max);
+  }
+
+  /// Create a random [Label].
+  Label label({
+    String id,
+    String name,
+    int unread,
+    String type,
+  }) {
+    return new Label(
+      id: id ?? 'INBOX',
+      name: name ?? 'Inbox',
+      unread: unread ?? number(800),
+      type: type ?? 'system',
+    );
+  }
+
+  /// Create a [List] of [Label] objects for use in testing and demos.
+  List<Label> labels() {
+    return <Label>[
+      new Label(
+        id: 'INBOX',
+        name: 'Inbox',
+        unread: number(20),
+        type: 'system',
+      ),
+      new Label(
+        id: 'STARRED',
+        name: 'Starred',
+        unread: number(100),
+        type: 'system',
+      ),
+      new Label(
+        id: 'DRAFT',
+        name: 'Drafts',
+        unread: number(5),
+        type: 'system',
+      ),
+      new Label(
+        id: 'TRASH',
+        name: 'Trash',
+        unread: number(200),
+        type: 'system',
+      ),
+    ];
   }
 }
