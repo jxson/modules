@@ -8,13 +8,13 @@ import 'dart:convert' show JSON;
 import 'package:flutter/http.dart' as http;
 import 'package:models/music.dart';
 
-const String _kApiBaseUrl = 'api.spotify.com';
+const String _kApiBaseUrl = '104.196.239.187:443';
 
 /// Client to retrieve data for Music
 class MusicClient {
   /// Retrieves given artist based on id
   static Future<Artist> getArtistById(String id) async {
-    Uri uri = new Uri.https(_kApiBaseUrl, '/v1/artists/$id');
+    Uri uri = new Uri.http(_kApiBaseUrl, '/v1/artists/$id');
     http.Response response = await http.get(uri);
     if (response.statusCode != 200) {
       return null;
@@ -24,7 +24,7 @@ class MusicClient {
 
   /// Retieves related artists for given artist id
   static Future<List<Artist>> getRelatedArtists(String id) async {
-    Uri uri = new Uri.https(_kApiBaseUrl, '/v1/artists/$id/related-artists');
+    Uri uri = new Uri.http(_kApiBaseUrl, '/v1/artists/$id/related-artists');
     http.Response response = await http.get(uri);
     if (response.statusCode != 200) {
       return null;
@@ -41,7 +41,7 @@ class MusicClient {
 
   /// Retrieves the given album based on id
   static Future<Album> getAlbumById(String id) async {
-    Uri uri = new Uri.https(_kApiBaseUrl, '/v1/albums/$id');
+    Uri uri = new Uri.http(_kApiBaseUrl, '/v1/albums/$id');
     http.Response response = await http.get(uri);
     if (response.statusCode != 200) {
       return null;
@@ -51,7 +51,7 @@ class MusicClient {
 
   /// Retreives albums for given artist id
   static Future<List<Album>> getAlbumsForArtist(String id) async {
-    Uri uri = new Uri.https(_kApiBaseUrl, '/v1/artists/$id/albums ');
+    Uri uri = new Uri.http(_kApiBaseUrl, '/v1/artists/$id/albums ');
     http.Response response = await http.get(uri);
     if (response.statusCode != 200) {
       return null;

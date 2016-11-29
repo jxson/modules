@@ -22,7 +22,7 @@ final String _kMusicAlbumIdKey = 'music-album-id';
 // The album id
 // TODO(dayang): this is hardcoded for now, ideally whoever launches this story
 // should set the album id
-String _albumId = 'p336IIjZCl8';
+String _albumId = '7gsWAHLeT0w7es6FofOXk1';
 
 ModuleImpl _module;
 
@@ -48,7 +48,7 @@ class LinkWatcherImpl extends LinkWatcher {
 
     Document musicDoc = docs[_kMusicDocId];
     if (musicDoc == null || musicDoc.properties == null) {
-      _log('No youtube doc found.');
+      _log('No music doc found.');
       return;
     }
 
