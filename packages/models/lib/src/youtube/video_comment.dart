@@ -31,10 +31,20 @@ class VideoComment {
   /// Constructs [VideoComment] model from Youtube api json data
   factory VideoComment.fromJson(dynamic json) {
     dynamic topLevelSnippet = json['snippet']['topLevelComment']['snippet'];
+    // HACK(dayang): Removing non-ascii characters for fuchsia, should place
+    // back once Emojis are working
+    String authorDisplayName = topLevelSnippet['authorDisplayName'];
+    authorDisplayName.replaceAll(new RegExp('[^\\x00-\\x7F]'), '');
+    String text = topLevelSnippet['textDisplay'];
+    text.replaceAll(new RegExp('[^\\x00-\\x7F]'), '');
+    // HACK(dayang): Converted images from HTTPS to HTTP, should remove once
+    // SSL is working
+    String authorProfileImageUrl = topLevelSnippet['authorProfileImageUrl'];
+    authorProfileImageUrl = authorProfileImageUrl.replaceFirst('https', 'http');
     return new VideoComment(
-      authorDisplayName: topLevelSnippet['authorDisplayName'],
-      authorProfileImageUrl: topLevelSnippet['authorProfileImageUrl'],
-      text: topLevelSnippet['textDisplay'],
+      authorDisplayName: authorDisplayName,
+      authorProfileImageUrl: authorProfileImageUrl,
+      text: text,
       likeCount: topLevelSnippet['likeCount'],
       totalReplyCount: json['snippet']['totalReplyCount'],
     );

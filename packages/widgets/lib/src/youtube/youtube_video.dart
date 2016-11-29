@@ -40,15 +40,14 @@ class YoutubeVideo extends StatelessWidget {
           videoId: videoId,
           apiKey: apiKey,
         ),
-        // TODO(youngseokyoon): Restore these when https gets ready.
-        // new YoutubeVideoOverview(
-        //   videoId: videoId,
-        //   apiKey: apiKey,
-        // ),
-        // new YoutubeCommentsList(
-        //   videoId: videoId,
-        //   apiKey: apiKey,
-        // ),
+        new YoutubeVideoOverview(
+          videoId: videoId,
+          apiKey: apiKey,
+        ),
+        new YoutubeCommentsList(
+          videoId: videoId,
+          apiKey: apiKey,
+        ),
       ],
     );
   }

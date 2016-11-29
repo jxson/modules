@@ -120,11 +120,12 @@ class HomeScreenState extends State<HomeScreen> {
       constraints: const BoxConstraints.expand(),
       child: new Material(
         child: _videoId != null && _apiKey != null
-            ? new YoutubeRelatedVideos(
+            ? new ScrollableViewport(
+              child: new YoutubeRelatedVideos(
                 videoId: _videoId,
                 apiKey: _apiKey,
-              )
-            : new CircularProgressIndicator(),
+              ),
+            ): new CircularProgressIndicator(),
       ),
     );
   }
