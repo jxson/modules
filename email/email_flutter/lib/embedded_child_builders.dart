@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets/map.dart';
+import 'package:widgets/shopping.dart';
 import 'package:widgets/usps.dart';
 import 'package:widgets/youtube.dart';
 
@@ -61,4 +62,15 @@ Future<Null> addEmbeddedChildBuilders() async {
       },
     );
   }
+
+  kEmbeddedChildProvider.addEmbeddedChildBuilder(
+    'order-receipt',
+    (dynamic args) {
+      return new EmbeddedChild(
+        widgetBuilder: (BuildContext context) => new InteractiveReceipt(),
+        // Flutter version doesn't need a specific disposer.
+        disposer: () {},
+      );
+    },
+  );
 }

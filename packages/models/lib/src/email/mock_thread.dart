@@ -88,6 +88,29 @@ class MockThread extends Thread {
               ),
             ],
           ),
+          new Message(
+            id: 'm4',
+            sender: new Mailbox(
+              address: 'cocoyang@cu.te',
+              displayName: 'Coco Yang',
+            ),
+            recipientList: <Mailbox>[
+              new Mailbox(
+                address: 'david@ya.ng',
+                displayName: 'David Yang',
+              )
+            ],
+            senderProfileUrl: null, // _kCocoAvatarUrl,
+            subject: 'Pixel Phone',
+            text: 'http://www.aplusmobile.com/yourorder',
+            timestamp: new DateTime.now(),
+            isRead: false,
+            attachments: <Attachment>[
+              new Attachment(
+                type: AttachmentType.orderReceipt,
+              ),
+            ],
+          ),
         ]) {
     id = id ?? 'thread1';
   }

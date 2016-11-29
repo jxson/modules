@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:widgets/map.dart';
+import 'package:widgets/shopping.dart';
 import 'package:widgets/usps.dart';
 import 'package:widgets/youtube.dart';
 
@@ -50,6 +51,16 @@ void addEmbeddedChildBuilders() {
                 videoId: args,
                 apiKey: googleApiKey,
               ),
+          // Flutter version doesn't need a specific disposer.
+          disposer: () {},
+        );
+      },
+    );
+    kEmbeddedChildProvider.addEmbeddedChildBuilder(
+      'order-receipt',
+      (dynamic args) {
+        return new EmbeddedChild(
+          widgetBuilder: (BuildContext context) => new InteractiveReceipt(),
           // Flutter version doesn't need a specific disposer.
           disposer: () {},
         );

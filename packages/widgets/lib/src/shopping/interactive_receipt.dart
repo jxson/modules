@@ -33,11 +33,15 @@ const Duration _kSnackBarDisplayDuration = const Duration(milliseconds: 2500);
 ///
 /// Prices and Items are not meant to reflect the real world.
 class InteractiveReceipt extends StatefulWidget {
+  final bool useHttps;
+
   /// Constructor
   InteractiveReceipt({
     Key key,
+    bool useHttps,
   })
-      : super(key: key);
+      : useHttps = useHttps ?? true,
+        super(key: key);
 
   @override
   _InteractiveReceiptState createState() => new _InteractiveReceiptState();
@@ -254,7 +258,9 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         new _AnimatedPhoneImage(
-          imageUrl: imageUrl,
+          imageUrl: config.useHttps
+              ? imageUrl
+              : imageUrl.replaceFirst('https:', 'http:'),
           animation: _imageAnimation,
         ),
         new Flexible(
@@ -446,7 +452,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                   _buildMainItemCard(),
                 ]),
           ),
-          new AdditionalItems(),
+          new AdditionalItems(useHttps: config.useHttps),
         ],
       ),
     );

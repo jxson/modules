@@ -56,6 +56,14 @@ class _MessageContentState extends State<MessageContent> {
               ),
             );
             break;
+
+          case AttachmentType.orderReceipt:
+            embeddedChildren.add(
+              kEmbeddedChildProvider.buildEmbeddedChild(
+                'order-receipt',
+                null,
+              ),
+            );
         }
       } catch (e) {
         print('Error occurred while building embedded child for attachment '
