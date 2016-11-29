@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:widgets/map.dart';
 import 'package:widgets/usps.dart';
+import 'package:widgets/youtube.dart';
 
 import '../src/config.dart';
 
@@ -28,16 +29,32 @@ void addEmbeddedChildBuilders() {
     );
 
     String googleApiKey = kConfig.get('google_api_key');
-    kEmbeddedChildProvider.addEmbeddedChildBuilder('map', (dynamic args) {
-      return new EmbeddedChild(
-        widgetBuilder: (BuildContext context) => new StaticMap(
-              location: args,
-              apiKey: googleApiKey,
-            ),
-        // Flutter version doesn't need a specific disposer.
-        disposer: () {},
-      );
-    });
+    kEmbeddedChildProvider.addEmbeddedChildBuilder(
+      'map',
+      (dynamic args) {
+        return new EmbeddedChild(
+          widgetBuilder: (BuildContext context) => new StaticMap(
+                location: args,
+                apiKey: googleApiKey,
+              ),
+          // Flutter version doesn't need a specific disposer.
+          disposer: () {},
+        );
+      },
+    );
+    kEmbeddedChildProvider.addEmbeddedChildBuilder(
+      'youtube-video',
+      (dynamic args) {
+        return new EmbeddedChild(
+          widgetBuilder: (BuildContext context) => new YoutubeVideo(
+                videoId: args,
+                apiKey: googleApiKey,
+              ),
+          // Flutter version doesn't need a specific disposer.
+          disposer: () {},
+        );
+      },
+    );
   } catch (e) {
     // TODO(youngseokyoon): use the config_flutter package instead for getting
     // the api key values.
