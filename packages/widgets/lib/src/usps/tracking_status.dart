@@ -16,10 +16,6 @@ final String _kApiBaseUrl = 'production.shippingapis.com';
 
 final String _kApiRestOfUrl = 'ShippingApi.dll';
 
-const TextStyle _entryTextStyle = const TextStyle(
-  fontSize: 12.0,
-);
-
 const double _kMapHeight = 200.0;
 
 /// Callback function signature for selecting a location to focus on
@@ -107,7 +103,23 @@ class _TrackingStatusState extends State<TrackingStatus> {
     setState(() {
       _selectedEntry = entry;
     });
-    config.onLocationSelect?.call(entry.fullLocation);
+    config.onLocationSelect?.call(entry?.fullLocation);
+  }
+
+  // HACK(dayang): Assume the package to be delieverd if the phrase "delivered"
+  // is in the most recent entry, otherwise assume the package to be en route
+  String get _currentOverallStatus {
+    if(_trackingEntries.isEmpty) {
+      return 'Package En Route';
+    }
+
+    if (_trackingEntries.first.entryDetails
+        .toLowerCase()
+        .contains('delivered')) {
+      return 'Package Delievered';
+    } else {
+      return 'Package En Route';
+    }
   }
 
   @override
@@ -144,111 +156,114 @@ class _TrackingStatusState extends State<TrackingStatus> {
   }
 
   Widget _buildTrackingEntry(TrackingEntry entry) {
-    return new Material(
-      color: entry == _selectedEntry ? Colors.grey[200] : Colors.white,
-      child: new InkWell(
-        onTap: () {
-          _handleEntrySelect(entry);
-        },
-        child: new Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24.0,
-            vertical: 12.0,
-          ),
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Flexible(
-                flex: 2,
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    // HACK(dayang): Flutter border widths are not being respected so I make a
+    // background container with some padding on the left to emulate a border
+    return new Container(
+      padding: const EdgeInsets.only(left: 4.0),
+      decoration: new BoxDecoration(
+        backgroundColor:
+            entry == _selectedEntry ? Colors.indigo[500] : Colors.white,
+      ),
+      child: new Material(
+        color: Colors.white,
+        child: new InkWell(
+          onTap: () {
+            _handleEntrySelect(entry);
+          },
+          child: new Container(
+            padding: const EdgeInsets.only(
+              left: 20.0,
+              right: 24.0,
+              top: 16.0,
+              bottom: 16.0,
+            ),
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                new Row(
                   children: <Widget>[
-                    new Text(
-                      entry.date,
-                      style: _entryTextStyle,
+                    new Container(
+                      width: 110.0,
+                      child: new Text(
+                        entry.date,
+                        style: new TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 12.0,
+                        ),
+                      ),
                     ),
                     new Text(
                       entry.time,
-                      style: _entryTextStyle,
+                      style: new TextStyle(
+                        color: Colors.grey[700],
+                        fontSize: 12.0,
+                      ),
                     ),
                   ],
                 ),
-              ),
-              new Flexible(
-                flex: 2,
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new Text(
-                      entry.city,
-                      style: _entryTextStyle,
-                    ),
-                    new Text(
-                      '${entry.state}, ${entry.zipCode}',
-                      style: _entryTextStyle,
-                    ),
-                  ],
+                new Container(
+                  margin: const EdgeInsets.only(top: 8.0),
+                  child: new Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new Flexible(
+                        flex: 1,
+                        child: new Text(
+                          '${entry.city}, ${entry.state} ${entry.zipCode}',
+                        ),
+                      ),
+                      new Flexible(
+                        flex: 1,
+                        child: new Text(entry.entryDetails),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              new Flexible(
-                flex: 3,
-                child: new Text(
-                  entry.entryDetails,
-                  style: _entryTextStyle,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTrackingEntryList(BuildContext context) {
-    TextStyle headerStyle = new TextStyle(
-      color: Colors.white,
-      fontSize: 16.0,
-      fontWeight: FontWeight.w500,
+  Widget _buildHeader() {
+    return new Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 24.0,
+        vertical: 16.0,
+      ),
+      decoration: new BoxDecoration(
+        backgroundColor: Colors.indigo[500],
+      ),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          new Text(
+            _currentOverallStatus,
+            style: new TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+            ),
+          ),
+          new Image.network(
+            'http://uspsblog.com/wp-content/themes/postalposts/assets/img/icon-logo-transparent@2x.png',
+            height: 20.0,
+          ),
+        ],
+      ),
     );
+  }
 
+  Widget _buildTrackingEntryList(BuildContext context) {
     List<Widget> children = <Widget>[];
+
+    children.add(_buildHeader());
+
     children.add(new SizedBox(
       height: _kMapHeight,
       child: _embeddedMap.widgetBuilder(context),
-    ));
-    children.add(new Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24.0,
-        vertical: 12.0,
-      ),
-      decoration: new BoxDecoration(
-        backgroundColor: Colors.indigo[600],
-      ),
-      child: new Row(
-        children: <Widget>[
-          new Flexible(
-            flex: 2,
-            child: new Text(
-              'DATE/TIME',
-              style: headerStyle,
-            ),
-          ),
-          new Flexible(
-            flex: 2,
-            child: new Text(
-              'LOCATION',
-              style: headerStyle,
-            ),
-          ),
-          new Flexible(
-            flex: 3,
-            child: new Text(
-              'STATUS',
-              style: headerStyle,
-            ),
-          )
-        ],
-      ),
     ));
 
     _trackingEntries.forEach((TrackingEntry entry) {
