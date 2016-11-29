@@ -56,6 +56,12 @@ class MockThread extends Thread {
             text: 'Dude, same here. I\'m starving!',
             timestamp: new DateTime.now(),
             isRead: false,
+            attachments: <Attachment>[
+              new Attachment(
+                type: AttachmentType.youtubeVideo,
+                value: '0pfUC55a3Jc',
+              ),
+            ],
           ),
           new Message(
             id: 'm3',

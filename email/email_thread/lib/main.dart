@@ -55,23 +55,40 @@ void main() {
 
 /// Adds all the [EmbeddedChildBuilder]s that this module supports.
 void _addEmbeddedChildBuilders() {
+  _addEmbeddedChildBuilder(
+    'usps-shipping',
+    'file:///system/apps/usps',
+    'usps-doc',
+    'usps-tracking-key',
+  );
+
+  _addEmbeddedChildBuilder(
+    'youtube-video',
+    'file:///system/apps/youtube_video',
+    'youtube-doc',
+    'youtube-video-id',
+  );
+}
+
+void _addEmbeddedChildBuilder(
+  String type,
+  String moduleUrl,
+  String docId,
+  String propKey,
+) {
   // USPS Tracking.
   kEmbeddedChildProvider.addEmbeddedChildBuilder(
-    'usps-shipping',
+    type,
     (dynamic args) {
       // Initialize the sub-module.
-      const String kUSPSModuleUrl = 'file:///system/apps/usps';
-      const String kUspsDocId = 'usps-doc';
-      const String kUspsTrackingKey = 'usps-tracking-key';
 
       // Create a new link, add necessary data to it, and create a duplicate of
       // it to be passed to the sub-module.
       LinkProxy link = new LinkProxy();
-      _module.story.createLink('usps', link.ctrl.request());
+      _module.story.createLink(type, link.ctrl.request());
       link.addDocuments(<String, Document>{
-        kUspsDocId: new Document.init(kUspsDocId, <String, Value>{
-          // We assume that the 'args' contains the tracking number as String.
-          kUspsTrackingKey: new Value()..stringValue = args,
+        docId: new Document.init(docId, <String, Value>{
+          propKey: new Value()..stringValue = args,
         }),
       });
 
@@ -79,7 +96,7 @@ void _addEmbeddedChildBuilders() {
       InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
 
       _module.story.startModule(
-        kUSPSModuleUrl,
+        moduleUrl,
         link.ctrl.unbind(),
         null,
         null,

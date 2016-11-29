@@ -8,6 +8,7 @@ import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets/map.dart';
 import 'package:widgets/usps.dart';
+import 'package:widgets/youtube.dart';
 
 /// Adds all the [EmbeddedChildBuilder]s that this application supports.
 Future<Null> addEmbeddedChildBuilders() async {
@@ -32,15 +33,32 @@ Future<Null> addEmbeddedChildBuilders() async {
   }
 
   if (config.has('google_api_key')) {
-    kEmbeddedChildProvider.addEmbeddedChildBuilder('map', (dynamic args) {
-      return new EmbeddedChild(
-        widgetBuilder: (BuildContext context) => new StaticMap(
-              location: args,
-              apiKey: config.get('google_api_key'),
-            ),
-        // Flutter version doesn't need a specific disposer.
-        disposer: () {},
-      );
-    });
+    kEmbeddedChildProvider.addEmbeddedChildBuilder(
+      'map',
+      (dynamic args) {
+        return new EmbeddedChild(
+          widgetBuilder: (BuildContext context) => new StaticMap(
+                location: args,
+                apiKey: config.get('google_api_key'),
+              ),
+          // Flutter version doesn't need a specific disposer.
+          disposer: () {},
+        );
+      },
+    );
+
+    kEmbeddedChildProvider.addEmbeddedChildBuilder(
+      'youtube-video',
+      (dynamic args) {
+        return new EmbeddedChild(
+          widgetBuilder: (BuildContext context) => new YoutubeVideo(
+                apiKey: config.get('google_api_key'),
+                videoId: args,
+              ),
+          // Flutter version doesn't need a specific disposer.
+          disposer: () {},
+        );
+      },
+    );
   }
 }
