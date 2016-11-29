@@ -12,8 +12,15 @@ import 'package:flutter/material.dart';
 ///
 /// Prices and items are not meant to reflect the real world
 class AdditionalItems extends StatelessWidget {
+  final bool useHttps;
+
   /// Constructor
-  AdditionalItems({Key key}) : super(key: key);
+  AdditionalItems({
+    Key key,
+    bool useHttps,
+  })
+      : useHttps = useHttps ?? true,
+        super(key: key);
 
   Widget _buildItem({
     String name,
@@ -34,7 +41,7 @@ class AdditionalItems extends StatelessWidget {
               backgroundColor: Colors.grey[300],
             ),
             child: new Image.network(
-              imageUrl,
+              useHttps ? imageUrl : imageUrl.replaceFirst('https:', 'http:'),
             ),
           ),
           new Text(

@@ -12,6 +12,7 @@ group("email") {
     "//apps/modules/email/email_story",
     "//apps/modules/email/email_thread",
     "//apps/modules/email/interactive_receipt",
+    "//apps/modules/email/interactive_receipt_http",
     "//apps/modules/email/map",
     "//apps/modules/email/music_story",
     "//apps/modules/email/user_shell:email_user_shell",

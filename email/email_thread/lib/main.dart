@@ -56,26 +56,31 @@ void main() {
 /// Adds all the [EmbeddedChildBuilder]s that this module supports.
 void _addEmbeddedChildBuilders() {
   _addEmbeddedChildBuilder(
-    'usps-shipping',
-    'file:///system/apps/usps',
-    'usps-doc',
-    'usps-tracking-key',
+    type: 'usps-shipping',
+    moduleUrl: 'file:///system/apps/usps',
+    docId: 'usps-doc',
+    propKey: 'usps-tracking-key',
   );
 
   _addEmbeddedChildBuilder(
-    'youtube-video',
-    'file:///system/apps/youtube_video',
-    'youtube-doc',
-    'youtube-video-id',
+    type: 'youtube-video',
+    moduleUrl: 'file:///system/apps/youtube_video',
+    docId: 'youtube-doc',
+    propKey: 'youtube-video-id',
+  );
+
+  _addEmbeddedChildBuilder(
+    type: 'order-receipt',
+    moduleUrl: 'file:///system/apps/interactive_receipt_http',
   );
 }
 
-void _addEmbeddedChildBuilder(
+void _addEmbeddedChildBuilder({
   String type,
   String moduleUrl,
   String docId,
   String propKey,
-) {
+}) {
   // USPS Tracking.
   kEmbeddedChildProvider.addEmbeddedChildBuilder(
     type,
@@ -86,11 +91,14 @@ void _addEmbeddedChildBuilder(
       // it to be passed to the sub-module.
       LinkProxy link = new LinkProxy();
       _module.story.createLink(type, link.ctrl.request());
-      link.addDocuments(<String, Document>{
-        docId: new Document.init(docId, <String, Value>{
-          propKey: new Value()..stringValue = args,
-        }),
-      });
+
+      if (docId != null && propKey != null) {
+        link.addDocuments(<String, Document>{
+          docId: new Document.init(docId, <String, Value>{
+            propKey: new Value()..stringValue = args,
+          }),
+        });
+      }
 
       ModuleControllerProxy moduleController = new ModuleControllerProxy();
       InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
