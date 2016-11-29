@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:meta/meta.dart';
+
 import '../email/mailbox.dart';
 
 /// Represents a Google User Account

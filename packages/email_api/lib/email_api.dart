@@ -281,7 +281,9 @@ String _body(gmail.Message message) {
 List<Attachment> _attachments(List<Uri> links) {
   // TODO(jxson): SO-138 separate detection and extraction.
   return links.where((Uri link) {
-    return link.host == 'www.youtube.com' || link.host == 'tools.usps.com';
+    return link.host == 'www.youtube.com' ||
+        link.host == 'tools.usps.com' ||
+        link.host == 'www.aplusmobile.com';
   }).map((Uri link) {
     if (link.host == 'www.youtube.com' &&
         link.path == '/watch' &&
@@ -296,6 +298,12 @@ List<Attachment> _attachments(List<Uri> links) {
       return new Attachment(
         type: AttachmentType.uspsShipping,
         value: link.queryParameters['qtc_tLabels1'],
+      );
+    } else if (link.host == 'www.aplusmobile.com' &&
+        link.path == '/yourorder') {
+      return new Attachment(
+        type: AttachmentType.orderReceipt,
+        value: '',
       );
     }
   }).toList();
