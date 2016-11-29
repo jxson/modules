@@ -13,5 +13,6 @@ dart_package("fixtures") {
     "//apps/modules/packages/models",
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/uuid",
+    "//third_party/dart-pkg/pub/lorem",
   ]
 }

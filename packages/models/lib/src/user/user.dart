@@ -72,6 +72,7 @@ class User {
     return json;
   }
 
+  /// The [Mailbox] for this user.
   Mailbox get mailbox {
     _mailbox ??= new Mailbox(
       displayName: name,

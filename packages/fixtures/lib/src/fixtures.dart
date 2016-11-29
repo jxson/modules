@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 import 'package:uuid/uuid.dart';
+import 'package:lorem/lorem.dart';
 
 import 'name.dart';
 import 'namespace.dart';
@@ -33,9 +34,9 @@ class FixturesError extends StateError {
 /// The objects returned from [Fixtures] methods are not Stubs, or Mocks. They
 /// are actual instances of their return types.
 class Fixtures {
+  final Lorem _lorem = new Lorem();
   final Set<String> _names = new Set<String>();
   final Map<String, Sequence> _sequences = new Map<String, Sequence>();
-  final Random _rng = new Random();
   static final String _uuidUser =
       _uuid.v5(Uuid.NAMESPACE_URL, namespace('users'));
 
@@ -149,7 +150,8 @@ class Fixtures {
 
   /// Genrate a random [int] no greater than [max].
   int number([int max]) {
-    return _rng.nextInt(max);
+    Random rng = new Random();
+    return rng.nextInt(max);
   }
 
   /// Create a random [Label].
@@ -197,7 +199,7 @@ class Fixtures {
     ];
   }
 
-  /// Generate [Attachement] objects.
+  /// Generate [Attachment] objects.
   Attachment attachment({
     String id,
     AttachmentType type,
@@ -248,8 +250,8 @@ class Fixtures {
       senderProfileUrl: null,
       recipientList: to?.map((User recipient) => recipient.mailbox)?.toList(),
       ccList: cc?.map((User recipient) => recipient.mailbox)?.toList(),
-      subject: subject,
-      text: text,
+      subject: subject ?? _lorem.createSentence(),
+      text: _lorem.createText(),
       timestamp: timestamp ?? new DateTime.now(),
       isRead: isRead ?? false,
       attachments: attachments,
@@ -258,16 +260,15 @@ class Fixtures {
 
   /// Generate a [Thread].
   Thread thread([List<Message> messages]) {
-    // TODO(jasoncampbell): randomize the number of messages once content can
-    // be generated.
-    messages ??= <Message>[
-      message(),
-    ];
+    if (messages == null || messages.isEmpty) {
+      int count = number(12);
+      messages = new List<Message>.generate(count, (int index) => message());
+    }
 
     return new Thread(
       id: id('thread'),
       historyId: id('history'),
-      snippet: 'Example snippet',
+      snippet: _lorem.createSentence(),
       messages: messages,
     );
   }

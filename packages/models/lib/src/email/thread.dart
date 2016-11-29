@@ -50,10 +50,10 @@ class Thread {
   @override
   String toString() {
     return 'Thread('
-        'id: $id"'
-        'snippet: $snippet"'
-        'historyId: $historyId"'
-        'messages: $messages"'
+        'id: "$id"'
+        'snippet: "$snippet"'
+        'historyId: "$historyId"'
+        'messages: "$messages"'
         ')';
   }
 

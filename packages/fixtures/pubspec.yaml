@@ -8,5 +8,6 @@ dependencies:
   models:
     path: ../models
   uuid: 0.5.3
+  lorem: 0.1.0
 dev_dependencies:
   test: 0.12.15+6

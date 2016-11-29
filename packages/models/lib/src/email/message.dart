@@ -75,7 +75,8 @@ class Message {
     int ms = json['timestamp'];
     DateTime _timestamp = new DateTime.fromMillisecondsSinceEpoch(ms);
 
-    Iterable<Uri> links = json['links']?.map((String link) => Uri.parse(link));
+    Iterable<Uri> links =
+        json['links']?.map((String link) => Uri.parse(link));
 
     Iterable<Attachment> attachments = json['attachments']
         ?.map((Map<String, String> a) => new Attachment.fromJson(a));
@@ -128,7 +129,16 @@ class Message {
   @override
   String toString() {
     return 'Message('
-        'id: $id"'
+        'id: "$id" '
+        'sender: "$sender" '
+        'senderProfileUrl: "$senderProfileUrl" '
+        'subject: "$subject" '
+        'text: "$text" '
+        'timestamp: "$timestamp" '
+        'isRead: "$isRead" '
+        'attachments: "$attachments" '
+        'recipientList: "$recipientList" '
+        'ccList: "$ccList" '
         ')';
   }
 

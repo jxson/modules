@@ -8,3 +8,4 @@ dependencies:
   googleapis_auth: ^0.2.3
   googleapis: ^0.32.0
   uuid: ^0.5.3
+  lorem: ^0.1.0
