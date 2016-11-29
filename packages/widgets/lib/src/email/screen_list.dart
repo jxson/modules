@@ -30,18 +30,18 @@ class EmailListScreen extends StoreWatcher {
   EmailListScreen({
     Key key,
     this.style: InboxStyle.multiLine,
-    this.inboxTitle: 'Inbox',
+    this.fallbackTitle: 'Inbox',
   })
       : super(key: key) {
     assert(style != null);
-    assert(inboxTitle != null);
+    assert(fallbackTitle != null);
   }
 
   /// Indicates whether single line style should be used for thread list items
   final InboxStyle style;
 
   /// Header Title for this view
-  final String inboxTitle;
+  final String fallbackTitle;
 
   @override
   void initStores(ListenToStore listenToStore) {
@@ -139,7 +139,7 @@ class EmailListScreen extends StoreWatcher {
             child: new Row(
               children: <Widget>[
                 new Text(
-                  inboxTitle,
+                  emailSession.focusedLabel?.name ?? fallbackTitle,
                   overflow: TextOverflow.ellipsis,
                   style: new TextStyle(
                     fontSize: 18.0,
