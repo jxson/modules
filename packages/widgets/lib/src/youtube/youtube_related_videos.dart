@@ -171,7 +171,7 @@ Future<List<VideoData>> _getRelatedVideoData({
   Map<String, String> params = <String, String>{};
   params['part'] = 'snippet';
   params['relatedToVideoId'] = videoId;
-  params['maxResults'] = '10';
+  params['maxResults'] = '6';
   params['type'] = 'video';
   params['key'] = apiKey;
 
