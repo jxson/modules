@@ -57,9 +57,18 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
       _log('ERROR: null document for some reason.');
       return;
     }
+    bool newlyFocusedThread =
+        _doc != null && _doc.focusedThreadId != doc.focusedThreadId;
     _doc = doc;
     _visibleLabels =
         new List<Label>.unmodifiable(_doc?.visibleLabels ?? <Label>[]);
+    if (newlyFocusedThread) {
+      _expandedMessageIds.clear();
+      Thread thread = focusedThread;
+      if (thread != null && !thread.messages.isEmpty) {
+        _expandedMessageIds.add(thread.messages.last.id);
+      }
+    }
     trigger();
   }
 
