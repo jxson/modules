@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
@@ -11,6 +12,7 @@ import 'package:apps.modules.email.email_service/email.fidl.dart' as service;
 import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
 import 'package:lib.fidl.dart/bindings.dart';
 import 'package:models/email.dart';
+import 'package:models/user.dart';
 
 import 'email_session_doc.dart';
 
@@ -39,9 +41,28 @@ class EmailSessionImpl extends es.EmailSession {
   ///
   /// Connects to necessary email services, and fetches the initial data.
   void initialize(ServiceProvider emailServices) {
+    _log('initialize called');
+    _link.query(_doc.readFromLink);
+
     connectToService(emailServices, _email.ctrl);
 
-    // TODO(youngseokyoon): make a call to email_service to fetch initial data.
+    _log('calling _email.me()');
+    _email.me((service.User user) {
+      _log('_email.me() called back $user');
+      _doc.user = new User.fromJson(JSON.decode(user.jsonPayload));
+      _update();
+
+      _log('calling _email.labels()');
+      _email.labels(true, (List<service.Label> labels) {
+        _log('_email.labels() called back: $labels');
+        _doc.visibleLabels = labels
+            .map((service.Label l) =>
+                new Label.fromJson(JSON.decode(l.jsonPayload)))
+            .toList();
+        focusLabel('INBOX');
+        _update();
+      });
+    });
   }
 
   /// Closes the bindings.
@@ -54,21 +75,24 @@ class EmailSessionImpl extends es.EmailSession {
   void focusLabel(String labelId) {
     _log('focusLabel($labelId)');
     // TODO(alangardner): Verify the label exists before setting this
-    _doc.focusedLabelId = labelId;
+    if (labelId != _doc.focusedLabelId) {
+      _doc.focusedLabelId = labelId;
 
-    // TODO(youngseokyoon): make a call to email_service here to fetch relevant
-    // threads. For now, just fake it with a timer.
-    _doc.fetchingThreads = true;
+      // TODO(alangardner): Paging to allow loading of more than 20
+      _doc.fetchingThreads = true;
+      _email.threads(labelId, 20, (List<service.Thread> threads) {
+        _doc.visibleThreads = threads
+            .map((service.Thread t) =>
+                new Thread.fromJson(JSON.decode(t.jsonPayload)))
+            .toList();
+        _doc.fetchingThreads = false;
+        _doc.focusedThreadId =
+            _doc.visibleThreads.isEmpty ? null : _doc.visibleThreads.first.id;
+        _update();
+      });
 
-    new Timer(new Duration(milliseconds: 300), () {
-      Label currentLabel = _doc.visibleLabels
-          .firstWhere((Label l) => l.id == _doc.focusedLabelId);
-      _doc.visibleThreads = mockThreads(currentLabel.unread);
-      _doc.fetchingThreads = false;
       _update();
-    });
-
-    _update();
+    }
   }
 
   @override
@@ -80,6 +104,7 @@ class EmailSessionImpl extends es.EmailSession {
   }
 
   void _update() {
+    _log('_update called');
     _doc.writeToLink(_link);
   }
 }

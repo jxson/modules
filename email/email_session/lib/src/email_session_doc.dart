@@ -7,6 +7,11 @@ import 'dart:convert';
 import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:models/email.dart';
+import 'package:models/user.dart';
+
+void _log(String msg) {
+  print('[email_session:SessionDoc] $msg');
+}
 
 List<Label> _mockLabels = <Label>[
   new Label(
@@ -45,6 +50,9 @@ class EmailSessionDoc {
   /// EmailSession doc id
   static const String docid = 'emailSession';
 
+  /// User property name
+  static const String userProp = 'user';
+
   /// Visible labels property name
   static const String visibleLabelsProp = 'visibleLabels';
 
@@ -62,6 +70,9 @@ class EmailSessionDoc {
 
   /// Fetching threads property name
   static const String fetchingThreadsProp = 'fetchingThreads';
+
+  /// The current user
+  User user;
 
   /// Available labels
   List<Label> visibleLabels;
@@ -86,6 +97,14 @@ class EmailSessionDoc {
 
   /// Fill with mock data
   EmailSessionDoc.withMockData() {
+    user = new User(
+      name: 'Coco Yang',
+      email: 'coco@cu.te',
+      familyName: 'Yang',
+      givenName: 'Coco',
+      picture:
+          'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
+    );
     visibleLabels = _mockLabels;
     visibleThreads = mockThreads(_mockLabels[0].unread);
     focusedThreadId = visibleThreads[0].id;
@@ -95,15 +114,20 @@ class EmailSessionDoc {
   }
 
   /// Construct from data in link document.
-  EmailSessionDoc.fromLinkDocument(Document doc) {
-    visibleLabels = _labelsFromJson(
-        JSON.decode(doc.properties[visibleLabelsProp]?.stringValue));
-    focusedLabelId = doc.properties[focusedLabelIdProp]?.stringValue;
-    visibleThreads = _threadsFromJson(
-        JSON.decode(doc.properties[visibleThreadsProp]?.stringValue));
-    focusedThreadId = doc.properties[focusedThreadIdProp]?.stringValue;
-    fetchingLabels = _readBool(doc, fetchingLabelsProp);
-    fetchingThreads = _readBool(doc, fetchingThreadsProp);
+  void readFromLink(Map<String, Document> docs) {
+    Document doc = docs[docid];
+    if (doc != null) {
+      user =
+          new User.fromJson(JSON.decode(doc.properties[userProp]?.stringValue));
+      visibleLabels = _labelsFromJson(
+          JSON.decode(doc.properties[visibleLabelsProp]?.stringValue));
+      focusedLabelId = doc.properties[focusedLabelIdProp]?.stringValue;
+      visibleThreads = _threadsFromJson(
+          JSON.decode(doc.properties[visibleThreadsProp]?.stringValue));
+      focusedThreadId = doc.properties[focusedThreadIdProp]?.stringValue;
+      fetchingLabels = _readBool(doc, fetchingLabelsProp);
+      fetchingThreads = _readBool(doc, fetchingThreadsProp);
+    }
   }
 
   /// Write state to link
@@ -119,6 +143,9 @@ class EmailSessionDoc {
     // it will silently fail at FIDL layer and break things.
     link.setAllDocuments(<String, Document>{
       docid: new Document.init(docid, <String, Value>{
+        userProp: user != null
+            ? (new Value()..stringValue = JSON.encode(user.toJson()))
+            : null,
         visibleLabelsProp: visibleLabels != null
             ? (new Value()
               ..stringValue = JSON.encode(_labelsToJson(visibleLabels)))

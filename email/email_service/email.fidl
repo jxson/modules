@@ -21,7 +21,7 @@ struct User {
 
 [ServiceName="modules.EmailService"]
 interface EmailService {
-  Me(string LabelID, int64 max) => (User user);
+  Me() => (User user);
   Labels(bool all) => (array<Label> labels);
   Threads(string LabelID, int64 max) => (array<Thread> threads);
 };

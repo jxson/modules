@@ -19,8 +19,15 @@ void _log(String msg) {
 dynamic _parser(String docid, Document doc) {
   _log('Parsing document $docid');
   if (docid == EmailSessionDoc.docid) {
-    return new EmailSessionDoc.fromLinkDocument(doc);
+    _log(' docid: $docid');
+    Map<String, Document> map = <String, Document>{docid: doc};
+    EmailSessionDoc session = new EmailSessionDoc();
+
+    session.readFromLink(map);
+
+    return session;
   }
+
   return null;
 }
 
@@ -44,9 +51,9 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
   }
 
   void _onUpdate(LinkObjectCache cache) {
-    _log('_onUpdate call');
+    _log('_onUpdate called: $cache');
     EmailSessionDoc doc = cache[EmailSessionDoc.docid];
-    if (_doc == null) {
+    if (doc == null) {
       _log('ERROR: null document for some reason.');
       return;
     }
@@ -56,12 +63,8 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
     trigger();
   }
 
-  // TODO(alangardner): Implement. This is only a mock.
   @override
-  User get user => new User(
-        name: 'Coco Yang',
-        email: 'littlePuppyCoco@puppy.cute',
-      );
+  User get user => _doc?.user;
 
   @override
   List<Label> get visibleLabels => _visibleLabels;

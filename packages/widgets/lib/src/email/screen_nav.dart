@@ -23,7 +23,7 @@ class EmailNavScreen extends StoreWatcher {
   Widget build(BuildContext context, Map<StoreToken, Store> stores) {
     final EmailSessionStore emailSession = stores[kEmailSessionStoreToken];
 
-    if (emailSession.fetchingLabels) {
+    if (emailSession.user == null || emailSession.fetchingLabels) {
       return new Center(child: new CircularProgressIndicator());
     }
 
