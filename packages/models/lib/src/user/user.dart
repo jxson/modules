@@ -10,13 +10,13 @@ import '../email/mailbox.dart';
 /// https://developers.google.com/identity/
 class User {
   /// Unique ID for user
-  String id;
+  final String id;
 
   /// Email address for user
-  String email;
+  final String email;
 
   /// Full name for user, Ex: John Doe
-  String name;
+  final String name;
 
   /// 'First name' for user, Ex: John
   String givenName;
@@ -25,22 +25,23 @@ class User {
   String familyName;
 
   /// URL for user avatar
-  String picture;
+  final String picture;
 
   /// Location that user is associated with
-  String locale;
+  final String locale;
 
   Mailbox _mailbox;
 
   /// Constructor to create a new user
-  User(
-      {this.id,
-      @required this.email,
-      @required this.name,
-      this.givenName,
-      this.familyName,
-      this.picture,
-      this.locale}) {
+  User({
+    this.id,
+    @required this.email,
+    @required this.name,
+    this.givenName,
+    this.familyName,
+    this.picture,
+    this.locale,
+  }) {
     assert(name != null);
     assert(email != null);
 
