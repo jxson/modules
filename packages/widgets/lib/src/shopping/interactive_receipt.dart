@@ -33,6 +33,7 @@ const Duration _kSnackBarDisplayDuration = const Duration(milliseconds: 2500);
 ///
 /// Prices and Items are not meant to reflect the real world.
 class InteractiveReceipt extends StatefulWidget {
+  /// Indicates whether to use the https url for images
   final bool useHttps;
 
   /// Constructor
@@ -139,7 +140,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
         style: new TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w500,
-          fontSize: 24.0,
+          fontSize: 20.0,
         ),
       ),
     );
@@ -162,8 +163,8 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
             });
           },
           child: new Container(
-            width: 30.0,
-            height: 30.0,
+            width: 20.0,
+            height: 20.0,
           ),
         ),
       ),
@@ -208,7 +209,10 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                   }
                   return new DropdownMenuItem<_StorageSize>(
                     value: value,
-                    child: new Text(text),
+                    child: new Text(
+                      text,
+                      style: new TextStyle(fontSize: 12.0),
+                    ),
                   );
                 }).toList(),
               ),
@@ -220,6 +224,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                   'Submit Modification',
                   style: new TextStyle(
                     color: Colors.blue[600],
+                    fontSize: 10.0,
                   ),
                 ),
                 onPressed: () {
@@ -232,6 +237,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                       content: new Text(
                         'Your order has been successfully modified',
                         textAlign: TextAlign.center,
+                        style: new TextStyle(fontSize: 12.0),
                       ),
                     ));
                   });
@@ -248,6 +254,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
           '$_storageSizeText / $_colorText',
           softWrap: false,
           overflow: TextOverflow.fade,
+          style: new TextStyle(fontSize: 12.0),
         ),
       );
     }
@@ -274,18 +281,23 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                 new Text(
                   '1 Phone XL',
                   style: new TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                   ),
                 ),
                 new Container(
                   margin: const EdgeInsets.only(
                     top: 4.0,
-                    right: 24.0,
+                    right: 12.0,
                   ),
                   child: new Row(
                     children: <Widget>[
                       _buildPhoneDetails(),
-                      _editMode ? new Container() : new Text(_price),
+                      _editMode
+                          ? new Container()
+                          : new Text(
+                              _price,
+                              style: new TextStyle(fontSize: 12.0),
+                            ),
                     ],
                   ),
                 ),
@@ -295,8 +307,8 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
         ),
         new Container(
           margin: const EdgeInsets.only(
-            right: 16.0,
-            left: 16.0,
+            right: 8.0,
+            left: 8.0,
             top: 30.0,
           ),
           child: new FadeTransition(
@@ -323,9 +335,9 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
       child: new Row(children: <Widget>[
         new Flexible(
           flex: 1,
-          child: new Text(label),
+          child: new Text(label, style: new TextStyle(fontSize: 12.0)),
         ),
-        new Text(value),
+        new Text(value, style: new TextStyle(fontSize: 12.0)),
       ]),
     );
   }
@@ -333,14 +345,14 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
   Widget _buildPricing() {
     return new Container(
       margin: const EdgeInsets.only(
-        left: 64.0,
-        right: 64.0,
+        left: 16.0,
+        right: 16.0,
         top: 16.0,
       ),
       padding: const EdgeInsets.only(
         top: 16.0,
-        left: 28.0,
-        right: 28.0,
+        left: 14.0,
+        right: 14.0,
       ),
       decoration: new BoxDecoration(
         border: new Border(
@@ -375,8 +387,8 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
     return new Container(
       padding: const EdgeInsets.only(
         top: 70.0,
-        right: 48.0,
-        left: 48.0,
+        right: 16.0,
+        left: 16.0,
       ),
       child: new Card(
         child: new Column(
@@ -398,7 +410,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                         new Text(
                           'Thanks for shopping with A+ Mobile',
                           style: new TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 18.0,
                             color: Colors.grey[700],
                           ),
                         ),
@@ -408,6 +420,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
                             'You have 7 hours to modify your order',
                             style: new TextStyle(
                               color: Colors.grey[700],
+                              fontSize: 12.0,
                             ),
                           ),
                         ),
@@ -418,7 +431,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
               ],
             ),
             new Container(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(8.0),
               child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,

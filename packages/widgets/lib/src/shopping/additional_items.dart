@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 ///
 /// Prices and items are not meant to reflect the real world
 class AdditionalItems extends StatelessWidget {
+  /// Indicates whether to use the https url for images
   final bool useHttps;
 
   /// Constructor
@@ -35,8 +36,8 @@ class AdditionalItems extends StatelessWidget {
           new Container(
             margin: const EdgeInsets.only(bottom: 4.0),
             padding: const EdgeInsets.all(15.0),
-            width: 225.0,
-            height: 225.0,
+            width: 180.0,
+            height: 180.0,
             decoration: new BoxDecoration(
               backgroundColor: Colors.grey[300],
             ),
