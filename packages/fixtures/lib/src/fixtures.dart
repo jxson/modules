@@ -140,17 +140,19 @@ class Fixtures {
     email ??= 'user-${_sequence(email)}@example.org';
 
     String id = _uuid.v5(_uuidUser, email);
-    // TODO(jxson): SO-29 Add a fixture for generating avatars.
-    String avatar =
-        'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg';
     return new User(
-        id: id, name: name, email: email, locale: 'en', picture: avatar);
+      id: id,
+      name: name,
+      email: email,
+      locale: 'en',
+    );
   }
 
+  /// Me.
   User me() {
     return user(
-      name: 'Coco Yang',
-      email: 'coco@example.org',
+      name: 'Aparna Nielsen',
+      email: 'aparna@example.org',
     );
   }
 
@@ -210,9 +212,6 @@ class Fixtures {
     AttachmentType type,
     String value,
   }) {
-    int seq = _sequence('attachement');
-    id ??= 'attachement-$seq';
-
     switch (type) {
       case AttachmentType.youtubeVideo:
         value ??= '0pfUC55a3Jc';
@@ -226,7 +225,7 @@ class Fixtures {
     }
 
     return new Attachment(
-      id: id,
+      id: id ?? this.id('attachment'),
       value: value ?? 'example-value',
       type: type ?? AttachmentType.youtubeVideo,
     );
@@ -283,9 +282,149 @@ class Fixtures {
   }
 
   /// TODO(jasoncampbell): document this.
-  List<Thread> threads(int size) {
-    return new List<Thread>.generate(
-        size, (int index) => new MockThread(id: index.toString()));
+  List<Thread> threads({
+    String labelId: 'INBOX',
+  }) {
+    List<Thread> results;
+
+    switch (labelId) {
+      case 'INBOX':
+        results = _inbox();
+        break;
+      default:
+        results = <Thread>[];
+    }
+
+    return results;
+  }
+
+  List<Thread> _inbox() {
+    User me = this.me();
+    User dad = user(name: 'Ian Nielsen');
+    User store = user(
+      name: 'Bedford Mobile Outlet',
+      email: 'store@example.org',
+    );
+
+    return <Thread>[
+      thread(<Message>[
+        message(
+            sender: store,
+            to: <User>[me],
+            timestamp: DateTime.parse('2016-11-29T18:14-0600'),
+            subject: 'Your order from Bedford Mobile',
+            text: 'http://www.aplusmobile.com/yourorder',
+            isRead: false,
+            attachments: <Attachment>[
+              attachment(
+                type: AttachmentType.orderReceipt,
+              ),
+            ]),
+        message(
+          sender: store,
+          to: <User>[me],
+          timestamp: DateTime.parse('2016-11-29T19:14-0600'),
+          subject: 'Your order from Bedford Mobile Outlet is on its way! ',
+          text: '''Hello Aparna Nielsen,
+
+We’re writing to inform you that your order (#S000242323) has recently shipped!
+
+If you would like to track the progress of your package, please visit the USPS website:
+
+https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=9341989676090046890941
+
+Thank you very much,
+Sam Lefferts
+Bedford Mobile Outlet
+          ''',
+          attachments: <Attachment>[
+            attachment(
+              value: '9341989676090046890941',
+              type: AttachmentType.uspsShipping,
+            ),
+          ],
+        ),
+      ]),
+      thread(<Message>[
+        message(
+          sender: me,
+          to: <User>[dad],
+          timestamp: DateTime.parse('2016-11-28T22:57:00-0600'),
+          subject: 'India trip planning',
+          text: '''Hey Dad,
+
+
+Can you send over the doc that has Nani's birthday plans? Just want to make sure I have the dates right!
+
+
+Love, Aparna
+          ''',
+        ),
+        message(
+          sender: dad,
+          to: <User>[me],
+          timestamp: DateTime.parse('2016-11-29T01:12:00-0600'),
+          subject: 're: India trip planning',
+          text: '''Hi pumpkin-
+
+I actually haven't started putting a doc together yet. Maybe we can work on it together later this week.
+
+But the dates are still the same - your mother and I will be leaving from EWR on Sunday 5/14 at 7:00am, so we'll be at Vadodara around Tuesday morning.
+
+And we're planning to depart BDQ on 5/31 at 5:00pm.
+
+-Dad
+          ''',
+        ),
+        message(
+          sender: me,
+          to: <User>[dad],
+          timestamp: DateTime.parse('2016-11-29T03:12:00-0600'),
+          subject: 'India trip planning',
+          text: '''Ahhh ok. My mistake. :)
+
+
+Yes, I should be free to work on putting one together after this Thursday!
+
+          ''',
+        ),
+        message(
+          sender: dad,
+          to: <User>[me],
+          timestamp: DateTime.parse('2016-11-29T16:31:00-0600'),
+          subject: 're: India trip planning',
+          text:
+              '''Great, I'll give you a call once I can dig up all my files. Lots of old itineraries lying around that we never quite got around to.
+
+
+By the way, do you have enough suitcases for your stuff? Your mother and I have a couple extra.
+
+          ''',
+        ),
+        message(
+          sender: me,
+          to: <User>[dad],
+          timestamp: DateTime.parse('2016-11-29T17:35:00-0600'),
+          subject: 're: India trip planning',
+          text:
+              '''I'll be getting some new luggage delivered, so I should be ready. Do you have my immunization history available by chance? I think it's over in the top drawer of my old dresser.
+
+
+By the way, I came across this awesome video. Maybe we can do this on a future trip. :)
+https://www.youtube.com/watch?v=KbtZfzxX44o
+
+
+-Aparna
+          ''',
+          attachments: <Attachment>[
+            attachment(
+              value: 'KbtZfzxX44o',
+              type: AttachmentType.youtubeVideo,
+            ),
+          ],
+        ),
+      ]),
+    ];
   }
 
   /// Generates sequenced String ids based on key.

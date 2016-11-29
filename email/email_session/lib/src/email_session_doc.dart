@@ -6,43 +6,13 @@ import 'dart:convert';
 
 import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
+import 'package:fixtures/fixtures.dart';
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
 void _log(String msg) {
   print('[email_session:SessionDoc] $msg');
 }
-
-List<Label> _mockLabels = <Label>[
-  new Label(
-    id: 'INBOX',
-    name: 'Inbox',
-    unread: 5,
-    type: 'system',
-  ),
-  new Label(
-    id: 'STARRED',
-    name: 'Starred',
-    unread: 0,
-    type: 'system',
-  ),
-  new Label(
-    id: 'DRAFT',
-    name: 'Drafts',
-    unread: 18,
-    type: 'system',
-  ),
-  new Label(
-    id: 'TRASH',
-    name: 'Trash',
-    unread: 1,
-    type: 'system',
-  ),
-];
-
-/// Temp convenience method for generating mock threads
-List<Thread> mockThreads(int size) => new List<Thread>.generate(
-    size, (int index) => new MockThread(id: index.toString()));
 
 /// Captures the state of an email session.
 /// Can be serialized to Links to be shared with other modules.
@@ -97,18 +67,12 @@ class EmailSessionDoc {
 
   /// Fill with mock data
   EmailSessionDoc.withMockData() {
-    user = new User(
-      name: 'Coco Yang',
-      email: 'coco@cu.te',
-      familyName: 'Yang',
-      givenName: 'Coco',
-      picture:
-          'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
-    );
-    visibleLabels = _mockLabels;
-    visibleThreads = mockThreads(_mockLabels[0].unread);
+    Fixtures fixtures = new Fixtures();
+    user = fixtures.me();
+    visibleLabels = fixtures.labels();
+    visibleThreads = fixtures.threads();
     focusedThreadId = visibleThreads[0].id;
-    focusedLabelId = _mockLabels[0].id;
+    focusedLabelId = 'INBOX';
     fetchingLabels = false;
     fetchingThreads = false;
   }

@@ -16,6 +16,7 @@ dart_package("client") {
     "//apps/modules/email/email_service:interfaces_dart",
     "//apps/modules/email/email_session:interfaces_dart",
     "//apps/modules/packages/email_session_store",
+    "//apps/modules/packages/fixtures",
     "//apps/modules/packages/models",
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/flutter_flux",
@@ -41,12 +42,13 @@ flutter_app("email_session") {
     "//apps/modules/email/email_service:interfaces_dart",
     "//apps/modules/email/email_session:interfaces_dart",
     "//apps/modules/packages/email_session_store",
+    "//apps/modules/packages/fixtures",
     "//apps/modules/packages/models",
     "//apps/mozart/lib/flutter",
     "//apps/mozart/services/views:views_dart",
     "//lib/fidl/dart",
     "//lib/flutter/packages/flutter",
-    "//third_party/dart-pkg/pub/googleapis",
     "//third_party/dart-pkg/pub/flutter_flux",
+    "//third_party/dart-pkg/pub/googleapis",
   ]
 }
