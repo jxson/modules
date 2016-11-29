@@ -4,34 +4,80 @@
 
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
+import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 
-const Color _kTurquoise = const Color(0xFF1DE9B6);
-
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
+
+final ModuleBinding _moduleBinding = new ModuleBinding();
+
+/// Main entry point to the color module.
+void main() {
+  _log('Color module started with context: $_context');
+
+  final GlobalKey<_ColorWidgetState> colorWidgetKey =
+      new GlobalKey<_ColorWidgetState>();
+
+  /// Add _ModuleImpl to this application's outgoing ServiceProvider.
+  _context.outgoingServices.addServiceForName(
+    (InterfaceRequest<Module> request) {
+      _moduleBinding.bind(
+        new _ModuleImpl(
+          (Map<String, Document> documents) {
+            _log('Documents: $documents');
+            documents.values
+                .where(
+                  (Document document) => document.properties['color'] != null,
+                )
+                .map((Document document) => document.properties['color'])
+                .forEach(
+                  (String colorValue) =>
+                      colorWidgetKey.currentState.color = new Color(
+                        int.parse(colorValue),
+                      ),
+                );
+          },
+        ),
+        request,
+      );
+    },
+    Module.serviceName,
+  );
+
+  runApp(new _ColorWidget(key: colorWidgetKey));
+}
 
 void _log(String msg) {
   print('[Color Module] $msg');
 }
 
-/// An implementation of the [Module] interface.
-class ModuleImpl extends Module {
-  final ModuleBinding _binding = new ModuleBinding();
+typedef void _OnDocuments(Map<String, Document> documents);
 
-  /// [Story] service provided by the framework.
-  final StoryProxy story = new StoryProxy();
+class _LinkWatcherImpl extends LinkWatcher {
+  final _OnDocuments _onDocuments;
 
-  /// [Link] service provided by the framework.
-  final LinkProxy link = new LinkProxy();
+  _LinkWatcherImpl(this._onDocuments);
 
-  /// Bind an [InterfaceRequest] for a [Module] interface to this object.
-  void bind(InterfaceRequest<Module> request) {
-    _binding.bind(this, request);
+  @override
+  void notify(Map<String, Document> documents) {
+    _onDocuments?.call(documents);
   }
+}
+
+/// An implementation of the [Module] interface.
+class _ModuleImpl extends Module {
+  /// [Link] service provided by the framework.
+  final LinkProxy _link = new LinkProxy();
+
+  final LinkWatcherBinding _linkWatcherBinding = new LinkWatcherBinding();
+
+  final _OnDocuments _onDocuments;
+
+  _ModuleImpl(this._onDocuments);
 
   /// Implementation of the Initialize(Story story, Link link) method.
   @override
@@ -42,43 +88,42 @@ class ModuleImpl extends Module {
     InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
-
-    story.ctrl.bind(storyHandle);
-    link.ctrl.bind(linkHandle);
+    _link.ctrl.bind(linkHandle);
+    _link.watch(_linkWatcherBinding.wrap(new _LinkWatcherImpl(_onDocuments)));
   }
 
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
 
-    // Do some clean up here.
+    _link.ctrl.close();
+    _linkWatcherBinding.close();
 
     // Invoke the callback to signal that the clean-up process is done.
     callback();
   }
 }
 
-/// Instance of [ModuleImpl].
-ModuleImpl moduleImpl = new ModuleImpl();
+class _ColorWidget extends StatefulWidget {
+  _ColorWidget({Key key}) : super(key: key);
 
-/// Main entry point to the color module.
-void main() {
-  _log('Color module started with context: $_context');
+  @override
+  _ColorWidgetState createState() => new _ColorWidgetState();
+}
 
-  /// Add [ModuleImpl] to this application's outgoing ServiceProvider.
-  _context.outgoingServices.addServiceForName(
-    (InterfaceRequest<Module> request) {
-      _log('Received binding request for Module');
-      moduleImpl.bind(request);
-    },
-    Module.serviceName,
-  );
+class _ColorWidgetState extends State<_ColorWidget> {
+  Color _color = new Color(0x00000000);
 
-  runApp(
-    new Container(
-      decoration: new BoxDecoration(
-        backgroundColor: _kTurquoise,
-      ),
-    ),
-  );
+  set color(Color color) {
+    setState(() {
+      _color = color;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => new Container(
+        decoration: new BoxDecoration(
+          backgroundColor: _color,
+        ),
+      );
 }
