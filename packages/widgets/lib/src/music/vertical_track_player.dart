@@ -77,7 +77,7 @@ class VerticalTrackPlayer extends StatelessWidget {
       child: new Stack(
         children: <Widget>[
           new Container(
-            height: 130.0,
+            height: 70.0,
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: new Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
