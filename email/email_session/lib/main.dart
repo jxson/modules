@@ -59,6 +59,7 @@ class ModuleImpl extends Module {
 
     _incomingServices.ctrl.bind(incomingServices);
 
+    // TODO(alangardner): Temporarily start with mock data
     EmailSessionDoc sessionState = new EmailSessionDoc.withMockData();
 
     _emailSessionImpl = new EmailSessionImpl(
@@ -74,9 +75,6 @@ class ModuleImpl extends Module {
       es.EmailSession.serviceName,
     );
     _serviceProviderImpl.bind(outgoingServices);
-
-    // Initial write of current state.
-    sessionState.writeToLink(emailSessionLinkProxy);
   }
 
   @override

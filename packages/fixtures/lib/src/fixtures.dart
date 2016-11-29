@@ -147,6 +147,13 @@ class Fixtures {
         id: id, name: name, email: email, locale: 'en', picture: avatar);
   }
 
+  User me() {
+    return user(
+      name: 'Coco Yang',
+      email: 'coco@example.org',
+    );
+  }
+
   /// Genrate a random [int] no greater than [max].
   int number([int max]) {
     return _rng.nextInt(max);
@@ -197,7 +204,7 @@ class Fixtures {
     ];
   }
 
-  /// Generate [Attachement] objects.
+  /// Generate [Attachment] objects.
   Attachment attachment({
     String id,
     AttachmentType type,
@@ -212,6 +219,9 @@ class Fixtures {
         break;
       case AttachmentType.uspsShipping:
         value ??= '9374889676090175041871';
+        break;
+      case AttachmentType.orderReceipt:
+        value ??= 'order-123';
         break;
     }
 
@@ -270,6 +280,12 @@ class Fixtures {
       snippet: 'Example snippet',
       messages: messages,
     );
+  }
+
+  /// TODO(jasoncampbell): document this.
+  List<Thread> threads(int size) {
+    return new List<Thread>.generate(
+        size, (int index) => new MockThread(id: index.toString()));
   }
 
   /// Generates sequenced String ids based on key.

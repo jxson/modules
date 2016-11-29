@@ -4,17 +4,26 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:apps.modules.email.email_service/email.fidl.dart' as es;
 import 'package:email_api/email_api.dart';
+import 'package:fixtures/fixtures.dart';
 import 'package:lib.fidl.dart/bindings.dart' as bindings;
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
 import 'api.dart';
 
+void _log(String msg) {
+  print('[email_service] $msg');
+}
+
 /// Implementation for email_service.
 class EmailServiceImpl extends es.EmailService {
+  // HACK(alangardner): Used for backup testing if network calls fail
+  final Fixtures fixtures = new Fixtures();
+
   final es.EmailServiceBinding _binding = new es.EmailServiceBinding();
 
   /// Binds this implementation to the incoming [bindings.InterfaceRequest].
@@ -30,18 +39,33 @@ class EmailServiceImpl extends es.EmailService {
 
   @override
   Future<Null> me(
-    String labelId,
-    int max,
     void callback(es.User user),
   ) async {
-    EmailAPI api = await API.get();
-    User me = await api.me();
+    _log('* me() called');
+    User me;
+
+    try {
+      EmailAPI api = await API.get();
+      me = await api.me();
+    } on SocketException catch (e) {
+      _log('SocketException: $e');
+      me = fixtures.me();
+    } catch (e) {
+      _log('BAD ERROR: $e');
+      me = fixtures.me();
+    }
+
     String payload = JSON.encode(me);
     es.User result = new es.User.init(
       me.id,
       payload,
     );
 
+    if (callback == null) {
+      _log('** callback is null');
+    }
+
+    _log('* me() calling back');
     callback(result);
   }
 
@@ -50,8 +74,19 @@ class EmailServiceImpl extends es.EmailService {
     bool all,
     void callback(List<es.Label> labels),
   ) async {
-    EmailAPI api = await API.get();
-    List<Label> labels = await api.labels();
+    _log('* labels() called');
+    List<Label> labels;
+
+    try {
+      EmailAPI api = await API.get();
+      labels = await api.labels();
+    } on SocketException catch (e) {
+      _log('SocketException: $e');
+      labels = fixtures.labels();
+    } catch (e) {
+      _log('BAD ERROR: $e');
+      labels = fixtures.labels();
+    }
 
     List<es.Label> results = labels.map((Label label) {
       String payload = JSON.encode(label);
@@ -61,6 +96,7 @@ class EmailServiceImpl extends es.EmailService {
       );
     }).toList();
 
+    _log('* labels() calling back');
     callback(results);
   }
 
@@ -70,11 +106,22 @@ class EmailServiceImpl extends es.EmailService {
     int max,
     void callback(List<es.Thread> threads),
   ) async {
-    EmailAPI api = await API.get();
-    List<Thread> threads = await api.threads(
-      labelId: labelId,
-      max: max,
-    );
+    _log('* threads() called');
+    List<Thread> threads;
+
+    try {
+      EmailAPI api = await API.get();
+      threads = await api.threads(
+        labelId: labelId,
+        max: max,
+      );
+    } on SocketException catch (e) {
+      _log('SocketException: $e');
+      threads = fixtures.threads(4);
+    } catch (e) {
+      _log('BAD ERROR: $e');
+      threads = fixtures.threads(4);
+    }
 
     List<es.Thread> results = threads.map((Thread thread) {
       String payload = JSON.encode(thread);
@@ -84,6 +131,7 @@ class EmailServiceImpl extends es.EmailService {
       );
     }).toList();
 
+    _log('* threads() calling back');
     callback(results);
   }
 }
