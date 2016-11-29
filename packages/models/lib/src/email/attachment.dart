@@ -8,7 +8,10 @@ enum AttachmentType {
   youtubeVideo,
 
   /// USPS Shipping code
-  uspsShipping
+  uspsShipping,
+
+  /// A order recipet for an online purchase
+  orderReceipt,
 }
 
 /// Simple representation of an email attachment
