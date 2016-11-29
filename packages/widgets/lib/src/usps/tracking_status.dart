@@ -109,7 +109,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
   // HACK(dayang): Assume the package to be delieverd if the phrase "delivered"
   // is in the most recent entry, otherwise assume the package to be en route
   String get _currentOverallStatus {
-    if(_trackingEntries.isEmpty) {
+    if (_trackingEntries.isEmpty) {
       return 'Package En Route';
     }
 
