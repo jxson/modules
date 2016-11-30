@@ -58,6 +58,7 @@ class ModuleImpl extends Module {
   }
 }
 
+/// Instance of [ModuleImpl].
 ModuleImpl moduleImpl = new ModuleImpl();
 
 /// Main entry point to the color module.
