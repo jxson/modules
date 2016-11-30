@@ -266,6 +266,7 @@ void _addEmbeddedChildBuilders() {
             });
           });
         },
+        additionalData: moduleController,
       );
     },
   );

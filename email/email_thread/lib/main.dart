@@ -128,6 +128,7 @@ void _addEmbeddedChildBuilder({
             });
           });
         },
+        additionalData: moduleController,
       );
     },
   );

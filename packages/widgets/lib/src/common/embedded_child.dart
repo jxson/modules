@@ -61,6 +61,7 @@ class EmbeddedChild {
   EmbeddedChild({
     @required WidgetBuilder widgetBuilder,
     EmbeddedChildDisposer disposer,
+    this.additionalData,
   })
       : _widgetBuilder = widgetBuilder,
         _disposer = disposer {
@@ -74,6 +75,9 @@ class EmbeddedChild {
 
   /// Disposer to be used to clean up the created child widget.
   EmbeddedChildDisposer _disposer;
+
+  /// Reserved for keeping more extra references.
+  dynamic additionalData;
 
   /// Dispose the widget.
   void dispose() {
