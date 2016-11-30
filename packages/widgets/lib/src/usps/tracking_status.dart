@@ -127,6 +127,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
     super.initState();
 
     _embeddedMap = kEmbeddedChildProvider.buildEmbeddedChild('map', '');
+    print('[tracking_status] _embeddedMap: $_embeddedMap');
 
     _getTrackingData().then((List<TrackingEntry> entries) {
       if (mounted) {
