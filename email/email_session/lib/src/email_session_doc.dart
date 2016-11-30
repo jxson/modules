@@ -10,6 +10,7 @@ import 'package:fixtures/fixtures.dart';
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
+// ignore: UNUSED_ELEMENT
 void _log(String msg) {
   print('[email_session:SessionDoc] $msg');
 }
