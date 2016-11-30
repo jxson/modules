@@ -22,7 +22,7 @@ void main() {
       expect(user.email, isNotEmpty, reason: 'email should be set');
       expect(user.givenName, isNotEmpty, reason: 'givenName should be set');
       expect(user.familyName, isNotEmpty, reason: 'familyName should be set');
-      expect(user.picture, isNotEmpty, reason: 'picture should be set');
+      expect(user.picture, isNull, reason: 'picture should be set');
       expect(user.locale, equals('en'), reason: 'locale should default to en');
     });
 

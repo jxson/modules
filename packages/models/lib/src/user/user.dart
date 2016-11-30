@@ -73,6 +73,7 @@ class User {
     return json;
   }
 
+  /// Get an instance of Mailbox that maps to this user.
   Mailbox get mailbox {
     _mailbox ??= new Mailbox(
       displayName: name,
