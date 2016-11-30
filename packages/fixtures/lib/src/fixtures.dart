@@ -305,6 +305,9 @@ class Fixtures {
       name: 'Bedford Mobile Outlet',
       email: 'store@example.org',
     );
+    User miguel = user(name: 'Miguel Entorre');
+    User sophie = user(name: 'Sophie Chua');
+    User danielle = user(name: 'Danielle Kazlowski');
 
     return <Thread>[
       thread(<Message>[
@@ -419,6 +422,140 @@ https://www.youtube.com/watch?v=KbtZfzxX44o
           attachments: <Attachment>[
             attachment(
               value: 'KbtZfzxX44o',
+              type: AttachmentType.youtubeVideo,
+            ),
+          ],
+        ),
+      ]),
+      thread(<Message>[
+        message(
+          sender: miguel,
+          to: <User>[me],
+          timestamp: DateTime.parse('2016-11-28T23:45:00-0600'),
+          subject: 'Toe the Line followup',
+          text:
+              '''Hey, I have a couple thoughts on how we can update the Silver Toe lineup. Bear with me here, these ideas are amazing.
+
+
+1) We enlist an A-list celebrity to promote the line. As I understand, Shamra is in town, so we might be able to convince her to pitch this line of socks if we're sufficiently compelling.
+
+
+2) We create a cartoon series about anthropomorphic socks.
+
+
+What do you think?
+
+
+-Miguel
+
+          ''',
+        ),
+        message(
+          sender: me,
+          to: <User>[miguel],
+          subject: 're: Toe the Line followup',
+          timestamp: DateTime.parse('2016-11-29T15:02:00-0600'),
+          text: '''Sounds good. Want to meet up later this afternoon?
+
+
+-A
+''',
+        ),
+        message(
+          sender: miguel,
+          to: <User>[me],
+          subject: 're: Toe the Line followup',
+          timestamp: DateTime.parse('2016-11-29T17:01:00-0600'),
+          text:
+              '''Yeah, I'm free for the rest of the afternoon. Want to just stop by my desk when you have a spare moment? It might be better if I can draw it out in person.
+              ''',
+        ),
+      ]),
+      thread(<Message>[
+        message(
+          sender: me,
+          to: <User>[sophie],
+          subject: 'Plans for Miguel’s birthday',
+          timestamp: DateTime.parse('2016-11-29T15:20:00-0600'),
+          text: '''Hey Sophie,
+
+
+Any thoughts on what to do for Miguel's birthday? It's coming up!
+
+
+I was thinking that maybe we could bring in a delicious snack that he might like. But I'm open to other ideas!
+
+
+-Aparna''',
+        ),
+        message(
+          sender: sophie,
+          to: <User>[me],
+          subject: 're: Plans for Miguel’s birthday',
+          timestamp: DateTime.parse('2016-11-29T15:28:00-0600'),
+          text:
+              '''I heard that Miguel likes Pavlova! Let's make one for him. I was looking for tutorials online, and just found this one...
+https://www.youtube.com/watch?v=NS4yqgNjl9Y
+
+
+-Sophie''',
+          attachments: <Attachment>[
+            attachment(
+              type: AttachmentType.youtubeVideo,
+              value: 'NS4yqgNjl9Y',
+            ),
+          ],
+        ),
+        message(
+          sender: me,
+          to: <User>[sophie],
+          subject: 're: Plans for Miguel’s birthday',
+          timestamp: DateTime.parse('2016-11-29T16:54:00-0600'),
+          text:
+              '''Oh wow, that Pavlova recipe looks a bit complicated. But I might be able to pull something like that off.
+
+
+I started looking around some more myself, and came across this one:
+https://www.youtube.com/watch?v=KkHLj9QLYck
+
+
+I see this chef on that show on TV pretty often. So if it's easy enough for her to make a Pavlova in 30 minutes, I should have no problem making one by the end of this week…
+
+
+-Aparna''',
+        ),
+      ]),
+      thread(<Message>[
+        message(
+          sender: me,
+          to: <User>[danielle],
+          subject: 'Concert on Friday?',
+          timestamp: DateTime.parse('2016-11-28T23:56:00-0600'),
+          text: '''Hey!
+
+
+Interested in seeing Chvrches next month? They have a new album that's supposed to be pretty good. I think they’re playing on the 30th at the Chicago Regal, just before the New Year.
+
+
+-Aparna''',
+        ),
+        message(
+          sender: danielle,
+          to: <User>[me],
+          subject: 're: Concert on Friday?',
+          timestamp: DateTime.parse('2016-11-29T14:05:00-0600'),
+          text:
+              '''Oh, I was just about to ask you about seeing Chvrches! I was listening to their album non-stop, as a matter of fact. I’m going to check to see if I can get a sitter for the kids that weekend. Fingers crossed!
+
+
+In the meantime, take a look at one of their videos:
+https://www.youtube.com/watch?v=4Eo84jDIMKI
+
+
+-Danielle''',
+          attachments: <Attachment>[
+            attachment(
+              value: '4Eo84jDIMKI',
               type: AttachmentType.youtubeVideo,
             ),
           ],
