@@ -234,13 +234,16 @@ void main() {
 /// Adds all the [EmbeddedChildBuilder]s that this module supports.
 void _addEmbeddedChildBuilders() {
   // USPS Tracking.
+  _log("calling addEmbeddedChildBuilder('map')");
   kEmbeddedChildProvider.addEmbeddedChildBuilder(
     'map',
     (dynamic args) {
+      _log('trying to launch map!');
       // Initialize the sub-module.
       ModuleControllerProxy moduleController = new ModuleControllerProxy();
       InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
 
+      _log('before startModule!');
       _module.story.startModule(
         _kMapModuleUrl,
         _module.duplicateLink(),
@@ -249,6 +252,7 @@ void _addEmbeddedChildBuilders() {
         moduleController.ctrl.request(),
         viewOwnerPair.passRequest(),
       );
+      _log('after startModule!');
 
       InterfaceHandle<ViewOwner> viewOwner = viewOwnerPair.passHandle();
       ChildViewConnection conn = new ChildViewConnection(viewOwner);
@@ -270,4 +274,5 @@ void _addEmbeddedChildBuilders() {
       );
     },
   );
+  _log("called addEmbeddedChildBuilder('map')");
 }
