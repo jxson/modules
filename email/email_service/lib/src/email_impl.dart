@@ -22,7 +22,7 @@ void _log(String msg) {
 /// Implementation for email_service.
 class EmailServiceImpl extends es.EmailService {
   // HACK(alangardner): Used for backup testing if network calls fail
-  final Fixtures fixtures = new Fixtures();
+  final Fixtures _fixtures = new Fixtures();
 
   final es.EmailServiceBinding _binding = new es.EmailServiceBinding();
 
@@ -42,19 +42,7 @@ class EmailServiceImpl extends es.EmailService {
     void callback(es.User user),
   ) async {
     _log('* me() called');
-    User me;
-
-    try {
-      EmailAPI api = await API.get();
-      me = await api.me();
-    } on SocketException catch (e) {
-      _log('SocketException: $e');
-      me = fixtures.me();
-    } catch (e) {
-      _log('BAD ERROR: $e');
-      me = fixtures.me();
-    }
-
+    User me = _fixtures.me();
     String payload = JSON.encode(me);
     es.User result = new es.User.init(
       me.id,
@@ -75,18 +63,7 @@ class EmailServiceImpl extends es.EmailService {
     void callback(List<es.Label> labels),
   ) async {
     _log('* labels() called');
-    List<Label> labels;
-
-    try {
-      EmailAPI api = await API.get();
-      labels = await api.labels();
-    } on SocketException catch (e) {
-      _log('SocketException: $e');
-      labels = fixtures.labels();
-    } catch (e) {
-      _log('BAD ERROR: $e');
-      labels = fixtures.labels();
-    }
+    List<Label> labels = _fixtures.labels();
 
     List<es.Label> results = labels.map((Label label) {
       String payload = JSON.encode(label);
@@ -107,21 +84,7 @@ class EmailServiceImpl extends es.EmailService {
     void callback(List<es.Thread> threads),
   ) async {
     _log('* threads() called');
-    List<Thread> threads;
-
-    try {
-      EmailAPI api = await API.get();
-      threads = await api.threads(
-        labelId: labelId,
-        max: max,
-      );
-    } on SocketException catch (e) {
-      _log('SocketException: $e');
-      threads = fixtures.threads(labelId: labelId);
-    } catch (e) {
-      _log('BAD ERROR: $e');
-      threads = fixtures.threads(labelId: labelId);
-    }
+    List<Thread> threads = _fixtures.threads(labelId: labelId);
 
     List<es.Thread> results = threads.map((Thread thread) {
       String payload = JSON.encode(thread);
