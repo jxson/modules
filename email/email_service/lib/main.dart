@@ -10,10 +10,8 @@ import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.modules.email.email_service/email.fidl.dart' as es;
-import 'package:email_api/email_api.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
-import 'package:models/email.dart';
 
 import 'src/email_impl.dart';
 
