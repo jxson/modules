@@ -85,16 +85,6 @@ Future<Null> main() async {
     Module.serviceName,
   );
 
-  // TODO(alangardner): Enable only if testing HTTPS.
-  // EmailAPI api = await EmailAPI.fromConfig('assets/config.json');
-  // List<Thread> threads = await api.threads(
-  //  labelId: 'INBOX',
-  //  max: 15,
-  //);
-  //threads.forEach((Thread thread) {
-  //  _log('thread: ${thread.id}');
-  //});
-
   runApp(new MaterialApp(
     title: 'Email Service',
     home: new Text('This should never be seen.'),

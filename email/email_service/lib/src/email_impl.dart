@@ -4,7 +4,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:apps.modules.email.email_service/email.fidl.dart' as es;
 import 'package:email_api/email_api.dart';
@@ -21,9 +20,6 @@ void _log(String msg) {
 
 /// Implementation for email_service.
 class EmailServiceImpl extends es.EmailService {
-  // HACK(alangardner): Used for backup testing if network calls fail
-  final ModelFixtures _fixtures = new ModelFixtures();
-
   final es.EmailServiceBinding _binding = new es.EmailServiceBinding();
 
   /// Binds this implementation to the incoming [bindings.InterfaceRequest].
@@ -42,16 +38,15 @@ class EmailServiceImpl extends es.EmailService {
     void callback(es.User user),
   ) async {
     _log('* me() called');
-    User me = _fixtures.me();
+
+    EmailAPI api = await API.get();
+    User me = await api.me();
+
     String payload = JSON.encode(me);
     es.User result = new es.User.init(
       me.id,
       payload,
     );
-
-    if (callback == null) {
-      _log('** callback is null');
-    }
 
     _log('* me() calling back');
     callback(result);
@@ -63,7 +58,8 @@ class EmailServiceImpl extends es.EmailService {
     void callback(List<es.Label> labels),
   ) async {
     _log('* labels() called');
-    List<Label> labels = _fixtures.labels();
+    EmailAPI api = await API.get();
+    List<Label> labels = await api.labels();
 
     List<es.Label> results = labels.map((Label label) {
       String payload = JSON.encode(label);
@@ -84,7 +80,12 @@ class EmailServiceImpl extends es.EmailService {
     void callback(List<es.Thread> threads),
   ) async {
     _log('* threads() called');
-    List<Thread> threads = _fixtures.threads(labelId: labelId);
+
+    EmailAPI api = await API.get();
+    List<Thread> threads = await api.threads(
+      labelId: labelId,
+      max: max,
+    );
 
     List<es.Thread> results = threads.map((Thread thread) {
       String payload = JSON.encode(thread);

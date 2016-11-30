@@ -65,7 +65,7 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
     if (newlyFocusedThread) {
       _expandedMessageIds.clear();
       Thread thread = focusedThread;
-      if (thread != null && !thread.messages.isEmpty) {
+      if (thread != null && thread.messages.isNotEmpty) {
         _expandedMessageIds.add(thread.messages.last.id);
       }
     }
