@@ -182,25 +182,25 @@ class Fixtures {
       new Label(
         id: 'INBOX',
         name: 'Inbox',
-        unread: number(20),
+        unread: _inbox().length,
         type: 'system',
       ),
       new Label(
         id: 'STARRED',
         name: 'Starred',
-        unread: number(100),
+        unread: _starred().length,
         type: 'system',
       ),
       new Label(
         id: 'DRAFT',
         name: 'Drafts',
-        unread: number(5),
+        unread: _drafts().length,
         type: 'system',
       ),
       new Label(
         id: 'TRASH',
         name: 'Trash',
-        unread: number(200),
+        unread: _trash().length,
         type: 'system',
       ),
     ];
@@ -291,11 +291,76 @@ class Fixtures {
       case 'INBOX':
         results = _inbox();
         break;
+      case 'STARRED':
+        results = _starred();
+        break;
+      case 'DRAFTS':
+        results = _drafts();
+        break;
+      case 'TRASH':
+        results = _trash();
+        break;
       default:
         results = <Thread>[];
     }
 
     return results;
+  }
+
+  List<Thread> _starred() {
+    User me = this.me();
+    User dad = user(name: 'Ian Nielsen');
+    return <Thread>[
+      thread(<Message>[
+        message(
+          sender: dad,
+          to: <User>[me],
+          timestamp: DateTime.parse('2016-11-29T18:14-0600'),
+          subject: 'Don\'t forget to call your mom.',
+          text: 'It\'s her birthday too. You know how she gets. ;-)',
+          isRead: true,
+        )
+      ])
+    ];
+  }
+
+  List<Thread> _drafts() {
+    return <Thread>[];
+  }
+
+  List<Thread> _trash() {
+    User me = this.me();
+    return <Thread>[
+      thread(<Message>[
+        message(
+          sender: user(name: 'Traveling Salesman'),
+          to: <User>[me],
+          timestamp: DateTime.parse('2016-11-22T06:22-0600'),
+          subject: '90% off for a limited time!!!',
+          text: '''90% off for a limited time!
+
+If you want to change your life, click here and get 90% stuff you really need.
+---> CLICK HERE <----
+''',
+          isRead: true,
+        )
+      ]),
+      thread(<Message>[
+        message(
+          sender: user(name: 'Gym'),
+          to: <User>[me],
+          timestamp: DateTime.parse('2016-11-21T05:02-0600'),
+          subject: 'New Years Resolution Time',
+          text: '''
+
+A new year is coming up. Time to commit again to those new years resolutions and sign up for a gym membership.
+
+Sign up now!
+''',
+          isRead: true,
+        )
+      ])
+    ];
   }
 
   List<Thread> _inbox() {

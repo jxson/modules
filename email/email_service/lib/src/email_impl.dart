@@ -117,10 +117,10 @@ class EmailServiceImpl extends es.EmailService {
       );
     } on SocketException catch (e) {
       _log('SocketException: $e');
-      threads = fixtures.threads();
+      threads = fixtures.threads(labelId: labelId);
     } catch (e) {
       _log('BAD ERROR: $e');
-      threads = fixtures.threads();
+      threads = fixtures.threads(labelId: labelId);
     }
 
     List<es.Thread> results = threads.map((Thread thread) {
