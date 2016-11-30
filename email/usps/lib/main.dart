@@ -113,6 +113,17 @@ class ModuleImpl extends Module {
     link.ctrl.bind(linkHandle);
     link.watchAll(_linkWatcher.getHandle());
 
+    _readAPIKey();
+
+    _addEmbeddedChildBuilders();
+
+    runApp(new MaterialApp(
+      title: 'USPS Tracking',
+      home: new HomeScreen(key: _kHomeKey),
+      theme: new ThemeData(primarySwatch: Colors.blue),
+      debugShowCheckedModeBanner: false,
+    ));
+
     // Initially set the location to null
     // We wont know the location until the USPS logic runs and fetches the
     // locations
@@ -218,17 +229,6 @@ void main() {
     },
     Module.serviceName,
   );
-
-  _readAPIKey();
-
-  _addEmbeddedChildBuilders();
-
-  runApp(new MaterialApp(
-    title: 'USPS Tracking',
-    home: new HomeScreen(key: _kHomeKey),
-    theme: new ThemeData(primarySwatch: Colors.blue),
-    debugShowCheckedModeBanner: false,
-  ));
 }
 
 /// Adds all the [EmbeddedChildBuilder]s that this module supports.
@@ -258,7 +258,11 @@ void _addEmbeddedChildBuilders() {
       ChildViewConnection conn = new ChildViewConnection(viewOwner);
 
       return new EmbeddedChild(
-        widgetBuilder: (_) => new ChildView(connection: conn),
+        widgetBuilder: (BuildContext context) {
+          ChildView childView = new ChildView(connection: conn);
+          _log('widgetBuilder call. conn: $conn, childView: $childView');
+          return childView;
+        },
         disposer: () {
           moduleController.stop(() {
             viewOwner.close();
@@ -270,7 +274,7 @@ void _addEmbeddedChildBuilders() {
             });
           });
         },
-        additionalData: moduleController,
+        additionalData: <dynamic>[moduleController, conn],
       );
     },
   );
