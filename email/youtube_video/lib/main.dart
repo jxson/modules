@@ -116,7 +116,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      alignment: FractionalOffset.center,
+      alignment: FractionalOffset.topCenter,
       constraints: const BoxConstraints.expand(),
       child: new Material(
         child: _videoId != null && _apiKey != null

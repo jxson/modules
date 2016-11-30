@@ -96,9 +96,12 @@ class _MessageContentState extends State<MessageContent> {
     embeddedChildren.forEach((EmbeddedChild ec) {
       children.add(new SizedBox(
         height: _kEmbeddedChildHeight,
-        child: new Card(
-          color: Colors.grey[200],
-          child: ec.widgetBuilder(context),
+        child: new Align(
+          alignment: FractionalOffset.topCenter,
+          child: new Card(
+            color: Colors.grey[200],
+            child: ec.widgetBuilder(context),
+          ),
         ),
       ));
     });
