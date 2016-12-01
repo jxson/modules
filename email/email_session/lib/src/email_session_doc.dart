@@ -6,8 +6,8 @@ import 'dart:convert';
 
 import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
-import 'package:fixtures/fixtures.dart';
 import 'package:models/email.dart';
+import 'package:models/fixtures.dart';
 import 'package:models/user.dart';
 
 // ignore: UNUSED_ELEMENT
@@ -68,7 +68,7 @@ class EmailSessionDoc {
 
   /// Fill with mock data
   EmailSessionDoc.withMockData() {
-    Fixtures fixtures = new Fixtures();
+    ModelFixtures fixtures = new ModelFixtures();
     user = fixtures.me();
     visibleLabels = fixtures.labels();
     visibleThreads = fixtures.threads();

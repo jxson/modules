@@ -9,3 +9,16 @@ group("modules") {
     "//apps/modules/gallery:modules_gallery",
   ]
 }
+
+group("test") {
+  testonly = true
+
+  deps = [
+    "//apps/modules/packages/clients/test",
+    "//apps/modules/packages/email_api/test",
+    "//apps/modules/packages/fixtures/test",
+    "//apps/modules/packages/models/test",
+    "//apps/modules/packages/util/test",
+    "//apps/modules/packages/widgets/test",
+  ]
+}

@@ -4,12 +4,12 @@
 
 import 'dart:convert';
 
-import 'package:fixtures/fixtures.dart';
 import 'package:models/email.dart';
+import 'package:models/fixtures.dart';
 import 'package:test/test.dart';
 
 void main() {
-  Fixtures fixtures = new Fixtures();
+  ModelFixtures fixtures = new ModelFixtures();
 
   test('Label JSON encode/decode', () {
     Label label = fixtures.label();

@@ -2,15 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:fixtures/fixtures.dart';
+import 'package:models/fixtures.dart';
 import 'package:models/user.dart';
 import 'package:test/test.dart';
 
 void main() {
-  Fixtures fixtures;
+  ModelFixtures fixtures;
 
   setUp(() {
-    fixtures = new Fixtures();
+    fixtures = new ModelFixtures();
   });
 
   group('fixtures.user(...)', () {

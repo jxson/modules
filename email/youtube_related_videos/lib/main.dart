@@ -121,11 +121,12 @@ class HomeScreenState extends State<HomeScreen> {
       child: new Material(
         child: _videoId != null && _apiKey != null
             ? new ScrollableViewport(
-              child: new YoutubeRelatedVideos(
-                videoId: _videoId,
-                apiKey: _apiKey,
-              ),
-            ): new CircularProgressIndicator(),
+                child: new YoutubeRelatedVideos(
+                  videoId: _videoId,
+                  apiKey: _apiKey,
+                ),
+              )
+            : new CircularProgressIndicator(),
       ),
     );
   }

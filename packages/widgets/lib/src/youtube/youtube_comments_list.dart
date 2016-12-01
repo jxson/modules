@@ -63,7 +63,6 @@ class _YoutubeCommentsListState extends State<YoutubeCommentsList> {
     params['textFormat'] = 'plainText';
     params['maxResults'] = _kMaxComments;
 
-
     Uri uri = new Uri.https(_kApiBaseUrl, _kApiRestOfUrl, params);
     http.Response response = await http.get(uri);
     if (response.statusCode != 200) {
