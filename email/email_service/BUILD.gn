@@ -5,7 +5,7 @@
 import("//flutter/build/flutter_app.gni")
 import("//lib/fidl/fidl.gni")
 
-flutter_app("email_service") {
+flutter_app("email_service_app") {
   package_name = "email_service"
 
   source_dir = "lib"
@@ -18,7 +18,7 @@ flutter_app("email_service") {
     "//apps/modular/lib/app/dart",
     "//apps/modular/services/application:application_dart",
     "//apps/modular/services/story:story_dart",
-    "//apps/modules/email/email_service:interfaces_dart",
+    "//apps/modules/email/email_service:email_service_dart",
     "//apps/modules/packages/email_api",
     "//apps/modules/packages/fixtures",
     "//apps/modules/packages/models",
@@ -29,7 +29,7 @@ flutter_app("email_service") {
   ]
 }
 
-fidl("interfaces") {
+fidl("email_service") {
   sources = [
     "email.fidl",
   ]

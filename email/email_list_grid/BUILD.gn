@@ -12,7 +12,7 @@ flutter_app("email_list_grid") {
     "//apps/modular/services/application:application_dart",
     "//apps/modular/services/story:story_dart",
     "//apps/modules/email/email_session:client",
-    "//apps/modules/email/email_session:interfaces_dart",
+    "//apps/modules/email/email_session:email_session_dart",
     "//apps/modules/packages/email_session_store",
     "//apps/modules/packages/models",
     "//apps/modules/packages/widgets",
