@@ -2,16 +2,14 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//build/dart/dart_package.gni")
+import("//build/dart/dart_test.gni")
 
-dart_package("fixtures") {
-  package_name = "fixtures"
-
-  source_dir = "lib"
+dart_test("test") {
+  source_dir = "."
 
   deps = [
     "//apps/modules/packages/util",
-    "//lib/flutter/packages/flutter",
-    "//third_party/dart-pkg/pub/uuid",
+    "//lib/flutter/packages/flutter_test",
+    "//third_party/dart-pkg/pub/test",
   ]
 }

@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:fixtures/fixtures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:models/fixtures.dart';
 import 'package:models/user.dart';
 import 'package:widgets/user.dart';
 
@@ -54,7 +54,7 @@ void main() {
   });
 
   test('Alphtars for the same User should have the same background color.', () {
-    Fixtures fixtures = new Fixtures();
+    ModelFixtures fixtures = new ModelFixtures();
     User user = fixtures.user();
 
     Alphatar a1 = new Alphatar.fromUser(user: user);

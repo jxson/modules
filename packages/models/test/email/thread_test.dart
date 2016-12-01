@@ -3,13 +3,13 @@
 // found in the LICENSE file.
 import 'dart:convert';
 
-import 'package:fixtures/fixtures.dart';
 import 'package:models/email.dart';
+import 'package:models/fixtures.dart';
 import 'package:models/user.dart';
 import 'package:test/test.dart';
 
 void main() {
-  Fixtures fixtures = new Fixtures();
+  ModelFixtures fixtures = new ModelFixtures();
 
   group('thread.getSubject()', () {
     User sender = fixtures.user(name: 'Coco Yang');
@@ -58,7 +58,7 @@ void main() {
   });
 
   group('JSON encode/decode', () {
-    Fixtures fixtures = new Fixtures();
+    ModelFixtures fixtures = new ModelFixtures();
 
     test('message with attachments', () {
       int ms = new DateTime.now().millisecondsSinceEpoch;

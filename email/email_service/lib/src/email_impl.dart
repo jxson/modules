@@ -8,9 +8,9 @@ import 'dart:io';
 
 import 'package:apps.modules.email.email_service/email.fidl.dart' as es;
 import 'package:email_api/email_api.dart';
-import 'package:fixtures/fixtures.dart';
 import 'package:lib.fidl.dart/bindings.dart' as bindings;
 import 'package:models/email.dart';
+import 'package:models/fixtures.dart';
 import 'package:models/user.dart';
 
 import 'api.dart';
@@ -22,7 +22,7 @@ void _log(String msg) {
 /// Implementation for email_service.
 class EmailServiceImpl extends es.EmailService {
   // HACK(alangardner): Used for backup testing if network calls fail
-  final Fixtures _fixtures = new Fixtures();
+  final ModelFixtures _fixtures = new ModelFixtures();
 
   final es.EmailServiceBinding _binding = new es.EmailServiceBinding();
 
