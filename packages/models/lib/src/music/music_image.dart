@@ -22,12 +22,10 @@ class MusicImage {
 
   /// Creates a MusicImage object from json data
   factory MusicImage.fromJson(dynamic json) {
-    String url = json['url'];
-    url = url.replaceFirst('https', 'http');
     return new MusicImage(
       height: json['height'].roundToDouble(),
       width: json['width'].roundToDouble(),
-      url: url,
+      url: json['url'],
     );
   }
 
