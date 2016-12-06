@@ -14,9 +14,11 @@ import 'package:models/youtube.dart';
 import 'loading_state.dart';
 import 'youtube_thumbnail.dart';
 
-const String _kApiBaseUrl = '104.196.239.187';
+const String _kApiBaseUrl = 'content.googleapis.com';
 
 const String _kApiRestOfUrl = '/youtube/v3/search';
+
+const String _kMaxResults = '10';
 
 /// UI widget that loads and shows related videos for a given Youtube video
 class YoutubeRelatedVideos extends StatefulWidget {
@@ -171,11 +173,11 @@ Future<List<VideoData>> _getRelatedVideoData({
   Map<String, String> params = <String, String>{};
   params['part'] = 'snippet';
   params['relatedToVideoId'] = videoId;
-  params['maxResults'] = '6';
+  params['maxResults'] = _kMaxResults;
   params['type'] = 'video';
   params['key'] = apiKey;
 
-  Uri uri = new Uri.http(_kApiBaseUrl, _kApiRestOfUrl, params);
+  Uri uri = new Uri.https(_kApiBaseUrl, _kApiRestOfUrl, params);
   http.Response response = await http.get(uri);
   if (response.statusCode != 200) {
     return null;

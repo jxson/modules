@@ -19,8 +19,6 @@ final String _kApiRestOfUrl = '/youtube/v3/commentThreads';
 
 final String _kApiQueryParts = 'id,snippet';
 
-final String _kMaxComments = '5';
-
 // TODO(dayang): Render "one hour before.." style timestamps for comments
 // https://fuchsia.atlassian.net/browse/SO-118
 
@@ -61,7 +59,6 @@ class _YoutubeCommentsListState extends State<YoutubeCommentsList> {
     params['part'] = _kApiQueryParts;
     params['order'] = 'relevance';
     params['textFormat'] = 'plainText';
-    params['maxResults'] = _kMaxComments;
 
     Uri uri = new Uri.https(_kApiBaseUrl, _kApiRestOfUrl, params);
     http.Response response = await http.get(uri);
@@ -162,10 +159,9 @@ class _YoutubeCommentsListState extends State<YoutubeCommentsList> {
           children: <Widget>[
             new Container(
               margin: const EdgeInsets.only(right: 16.0),
-              // HACK(dayang): Removed ImageURL due to performace issues,
-              // should put back in once network performance improves
-              child: new Alphatar.fromName(
+              child: new Alphatar.fromNameAndUrl(
                 name: comment.authorDisplayName,
+                avatarUrl: comment.authorProfileImageUrl,
               ),
             ),
             new Flexible(

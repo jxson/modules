@@ -14,7 +14,7 @@ import 'package:models/youtube.dart';
 import '../user/alphatar.dart';
 import 'loading_state.dart';
 
-const String _kApiBaseUrl = '104.196.239.187';
+const String _kApiBaseUrl = 'content.googleapis.com';
 
 const String _kApiRestOfUrl = '/youtube/v3/videos';
 
@@ -57,7 +57,7 @@ class _YoutubeVideoOverviewState extends State<YoutubeVideoOverview> {
     params['key'] = config.apiKey;
     params['part'] = _kApiQueryParts;
 
-    Uri uri = new Uri.http(_kApiBaseUrl, _kApiRestOfUrl, params);
+    Uri uri = new Uri.https(_kApiBaseUrl, _kApiRestOfUrl, params);
     http.Response response = await http.get(uri);
     if (response.statusCode != 200) {
       return null;
