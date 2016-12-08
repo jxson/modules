@@ -8,7 +8,7 @@ import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module_controller.fidl.dart';
-import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
+import 'package:apps.modules.email.services/email_session.fidl.dart' as es;
 import 'package:apps.mozart.lib.flutter/child_view.dart';
 import 'package:email_session_client/client.dart';
 import 'package:email_session_store/email_session_store.dart';

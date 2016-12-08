@@ -178,7 +178,7 @@ Future<bool> processDirectives(
   int endIndex = directives.last.end;
 
   String actual = src.getText(startIndex, endIndex);
-  String expected = _getOrderedDirectives(directives);
+  String expected = _getOrderedDirectives(directives, src);
 
   if (actual == expected) {
     return false;
@@ -244,7 +244,10 @@ class _Condition<T extends UriBasedDirective> {
   }
 }
 
-String _getOrderedDirectives(List<UriBasedDirective> directives) {
+String _getOrderedDirectives(
+  List<UriBasedDirective> directives,
+  SourceFile src,
+) {
   Set<UriBasedDirective> directiveSet = directives.toSet();
 
   List<_ConditionFn> conditions = <_ConditionFn>[
@@ -267,7 +270,12 @@ String _getOrderedDirectives(List<UriBasedDirective> directives) {
         directiveSet.removeAll(group);
 
         // Join the import directives with a newline character.
-        return group.join('\n');
+        // Use the text as appears in the original file, in order to respect the
+        // formatting done by dartfmt.
+        return group
+            .map((UriBasedDirective directive) =>
+                src.getText(directive.offset, directive.end))
+            .join('\n');
       })
       // Remove any empty groups.
       .where((String s) => s.isNotEmpty)

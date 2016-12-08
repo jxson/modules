@@ -5,11 +5,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:apps.modules.email.email_service/email.fidl.dart' as es;
+import 'package:apps.modules.email.services/email_service.fidl.dart' as es;
 import 'package:email_api/email_api.dart';
 import 'package:lib.fidl.dart/bindings.dart' as bindings;
 import 'package:models/email.dart';
-import 'package:models/fixtures.dart';
 import 'package:models/user.dart';
 
 import 'api.dart';

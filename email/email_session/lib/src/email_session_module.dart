@@ -7,7 +7,7 @@ import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
-import 'package:apps.modules.email.email_session/email_session.fidl.dart' as es;
+import 'package:apps.modules.email.services/email_session.fidl.dart' as es;
 import 'package:email_session_store/email_session_store.dart';
 import 'package:lib.fidl.dart/bindings.dart';
 import 'package:models/email.dart';

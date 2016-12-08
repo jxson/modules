@@ -4,7 +4,6 @@
 
 import("//build/dart/dart_package.gni")
 import("//flutter/build/flutter_app.gni")
-import("//lib/fidl/fidl.gni")
 
 dart_package("client") {
   package_name = "email_session_client"
@@ -13,20 +12,18 @@ dart_package("client") {
 
   deps = [
     "//apps/modular/lib/app/dart",
-    "//apps/modules/email/email_service:email_service_dart",
-    "//apps/modules/email/email_session:email_session_dart",
+    "//apps/modular/services/application:application_dart",
+    "//apps/modular/services/story:story_dart",
+    "//apps/modules/email/services:services_dart",
     "//apps/modules/packages/email_session_store",
     "//apps/modules/packages/fixtures",
     "//apps/modules/packages/models",
+    "//apps/mozart/lib/flutter",
+    "//apps/mozart/services/views:views_dart",
+    "//lib/fidl/dart",
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/flutter_flux",
     "//third_party/dart-pkg/pub/googleapis",
-  ]
-}
-
-fidl("email_session") {
-  sources = [
-    "email_session.fidl",
   ]
 }
 
@@ -37,18 +34,6 @@ flutter_app("email_session_app") {
   main_dart = "lib/main.dart"
 
   deps = [
-    "//apps/modular/services/application:application_dart",
-    "//apps/modular/services/story:story_dart",
-    "//apps/modules/email/email_service:email_service_dart",
-    "//apps/modules/email/email_session:email_session_dart",
-    "//apps/modules/packages/email_session_store",
-    "//apps/modules/packages/fixtures",
-    "//apps/modules/packages/models",
-    "//apps/mozart/lib/flutter",
-    "//apps/mozart/services/views:views_dart",
-    "//lib/fidl/dart",
-    "//lib/flutter/packages/flutter",
-    "//third_party/dart-pkg/pub/flutter_flux",
-    "//third_party/dart-pkg/pub/googleapis",
+    "//apps/modules/email/email_session:client",
   ]
 }
