@@ -66,8 +66,12 @@ class _MessageContentState extends State<MessageContent> {
             );
         }
       } catch (e) {
-        print('Error occurred while building embedded child for attachment '
-            '${attachment.id}: $e');
+        embeddedChildren.add(
+          new EmbeddedChild(
+            widgetBuilder: (_) => new Text('Error occurred while building '
+            'embedded child for attachment ${attachment.toJson()}: $e'),
+          ),
+        );
       }
     });
   }
