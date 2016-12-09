@@ -6,6 +6,8 @@ import 'package:flutter_flux/flutter_flux.dart';
 import 'package:models/email.dart';
 import 'package:models/user.dart';
 
+export 'package:flutter_flux/flutter_flux.dart';
+
 /// Represents an active view session into an Email repository
 abstract class EmailSessionStore implements Store {
   /// The current user profile

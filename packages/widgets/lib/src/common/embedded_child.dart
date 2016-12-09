@@ -126,7 +126,7 @@ class EmbeddedChildProvider {
 
     EmbeddedChildBuilder builder = _builders[type];
     if (builder == null) {
-      throw new Exception('The EmbeddedChildBuilder of type $type not found!');
+      throw new Exception('EmbeddedChildBuilder of type "$type" not found!');
     }
 
     return builder(args);
