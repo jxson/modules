@@ -43,7 +43,7 @@ gitbook = $(shell which gitbook)
 
 FLUTTER_TEST_FLAGS ?=
 
-DART_PACKAGES = $(shell find . -name "pubspec.yaml" -exec dirname {} \;)
+DART_PACKAGES = $(shell find . -name "pubspec.yaml" -or -name ".packages" -exec dirname {} \;)
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
 DART_ANALYSIS_OPTIONS = $(addsuffix /.analysis_options, $(DART_PACKAGES))
 JS_FILES = $(shell find . -name "*.js" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
