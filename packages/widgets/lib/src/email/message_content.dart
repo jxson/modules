@@ -69,7 +69,7 @@ class _MessageContentState extends State<MessageContent> {
         embeddedChildren.add(
           new EmbeddedChild(
             widgetBuilder: (_) => new Text('Error occurred while building '
-            'embedded child for attachment ${attachment.toJson()}: $e'),
+                'embedded child for attachment ${attachment.toJson()}: $e'),
           ),
         );
       }

@@ -13,7 +13,6 @@ export 'email_session_store.dart';
 
 /// A mock implemenation of EmailSession
 class EmailSessionStoreMock extends Store implements EmailSessionStore {
-
   User _user;
   List<Label> _visibleLabels;
   String _focusedLabelId;
