@@ -18,8 +18,6 @@ FLUTTER_DIR := $(FUCHSIA_ROOT)/lib/flutter
 FLUTTER_BIN := $(FLUTTER_DIR)/bin
 DART_BIN := $(FLUTTER_BIN)/cache/dart-sdk/bin
 OUT_DIR := $(FUCHSIA_ROOT)/out
-GEN_DIR := $(OUT_DIR)/debug-x86-64/gen/apps/modules
-MAGENTA_DIR := $(FUCHSIA_ROOT)/magenta
 MAGENTA_BUILD_DIR := $(OUT_DIR)/build-magenta/build-magenta-pc-x86-64
 PATH := $(FLUTTER_BIN):$(DART_BIN):$(PATH)
 
@@ -28,14 +26,22 @@ PATH := $(FLUTTER_BIN):$(DART_BIN):$(PATH)
 FSET_FLAGS :=
 GOMA ?=
 ifeq ($(GOMA),1)
-	GOMA_FLAGS += --goma
+	FSET_FLAGS += --goma
 endif
 ifeq ($(GOMA),0)
-	GOMA_FLAGS += --no-goma
+	FSET_FLAGS += --no-goma
+endif
+
+# Respect the fuchsia build variant if already set by fset command externally.
+# Otherwise, default to debug build.
+FUCHSIA_VARIANT ?= debug
+ifeq ($(FUCHSIA_VARIANT),release)
+	FSET_FLAGS += --release
 endif
 
 FENV := source $(FUCHSIA_ROOT)/scripts/env.sh && fset x86-64 $(FSET_FLAGS)
 
+DART_ANALYSIS_FLAGS := --lints --fatal-lints --fatal-warnings
 
 ################################################################################
 ## Common variables to use
@@ -43,7 +49,7 @@ gitbook = $(shell which gitbook)
 
 FLUTTER_TEST_FLAGS ?=
 
-DART_PACKAGES = $(shell find . -name "pubspec.yaml" -or -name ".packages" -exec dirname {} \;)
+DART_PACKAGES = $(sort $(shell find . \( -name "pubspec.yaml" -or -name ".packages" \) -exec dirname {} \;))
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
 DART_ANALYSIS_OPTIONS = $(addsuffix /.analysis_options, $(DART_PACKAGES))
 JS_FILES = $(shell find . -name "*.js" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
@@ -170,7 +176,7 @@ dart-base: build-fuchsia dart-symlinks $(addsuffix /.packages, $(DART_PACKAGES))
 
 .PHONY: dart-symlinks
 dart-symlinks:
-	@$(FUCHSIA_ROOT)/scripts/symlink-dot-packages.py
+	@$(FUCHSIA_ROOT)/scripts/symlink-dot-packages.py --tree=//apps/modules/*
 
 .PHONY: dart-clean
 dart-clean:
@@ -236,10 +242,18 @@ dart-fmt-extras-check:
 
 .PHONY: dart-lint
 dart-lint: dart-base
+	@# First run the fuchsia dart analysis tool to analyze all dart packages
+	@# with BUILD.gn files.
+	@$(FUCHSIA_ROOT)/scripts/run-dart-analysis.py \
+			--out=$(OUT_DIR)/$(FUCHSIA_VARIANT)-x86-64 \
+			--tree=//apps/modules/* \
+			$(DART_ANALYSIS_FLAGS)
+	@# Next, run the dartanalyzer for regular dart packages without BUILD.gn
 	@for pkg in $(DART_PACKAGES); do \
+		if [ -e $${pkg}/BUILD.gn ]; then continue; fi; \
 		echo "** Running the dartanalyzer in '$${pkg}' ..."; \
 		pushd $${pkg} > /dev/null; \
-		dartanalyzer --lints --fatal-lints --fatal-warnings . || exit 1; \
+		dartanalyzer $(DART_ANALYSIS_FLAGS) . || exit 1; \
 		popd > /dev/null; \
 		echo; \
 	done
