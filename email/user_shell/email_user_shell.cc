@@ -123,9 +123,11 @@ class EmailUserShellApp
 
   void CreateStory(const fidl::String& url) {
     FTL_LOG(INFO) << "EmailUserShell::CreateStory() " << url;
-    story_provider_->CreateStory(url, fidl::GetProxy(&story_controller_));
-    story_controller_->GetInfo([this](modular::StoryInfoPtr story_info) {
-      InitStory();
+    story_provider_->CreateStory(url, [this](const fidl::String& story_id) {
+      story_provider_->GetController(story_id, story_controller_.NewRequest());
+      story_controller_->GetInfo([this](modular::StoryInfoPtr story_info) {
+        InitStory();
+      });
     });
   }
 
