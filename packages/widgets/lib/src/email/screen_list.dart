@@ -100,11 +100,10 @@ class EmailListScreen extends StoreWatcher {
     }
 
     String focusedThreadId = emailSession.focusedThread?.id;
-    List<Widget> threadListItems = <Widget>[];
-    emailSession.visibleThreads.forEach((Thread t) {
-      threadListItems
-          .add(_createThreadListItem(context, t, t.id == focusedThreadId));
-    });
+    List<Widget> threadListItems = emailSession.visibleThreads
+        .map((Thread t) =>
+            _createThreadListItem(context, t, t.id == focusedThreadId))
+        .toList();
 
     // Use a standard Block to vertically place threadItems in the singleLine
     // and multiLine inbox styles. Use a ThreadGridLayout to place threadItems

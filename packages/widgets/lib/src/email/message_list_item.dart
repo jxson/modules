@@ -126,13 +126,9 @@ class MessageListItem extends StatelessWidget {
 
     if (isExpanded) {
       // Create list of both CCed and direct recipients of email
-      List<String> allRecipientList = <String>[];
-      message.recipientList.forEach((Mailbox m) {
-        allRecipientList.add(m.displayText);
-      });
-      message.ccList.forEach((Mailbox m) {
-        allRecipientList.add(m.displayText);
-      });
+      List<String> allRecipientList = <String>[]
+        ..addAll(message.recipientList.map((Mailbox m) => m.displayText))
+        ..addAll(message.ccList.map((Mailbox m) => m.displayText));
       subtitleText = 'to ${allRecipientList.join(', ')}';
     } else {
       subtitleText = message.generateSnippet();
