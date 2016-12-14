@@ -35,9 +35,9 @@ void main() {
                 )
                 .map((Document document) => document.properties['color'])
                 .forEach(
-                  (String colorValue) =>
+                  (Value colorValue) =>
                       colorWidgetKey.currentState.color = new Color(
-                        int.parse(colorValue),
+                        int.parse(colorValue.stringValue),
                       ),
                 );
           },
