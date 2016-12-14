@@ -13,4 +13,6 @@ dart_package("clients") {
     "//lib/flutter/packages/flutter",
     "//apps/modules/packages/models",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

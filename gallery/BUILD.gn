@@ -20,6 +20,8 @@ dart_package("gallery") {
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/flutter_flux",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }
 
 flutter_app("modules_gallery") {
@@ -41,4 +43,6 @@ flutter_app("modules_gallery") {
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/flutter_flux",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

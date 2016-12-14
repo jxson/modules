@@ -15,4 +15,6 @@ dart_package("flux") {
     "//apps/modules/packages/models",
     "//third_party/dart-pkg/pub/flutter_flux",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

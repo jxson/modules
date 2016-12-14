@@ -14,4 +14,6 @@ dart_package("fixtures") {
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/uuid",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

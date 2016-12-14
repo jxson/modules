@@ -8,4 +8,6 @@ dart_package("config") {
   package_name = "config"
 
   source_dir = "lib"
+
+  analysis_options = "//apps/modules/.analysis_options"
 }
