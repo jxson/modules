@@ -68,11 +68,9 @@ class _YoutubeCommentsListState extends State<YoutubeCommentsList> {
     dynamic jsonData = JSON.decode(response.body);
 
     if (jsonData['items'] is List<dynamic>) {
-      List<VideoComment> comments = <VideoComment>[];
-      jsonData['items'].forEach((dynamic json) {
-        comments.add(new VideoComment.fromJson(json));
-      });
-      return comments;
+      return jsonData['items']
+          .map((dynamic json) => new VideoComment.fromJson(json))
+          .toList();
     } else {
       return null;
     }

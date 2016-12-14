@@ -109,10 +109,9 @@ class EmailListScreen extends StoreWatcher {
           '${emailStore.exception}');
     }
 
-    List<Widget> threadListItems = <Widget>[];
-    emailStore.threads.forEach((Thread t) {
-      threadListItems.add(_createThreadListItem(context, t));
-    });
+    List<Widget> threadListItems = emailStore.threads
+        .map((Thread t) => _createThreadListItem(context, t))
+        .toList();
 
     // Use a standard Block to vertically place threadItems in the singleLine
     // and multiLine inbox styles. Use a ThreadGridLayout to place threadItems

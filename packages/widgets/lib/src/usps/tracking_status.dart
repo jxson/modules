@@ -89,11 +89,9 @@ class _TrackingStatusState extends State<TrackingStatus> {
     Iterable<xml.XmlElement> topLevelElements =
         xmlData.findAllElements('TrackInfo');
     if (topLevelElements.isNotEmpty) {
-      List<TrackingEntry> entries = <TrackingEntry>[];
-      topLevelElements.first.children.forEach((xml.XmlNode node) {
-        entries.add(new TrackingEntry.fromXML(node));
-      });
-      return entries;
+      return topLevelElements.first.children
+          .map((xml.XmlNode node) => new TrackingEntry.fromXML(node))
+          .toList();
     } else {
       return null;
     }

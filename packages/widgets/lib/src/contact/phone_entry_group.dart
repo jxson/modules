@@ -91,15 +91,14 @@ class PhoneEntryGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    List<Widget> children = <Widget>[];
-    contact.phoneNumbers.forEach((PhoneEntry entry) {
-      children.add(_buildPhoneEntryRow(
-        entry: entry,
-        showPrimaryStar: entry == contact.primaryPhoneNumber &&
-            contact.phoneNumbers.length > 1,
-        theme: theme,
-      ));
-    });
+    List<Widget> children = contact.phoneNumbers
+        .map((PhoneEntry entry) => _buildPhoneEntryRow(
+              entry: entry,
+              showPrimaryStar: entry == contact.primaryPhoneNumber &&
+                  contact.phoneNumbers.length > 1,
+              theme: theme,
+            ))
+        .toList();
     return new Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,

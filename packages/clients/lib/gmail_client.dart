@@ -153,12 +153,11 @@ class GmailClient extends EmailClient {
     String historyId = json['historyId'].toString();
 
     List<dynamic> jsonMessages = json['messages'];
-    List<Message> messages = <Message>[];
-    if (jsonMessages != null) {
-      jsonMessages.forEach((dynamic jsonMessage) {
-        messages.add(_createMessageFromJSON(jsonMessage));
-      });
-    }
+    List<Message> messages = jsonMessages == null
+        ? <Message>[]
+        : jsonMessages
+            .map((dynamic jsonMessage) => _createMessageFromJSON(jsonMessage))
+            .toList();
 
     return new Thread(
       id: id,

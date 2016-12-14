@@ -143,9 +143,9 @@ List<Label> _labelsFromJson(Map<String, List<Map<String, String>>> json) {
   List<Label> labels = <Label>[];
 
   if (json.containsKey('labels')) {
-    json['labels'].forEach((Map<String, String> value) {
-      labels.add(new Label.fromJson(value));
-    });
+    labels = json['labels']
+        .map((Map<String, String> value) => new Label.fromJson(value))
+        .toList();
   }
 
   return labels;
@@ -169,9 +169,9 @@ List<Thread> _threadsFromJson(Map<String, List<Map<String, String>>> json) {
   List<Thread> threads = <Thread>[];
 
   if (json.containsKey('threads')) {
-    json['threads'].forEach((Map<String, String> value) {
-      threads.add(new Thread.fromJson(value));
-    });
+    threads = json['threads']
+        .map((Map<String, String> value) => new Thread.fromJson(value))
+        .toList();
   }
 
   return threads;
