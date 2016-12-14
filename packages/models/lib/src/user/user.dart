@@ -52,7 +52,7 @@ class User {
   }
 
   /// Construct a new User from JSON.
-  factory User.fromJson(Map<String, String> json) {
+  factory User.fromJson(Map<String, dynamic> json) {
     return new User(
       id: json['id'],
       email: json['email'],
