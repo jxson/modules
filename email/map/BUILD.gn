@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 import("//flutter/build/flutter_app.gni")
+import("//build/component/component.gni")
 
 flutter_app("map") {
   main_dart = "lib/main.dart"
@@ -22,4 +23,9 @@ flutter_app("map") {
   ]
 
   analysis_options = "//apps/modules/.analysis_options"
+}
+
+fuchsia_component("map_component") {
+  manifest = "map_component.json"
+  flutter_program = ":map"
 }
