@@ -25,6 +25,8 @@ dart_package("client") {
     "//third_party/dart-pkg/pub/flutter_flux",
     "//third_party/dart-pkg/pub/googleapis",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }
 
 flutter_app("email_session_app") {
@@ -36,4 +38,6 @@ flutter_app("email_session_app") {
   deps = [
     "//apps/modules/email/email_session:client",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

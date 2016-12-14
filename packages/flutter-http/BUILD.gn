@@ -12,5 +12,6 @@ dart_package("flutter-http") {
   deps = [
     "//lib/flutter/packages/flutter",
   ]
-}
 
+  analysis_options = "//apps/modules/.analysis_options"
+}

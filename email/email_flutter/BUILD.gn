@@ -17,4 +17,6 @@ dart_package("email_flutter") {
     "//apps/modules/packages/widgets",
     "//lib/flutter/packages/flutter",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

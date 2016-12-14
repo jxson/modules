@@ -17,4 +17,6 @@ dart_package("email_session_store") {
     "//third_party/dart-pkg/pub/flutter_flux",
     "//third_party/dart-pkg/pub/googleapis",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

@@ -13,4 +13,6 @@ dart_package("config_flutter") {
     "//apps/modules/packages/config",
     "//lib/flutter/packages/flutter",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

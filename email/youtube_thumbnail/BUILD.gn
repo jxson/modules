@@ -18,4 +18,6 @@ flutter_app("youtube_thumbnail") {
     "//lib/fidl/dart",
     "//lib/flutter/packages/flutter",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }

@@ -12,4 +12,6 @@ dart_package("auth") {
   deps = [
     "//lib/flutter/packages/flutter",
   ]
+
+  analysis_options = "//apps/modules/.analysis_options"
 }
