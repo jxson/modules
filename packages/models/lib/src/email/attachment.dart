@@ -33,7 +33,7 @@ class Attachment {
   });
 
   /// Construct a new [Attachment] from JSON.
-  factory Attachment.fromJson(Map<String, String> json) {
+  factory Attachment.fromJson(Map<String, dynamic> json) {
     int type = int.parse(json['type']);
 
     return new Attachment(
