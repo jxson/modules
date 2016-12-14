@@ -273,8 +273,19 @@ dart-test: dart-base
 		echo; \
 		pushd $${pkg} > /dev/null; \
 		if [ -d "test" ]; then \
+			if [ -h ".packages" ]; then \
+				mv -f .packages .packages.bak; \
+				backup=1; \
+			fi; \
 			echo "** Running the flutter tests in '$${pkg}' ..."; \
-			flutter test $(FLUTTER_TEST_FLAGS) || exit 1; \
+			flutter test $(FLUTTER_TEST_FLAGS); \
+			test_result=$$?; \
+			if [ $${backup} -ne 0 ]; then \
+				mv -f .packages.bak .packages; \
+			fi; \
+			if [ $${test_result} -ne 0 ]; then \
+				exit 1; \
+			fi; \
 		else \
 			echo "** No tests found in '$${pkg}'."; \
 		fi; \
