@@ -1,0 +1,186 @@
+[
+  {
+    "cmd": [],
+    "name": "ensure_goma"
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "RECIPE_MODULE[infra::cipd]/resources/bootstrap.py",
+      "--platform",
+      "linux-amd64",
+      "--dest-directory",
+      "[SLAVE_BUILD]/cipd",
+      "--json-output",
+      "/path/to/tmp/json"
+    ],
+    "name": "ensure_goma.install cipd",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@1@@@",
+      "@@@STEP_TEXT@cipd instance_id: 40-chars-fake-of-the-package-instance_id@@@",
+      "@@@STEP_LOG_LINE@json.output@{@@@",
+      "@@@STEP_LOG_LINE@json.output@  \"executable\": \"[SLAVE_BUILD]/cipd/cipd\", @@@",
+      "@@@STEP_LOG_LINE@json.output@  \"instance_id\": \"40-chars-fake-of-the-package-instance_id\"@@@",
+      "@@@STEP_LOG_LINE@json.output@}@@@",
+      "@@@STEP_LOG_END@json.output@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[SLAVE_BUILD]/cipd/cipd",
+      "ensure",
+      "--root",
+      "[CACHE]/cipd/goma",
+      "--list",
+      "infra_internal/goma/client/linux-amd64 release",
+      "--json-output",
+      "/path/to/tmp/json",
+      "--service-account-json",
+      "/creds/service_accounts/service-account-goma-client.json"
+    ],
+    "name": "ensure_goma.ensure_installed",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@1@@@",
+      "@@@STEP_LOG_LINE@json.output@{@@@",
+      "@@@STEP_LOG_LINE@json.output@  \"result\": [@@@",
+      "@@@STEP_LOG_LINE@json.output@    {@@@",
+      "@@@STEP_LOG_LINE@json.output@      \"instance_id\": \"resolved-instance_id-of-release---------\", @@@",
+      "@@@STEP_LOG_LINE@json.output@      \"package\": \"infra_internal/goma/client/linux-amd64\"@@@",
+      "@@@STEP_LOG_LINE@json.output@    }@@@",
+      "@@@STEP_LOG_LINE@json.output@  ]@@@",
+      "@@@STEP_LOG_LINE@json.output@}@@@",
+      "@@@STEP_LOG_END@json.output@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "RECIPE_MODULE[infra::cipd]/resources/bootstrap.py",
+      "--platform",
+      "linux-amd64",
+      "--dest-directory",
+      "[SLAVE_BUILD]/cipd",
+      "--json-output",
+      "/path/to/tmp/json"
+    ],
+    "name": "install cipd",
+    "~followup_annotations": [
+      "@@@STEP_TEXT@cipd instance_id: 40-chars-fake-of-the-package-instance_id@@@",
+      "@@@STEP_LOG_LINE@json.output@{@@@",
+      "@@@STEP_LOG_LINE@json.output@  \"executable\": \"[SLAVE_BUILD]/cipd/cipd\", @@@",
+      "@@@STEP_LOG_LINE@json.output@  \"instance_id\": \"40-chars-fake-of-the-package-instance_id\"@@@",
+      "@@@STEP_LOG_LINE@json.output@}@@@",
+      "@@@STEP_LOG_END@json.output@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[SLAVE_BUILD]/cipd/cipd",
+      "ensure",
+      "--root",
+      "[CACHE]/cipd",
+      "--list",
+      "fuchsia/tools/jiri/linux-amd64 latest",
+      "--json-output",
+      "/path/to/tmp/json",
+      "--service-account-json",
+      "/creds/service_accounts/service-account-goma-client.json"
+    ],
+    "name": "ensure_installed",
+    "~followup_annotations": [
+      "@@@STEP_LOG_LINE@json.output@{@@@",
+      "@@@STEP_LOG_LINE@json.output@  \"result\": [@@@",
+      "@@@STEP_LOG_LINE@json.output@    {@@@",
+      "@@@STEP_LOG_LINE@json.output@      \"instance_id\": \"resolved-instance_id-of-latest----------\", @@@",
+      "@@@STEP_LOG_LINE@json.output@      \"package\": \"fuchsia/tools/jiri/linux-amd64\"@@@",
+      "@@@STEP_LOG_LINE@json.output@    }@@@",
+      "@@@STEP_LOG_LINE@json.output@  ]@@@",
+      "@@@STEP_LOG_LINE@json.output@}@@@",
+      "@@@STEP_LOG_END@json.output@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[CACHE]/cipd/jiri",
+      "init",
+      "-cache",
+      "[CACHE]/jiri"
+    ],
+    "name": "jiri init"
+  },
+  {
+    "cmd": [
+      "[CACHE]/cipd/jiri",
+      "project",
+      "clean"
+    ],
+    "name": "jiri project clean"
+  },
+  {
+    "cmd": [
+      "[CACHE]/cipd/jiri",
+      "import",
+      "-overwrite=true",
+      "userspace",
+      "https://fuchsia.googlesource.com/manifest"
+    ],
+    "name": "jiri import"
+  },
+  {
+    "cmd": [
+      "[CACHE]/cipd/jiri",
+      "update",
+      "-autoupdate=false",
+      "-gc=true"
+    ],
+    "name": "jiri update"
+  },
+  {
+    "cmd": [
+      "[CACHE]/cipd/jiri",
+      "snapshot",
+      "/path/to/tmp/"
+    ],
+    "name": "jiri snapshot",
+    "~followup_annotations": [
+      "@@@STEP_LOG_LINE@jiri.snapshot@@@@",
+      "@@@STEP_LOG_LINE@jiri.snapshot@<manifest>@@@",
+      "@@@STEP_LOG_LINE@jiri.snapshot@  <projects>@@@",
+      "@@@STEP_LOG_LINE@jiri.snapshot@    <project name=\"manifest\" path=\"manifest\" remote=\"https://fuchsia.googlesource.com/manifest\" revision=\"4c2b0da3c06341db5cebe4d02c78c93c3b2bd78b\"/>@@@",
+      "@@@STEP_LOG_LINE@jiri.snapshot@  </projects>@@@",
+      "@@@STEP_LOG_LINE@jiri.snapshot@</manifest>@@@",
+      "@@@STEP_LOG_END@jiri.snapshot@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[CACHE]/cipd/jiri",
+      "patch",
+      "-host",
+      "fuchsia-review.googlesource.com",
+      "-delete=true",
+      "-force=true",
+      "refs/changes/89/456789/12"
+    ],
+    "name": "jiri patch"
+  },
+  {
+    "cmd": [
+      "make",
+      "presubmit"
+    ],
+    "cwd": "[SLAVE_BUILD]/apps/modules",
+    "env": {
+      "GOMA": "1",
+      "MINIMAL": "1"
+    },
+    "name": "build and run presubmit tests"
+  },
+  {
+    "name": "$result",
+    "recipe_result": null,
+    "status_code": 0
+  }
+]
