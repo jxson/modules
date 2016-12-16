@@ -1,0 +1,12 @@
+{
+  "fuchsia:component": {
+    "name": "email_service",
+    "url": "file:///system/apps/email_service"
+  },
+  "fuchsia:program": {
+    "resource": "main"
+  },
+  "fuchsia:resources": {
+    "main": "email_service_component"
+  }
+}

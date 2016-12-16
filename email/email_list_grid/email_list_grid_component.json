@@ -1,0 +1,12 @@
+{
+  "fuchsia:component": {
+    "name": "email_list_grid",
+    "url": "file:///system/apps/email_list_grid"
+  },
+  "fuchsia:program": {
+    "resource": "main"
+  },
+  "fuchsia:resources": {
+    "main": "email_list_grid_component"
+  }
+}

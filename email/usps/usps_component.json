@@ -1,0 +1,12 @@
+{
+  "fuchsia:component": {
+    "name": "usps",
+    "url": "file:///system/apps/usps"
+  },
+  "fuchsia:program": {
+    "resource": "main"
+  },
+  "fuchsia:resources": {
+    "main": "usps_component"
+  }
+}

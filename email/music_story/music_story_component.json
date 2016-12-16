@@ -1,0 +1,12 @@
+{
+  "fuchsia:component": {
+    "name": "music_story",
+    "url": "file:///system/apps/music_story"
+  },
+  "fuchsia:program": {
+    "resource": "main"
+  },
+  "fuchsia:resources": {
+    "main": "music_story_component"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "fuchsia:component": {
+    "name": "interactive_receipt",
+    "url": "file:///system/apps/interactive_receipt"
+  },
+  "fuchsia:program": {
+    "resource": "main"
+  },
+  "fuchsia:resources": {
+    "main": "interactive_receipt_component"
+  }
+}
