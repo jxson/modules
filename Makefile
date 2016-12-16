@@ -32,6 +32,15 @@ ifeq ($(GOMA),0)
 	FSET_FLAGS += --no-goma
 endif
 
+# If MINIMAL=1 then we perform a minimal build of only the "modules" package and
+# its dependencies.
+MINIMAL ?=
+ifeq ($(MINIMAL),1)
+	FSET_FLAGS += --modules modules
+endif
+
+# TODO(armansito): Remove this TODO line as part of a CL to test the CQ.
+
 # Respect the fuchsia build variant if already set by fset command externally.
 # Otherwise, default to debug build.
 FUCHSIA_VARIANT ?= debug
