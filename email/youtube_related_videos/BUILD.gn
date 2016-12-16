@@ -2,6 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("//build/component/component.gni")
 import("//flutter/build/flutter_app.gni")
 
 flutter_app("youtube_related_videos") {
@@ -23,4 +24,9 @@ flutter_app("youtube_related_videos") {
   ]
 
   analysis_options = "//apps/modules/.analysis_options"
+}
+
+fuchsia_component("youtube_related_videos_component") {
+  manifest = "youtube_related_videos_component.json"
+  flutter_program = ":youtube_related_videos"
 }

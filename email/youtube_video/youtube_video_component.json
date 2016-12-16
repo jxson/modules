@@ -1,0 +1,12 @@
+{
+  "fuchsia:component": {
+    "name": "youtube_video",
+    "url": "file:///system/apps/youtube_video"
+  },
+  "fuchsia:program": {
+    "resource": "main"
+  },
+  "fuchsia:resources": {
+    "main": "youtube_video_component"
+  }
+}

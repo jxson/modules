@@ -1,0 +1,12 @@
+{
+  "fuchsia:component": {
+    "name": "email_session",
+    "url": "file:///system/apps/email_session"
+  },
+  "fuchsia:program": {
+    "resource": "main"
+  },
+  "fuchsia:resources": {
+    "main": "email_session_component"
+  }
+}

@@ -2,6 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("//build/component/component.gni")
 import("//flutter/build/flutter_app.gni")
 
 flutter_app("usps") {
@@ -22,4 +23,9 @@ flutter_app("usps") {
   ]
 
   analysis_options = "//apps/modules/.analysis_options"
+}
+
+fuchsia_component("usps_component") {
+  manifest = "usps_component.json"
+  flutter_program = ":usps"
 }

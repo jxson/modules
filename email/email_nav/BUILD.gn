@@ -2,6 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("//build/component/component.gni")
 import("//flutter/build/flutter_app.gni")
 
 flutter_app("email_nav") {
@@ -23,4 +24,9 @@ flutter_app("email_nav") {
   ]
 
   analysis_options = "//apps/modules/.analysis_options"
+}
+
+fuchsia_component("email_nav_component") {
+  manifest = "email_nav_component.json"
+  flutter_program = ":email_nav"
 }

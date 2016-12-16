@@ -2,6 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("//build/component/component.gni")
 import("//flutter/build/flutter_app.gni")
 
 flutter_app("interactive_receipt_http") {
@@ -19,4 +20,9 @@ flutter_app("interactive_receipt_http") {
   ]
 
   analysis_options = "//apps/modules/.analysis_options"
+}
+
+fuchsia_component("interactive_receipt_http_component") {
+  manifest = "interactive_receipt_http_component.json"
+  flutter_program = ":interactive_receipt_http"
 }

@@ -2,8 +2,8 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//flutter/build/flutter_app.gni")
 import("//build/component/component.gni")
+import("//flutter/build/flutter_app.gni")
 
 flutter_app("map") {
   main_dart = "lib/main.dart"

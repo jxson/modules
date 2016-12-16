@@ -1,7 +1,7 @@
 {
   "fuchsia:component": {
     "name": "map",
-    "url": "https://fuchsia.google.com/map"
+    "url": "file:///system/apps/map"
   },
   "fuchsia:program": {
     "resource": "main"
