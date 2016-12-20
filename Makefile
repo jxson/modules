@@ -32,6 +32,12 @@ ifeq ($(GOMA),0)
 	FSET_FLAGS += --no-goma
 endif
 
+# If NO_ENSURE_GOMA=1 then we tell fbuild not to run the goma script directly.
+NO_ENSURE_GOMA ?=
+ifeq ($(NO_ENSURE_GOMA),1)
+	FSET_FLAGS += --no-ensure-goma
+endif
+
 # If MINIMAL=1 then we perform a minimal build of only the "modules" package and
 # its dependencies.
 MINIMAL ?=
