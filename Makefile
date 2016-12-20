@@ -52,11 +52,12 @@ FENV := source $(FUCHSIA_ROOT)/scripts/env.sh && fset x86-64 $(FSET_FLAGS)
 
 DART_ANALYSIS_FLAGS := --lints --fatal-lints --fatal-warnings
 
+FLUTTER_TEST_FLAGS ?=
+FLUTTER_TEST_FLAGS += --coverage
+
 ################################################################################
 ## Common variables to use
 gitbook = $(shell which gitbook)
-
-FLUTTER_TEST_FLAGS ?=
 
 DART_PACKAGES = $(sort $(shell find . \( -name "pubspec.yaml" -or -name ".packages" \) -exec dirname {} \;))
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
@@ -88,8 +89,8 @@ build:
 	@true
 
 .PHONY: clean
-clean:
-	@$(MAKE) dart-clean
+clean: dart-clean
+	@true
 
 .PHONY: copyright-check
 copyright-check:
@@ -114,28 +115,25 @@ depclean:
 	@rm -rf $(MAGENTA_BUILD_DIR)
 
 .PHONY: fmt
-fmt: ## Format everything.
-	@$(MAKE) dart-fmt
-	@$(MAKE) dart-fmt-extras
+fmt: dart-fmt dart-fmt-extras ## Format everything.
+	@true
 
 .PHONY: lint
-lint: ## Lint everything.
-	@$(MAKE) dart-lint
+lint: dart-lint ## Lint everything.
+	@true
 
 # TODO(youngseokyoon): integrate this with the CI system later.
 .PHONY: presubmit
-presubmit: ## Run the presubmit tests.
-	@$(MAKE) build-fuchsia
-	@$(MAKE) copyright-check
-	@$(MAKE) dart-presubmit
+presubmit: build-fuchsia copyright-check dart-presubmit ## Run the presubmit tests.
+	@true
 
 .PHONY: test
-test: ## Run tests for all modules.
-	@$(MAKE) dart-test
+test: dart-test ## Run tests for all modules.
+	@true
 
 .PHONY: coverage
-coverage: ## Show coverage for all modules.
-	@$(MAKE) dart-coverage
+coverage: dart-coverage ## Show coverage for all modules.
+	@true
 
 .PHONY: run
 run: dart-base ## Run the gallery flutter app.
@@ -197,8 +195,7 @@ dart-clean:
 	@rm -rf coverage
 
 .PHONY: dart-coverage
-dart-coverage:
-	@FLUTTER_TEST_FLAGS='--coverage' $(MAKE) dart-test
+dart-coverage: dart-test
 	@echo
 	@echo "** Code coverage for dart files **"
 	@echo
@@ -293,11 +290,8 @@ dart-test: dart-base
 	done
 
 .PHONY: dart-presubmit
-dart-presubmit:
-	@$(MAKE) dart-fmt-check
-	@$(MAKE) dart-fmt-extras-check
-	@$(MAKE) dart-lint
-	@$(MAKE) dart-coverage
+dart-presubmit: dart-fmt-check dart-fmt-extras-check dart-lint dart-coverage
+	@true
 
 ################################################################################
 ## Email related targets
