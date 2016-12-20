@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:email_session_store/email_session_store_mock.dart';
 import 'package:flutter/material.dart';
-import 'package:flux/email.dart';
-import 'package:models/email.dart';
 
 import 'gallery/embedded_child_builders.dart';
 import 'gallery/home.dart';
@@ -38,15 +37,8 @@ class AppState extends State<App> {
   void initState() {
     super.initState();
 
-    // Initialize the stores here.
-    // The following line is put here to make sure that the store is initialized
-    // before the updateThreadsAction is dispatched.
-    kEmailStoreToken;
-    kEmailActions.updateThreads(<Thread>[
-      new MockThread(id: 'thread01'),
-      new MockThread(id: 'thread02'),
-      new MockThread(id: 'thread03'),
-    ]);
+    // Initialize the mock email session store here.
+    kEmailSessionStoreToken ??= new StoreToken(new EmailSessionStoreMock());
   }
 
   @override
@@ -55,7 +47,6 @@ class AppState extends State<App> {
       title: 'FX Modules',
       theme: new ThemeData(primarySwatch: Colors.blue),
       routes: kRoutes,
-      onGenerateRoute: handleRoute,
       home: new Home(
         showPerformanceOverlay: showPerformanceOverlay,
         onShowPerformanceOverlayChanged: (bool value) {

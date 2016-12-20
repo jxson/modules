@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:widgets/email.dart';
 
 import '../screens/index.dart';
 import '../src/config.dart';
@@ -53,8 +54,7 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     group: GalleryGroups.screen,
     href: '/email/thread',
     builder: (BuildContext context, GalleryItem item) =>
-        galleryScaffoldedScreen(
-            item.title, new EmailThreadScreen(threadId: 'thread01')),
+        galleryScaffoldedScreen(item.title, new EmailThreadScreen()),
   ),
   new GalleryItem(
     title: 'Email - Editor',

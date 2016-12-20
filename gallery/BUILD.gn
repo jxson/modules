@@ -11,9 +11,7 @@ dart_package("gallery") {
   source_dir = "lib"
 
   deps = [
-    "//apps/modules/packages/auth",
     "//apps/modules/packages/clients",
-    "//apps/modules/packages/flux",
     "//apps/modules/packages/models",
     "//apps/modules/packages/util",
     "//apps/modules/packages/widgets",
@@ -34,9 +32,7 @@ flutter_app("modules_gallery") {
   source_dir = "lib"
 
   deps = [
-    "//apps/modules/packages/auth",
     "//apps/modules/packages/clients",
-    "//apps/modules/packages/flux",
     "//apps/modules/packages/models",
     "//apps/modules/packages/util",
     "//apps/modules/packages/widgets",
