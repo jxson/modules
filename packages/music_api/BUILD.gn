@@ -4,14 +4,14 @@
 
 import("//build/dart/dart_package.gni")
 
-dart_package("clients") {
-  package_name = "clients"
+dart_package("music_api") {
+  package_name = "music_api"
 
   source_dir = "lib"
 
   deps = [
-    "//lib/flutter/packages/flutter",
     "//apps/modules/packages/models",
+    "//lib/flutter/packages/flutter",
   ]
 
   analysis_options = "//apps/modules/.analysis_options"

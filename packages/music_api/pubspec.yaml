@@ -2,20 +2,13 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-name: clients
-description: >
-  A collection of client APIs used for communicating with various backend
-  services and transforming the data into the right formats.
+name: music_api
 dependencies:
   flutter:
     sdk: flutter
   models:
     path: ../models
-dependency_overrides:
-  http:
-    path: ../../packages/flutter-http/
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: any
-  mockito: ^1.0.1
+  test: ^0.12.15

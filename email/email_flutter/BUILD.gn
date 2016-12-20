@@ -13,7 +13,6 @@ dart_package("email_flutter") {
   deps = [
     "//apps/modules/packages/config_flutter",
     "//apps/modules/packages/email_session_store",
-    "//apps/modules/packages/clients",
     "//apps/modules/packages/widgets",
     "//lib/flutter/packages/flutter",
   ]

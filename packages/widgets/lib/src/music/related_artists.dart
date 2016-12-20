@@ -2,10 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:clients/music_client.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/music.dart';
+import 'package:music_api/music_api.dart';
 
 import 'loading_state.dart';
 
@@ -37,7 +37,7 @@ class _RelatedArtistsState extends State<RelatedArtists> {
   @override
   void initState() {
     super.initState();
-    MusicClient.getRelatedArtists(config.artistId).then((List<Artist> artists) {
+    MusicAPI.getRelatedArtists(config.artistId).then((List<Artist> artists) {
       if (mounted) {
         if (artists == null) {
           setState(() {
