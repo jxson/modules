@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   models:
     path: ../models
-  clients:
-    path: ../clients
+  music_api:
+    path: ../music_api
   xml: ^2.4.3
 dependency_overrides:
   http:

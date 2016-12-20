@@ -14,7 +14,6 @@ group("test") {
   testonly = true
 
   deps = [
-    "//apps/modules/packages/clients/test",
     "//apps/modules/packages/email_api/test",
     "//apps/modules/packages/fixtures/test",
     "//apps/modules/packages/models/test",

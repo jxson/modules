@@ -2,10 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:clients/music_client.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/music.dart';
+import 'package:music_api/music_api.dart';
 
 import 'loading_state.dart';
 import 'related_artists.dart';
@@ -42,7 +42,7 @@ class _AlbumPageState extends State<AlbumPage> {
   @override
   void initState() {
     super.initState();
-    MusicClient.getAlbumById(config.albumId).then((Album album) {
+    MusicAPI.getAlbumById(config.albumId).then((Album album) {
       if (mounted) {
         if (album == null) {
           setState(() {

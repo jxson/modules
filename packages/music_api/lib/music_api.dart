@@ -11,7 +11,7 @@ import 'package:models/music.dart';
 const String _kApiBaseUrl = 'api.spotify.com';
 
 /// Client to retrieve data for Music
-class MusicClient {
+class MusicAPI {
   /// Retrieves given artist based on id
   static Future<Artist> getArtistById(String id) async {
     Uri uri = new Uri.https(_kApiBaseUrl, '/v1/artists/$id');
