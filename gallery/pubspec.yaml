@@ -5,10 +5,10 @@
 name: gallery
 description: View UI Widgets and screens.
 dependencies:
+  config_flutter:
+    path: ../../packages/config_flutter
   flutter:
     sdk: flutter
-  clients:
-    path: ../packages/clients
   flutter_flux:
     path: ../../../third_party/dart-pkg/pub/flutter_flux
   models:

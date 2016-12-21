@@ -181,15 +181,8 @@ doc:
 $(DART_ANALYSIS_OPTIONS): $(DIRNAME)/.analysis_options
 	cp $< $@
 
-# Copy the example config file, if the config file does not exist.
-EXAMPLE_CONFIG_FILE = gallery/lib/src/config.example.dart
-TARGET_CONFIG_FILE = gallery/lib/src/config.dart
-
-$(TARGET_CONFIG_FILE):
-	cp $(EXAMPLE_CONFIG_FILE) $(TARGET_CONFIG_FILE)
-
 .PHONY: dart-base
-dart-base: build-fuchsia dart-symlinks $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS) $(TARGET_CONFIG_FILE)
+dart-base: build-fuchsia dart-symlinks $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS)
 	@true
 
 .PHONY: dart-symlinks
@@ -310,7 +303,7 @@ dart-presubmit: dart-fmt-check dart-fmt-extras-check dart-lint dart-coverage
 auth: email/config.json ## Update email auth credentials with a refresh token.
 	@cd email/tools; \
 	pub run bin/oauth.dart
-	@for dir in email/email_flutter/assets email/email_service/assets email/map/assets email/usps/assets email/youtube_related_videos/assets email/youtube_video/assets; do \
+	@for dir in email/email_flutter/assets email/email_service/assets email/map/assets email/usps/assets email/youtube_related_videos/assets email/youtube_video/assets gallery/assets; do \
 		mkdir -p $${dir}; \
 		cp email/config.json $${dir}/config.json; \
 	done

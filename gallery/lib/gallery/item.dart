@@ -4,6 +4,7 @@
 
 import 'dart:developer';
 
+import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -11,7 +12,7 @@ import 'groups.dart';
 
 /// Used to build the widgets that hold the UI for [GalleryItem] instances.
 typedef Widget GalleryPageBuilder(
-    BuildContext context, GalleryItem galleryItem);
+    BuildContext context, GalleryItem galleryItem, Config config);
 
 /// A [Widget] for gallery list items.
 ///

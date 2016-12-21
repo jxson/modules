@@ -4,3 +4,5 @@
 
 name: gallery
 uses-material-design: true
+assets:
+  - assets/config.json

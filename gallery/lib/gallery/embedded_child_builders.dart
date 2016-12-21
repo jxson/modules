@@ -2,25 +2,23 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets/map.dart';
 import 'package:widgets/shopping.dart';
 import 'package:widgets/usps.dart';
 import 'package:widgets/youtube.dart';
 
-import '../src/config.dart';
-
 /// Adds all the [EmbeddedChildBuilder]s that this application supports.
-void addEmbeddedChildBuilders() {
-  // USPS Tracking.
-  try {
-    String uspsApiKey = kConfig.get('usps_api_key');
+void addEmbeddedChildBuilders(Config config) {
+  // USPS Tracking
+  if (config.has('usps_api_key')) {
     kEmbeddedChildProvider.addEmbeddedChildBuilder(
       'usps-shipping',
       (dynamic args) {
         return new EmbeddedChild(
           widgetBuilder: (BuildContext context) => new TrackingStatus(
-                apiKey: uspsApiKey,
+                apiKey: config.get('usps_api_key'),
                 trackingCode: args,
               ),
           // Flutter version doesn't need a specific disposer.
@@ -28,48 +26,47 @@ void addEmbeddedChildBuilders() {
         );
       },
     );
+  }
 
-    String googleApiKey = kConfig.get('google_api_key');
+  // Map, Youtube video
+  if (config.has('google_api_key')) {
     kEmbeddedChildProvider.addEmbeddedChildBuilder(
       'map',
       (dynamic args) {
         return new EmbeddedChild(
           widgetBuilder: (BuildContext context) => new StaticMap(
                 location: args,
-                apiKey: googleApiKey,
+                apiKey: config.get('google_api_key'),
               ),
           // Flutter version doesn't need a specific disposer.
           disposer: () {},
         );
       },
     );
+
     kEmbeddedChildProvider.addEmbeddedChildBuilder(
       'youtube-video',
       (dynamic args) {
         return new EmbeddedChild(
           widgetBuilder: (BuildContext context) => new YoutubeVideo(
                 videoId: args,
-                apiKey: googleApiKey,
+                apiKey: config.get('google_api_key'),
               ),
           // Flutter version doesn't need a specific disposer.
           disposer: () {},
         );
       },
     );
-    kEmbeddedChildProvider.addEmbeddedChildBuilder(
-      'order-receipt',
-      (dynamic args) {
-        return new EmbeddedChild(
-          widgetBuilder: (BuildContext context) => new InteractiveReceipt(),
-          // Flutter version doesn't need a specific disposer.
-          disposer: () {},
-        );
-      },
-    );
-  } catch (e) {
-    // TODO(youngseokyoon): use the config_flutter package instead for getting
-    // the api key values.
-    // https://fuchsia.atlassian.net/browse/SO-140
-    print('Warning: $e');
   }
+
+  kEmbeddedChildProvider.addEmbeddedChildBuilder(
+    'order-receipt',
+    (dynamic args) {
+      return new EmbeddedChild(
+        widgetBuilder: (BuildContext context) => new InteractiveReceipt(),
+        // Flutter version doesn't need a specific disposer.
+        disposer: () {},
+      );
+    },
+  );
 }

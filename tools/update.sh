@@ -6,21 +6,10 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_DIR="$( dirname ${SCRIPT_DIR} )"
 
-EXAMPLE_CONFIG_FILE=${REPO_DIR}/gallery/lib/src/config.example.dart
-TARGET_CONFIG_FILE=${REPO_DIR}/gallery/lib/src/config.dart
-
-# If the "config.dart" file does not exist or is older than the example
-# config, copy the example config file to the target file.
-if [ "${TARGET_CONFIG_FILE}" -ot "${EXAMPLE_CONFIG_FILE}" ]; then
-    cp "${EXAMPLE_CONFIG_FILE}" "${TARGET_CONFIG_FILE}"
-fi
-
-PREFIX="${REPO_DIR}/email"
-
 # If config.json files are missing create empty ones so the build doesn't
 # break.
-for name in email_flutter email_service map usps youtube_related_videos youtube_video ; do
-  CONFIG="${PREFIX}/${name}/assets/config.json"
+for name in email/email_flutter email/email_service email/map email/usps email/youtube_related_videos email/youtube_video gallery; do
+  CONFIG="${REPO_DIR}/${name}/assets/config.json"
   if [ ! -f "${CONFIG}" ]; then
     mkdir -p "$( dirname ${CONFIG} )"
     echo "{}" >> "${CONFIG}"
