@@ -55,7 +55,7 @@ def RunSteps(api, category, patch_gerrit_url, patch_project, patch_ref,
     modules_repo_path = api.path['slave_build'].join('apps/modules')
     api.step('build and run presubmit tests', ['make', 'presubmit'],
              cwd=modules_repo_path,
-             env={'GOMA': 1, 'MINIMAL': 1})
+             env={'GOMA': 1, 'MINIMAL': 1, 'NO_ENSURE_GOMA': 1})
 
 def GenTests(api):
     yield api.test('basic')

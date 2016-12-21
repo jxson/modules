@@ -174,7 +174,8 @@
     "cwd": "[SLAVE_BUILD]/apps/modules",
     "env": {
       "GOMA": "1",
-      "MINIMAL": "1"
+      "MINIMAL": "1",
+      "NO_ENSURE_GOMA": "1"
     },
     "name": "build and run presubmit tests"
   },
