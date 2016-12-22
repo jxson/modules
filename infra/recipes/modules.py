@@ -52,10 +52,11 @@ def RunSteps(api, category, patch_gerrit_url, patch_project, patch_ref,
     # also always hardcodes x86-64 as the target architecture. Since this is
     # only exercising Dart code we don't parameterize the recipe for any other
     # architecture.
-    modules_repo_path = api.path['slave_build'].join('apps/modules')
-    api.step('build and run presubmit tests', ['make', 'presubmit'],
-             cwd=modules_repo_path,
-             env={'GOMA': 1, 'MINIMAL': 1, 'NO_ENSURE_GOMA': 1})
+    with api.goma.build_with_goma():
+        modules_repo_path = api.path['slave_build'].join('apps/modules')
+        api.step('build and run presubmit tests', ['make', 'presubmit'],
+                 cwd=modules_repo_path,
+                 env={'GOMA': 1, 'MINIMAL': 1, 'NO_ENSURE_GOMA': 1})
 
 def GenTests(api):
     yield api.test('basic')
