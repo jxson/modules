@@ -187,6 +187,7 @@
     "cwd": "[SLAVE_BUILD]/apps/modules",
     "env": {
       "GOMA": "1",
+      "GOMA_DIR": "[CACHE]/cipd/goma",
       "MINIMAL": "1",
       "NO_ENSURE_GOMA": "1"
     },
