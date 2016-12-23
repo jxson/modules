@@ -32,6 +32,11 @@ ifeq ($(GOMA),0)
 	FSET_FLAGS += --no-goma
 endif
 
+GOMA_DIR ?=
+ifneq ($(strip $(GOMA_DIR)),)
+	FSET_FLAGS += --goma-dir $(GOMA_DIR)
+endif
+
 # If NO_ENSURE_GOMA=1 then we tell fbuild not to run the goma script directly.
 NO_ENSURE_GOMA ?=
 ifeq ($(NO_ENSURE_GOMA),1)
