@@ -2,9 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
+
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
-import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/module_controller.fidl.dart';
@@ -18,7 +19,7 @@ final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
 final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 
-final String _kYoutubeDocId = 'youtube-doc';
+final String _kYoutubeDocRoot = 'youtube-doc';
 final String _kYoutubeVideoIdKey = 'youtube-video-id';
 
 final String _kChildUrl = 'file:///system/apps/youtube_thumbnail';
@@ -66,16 +67,10 @@ class ModuleImpl extends Module {
     // Bind the link handle and write the video id.
     link.ctrl.bind(linkHandle);
 
-    Document youtubeDoc = new Document.init(
-      _kYoutubeDocId,
-      <String, Value>{
-        _kYoutubeVideoIdKey: new Value()..stringValue = _kVideoId
-      },
-    );
-
-    link.addDocuments(<String, Document>{
-      _kYoutubeDocId: youtubeDoc,
-    });
+    Map<String, dynamic> doc = <String, dynamic>{
+      _kYoutubeVideoIdKey: _kVideoId
+    };
+    link.updateObject('/' + _kYoutubeDocRoot, JSON.encode(doc));
 
     // Spawn the child.
     _videoPlayerConn =

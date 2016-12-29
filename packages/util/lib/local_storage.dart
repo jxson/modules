@@ -62,7 +62,7 @@ class LocalStorage {
 
 class _Store {
   final File file;
-  final Map<String, String> _map = <String, String>{};
+  final Map<String, dynamic> _map = <String, dynamic>{};
 
   _Store(this.file);
 

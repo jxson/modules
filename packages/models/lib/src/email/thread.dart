@@ -57,9 +57,9 @@ class Thread {
         ')';
   }
 
-  /// Thread representation appropriate for JSON encoding.
+  /// Helper function for JSON.encode().
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> json = new Map<String, dynamic>();
+    Map<String, dynamic> json = <String, dynamic>{};
 
     json['id'] = id;
     json['snippet'] = snippet;

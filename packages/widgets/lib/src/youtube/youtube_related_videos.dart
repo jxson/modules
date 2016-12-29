@@ -170,12 +170,13 @@ Future<List<VideoData>> _getRelatedVideoData({
   String videoId,
   String apiKey,
 }) async {
-  Map<String, String> params = <String, String>{};
-  params['part'] = 'snippet';
-  params['relatedToVideoId'] = videoId;
-  params['maxResults'] = _kMaxResults;
-  params['type'] = 'video';
-  params['key'] = apiKey;
+  Map<String, String> params = <String, String>{
+    'part': 'snippet',
+    'relatedToVideoId': videoId,
+    'maxResults': _kMaxResults,
+    'type': 'video',
+    'key': apiKey,
+  };
 
   Uri uri = new Uri.https(_kApiBaseUrl, _kApiRestOfUrl, params);
   http.Response response = await http.get(uri);

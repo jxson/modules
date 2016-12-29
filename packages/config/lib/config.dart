@@ -16,7 +16,7 @@ abstract class BaseConfig {
     'https://www.googleapis.com/auth/youtube.readonly',
   ];
 
-  final Map<String, String> _data = <String, String>{};
+  final Map<String, dynamic> _data = <String, dynamic>{};
 
   /// Configuration loading needs to be defined separately for each unique
   /// environement, Flutter versus CLI.
@@ -61,7 +61,7 @@ abstract class BaseConfig {
   }
 
   /// Create a [Map] for use in JSON encoding.
-  Map<String, String> toJSON() {
+  Map<String, dynamic> toJSON() {
     return _data;
   }
 }

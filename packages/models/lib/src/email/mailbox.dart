@@ -58,9 +58,9 @@ class Mailbox {
     );
   }
 
-  /// JSON representation.
-  Map<String, String> toJson() {
-    return <String, String>{
+  /// Helper function for JSON.encode().
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
       'name': displayName,
       'email': address,
     };

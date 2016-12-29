@@ -3,10 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
-import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
@@ -22,7 +22,7 @@ final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 // This module expects to obtain the youtube video id string through the link
 // provided from the parent, in the following document id / property key.
 // TODO(youngseokyoon): add this information to the module manifest.
-final String _kYoutubeDocId = 'youtube-doc';
+final String _kYoutubeDocRoot = 'youtube-doc';
 final String _kYoutubeVideoIdKey = 'youtube-video-id';
 
 ModuleImpl _module;
@@ -50,17 +50,20 @@ class LinkWatcherImpl extends LinkWatcher {
   void close() => _binding.close();
 
   @override
-  void notify(Map<String, Document> docs) {
+  void notify(String json) {
     _log('LinkWatcherImpl::notify call');
 
-    Document youtubeDoc = docs[_kYoutubeDocId];
-    if (youtubeDoc == null || youtubeDoc.properties == null) {
-      _log('No youtube doc found.');
+    final dynamic doc = JSON.decode(json);
+    if (doc is! Map ||
+        doc[_kYoutubeDocRoot] is! Map ||
+        doc[_kYoutubeDocRoot][_kYoutubeVideoIdKey] is! String) {
+      _log('No youtube key found in json.');
       return;
     }
 
+    _videoId = doc[_kYoutubeDocRoot][_kYoutubeVideoIdKey];
+
     _log('_videoId: $_videoId');
-    _videoId = youtubeDoc.properties[_kYoutubeVideoIdKey]?.stringValue;
     _kHomeKey.currentState?.updateUI();
   }
 }

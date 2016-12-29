@@ -53,12 +53,13 @@ class _YoutubeCommentsListState extends State<YoutubeCommentsList> {
   LoadingState _loadingState = LoadingState.inProgress;
 
   Future<List<VideoComment>> _getCommentsData() async {
-    Map<String, String> params = <String, String>{};
-    params['videoId'] = config.videoId;
-    params['key'] = config.apiKey;
-    params['part'] = _kApiQueryParts;
-    params['order'] = 'relevance';
-    params['textFormat'] = 'plainText';
+    Map<String, String> params = <String, String>{
+      'videoId': config.videoId,
+      'key': config.apiKey,
+      'part': _kApiQueryParts,
+      'order': 'relevance',
+      'textFormat': 'plainText',
+    };
 
     Uri uri = new Uri.https(_kApiBaseUrl, _kApiRestOfUrl, params);
     http.Response response = await http.get(uri);

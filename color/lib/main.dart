@@ -2,9 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
+
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
-import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
@@ -27,19 +28,14 @@ void main() {
     (InterfaceRequest<Module> request) {
       _moduleBinding.bind(
         new _ModuleImpl(
-          (Map<String, Document> documents) {
-            _log('Documents: $documents');
-            documents.values
-                .where(
-                  (Document document) => document.properties['color'] != null,
-                )
-                .map((Document document) => document.properties['color'])
-                .forEach(
-                  (Value colorValue) =>
-                      colorWidgetKey.currentState.color = new Color(
-                        int.parse(colorValue.stringValue),
-                      ),
-                );
+          (String json) {
+            _log('JSON: $json');
+            // Expects Link to look something like this:
+            // { "color" : 255 }
+            final dynamic doc = JSON.decode(json);
+            if (doc is Map && doc['color'] is int) {
+              colorWidgetKey.currentState.color = new Color(doc['color']);
+            }
           },
         ),
         request,
@@ -55,16 +51,16 @@ void _log(String msg) {
   print('[Color Module] $msg');
 }
 
-typedef void _OnDocuments(Map<String, Document> documents);
+typedef void _OnNotify(String json);
 
 class _LinkWatcherImpl extends LinkWatcher {
-  final _OnDocuments _onDocuments;
+  final _OnNotify _onNotify;
 
-  _LinkWatcherImpl(this._onDocuments);
+  _LinkWatcherImpl(this._onNotify);
 
   @override
-  void notify(Map<String, Document> documents) {
-    _onDocuments?.call(documents);
+  void notify(String json) {
+    _onNotify?.call(json);
   }
 }
 
@@ -75,9 +71,9 @@ class _ModuleImpl extends Module {
 
   final LinkWatcherBinding _linkWatcherBinding = new LinkWatcherBinding();
 
-  final _OnDocuments _onDocuments;
+  final _OnNotify _onNotify;
 
-  _ModuleImpl(this._onDocuments);
+  _ModuleImpl(this._onNotify);
 
   /// Implementation of the Initialize(Story story, Link link) method.
   @override
@@ -89,7 +85,7 @@ class _ModuleImpl extends Module {
   ) {
     _log('ModuleImpl::initialize call');
     _link.ctrl.bind(linkHandle);
-    _link.watch(_linkWatcherBinding.wrap(new _LinkWatcherImpl(_onDocuments)));
+    _link.watch(_linkWatcherBinding.wrap(new _LinkWatcherImpl(_onNotify)));
   }
 
   @override

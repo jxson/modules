@@ -55,7 +55,7 @@ class GalleryItem extends StatelessWidget {
       subtitle: new Text(subtitle),
       onTap: () {
         Timeline.instantSync('Start Transition',
-            arguments: <String, String>{'from': '/', 'to': href});
+            arguments: <String, dynamic>{'from': '/', 'to': href});
         Navigator.pushNamed(context, href);
       },
     );

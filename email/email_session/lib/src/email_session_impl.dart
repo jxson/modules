@@ -41,14 +41,17 @@ class EmailSessionImpl extends es.EmailSession {
   /// Connects to necessary email services, and fetches the initial data.
   void initialize(ServiceProvider emailServices) {
     _log('initialize called');
-    _link.query(_doc.readFromLink);
+    _link.get('', _doc.readFromLink);
 
     connectToService(emailServices, _email.ctrl);
 
     _log('calling _email.me()');
     _email.me((service.User user) {
       _log('_email.me() called back $user');
-      _doc.user = new User.fromJson(JSON.decode(user.jsonPayload));
+
+      // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
+      Map<String, dynamic> json = JSON.decode(user.jsonPayload);
+      _doc.user = new User.fromJson(json);
       _update();
 
       _log('calling _email.labels()');
