@@ -41,7 +41,7 @@ Config file does not exist:
   /// Save the current configuration values to [this.file].
   Future<Null> save() async {
     JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-    Map<String, String> json = this.toJSON();
+    Map<String, dynamic> json = this.toJSON();
     String data = encoder.convert(json);
     await this.file.writeAsString(data);
   }

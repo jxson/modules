@@ -49,7 +49,7 @@ class Track {
   });
 
   /// Create a full track object form json data
-  factory Track.fromFullJson(dynamic json) {
+  factory Track.fromFullJson(Map<String, dynamic> json) {
     return new Track(
       name: json['name'],
       artists: Artist.listFromJson(json['artists']),
@@ -58,7 +58,7 @@ class Track {
           milliseconds: json['duration_ms'] is int
               ? json['duration_ms']
               : int.parse(json['duration_ms'])),
-      explicit: json['explicit'],
+      explicit: json['explicit'] ?? false,
       id: json['id'],
       popularity: json['popularity'],
       trackNumber: json['track_number'],
@@ -67,7 +67,7 @@ class Track {
   }
 
   /// Create a simplified track object from json data
-  factory Track.fromSimplifiedJson(dynamic json) {
+  factory Track.fromSimplifiedJson(Map<String, dynamic> json) {
     return new Track(
       name: json['name'],
       artists: Artist.listFromJson(json['artists']),

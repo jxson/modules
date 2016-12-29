@@ -3,9 +3,9 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:apps.modular.lib.app.dart/app.dart';
-import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module_controller.fidl.dart';
 import 'package:apps.modules.email.services/email_session.fidl.dart' as es;
@@ -56,16 +56,16 @@ void main() {
 /// Adds all the [EmbeddedChildBuilder]s that this module supports.
 void _addEmbeddedChildBuilders() {
   _addEmbeddedChildBuilder(
+    docRoot: 'usps-doc',
     type: 'usps-shipping',
     moduleUrl: 'file:///system/apps/usps',
-    docId: 'usps-doc',
     propKey: 'usps-tracking-key',
   );
 
   _addEmbeddedChildBuilder(
+    docRoot: 'youtube-doc',
     type: 'youtube-video',
     moduleUrl: 'file:///system/apps/youtube_video',
-    docId: 'youtube-doc',
     propKey: 'youtube-video-id',
   );
 
@@ -76,9 +76,9 @@ void _addEmbeddedChildBuilders() {
 }
 
 void _addEmbeddedChildBuilder({
+  String docRoot,
   String type,
   String moduleUrl,
-  String docId,
   String propKey,
 }) {
   // USPS Tracking.
@@ -92,12 +92,12 @@ void _addEmbeddedChildBuilder({
       LinkProxy link = new LinkProxy();
       _module.story.createLink(type, link.ctrl.request());
 
-      if (docId != null && propKey != null) {
-        link.addDocuments(<String, Document>{
-          docId: new Document.init(docId, <String, Value>{
-            propKey: new Value()..stringValue = args,
-          }),
-        });
+      if (docRoot != null && propKey != null && propKey is String) {
+        Map<String, dynamic> childDoc = <String, dynamic>{
+          propKey: args,
+          '@type': type
+        };
+        link.set('/' + docRoot, JSON.encode(childDoc));
       }
 
       ModuleControllerProxy moduleController = new ModuleControllerProxy();

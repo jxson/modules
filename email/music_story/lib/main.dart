@@ -2,9 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
+
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
-import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
@@ -16,7 +17,7 @@ final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
 final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 
-final String _kMusicDocId = 'youtube-doc';
+final String _kMusicDocRoot = 'youtube-doc';
 final String _kMusicAlbumIdKey = 'music-album-id';
 
 // The album id
@@ -43,16 +44,19 @@ class LinkWatcherImpl extends LinkWatcher {
   void close() => _binding.close();
 
   @override
-  void notify(Map<String, Document> docs) {
+  void notify(String json) {
     _log('LinkWatcherImpl::notify call');
 
-    Document musicDoc = docs[_kMusicDocId];
-    if (musicDoc == null || musicDoc.properties == null) {
-      _log('No music doc found.');
+    final dynamic doc = JSON.decode(json);
+    if (doc is! Map ||
+        doc[_kMusicDocRoot] is! Map ||
+        doc[_kMusicDocRoot][_kMusicAlbumIdKey] is! String) {
+      _log('No music album id key found in json.');
       return;
     }
 
-    _albumId = musicDoc.properties[_kMusicAlbumIdKey]?.stringValue;
+    _albumId = doc[_kMusicDocRoot][_kMusicAlbumIdKey];
+
     _log('_albumId: $_albumId');
     _kHomeKey.currentState?.updateUI();
   }

@@ -52,10 +52,11 @@ class _YoutubeVideoOverviewState extends State<YoutubeVideoOverview> {
   LoadingState _loadingState = LoadingState.inProgress;
 
   Future<VideoData> _getVideoData() async {
-    Map<String, String> params = <String, String>{};
-    params['id'] = config.videoId;
-    params['key'] = config.apiKey;
-    params['part'] = _kApiQueryParts;
+    Map<String, String> params = <String, String>{
+      'id': config.videoId,
+      'key': config.apiKey,
+      'part': _kApiQueryParts,
+    };
 
     Uri uri = new Uri.https(_kApiBaseUrl, _kApiRestOfUrl, params);
     http.Response response = await http.get(uri);

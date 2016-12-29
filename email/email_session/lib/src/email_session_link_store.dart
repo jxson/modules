@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:email_session_store/email_session_store.dart';
 import 'package:flutter_flux/flutter_flux.dart';
@@ -16,47 +15,32 @@ void _log(String msg) {
   print('[email_session:LinkStore] $msg');
 }
 
-dynamic _parser(String docid, Document doc) {
-  _log('Parsing document $docid');
-  if (docid == EmailSessionDoc.docid) {
-    _log(' docid: $docid');
-    Map<String, Document> map = <String, Document>{docid: doc};
-    EmailSessionDoc session = new EmailSessionDoc();
-
-    session.readFromLink(map);
-
-    return session;
-  }
-
-  return null;
-}
-
 /// Store for viewing email session state
 class EmailSessionLinkStore extends Store implements EmailSessionStore {
-  LinkObjectCache _cache;
+  LinkWatcherImpl _watcher;
   EmailSessionDoc _doc = new EmailSessionDoc();
   List<Label> _visibleLabels = const <Label>[];
   List<String> _expandedMessageIds = <String>[];
 
   /// Constructs a new Store to read the email session from the link
   EmailSessionLinkStore(Link link) {
-    _cache = new LinkObjectCache(link, _parser, this._onUpdate);
+    _watcher = new LinkWatcherImpl(link, this._onUpdate);
     triggerOnAction(emailSessionToggleMessageExpand, _toggleMessageExpand);
   }
 
   @override
   void dispose() {
-    _cache.close();
+    _watcher.close();
     super.dispose();
   }
 
-  void _onUpdate(LinkObjectCache cache) {
-    _log('_onUpdate called: $cache');
-    EmailSessionDoc doc = cache[EmailSessionDoc.docid];
-    if (doc == null) {
-      _log('ERROR: null document for some reason.');
-      return;
+  void _onUpdate(Map<String, dynamic> json) {
+    _log("Received _onUpdate");
+    if (json == null || json[EmailSessionDoc.docroot] == null) {
+      return null;
     }
+
+    EmailSessionDoc doc = new EmailSessionDoc()..fromJson(json);
     bool newlyFocusedThread =
         _doc != null && _doc.focusedThreadId != doc.focusedThreadId;
     _doc = doc;

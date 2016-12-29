@@ -45,17 +45,18 @@ class VideoData {
     // Check for ID and Snippet
     assert(json['id'] != null);
     assert(json['id'] is String ||
-        json['id'] is Map<String, dynamic> && json['id']['videoId'] is String);
+        json['id'] is Map && json['id']['videoId'] is String);
     assert(json['snippet'] != null);
 
     int viewCount;
     int likeCount;
     int dislikeCount;
 
-    if (json.containsKey('statistics')) {
-      viewCount = int.parse(json['statistics']['viewCount']);
-      likeCount = int.parse(json['statistics']['likeCount']);
-      dislikeCount = int.parse(json['statistics']['dislikeCount']);
+    final dynamic stats = json['statistics'];
+    if (stats is Map) {
+      viewCount = stats['viewCount'];
+      likeCount = stats['likeCount'];
+      dislikeCount = stats['dislikeCount'];
     }
 
     return new VideoData(

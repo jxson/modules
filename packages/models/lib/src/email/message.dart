@@ -78,13 +78,13 @@ class Message {
     Iterable<Uri> links = json['links']?.map((String link) => Uri.parse(link));
 
     Iterable<Attachment> attachments = json['attachments']
-        ?.map((Map<String, String> a) => new Attachment.fromJson(a));
+        ?.map((Map<String, dynamic> a) => new Attachment.fromJson(a));
 
     Iterable<Mailbox> to =
-        json['to']?.map((Map<String, String> u) => new Mailbox.fromJson(u));
+        json['to']?.map((Map<String, dynamic> u) => new Mailbox.fromJson(u));
 
     Iterable<Mailbox> cc =
-        json['cc']?.map((Map<String, String> u) => new Mailbox.fromJson(u));
+        json['cc']?.map((Map<String, dynamic> u) => new Mailbox.fromJson(u));
 
     return new Message(
       id: json['id'],
@@ -101,25 +101,24 @@ class Message {
     );
   }
 
-  /// Thread representation appropriate for JSON encoding.
+  /// Helper function for JSON.encode() creates JSON-encoded Thread object.
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> json = new Map<String, dynamic>();
     // TODO(jxson): MailBox models should be moved to User models, MailBox
     // representation should then user the standard User model for it's
     // backing data.
-
-    json['id'] = id;
-    json['sender'] = sender.toJson();
-    json['senderProfileUrl'] = senderProfileUrl;
-    json['subject'] = subject;
-    json['text'] = text;
-    json['timestamp'] = timestamp.millisecondsSinceEpoch;
-    json['isRead'] = isRead;
-    json['links'] = links.map((Uri l) => l.toString()).toList();
-    json['to'] = recipientList.map((Mailbox r) => r.toJson()).toList();
-    json['cc'] = ccList.map((Mailbox r) => r.toJson()).toList();
-    json['attachments'] =
-        attachments.map((Attachment a) => a.toJson()).toList();
+    Map<String, dynamic> json = <String, dynamic>{
+      'id': id,
+      'sender': sender.toJson(),
+      'senderProfileUrl': senderProfileUrl,
+      'subject': subject,
+      'text': text,
+      'timestamp': timestamp.millisecondsSinceEpoch,
+      'isRead': isRead,
+      'links': links.map((Uri l) => l.toString()).toList(),
+      'to': recipientList.map((Mailbox r) => r.toJson()).toList(),
+      'cc': ccList.map((Mailbox r) => r.toJson()).toList(),
+      'attachments': attachments.map((Attachment a) => a.toJson()).toList(),
+    };
 
     return json;
   }

@@ -43,9 +43,9 @@ class Attachment {
     );
   }
 
-  /// JSON representation.
-  Map<String, String> toJson() {
-    return <String, String>{
+  /// Helper function for JSON.encode().
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
       'id': id,
       'type': type.index.toString(),
       'value': value,

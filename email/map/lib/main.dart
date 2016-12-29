@@ -3,10 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
-import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
@@ -21,7 +21,7 @@ final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 
 // This module expects to obtain the location string through the link
 // provided from the parent, in the following document id / property key.
-final String _kMapDocId = 'map-doc';
+final String _kMapDocRoot = 'map-doc';
 final String _kMapLocationKey = 'map-location-key';
 final String _kMapHeightKey = 'map-height-key';
 final String _kMapWidthKey = 'map-width-key';
@@ -62,24 +62,34 @@ class LinkWatcherImpl extends LinkWatcher {
   void close() => _binding.close();
 
   @override
-  void notify(Map<String, Document> docs) {
-    _log('LinkWatcherImpl::notify call');
+  void notify(String json) {
+    _log('LinkWatcherImpl::notify call $json');
 
-    Document mapDoc = docs[_kMapDocId];
-    if (mapDoc == null || mapDoc.properties == null) {
-      _log('No map doc found.');
+    final dynamic doc = JSON.decode(json);
+    if (doc is! Map || doc[_kMapDocRoot] is! Map) {
+      _log('No map root found in json.');
+      return;
+    }
+    final Map<String, dynamic> mapDoc = doc[_kMapDocRoot];
+
+    if (mapDoc[_kMapLocationKey] is! String ||
+        mapDoc[_kMapHeightKey] is! double ||
+        mapDoc[_kMapWidthKey] is! double ||
+        mapDoc[_kMapZoomkey] is! int) {
+      _log('Bad json values in LinkWatcherImpl.notify');
       return;
     }
 
-    _mapLocation = mapDoc.properties[_kMapLocationKey]?.stringValue;
-    _mapHeight = mapDoc.properties[_kMapHeightKey]?.floatValue;
-    _mapWidth = mapDoc.properties[_kMapWidthKey]?.floatValue;
-    _mapZoom = mapDoc.properties[_kMapZoomkey]?.intValue;
+    _mapLocation = mapDoc[_kMapLocationKey];
+    _mapHeight = mapDoc[_kMapHeightKey];
+    _mapWidth = mapDoc[_kMapWidthKey];
+    _mapZoom = mapDoc[_kMapZoomkey];
 
     _log('_location: $_mapLocation');
     _log('_mapHeight: $_mapHeight');
     _log('_mapWidth: $_mapWidth');
     _log('_mapZoom: $_mapZoom');
+
     _kHomeKey.currentState?.updateUI();
   }
 }

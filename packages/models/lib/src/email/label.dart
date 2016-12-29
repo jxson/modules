@@ -29,24 +29,28 @@ class Label {
   factory Label.fromJson(Map<String, dynamic> json) {
     String id = json['id'];
     String name = json['name'];
-    String unread = json['unread'];
+    int unread = json['unread'];
     String type = json['type'];
+
+    if (unread is! int) {
+      unread = 0;
+    }
 
     return new Label(
       id: id,
       name: name,
-      unread: int.parse(unread),
+      unread: unread,
       type: type,
     );
   }
 
-  /// Make it JSON.
-  Map<String, String> toJson() {
-    Map<String, String> json = new Map<String, String>();
+  /// Helper function for JSON.encode().
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = <String, dynamic>{};
 
     json['id'] = id;
     json['name'] = name;
-    json['unread'] = unread.toString();
+    json['unread'] = unread;
     json['type'] = type;
 
     return json;

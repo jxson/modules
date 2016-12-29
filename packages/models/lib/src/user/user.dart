@@ -61,9 +61,9 @@ class User {
     );
   }
 
-  /// User as JSON.
-  Map<String, String> toJson() {
-    Map<String, String> json = new Map<String, String>();
+  /// Helper function for JSON.encode() creates JSON-encoded User object.
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = new Map<String, dynamic>();
 
     json['id'] = id;
     json['email'] = email;

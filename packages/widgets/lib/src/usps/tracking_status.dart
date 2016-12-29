@@ -75,12 +75,11 @@ class _TrackingStatusState extends State<TrackingStatus> {
   Future<List<TrackingEntry>> _getTrackingData() async {
     Map<String, String> params = <String, String>{};
     params['API'] = 'TrackV2';
-    params['XML'] = '''
-    <TrackFieldRequest USERID="${config.apiKey}">
-      <TrackID ID="${config.trackingCode}">
-      </TrackID>
-    </TrackFieldRequest>
-    ''';
+    // Do not use the ''' syntax because the newlines and spaces also get
+    // encoded.
+    params['XML'] = '<TrackFieldRequest USERID="${config.apiKey}">'
+        '<TrackID ID="${config.trackingCode}" />'
+        '</TrackFieldRequest>';
 
     Uri uri = new Uri.http(_kApiBaseUrl, _kApiRestOfUrl, params);
     http.Response response = await http.get(uri);
@@ -104,7 +103,7 @@ class _TrackingStatusState extends State<TrackingStatus> {
     config.onLocationSelect?.call(entry?.fullLocation);
   }
 
-  // HACK(dayang): Assume the package to be delieverd if the phrase "delivered"
+  // HACK(dayang): Assume the package to be delivered if the phrase "delivered"
   // is in the most recent entry, otherwise assume the package to be en route
   String get _currentOverallStatus {
     if (_trackingEntries.isEmpty) {

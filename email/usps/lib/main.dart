@@ -3,10 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
-import 'package:apps.modular.services.document_store/document.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/module_controller.fidl.dart';
@@ -24,9 +24,9 @@ final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 
 // This module expects to obtain the USPS tracking code string through the link
 // provided from the parent, in the following document id / property key.
-final String _kUspsDocId = 'usps-doc';
+final String _kUspsDocRoot = 'usps-doc';
 final String _kUspsTrackingKey = 'usps-tracking-key';
-final String _kMapDocId = 'map-doc';
+final String _kMapDocRoot = 'map-doc';
 final String _kMapLocationKey = 'map-location-key';
 final String _kMapHeightKey = 'map-height-key';
 final String _kMapWidthKey = 'map-width-key';
@@ -65,16 +65,18 @@ class LinkWatcherImpl extends LinkWatcher {
   void close() => _binding.close();
 
   @override
-  void notify(Map<String, Document> docs) {
+  void notify(String json) {
     _log('LinkWatcherImpl::notify call');
 
-    Document uspsDoc = docs[_kUspsDocId];
-    if (uspsDoc == null || uspsDoc.properties == null) {
-      _log('No usps doc found.');
+    final dynamic doc = JSON.decode(json);
+    if (doc is! Map ||
+        doc[_kUspsDocRoot] is! Map ||
+        doc[_kUspsDocRoot][_kUspsTrackingKey] is! String) {
+      _log('No usps tracking key found in json.');
       return;
     }
 
-    _trackingCode = uspsDoc.properties[_kUspsTrackingKey]?.stringValue;
+    _trackingCode = doc[_kUspsDocRoot][_kUspsTrackingKey];
 
     _log('_trackingCode: $_trackingCode');
     _kHomeKey.currentState?.updateUI();
@@ -130,19 +132,17 @@ class ModuleImpl extends Module {
     updateLocation('');
   }
 
-  /// Update Document store with location
+  /// Update Link with location
   void updateLocation(String location) {
     _log('location is updated to: $location');
-    Document mapDoc = new Document.init(_kMapDocId, <String, Value>{
-      _kMapZoomkey: new Value()..intValue = _kMapZoomValue,
-      _kMapHeightKey: new Value()..floatValue = _kMapHeightValue,
-      _kMapWidthKey: new Value()..floatValue = _kMapWidthValue,
-      _kMapLocationKey: new Value()..stringValue = location ?? '',
-    });
+    Map<String, dynamic> mapDoc = <String, dynamic>{
+      _kMapZoomkey: _kMapZoomValue,
+      _kMapHeightKey: _kMapHeightValue,
+      _kMapWidthKey: _kMapWidthValue,
+      _kMapLocationKey: location,
+    };
 
-    link.addDocuments(<String, Document>{
-      _kMapDocId: mapDoc,
-    });
+    link.updateObject('/' + _kMapDocRoot, JSON.encode(mapDoc));
   }
 
   /// Obtains a duplicated [InterfaceHandle] for the given [Link] object.
