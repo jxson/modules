@@ -189,7 +189,8 @@
       "GOMA": "1",
       "GOMA_DIR": "[CACHE]/cipd/goma",
       "MINIMAL": "1",
-      "NO_ENSURE_GOMA": "1"
+      "NO_ENSURE_GOMA": "1",
+      "PUB_CACHE": "[CACHE]/pub"
     },
     "name": "build and run presubmit tests"
   },

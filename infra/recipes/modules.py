@@ -57,7 +57,8 @@ def RunSteps(api, category, patch_gerrit_url, patch_project, patch_ref,
         api.step('build and run presubmit tests', ['make', 'presubmit'],
                  cwd=modules_repo_path,
                  env={'GOMA': 1, 'MINIMAL': 1, 'NO_ENSURE_GOMA': 1,
-                      'GOMA_DIR': api.goma.goma_dir})
+                      'GOMA_DIR': api.goma.goma_dir,
+                      'PUB_CACHE': api.path['cache'].join('pub')})
 
 def GenTests(api):
     yield api.test('basic')
