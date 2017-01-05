@@ -92,7 +92,7 @@ class ThreadView extends StatelessWidget {
       columnChildren.add(header);
     }
 
-    columnChildren.add(new Flexible(
+    columnChildren.add(new Expanded(
       flex: 1,
       child: new Block(
         children: blockChildren,

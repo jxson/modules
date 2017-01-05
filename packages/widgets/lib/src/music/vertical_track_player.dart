@@ -127,7 +127,7 @@ class VerticalTrackPlayer extends StatelessWidget {
     return new Column(
       children: <Widget>[
         // Album Art
-        new Flexible(
+        new Expanded(
           flex: 3,
           child: new Image.network(
             album.images.first.url,
@@ -135,7 +135,7 @@ class VerticalTrackPlayer extends StatelessWidget {
           ),
         ),
         // Track Info
-        new Flexible(
+        new Expanded(
           flex: 1,
           child: _buildTrackInfo(),
         ),

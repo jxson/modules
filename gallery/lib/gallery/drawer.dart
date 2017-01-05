@@ -123,7 +123,7 @@ class _GalleryDrawerState extends State<GalleryDrawer> {
       icon: icon,
       child: new Row(
         children: <Widget>[
-          new Flexible(child: new Text(text)),
+          new Expanded(child: new Text(text)),
           new Checkbox(value: value, onChanged: onChanged),
         ],
       ),

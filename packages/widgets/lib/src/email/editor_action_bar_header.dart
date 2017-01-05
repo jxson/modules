@@ -60,7 +60,7 @@ class EditorActionBarHeader extends StatelessWidget {
   Widget _buildButtonRow() {
     return new Row(
       children: <Widget>[
-        new Flexible(
+        new Expanded(
           flex: null,
           child: new ButtonBar(
             children: <Widget>[
@@ -72,7 +72,7 @@ class EditorActionBarHeader extends StatelessWidget {
             ],
           ),
         ),
-        new Flexible(
+        new Expanded(
           flex: 1,
           child: new ButtonBar(
             alignment: MainAxisAlignment.end,

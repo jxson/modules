@@ -212,11 +212,11 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget nav = new Flexible(
+    Widget nav = new Expanded(
       flex: 2,
       child: new Column(
         children: <Widget>[
-          new Flexible(
+          new Expanded(
             flex: 1,
             child: _connNav != null
                 ? new ChildView(connection: _connNav)
@@ -241,7 +241,7 @@ class HomeScreenState extends State<HomeScreen> {
     );
 
     ChildViewConnection connList = _grid ? _connListGrid : _connList;
-    Widget list = new Flexible(
+    Widget list = new Expanded(
       flex: 3,
       child: new Container(
         padding: new EdgeInsets.symmetric(horizontal: 4.0),
@@ -254,7 +254,7 @@ class HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    Widget thread = new Flexible(
+    Widget thread = new Expanded(
       flex: 4,
       child: _connThread != null
           ? new ChildView(connection: _connThread)

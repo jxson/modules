@@ -50,7 +50,7 @@ class PhoneEntryGroup extends StatelessWidget {
     ));
 
     // Add actual phone number
-    children.add(new Flexible(
+    children.add(new Expanded(
       flex: 1,
       child: new Text(
         entry.number,

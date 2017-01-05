@@ -89,7 +89,7 @@ class _YoutubeRelatedVideosState extends State<YoutubeRelatedVideos> {
             height: 110.0,
             child: new YoutubeThumbnail(videoId: videoData.id),
           ),
-          new Flexible(
+          new Expanded(
             flex: 1,
             child: new Container(
               padding: const EdgeInsets.only(left: 16.0),

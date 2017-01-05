@@ -162,7 +162,7 @@ class _YoutubeCommentsListState extends State<YoutubeCommentsList> {
                 avatarUrl: comment.authorProfileImageUrl,
               ),
             ),
-            new Flexible(
+            new Expanded(
               flex: 1,
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

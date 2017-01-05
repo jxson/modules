@@ -173,7 +173,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
 
   Widget _buildPhoneDetails() {
     if (_editMode) {
-      return new Flexible(
+      return new Expanded(
         flex: 1,
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +248,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
         ),
       );
     } else {
-      return new Flexible(
+      return new Expanded(
         flex: 1,
         child: new Text(
           '$_storageSizeText / $_colorText',
@@ -270,7 +270,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
               : imageUrl.replaceFirst('https:', 'http:'),
           animation: _imageAnimation,
         ),
-        new Flexible(
+        new Expanded(
           flex: 1,
           child: new Container(
             margin: const EdgeInsets.only(top: 30.0),
@@ -333,7 +333,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
     return new Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: new Row(children: <Widget>[
-        new Flexible(
+        new Expanded(
           flex: 1,
           child: new Text(label, style: new TextStyle(fontSize: 12.0)),
         ),
@@ -397,7 +397,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
           children: <Widget>[
             new Row(
               children: <Widget>[
-                new Flexible(
+                new Expanded(
                   flex: 1,
                   child: new Container(
                     alignment: FractionalOffset.center,
