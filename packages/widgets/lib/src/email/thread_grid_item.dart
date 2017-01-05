@@ -51,7 +51,7 @@ class ThreadGridItem extends StatelessWidget {
   Widget _buildHeader() {
     return new Row(
       children: <Widget>[
-        new Flexible(
+        new Expanded(
           flex: 1,
           child: new Container(
             constraints: new BoxConstraints(maxHeight: 86.0),
@@ -91,7 +91,7 @@ class ThreadGridItem extends StatelessWidget {
               avatarUrl: lastMessage.senderProfileUrl,
             ),
           ),
-          new Flexible(
+          new Expanded(
             flex: 1,
             child: new Container(
               padding: const EdgeInsets.only(

@@ -26,7 +26,7 @@ class ArchiveDismissableBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget archiveIcon = new Flexible(
+    Widget archiveIcon = new Expanded(
       flex: null,
       child: new Container(
         padding: new EdgeInsets.symmetric(horizontal: 16.0),
@@ -39,7 +39,7 @@ class ArchiveDismissableBackground extends StatelessWidget {
     );
 
     List<Widget> backgroundChildren = <Widget>[
-      new Flexible(
+      new Expanded(
         flex: 1,
         child: new Container(), //Empty container to space out icons
       ),

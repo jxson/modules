@@ -205,13 +205,13 @@ class _TrackingStatusState extends State<TrackingStatus> {
                   child: new Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new Flexible(
+                      new Expanded(
                         flex: 1,
                         child: new Text(
                           '${entry.city}, ${entry.state} ${entry.zipCode}',
                         ),
                       ),
-                      new Flexible(
+                      new Expanded(
                         flex: 1,
                         child: new Text(entry.entryDetails),
                       ),

@@ -77,7 +77,7 @@ class _RelatedArtistsState extends State<RelatedArtists> {
               fit: ImageFit.cover,
             ),
           ),
-          new Flexible(
+          new Expanded(
             flex: 1,
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,

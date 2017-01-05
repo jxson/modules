@@ -65,7 +65,7 @@ class MessageListItem extends StatelessWidget {
     if (isExpanded) {
       return new Row(
         children: <Widget>[
-          new Flexible(
+          new Expanded(
             flex: 1,
             child: titleText,
           ),
@@ -181,7 +181,7 @@ class MessageListItem extends StatelessWidget {
           // both widgets stretch the entire space and have the smae width
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Flexible(
+            new Expanded(
               flex: 1,
               child: new MessageContent(message: message),
             ),

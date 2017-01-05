@@ -109,12 +109,12 @@ class ThreadListItemSingleLine extends StatelessWidget {
     final Widget threadTitle = new Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        new Flexible(flex: 2, child: participantList),
-        new Flexible(
+        new Expanded(flex: 2, child: participantList),
+        new Expanded(
           flex: 3,
           child: previewText,
         ),
-        new Flexible(flex: null, child: timestamp),
+        new Expanded(flex: null, child: timestamp),
       ],
     );
 

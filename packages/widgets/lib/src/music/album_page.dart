@@ -147,7 +147,7 @@ class _AlbumPageState extends State<AlbumPage> {
     return new Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new Flexible(
+        new Expanded(
           flex: 3,
           child: new VerticalTrackPlayer(
             track: _currentTrack,
@@ -156,12 +156,12 @@ class _AlbumPageState extends State<AlbumPage> {
             onPreviousTrack: _hanldePreviousTrack,
           ),
         ),
-        new Flexible(
+        new Expanded(
           flex: 5,
           child: new Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              new Flexible(
+              new Expanded(
                 flex: 3,
                 child: new Block(
                   children: <Widget>[
@@ -169,7 +169,7 @@ class _AlbumPageState extends State<AlbumPage> {
                   ],
                 ),
               ),
-              new Flexible(
+              new Expanded(
                 flex: 2,
                 child: new Block(
                   children: <Widget>[

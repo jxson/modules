@@ -147,7 +147,7 @@ class EmailListScreen extends StoreWatcher {
               ],
             ),
           ),
-          new Flexible(
+          new Expanded(
             flex: 1,
             child: threadList,
           ),

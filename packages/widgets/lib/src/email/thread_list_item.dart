@@ -71,14 +71,14 @@ class ThreadListItem extends StatelessWidget {
 
     final Widget threadTitle = new Row(
       children: <Widget>[
-        new Flexible(
+        new Expanded(
           flex: 1,
           child: new ThreadParticipantList(
             thread: thread,
             isTitle: true,
           ),
         ),
-        new Flexible(
+        new Expanded(
           flex: null,
           child: new Container(
             padding: const EdgeInsets.only(left: 8.0),

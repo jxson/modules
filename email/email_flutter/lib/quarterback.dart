@@ -35,7 +35,7 @@ class EmailQuarterbackModule extends StatelessWidget {
       ),
     );
 
-    Widget thread = new Flexible(
+    Widget thread = new Expanded(
       flex: 1,
       // The container below should ideally be a ChildView.
       child: new Container(

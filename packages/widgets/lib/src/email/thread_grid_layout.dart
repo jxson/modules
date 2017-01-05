@@ -54,7 +54,7 @@ class ThreadGridLayout extends StatelessWidget {
       // distributed.
       List<Widget> columns = <Widget>[];
       for (int i = 0; i < columnCount; i++) {
-        columns.add(new Flexible(
+        columns.add(new Expanded(
           flex: 1,
           child: new Column(
             children: columnChildren[i],

@@ -144,13 +144,13 @@ class HomeScreenState extends State<HomeScreen> {
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Flexible(
+          new Expanded(
             flex: 3,
             child: _videoPlayerConn != null
                 ? new ChildView(connection: _videoPlayerConn)
                 : new CircularProgressIndicator(),
           ),
-          new Flexible(
+          new Expanded(
             flex: 2,
             child: _relatedVideoConn != null
                 ? new ChildView(connection: _relatedVideoConn)
