@@ -49,9 +49,8 @@ abstract class BaseConfig {
     keys.forEach((String key) {
       if (!has(key) || get(key) == null) {
         isValid = false;
+        message.add('* $key');
       }
-
-      message.add('* $key');
     });
 
     message.add('');
