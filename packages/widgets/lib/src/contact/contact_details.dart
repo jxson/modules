@@ -75,7 +75,7 @@ class ContactDetails extends StatelessWidget {
           fit: ImageFit.cover,
           colorFilter: new ColorFilter.mode(
             theme.primaryColor.withAlpha(30),
-            TransferMode.color,
+            BlendMode.color,
           ),
         ),
       ),
