@@ -11,7 +11,7 @@ if [ $# -eq 0 ] || [ ! -f "$1" ]; then
 fi
 
 # Update this year as needed.
-YEAR=2016
+YEAR="201[6-7]"
 
 # Determine the file type.
 FILETYPE=$(basename ${1##*.})
