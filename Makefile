@@ -176,6 +176,9 @@ doc:
 	@cd $* && flutter packages get
 	@touch $*
 
+$(DART_BIN):
+	@flutter precache
+
 # Each dart package needs the .analysis_options file so that the IDE can run the
 # live analysis with the correct options.
 $(DART_ANALYSIS_OPTIONS): $(DIRNAME)/.analysis_options
@@ -207,11 +210,11 @@ dart-coverage: dart-test
 	@dart tools/report_coverage.dart coverage/lcov.info
 
 .PHONY: dart-fmt
-dart-fmt: dart-base
+dart-fmt: $(DART_BIN)
 	@dartfmt -w $(DART_FILES)
 
 .PHONY: dart-fmt-check
-dart-fmt-check: dart-base
+dart-fmt-check: $(DART_BIN)
 	@echo -n "** Checking the dart formatting ..."; \
 	files=$$(dartfmt -n $(DART_FILES)); \
 	if [[ $${files} ]]; then \
@@ -230,12 +233,12 @@ dart-fmt-check: dart-base
 	fi
 
 .PHONY: dart-fmt-extras
-dart-fmt-extras:
+dart-fmt-extras: $(DART_BIN) tools/dartfmt_extras/.packages
 	@cd tools/dartfmt_extras; \
 	pub run bin/main.dart fix $(DIRNAME) $(DART_FILES)
 
 .PHONY: dart-fmt-extras-check
-dart-fmt-extras-check:
+dart-fmt-extras-check: $(DART_BIN) tools/dartfmt_extras/.packages
 	@echo "** Checking for more dart formatting issues ..."
 	@cd tools/dartfmt_extras; \
 	pub run bin/main.dart check $(DIRNAME) $(DART_FILES); \
