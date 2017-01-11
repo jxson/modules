@@ -16,7 +16,6 @@ group("email") {
     "map",
     "music_story",
     "services",
-    "user_shell:email_user_shell",
     "usps",
     "youtube_related_videos",
     "youtube_story",
