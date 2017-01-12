@@ -11,7 +11,7 @@
       "--platform",
       "linux-amd64",
       "--dest-directory",
-      "[SLAVE_BUILD]/cipd",
+      "[START_DIR]/cipd",
       "--json-output",
       "/path/to/tmp/json"
     ],
@@ -20,7 +20,7 @@
       "@@@STEP_NEST_LEVEL@1@@@",
       "@@@STEP_TEXT@cipd version: git_revision:05844bd9d1200cba8449b936b76e25eb90eabe25@@@",
       "@@@STEP_LOG_LINE@json.output@{@@@",
-      "@@@STEP_LOG_LINE@json.output@  \"executable\": \"[SLAVE_BUILD]/cipd/cipd\", @@@",
+      "@@@STEP_LOG_LINE@json.output@  \"executable\": \"[START_DIR]/cipd/cipd\", @@@",
       "@@@STEP_LOG_LINE@json.output@  \"version\": \"git_revision:05844bd9d1200cba8449b936b76e25eb90eabe25\"@@@",
       "@@@STEP_LOG_LINE@json.output@}@@@",
       "@@@STEP_LOG_END@json.output@@@"
@@ -28,10 +28,10 @@
   },
   {
     "cmd": [
-      "[SLAVE_BUILD]/cipd/cipd",
+      "[START_DIR]/cipd/cipd",
       "ensure",
       "--root",
-      "[CACHE]/cipd/goma",
+      "[START_DIR]/cipd/goma",
       "--list",
       "infra_internal/goma/client/linux-amd64 release",
       "--json-output",
@@ -54,6 +54,10 @@
     ]
   },
   {
+    "cmd": [],
+    "name": "ensure_jiri"
+  },
+  {
     "cmd": [
       "python",
       "-u",
@@ -61,15 +65,16 @@
       "--platform",
       "linux-amd64",
       "--dest-directory",
-      "[SLAVE_BUILD]/cipd",
+      "[START_DIR]/cipd",
       "--json-output",
       "/path/to/tmp/json"
     ],
-    "name": "install cipd",
+    "name": "ensure_jiri.install cipd",
     "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@1@@@",
       "@@@STEP_TEXT@cipd version: git_revision:05844bd9d1200cba8449b936b76e25eb90eabe25@@@",
       "@@@STEP_LOG_LINE@json.output@{@@@",
-      "@@@STEP_LOG_LINE@json.output@  \"executable\": \"[SLAVE_BUILD]/cipd/cipd\", @@@",
+      "@@@STEP_LOG_LINE@json.output@  \"executable\": \"[START_DIR]/cipd/cipd\", @@@",
       "@@@STEP_LOG_LINE@json.output@  \"version\": \"git_revision:05844bd9d1200cba8449b936b76e25eb90eabe25\"@@@",
       "@@@STEP_LOG_LINE@json.output@}@@@",
       "@@@STEP_LOG_END@json.output@@@"
@@ -77,10 +82,10 @@
   },
   {
     "cmd": [
-      "[SLAVE_BUILD]/cipd/cipd",
+      "[START_DIR]/cipd/cipd",
       "ensure",
       "--root",
-      "[CACHE]/cipd",
+      "[START_DIR]/cipd/jiri",
       "--list",
       "fuchsia/tools/jiri/linux-amd64 latest",
       "--json-output",
@@ -88,8 +93,9 @@
       "--service-account-json",
       "/creds/service_accounts/service-account-goma-client.json"
     ],
-    "name": "ensure_installed",
+    "name": "ensure_jiri.ensure_installed",
     "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@1@@@",
       "@@@STEP_LOG_LINE@json.output@{@@@",
       "@@@STEP_LOG_LINE@json.output@  \"result\": [@@@",
       "@@@STEP_LOG_LINE@json.output@    {@@@",
@@ -103,7 +109,7 @@
   },
   {
     "cmd": [
-      "[CACHE]/cipd/jiri",
+      "[START_DIR]/cipd/jiri/jiri",
       "init",
       "-cache",
       "[CACHE]/jiri"
@@ -112,17 +118,8 @@
   },
   {
     "cmd": [
-      "[CACHE]/cipd/jiri",
-      "project",
-      "clean"
-    ],
-    "name": "jiri project clean"
-  },
-  {
-    "cmd": [
-      "[CACHE]/cipd/jiri",
+      "[START_DIR]/cipd/jiri/jiri",
       "import",
-      "-overwrite=true",
       "userspace",
       "https://fuchsia.googlesource.com/manifest"
     ],
@@ -130,16 +127,15 @@
   },
   {
     "cmd": [
-      "[CACHE]/cipd/jiri",
+      "[START_DIR]/cipd/jiri/jiri",
       "update",
-      "-autoupdate=false",
-      "-gc=true"
+      "-autoupdate=false"
     ],
     "name": "jiri update"
   },
   {
     "cmd": [
-      "[CACHE]/cipd/jiri",
+      "[START_DIR]/cipd/jiri/jiri",
       "snapshot",
       "/path/to/tmp/"
     ],
@@ -156,12 +152,10 @@
   },
   {
     "cmd": [
-      "[CACHE]/cipd/jiri",
+      "[START_DIR]/cipd/jiri/jiri",
       "patch",
       "-host",
       "fuchsia-review.googlesource.com",
-      "-delete=true",
-      "-force=true",
       "refs/changes/89/456789/12"
     ],
     "name": "jiri patch"
@@ -170,7 +164,7 @@
     "cmd": [
       "python",
       "-u",
-      "[CACHE]/cipd/goma/goma_ctl.py",
+      "[START_DIR]/cipd/goma/goma_ctl.py",
       "restart"
     ],
     "env": {
@@ -184,10 +178,10 @@
       "make",
       "presubmit"
     ],
-    "cwd": "[SLAVE_BUILD]/apps/modules",
+    "cwd": "[START_DIR]/apps/modules",
     "env": {
       "GOMA": "1",
-      "GOMA_DIR": "[CACHE]/cipd/goma",
+      "GOMA_DIR": "[START_DIR]/cipd/goma",
       "MINIMAL": "1",
       "NO_ENSURE_GOMA": "1",
       "PUB_CACHE": "[CACHE]/pub"
@@ -198,9 +192,9 @@
     "cmd": [
       "python",
       "-u",
-      "[CACHE]/cipd/goma/goma_ctl.py",
+      "[START_DIR]/cipd/goma/goma_ctl.py",
       "jsonstatus",
-      "[CACHE]/cipd/goma/jsonstatus"
+      "[START_DIR]/cipd/goma/jsonstatus"
     ],
     "env": {
       "GOMA_CACHE_DIR": "[CACHE]/goma",
@@ -212,7 +206,7 @@
     "cmd": [
       "python",
       "-u",
-      "[CACHE]/cipd/goma/goma_ctl.py",
+      "[START_DIR]/cipd/goma/goma_ctl.py",
       "stat"
     ],
     "env": {
@@ -225,7 +219,7 @@
     "cmd": [
       "python",
       "-u",
-      "[CACHE]/cipd/goma/goma_ctl.py",
+      "[START_DIR]/cipd/goma/goma_ctl.py",
       "stop"
     ],
     "env": {

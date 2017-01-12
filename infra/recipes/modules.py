@@ -27,11 +27,9 @@ PROPERTIES = {
 }
 
 def run_jiri_update(api, manifest, remote):
-    api.jiri.set_config('fuchsia')
     api.jiri.init()
-    api.jiri.clean_project()
-    api.jiri.import_manifest(manifest, remote, overwrite=True)
-    api.jiri.update(gc=True)
+    api.jiri.import_manifest(manifest, remote)
+    api.jiri.update()
     step_result = api.jiri.snapshot(api.raw_io.output())
     snapshot = step_result.raw_io.output
     step_result.presentation.logs['jiri.snapshot'] = snapshot.splitlines()
@@ -45,15 +43,14 @@ def RunSteps(api, category, patch_gerrit_url, patch_project, patch_ref,
     run_jiri_update(api, 'userspace',
                     'https://fuchsia.googlesource.com/manifest')
     if patch_ref is not None:
-        api.jiri.patch(patch_ref, host=patch_gerrit_url, delete=True,
-                       force=True)
+        api.jiri.patch(patch_ref, host=patch_gerrit_url)
 
     # The make script defaults to a debug build unless specified otherwise. It
     # also always hardcodes x86-64 as the target architecture. Since this is
     # only exercising Dart code we don't parameterize the recipe for any other
     # architecture.
     with api.goma.build_with_goma():
-        modules_repo_path = api.path['slave_build'].join('apps/modules')
+        modules_repo_path = api.path['start_dir'].join('apps/modules')
         api.step('build and run presubmit tests', ['make', 'presubmit'],
                  cwd=modules_repo_path,
                  env={'GOMA': 1, 'MINIMAL': 1, 'NO_ENSURE_GOMA': 1,
