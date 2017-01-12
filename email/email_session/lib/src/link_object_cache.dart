@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:apps.modular.services.story/link.fidl.dart';
 
+/// Callback function for when the link is updated.
 typedef void LinkUpdated(Map<String, dynamic> json);
 
 /// Store implementation that watches a Link and constructs the JSON Map<>.
