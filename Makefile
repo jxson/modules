@@ -67,15 +67,15 @@ DART_ANALYSIS_FLAGS := --lints --fatal-lints --fatal-warnings
 ## Common variables to use
 gitbook = $(shell which gitbook)
 
-DART_PACKAGES = $(sort $(shell find . \( -name "pubspec.yaml" -or -name ".packages" \) -exec dirname {} \;))
-DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
+DART_PACKAGES = $(sort $(shell find . \( -name "pubspec.yaml" -or -name ".packages" \) ! -wholename "*/testdata/*" -exec dirname {} \;))
+DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*" ! -wholename "*/testdata/*")
 DART_ANALYSIS_OPTIONS = $(addsuffix /.analysis_options, $(DART_PACKAGES))
 FIDL_FILES = $(shell find . -name "*.fidl")
 GN_FILES = $(shell find . -name "*.gn")
 JS_FILES = $(shell find . -name "*.js" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
 PYTHON_FILES = $(shell find . -name "*.py" ! -wholename "./infra/*")
 SH_FILES = $(shell find ./tools -name "*.sh")
-YAML_FILES = $(shell find . -name "*.yaml")
+YAML_FILES = $(shell find . -name "*.yaml" ! -wholename "*/testdata/*")
 ALL_SOURCE_FILES = $(DART_FILES) $(FIDL_FILES) $(GN_FILES) $(JS_FILES) $(PYTHON_FILES) $(SH_FILES) $(YAML_FILES)
 
 ################################################################################

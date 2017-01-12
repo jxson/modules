@@ -1,0 +1,13 @@
+# Copyright 2017 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+name: widget_specs
+description: Tools and APIs for extracting widget specs and generating gallery screens.
+dependencies:
+  analyzer: ^0.28.1
+  glob: ^1.1.3
+  path: ^1.3.9
+  source_span: ^1.2.3
+dev_dependencies:
+  test: 0.12.15+4
