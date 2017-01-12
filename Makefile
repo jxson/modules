@@ -63,9 +63,6 @@ FENV := source $(FUCHSIA_ROOT)/scripts/env.sh && fset x86-64 $(FSET_FLAGS)
 
 DART_ANALYSIS_FLAGS := --lints --fatal-lints --fatal-warnings
 
-FLUTTER_TEST_FLAGS ?=
-FLUTTER_TEST_FLAGS += --coverage
-
 ################################################################################
 ## Common variables to use
 gitbook = $(shell which gitbook)
@@ -73,12 +70,13 @@ gitbook = $(shell which gitbook)
 DART_PACKAGES = $(sort $(shell find . \( -name "pubspec.yaml" -or -name ".packages" \) -exec dirname {} \;))
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*")
 DART_ANALYSIS_OPTIONS = $(addsuffix /.analysis_options, $(DART_PACKAGES))
-JS_FILES = $(shell find . -name "*.js" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
-SH_FILES = $(shell find ./tools -name "*.sh")
-GN_FILES = $(shell find . -name "*.gn")
 FIDL_FILES = $(shell find . -name "*.fidl")
+GN_FILES = $(shell find . -name "*.gn")
+JS_FILES = $(shell find . -name "*.js" ! -wholename "*/_book/*" ! -wholename "*/node_modules/*")
+PYTHON_FILES = $(shell find . -name "*.py" ! -wholename "./infra/*")
+SH_FILES = $(shell find ./tools -name "*.sh")
 YAML_FILES = $(shell find . -name "*.yaml")
-ALL_SOURCE_FILES = $(DART_FILES) $(JS_FILES) $(SH_FILES) $(GN_FILES) $(FIDL_FILES) $(YAML_FILES)
+ALL_SOURCE_FILES = $(DART_FILES) $(FIDL_FILES) $(GN_FILES) $(JS_FILES) $(PYTHON_FILES) $(SH_FILES) $(YAML_FILES)
 
 ################################################################################
 ## Common targets
@@ -202,7 +200,12 @@ dart-clean:
 	@rm -rf coverage
 
 .PHONY: dart-coverage
-dart-coverage: dart-test
+dart-coverage: dart-base
+	@tools/run_dart_tests.py --coverage
+	@$(MAKE) dart-report-coverage
+
+.PHONY: dart-report-coverage
+dart-report-coverage:
 	@echo
 	@echo "** Code coverage for dart files **"
 	@echo
@@ -273,31 +276,10 @@ dart-lint: dart-base
 
 .PHONY: dart-test
 dart-test: dart-base
-	@for pkg in $(DART_PACKAGES); do \
-		echo; \
-		pushd $${pkg} > /dev/null; \
-		if [ -d "test" ]; then \
-			if [ -h ".packages" ]; then \
-				mv -f .packages .packages.bak; \
-				backup=1; \
-			fi; \
-			echo "** Running the flutter tests in '$${pkg}' ..."; \
-			flutter test $(FLUTTER_TEST_FLAGS); \
-			test_result=$$?; \
-			if [ $${backup} -ne 0 ]; then \
-				mv -f .packages.bak .packages; \
-			fi; \
-			if [ $${test_result} -ne 0 ]; then \
-				exit 1; \
-			fi; \
-		else \
-			echo "** No tests found in '$${pkg}'."; \
-		fi; \
-		popd > /dev/null; \
-	done
+	@tools/run_dart_tests.py
 
 .PHONY: dart-presubmit
-dart-presubmit: dart-fmt-check dart-fmt-extras-check dart-lint dart-coverage
+dart-presubmit: dart-fmt-check dart-fmt-extras-check dart-lint dart-test
 	@true
 
 ################################################################################
