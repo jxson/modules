@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:util/parse_int.dart';
+
 /// Represents Video Data from a single Youtube video
 class VideoData {
   /// ID of video
@@ -54,9 +56,9 @@ class VideoData {
 
     final dynamic stats = json['statistics'];
     if (stats is Map) {
-      viewCount = stats['viewCount'];
-      likeCount = stats['likeCount'];
-      dislikeCount = stats['dislikeCount'];
+      viewCount = parseInt(stats['viewCount']);
+      likeCount = parseInt(stats['likeCount']);
+      dislikeCount = parseInt(stats['dislikeCount']);
     }
 
     return new VideoData(

@@ -66,4 +66,24 @@ void main() {
     expect(videoData.likeCount, 6);
     expect(videoData.dislikeCount, 4);
   });
+  test('fromJson() should be able to parse integers from strings', () {
+    Map<String, dynamic> json = <String, dynamic>{
+      'id': 'video1',
+      'snippet': <String, dynamic>{
+        'title': 'A cool video',
+        'description': 'A description',
+        'publishedAt': '2014-01-13T22:17:13.000Z',
+        'channelTitle': 'My channel'
+      },
+      'statistics': <String, dynamic>{
+        'viewCount': '10',
+        'likeCount': '6',
+        'dislikeCount': '4',
+      }
+    };
+    VideoData videoData = new VideoData.fromJson(json);
+    expect(videoData.viewCount, 10);
+    expect(videoData.likeCount, 6);
+    expect(videoData.dislikeCount, 4);
+  });
 }
