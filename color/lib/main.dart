@@ -11,6 +11,7 @@ import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lib.fidl.dart/bindings.dart';
+import 'package:util/parse_int.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
@@ -34,10 +35,7 @@ void main() {
             // { "color" : 255 } or { "color" : '0xFF1DE9B6' }
             final dynamic doc = JSON.decode(json);
             if (doc is Map && (doc['color'] is int || doc['color'] is String)) {
-              dynamic num = doc['color'];
-              if (num is String) {
-                num = int.parse(num, onError: (source) => 0);
-              }
+              int num = parseInt(doc['color']);
               colorWidgetKey.currentState.color = new Color(num);
             }
           },
