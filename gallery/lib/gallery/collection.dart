@@ -144,4 +144,12 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
       }
     },
   ),
+  new GalleryItem(
+    title: 'Widgets Gallery',
+    subtitle: 'Widgets Gallery',
+    group: GalleryGroups.screen,
+    href: '/widgets',
+    builder: (BuildContext context, GalleryItem item, Config config) =>
+        galleryScaffoldedScreen(item.title, new WidgetsGalleryScreen()),
+  ),
 ];

@@ -68,7 +68,7 @@ DART_ANALYSIS_FLAGS := --lints --fatal-lints --fatal-warnings
 gitbook = $(shell which gitbook)
 
 DART_PACKAGES = $(sort $(shell find . \( -name "pubspec.yaml" -or -name ".packages" \) ! -wholename "*/testdata/*" -exec dirname {} \;))
-DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*" ! -wholename "*/testdata/*")
+DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*" ! -wholename "*/testdata/*" ! -wholename "*/generated/*")
 DART_ANALYSIS_OPTIONS = $(addsuffix /.analysis_options, $(DART_PACKAGES))
 FIDL_FILES = $(shell find . -name "*.fidl")
 GN_FILES = $(shell find . -name "*.gn")
@@ -145,10 +145,16 @@ coverage: dart-coverage ## Show coverage for all modules.
 	@true
 
 .PHONY: run
-run: dart-base ## Run the gallery flutter app.
+run: dart-gen-specs ## Run the gallery flutter app.
+	@if [ -L "gallery/.packages" ]; then \
+		rm gallery/.packages; \
+	fi;
 	@cd gallery && flutter run --hot
 
-run-email: dart-base ## Run the email flutter app.
+run-email: ## Run the email flutter app.
+	@if [ -L "email/email_flutter/.packages" ]; then \
+		rm email/email_flutter/.packages; \
+	fi;
 	@cd email/email_flutter && flutter run --hot
 
 # TODO(jxson): Add gitbook as a third-party dependency.
@@ -197,7 +203,13 @@ dart-clean:
 		rm -rf .packages packages .pub build coverage; \
 		popd > /dev/null; \
 	done
+	@rm -rf gallery/lib/src/generated/*.dart
 	@rm -rf coverage
+
+.PHONY: dart-gen-specs
+dart-gen-specs: $(DART_BIN) tools/widget_specs/.packages
+	@rm -rf gallery/lib/src/generated/*.dart
+	@cd tools/widget_specs && pub run gen_widget_specs.dart $(DIRNAME)/packages/widgets $(DIRNAME)/gallery/lib/src/generated
 
 .PHONY: dart-coverage
 dart-coverage: dart-base
@@ -279,7 +291,7 @@ dart-test: dart-base
 	@tools/run_dart_tests.py
 
 .PHONY: dart-presubmit
-dart-presubmit: dart-fmt-check dart-fmt-extras-check dart-lint dart-test
+dart-presubmit: dart-gen-specs dart-fmt-check dart-fmt-extras-check dart-lint dart-test
 	@true
 
 ################################################################################

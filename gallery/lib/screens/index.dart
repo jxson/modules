@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 export 'common/error.dart';
+export 'common/widgets_gallery.dart';
 export 'contact/contact_details.dart';
 export 'email/editor.dart';
 export 'map/static_map.dart';

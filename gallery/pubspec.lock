@@ -7,30 +7,30 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3+1"
+  analyzer:
+    description:
+      name: analyzer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.28.1"
+  args:
+    description:
+      name: args
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.7"
   async:
     description:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.3"
-  auth:
-    description:
-      path: "../packages/auth"
-      relative: true
-    source: path
-    version: "0.0.0"
   charcode:
     description:
       name: charcode
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  clients:
-    description:
-      path: "../packages/clients"
-      relative: true
-    source: path
-    version: "0.0.0"
   collection:
     description:
       name: collection
@@ -61,6 +61,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  csslib:
+    description:
+      name: csslib
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.2+2"
   email_api:
     description:
       path: "../packages/email_api"
@@ -70,6 +76,12 @@ packages:
   email_session_store:
     description:
       path: "../packages/email_session_store"
+      relative: true
+    source: path
+    version: "0.0.0"
+  fixtures:
+    description:
+      path: "../packages/fixtures"
       relative: true
     source: path
     version: "0.0.0"
@@ -83,12 +95,16 @@ packages:
       relative: true
     source: path
     version: "4.0.0"
-  flux:
+  flutter_markdown:
+    description: flutter
+    source: sdk
+    version: "0.1.0"
+  glob:
     description:
-      path: "../packages/flux"
-      relative: true
-    source: path
-    version: "0.0.0"
+      name: glob
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.3"
   googleapis:
     description:
       name: googleapis
@@ -101,6 +117,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.3+5"
+  html:
+    description:
+      name: html
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.1"
   http:
     description:
       name: http
@@ -119,6 +141,30 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0"
+  isolate:
+    description:
+      name: isolate
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.3"
+  lists:
+    description:
+      name: lists
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.21"
+  logging:
+    description:
+      name: logging
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.11.3+1"
+  markdown:
+    description:
+      name: markdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
   matcher:
     description:
       name: matcher
@@ -137,6 +183,24 @@ packages:
       relative: true
     source: path
     version: "0.0.0"
+  music_api:
+    description:
+      path: "../packages/music_api"
+      relative: true
+    source: path
+    version: "0.0.0"
+  mustache:
+    description:
+      name: mustache
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.5+1"
+  package_config:
+    description:
+      name: package_config
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   path:
     description:
       name: path
@@ -149,12 +213,18 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.3"
+  plugin:
+    description:
+      name: plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   quiver:
     description:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.21.4"
+    version: "0.24.0"
   sky_engine:
     description:
       path: "../../../lib/flutter/bin/cache/pkg/sky_engine"
@@ -179,24 +249,60 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  strings:
+    description:
+      name: strings
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   typed_data:
     description:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.3"
+  unicode:
+    description:
+      name: unicode
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.10"
+  utf:
+    description:
+      name: utf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0+3"
   util:
     description:
       path: "../packages/util"
       relative: true
     source: path
     version: "0.0.0"
+  uuid:
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.3"
   vector_math:
     description:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  watcher:
+    description:
+      name: watcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.7+3"
+  widget_specs:
+    description:
+      path: "../tools/widget_specs"
+      relative: true
+    source: path
+    version: "0.0.0"
   widgets:
     description:
       path: "../packages/widgets"
@@ -209,5 +315,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.3"
+  yaml:
+    description:
+      name: yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.12"
 sdks:
-  dart: ">=1.21.0-dev.1.0 <2.0.0"
+  dart: ">=1.21.0-dev.2.0 <2.0.0"

@@ -7,3 +7,4 @@ build/
 ios/.generated/
 packages
 config.json
+lib/src/generated/

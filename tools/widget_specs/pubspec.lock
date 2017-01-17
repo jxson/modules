@@ -97,6 +97,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.3"
+  lists:
+    description:
+      name: lists
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.21"
   logging:
     description:
       name: logging
@@ -121,6 +127,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.3"
+  mustache:
+    description:
+      name: mustache
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.5+1"
   package_config:
     description:
       name: package_config
@@ -217,6 +229,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  strings:
+    description:
+      name: strings
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   test:
     description:
       name: test
@@ -229,6 +247,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.3"
+  unicode:
+    description:
+      name: unicode
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.10"
   utf:
     description:
       name: utf
