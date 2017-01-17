@@ -6,7 +6,9 @@ import 'dart:io';
 
 import 'package:analyzer/analyzer.dart';
 import 'package:glob/glob.dart';
+import 'package:path/path.dart' as path;
 import 'package:source_span/source_span.dart';
+import 'package:yaml/yaml.dart';
 
 import 'widget_specs.dart';
 
@@ -23,31 +25,56 @@ const List<String> _kFlutterWidgetSuperclasses = const <String>[
 ///
 /// The dart files are assumed to be under the `lib` directory.
 List<WidgetSpecs> extractWidgetSpecs(String packagePath) {
+  // Read the 'pubspec.yaml' file and extract the package name.
+  String pubspecPath = path.join(packagePath, 'pubspec.yaml');
+  dynamic pubspec = loadYaml(new File(pubspecPath).readAsStringSync());
+  String packageName = pubspec['name'];
+
   // Look for all the dart code under the 'lib' directory.
   Glob pattern = new Glob('$packagePath/lib/**/*.dart');
 
-  return pattern.listSync().expand(_extractFromDartFile).toList();
+  return pattern
+      .listSync()
+      .expand(new _DartFileExtractor(packagePath, packageName))
+      .toList();
 }
 
-/// Extracts all the flutter widgets and their specs from the given dart file.
-Iterable<WidgetSpecs> _extractFromDartFile(FileSystemEntity dartFile) {
-  // Parse the given file.
-  SourceFile source = new SourceFile(
-    new File(dartFile.path).readAsStringSync(),
-    url: new Uri.file(dartFile.path),
-  );
-  CompilationUnit cu = parseCompilationUnit(source.getText(0));
+/// Helper class for extracting all the flutter widgets and their specs from a
+/// given dart file.
+class _DartFileExtractor {
+  _DartFileExtractor(this.packagePath, this.packageName);
 
-  // Collect all the classes declared in that file.
-  _ClassVisitor classVisitor = new _ClassVisitor();
-  cu.visitChildren(classVisitor);
-  List<ClassDeclaration> classes = classVisitor.classes;
+  /// The root path of the pakcage.
+  final String packagePath;
 
-  // Find all the public flutter widgets, and then create widget specs for them.
-  return classes
-      .where(_isPublicWidget)
-      .map(new _WidgetSpecsCreator(source))
-      .toList();
+  /// The package name declared in the 'pubspec.yaml' file.
+  final String packageName;
+
+  Iterable<WidgetSpecs> call(FileSystemEntity dartFile) {
+    // Calculate the relative path.
+    String relPath = path.relative(
+      dartFile.path,
+      from: path.join(packagePath, 'lib'),
+    );
+
+    // Parse the given file.
+    SourceFile source = new SourceFile(
+      new File(dartFile.path).readAsStringSync(),
+      url: new Uri.file(dartFile.path),
+    );
+    CompilationUnit cu = parseCompilationUnit(source.getText(0));
+
+    // Collect all the classes declared in that file.
+    _ClassVisitor classVisitor = new _ClassVisitor();
+    cu.visitChildren(classVisitor);
+    List<ClassDeclaration> classes = classVisitor.classes;
+
+    // Find all the public flutter widgets, and then create widget specs for them.
+    return classes
+        .where(_isPublicWidget)
+        .map(new _WidgetSpecsCreator(packageName, relPath, source))
+        .toList();
+  }
 }
 
 /// Determines whether the given [ClassDeclaration] declares a public flutter
@@ -63,7 +90,11 @@ bool _isPublicWidget(ClassDeclaration c) {
 
 /// A helper class for creating [WidgetSpecs] from [ClassDeclaration]s.
 class _WidgetSpecsCreator {
-  _WidgetSpecsCreator(this.source);
+  _WidgetSpecsCreator(this.packageName, this.path, this.source);
+
+  final String packageName;
+
+  final String path;
 
   final SourceFile source;
 
@@ -82,7 +113,9 @@ class _WidgetSpecsCreator {
     }
 
     return new WidgetSpecs(
+      packageName: packageName,
       name: name,
+      path: path,
       doc: doc,
     );
   }

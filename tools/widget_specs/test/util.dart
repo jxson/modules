@@ -12,7 +12,26 @@ import 'package:path/path.dart' as path;
 /// created by the test runner, which includes the real test script.
 ///
 /// See: https://github.com/dart-lang/test/issues/110
-String getTestDataPath() {
+String getTestDataPath({String basename}) {
+  String scriptPath = getTestScriptPath();
+
+  basename ??= path.basenameWithoutExtension(scriptPath);
+
+  return path.normalize(
+    path.join(
+      path.dirname(scriptPath),
+      '..',
+      '..',
+      '..',
+      'testdata',
+      'widget_specs',
+      basename,
+    ),
+  );
+}
+
+/// Gets the test script path.
+String getTestScriptPath() {
   String scriptPath = Platform.script.path;
 
   if (!scriptPath.endsWith('_test.dart')) {
@@ -29,15 +48,5 @@ String getTestDataPath() {
     }
   }
 
-  return path.normalize(
-    path.join(
-      path.dirname(scriptPath),
-      '..',
-      '..',
-      '..',
-      'testdata',
-      'widget_specs',
-      path.basenameWithoutExtension(scriptPath),
-    ),
-  );
+  return scriptPath;
 }

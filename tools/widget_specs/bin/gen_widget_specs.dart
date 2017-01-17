@@ -72,6 +72,7 @@ const String _kHeader = '''
 const String _kIndexFileTemplate = '''
 {{ header }}
 
+import 'package:flutter/widgets.dart';
 import 'package:widget_specs/widget_specs.dart';
 
 {{ imports }}
@@ -79,6 +80,11 @@ import 'package:widget_specs/widget_specs.dart';
 /// Map of widget specs.
 final Map<String, WidgetSpecs> kWidgetSpecs = <String, WidgetSpecs>{
 {{ items }}
+};
+
+/// Map of widget builders.
+final Map<String, WidgetBuilder> kWidgetBuilders = <String, WidgetBuilder>{
+{{ builders }}
 };
 ''';
 
@@ -101,10 +107,16 @@ Future<Null> writeIndex(String outputDir, List<WidgetSpecs> widgetSpecs) async {
     return '  $underscoredName.kName: $underscoredName.kSpecs,';
   }).join('\n');
 
+  String builders = widgetSpecs.map((WidgetSpecs specs) {
+    String underscoredName = strings.underscore(specs.name);
+    return '  $underscoredName.kName: $underscoredName.kBuilder,';
+  }).join('\n');
+
   String output = template.renderString(<String, dynamic>{
     'header': _kHeader,
     'imports': imports,
     'items': items,
+    'builders': builders,
   });
 
   await new File(outputPath).writeAsString(output);
@@ -113,16 +125,25 @@ Future<Null> writeIndex(String outputDir, List<WidgetSpecs> widgetSpecs) async {
 const String _kSpecFileTemplate = '''
 {{ header }}
 
+import 'package:flutter/widgets.dart';
 import 'package:widget_specs/widget_specs.dart';
+import 'package:{{ package_name }}/{{ path }}';
 
 /// Name of the widget.
 const String kName = '{{ name }}';
 
 /// [WidgetSpecs] of this widget.
 final WidgetSpecs kSpecs = new WidgetSpecs(
+  packageName: '{{ package_name }}',
   name: '{{ name }}',
+  path: '{{ path }}',
   doc: \'\'\'
 {{ doc }}\'\'\',
+);
+
+/// Builder for this widget.
+final WidgetBuilder kBuilder = (BuildContext context) => new {{ name }}(
+  {{ params }}
 );
 ''';
 
@@ -137,15 +158,18 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
   );
 
   // Escape single quotes within the doc comments.
-  String escapedDoc = specs.doc.replaceAllMapped(
+  String escapedDoc = specs.doc?.replaceAllMapped(
     new RegExp(r"([^\\])'"),
     (Match m) => "${m.group(1)}\\\'",
   );
 
   String output = template.renderString(<String, dynamic>{
     'header': _kHeader,
+    'package_name': specs.packageName,
     'name': specs.name,
+    'path': specs.path,
     'doc': escapedDoc,
+    'params': '', // TODO(youngseokyoon): provide parameter values.
   });
 
   await new File(outputPath).writeAsString(output);

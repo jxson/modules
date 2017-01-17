@@ -56,6 +56,14 @@ class _WidgetsGalleryState extends State<WidgetsGalleryScreen> {
 
 ${specs.doc}''';
 
+    Widget exampleWidget;
+    try {
+      exampleWidget = kWidgetBuilders[specs.name]?.call(context);
+    } catch (e) {
+      exampleWidget = new Text('Failed to build the example widget.\n'
+          '(Likely due to missing required parameters.)');
+    }
+
     return new Align(
       alignment: FractionalOffset.topLeft,
       child: new Block(
@@ -63,6 +71,17 @@ ${specs.doc}''';
           new Markdown(
             data: markdownText,
             markdownStyle: new MarkdownStyle.largeFromTheme(Theme.of(context)),
+          ),
+          new Container(
+            decoration: new BoxDecoration(
+              border: new Border.all(color: Colors.grey[500]),
+              borderRadius: new BorderRadius.all(new Radius.circular(4.0)),
+            ),
+            margin: const EdgeInsets.all(16.0),
+            child: new Container(
+              margin: const EdgeInsets.all(16.0),
+              child: exampleWidget,
+            ),
           ),
         ],
       ),

@@ -39,4 +39,16 @@ void main() {
     );
     expect(widgetMap['NoCommentWidget'].doc, isNull);
   });
+
+  test('extractWidgetSpecs() should correctly extract the package name.', () {
+    widgetMap.keys.forEach((String key) {
+      expect(widgetMap[key].packageName, equals('mock_package'));
+    });
+  });
+
+  test('extractWidgetSpecs() should correctly extract the path.', () {
+    widgetMap.keys.forEach((String key) {
+      expect(widgetMap[key].path, equals('src/sample_widgets.dart'));
+    });
+  });
 }
