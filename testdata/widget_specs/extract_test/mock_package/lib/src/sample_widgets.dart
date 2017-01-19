@@ -2,16 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-class StatefulWidget {}
-
-class StatelessWidget {}
-
-class State<T> {}
-
-class Others {
-  _Widget02 widget02;
-  _Widget04 widget04;
-}
+import 'package:flutter/widgets.dart';
 
 /// This is a public [StatefulWidget].
 class Widget01 extends StatefulWidget {}

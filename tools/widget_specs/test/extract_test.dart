@@ -2,14 +2,25 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:widget_specs/widget_specs.dart';
 
 import 'util.dart';
 
-void main() {
+Future<Null> main() async {
   String mockPackagePath = path.join(getTestDataPath(), 'mock_package');
+
+  // Run 'flutter packages get'
+  await Process.run(
+    'flutter',
+    <String>['packages', 'get'],
+    workingDirectory: mockPackagePath,
+  );
+
   List<WidgetSpecs> widgetSpecs = extractWidgetSpecs(mockPackagePath);
   Map<String, WidgetSpecs> widgetMap =
       new Map<String, WidgetSpecs>.fromIterable(
@@ -48,7 +59,7 @@ void main() {
 
   test('extractWidgetSpecs() should correctly extract the path.', () {
     widgetMap.keys.forEach((String key) {
-      expect(widgetMap[key].path, equals('src/sample_widgets.dart'));
+      expect(widgetMap[key].path, equals('exported.dart'));
     });
   });
 }

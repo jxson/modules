@@ -2,12 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
-import 'package:widget_specs/widget_specs.dart';
 
 import 'util.dart';
 
@@ -16,6 +14,13 @@ void main() {
       () async {
     String mockPackagePath =
         path.join(getTestDataPath(basename: 'extract_test'), 'mock_package');
+
+    // Run 'flutter packages get'
+    await Process.run(
+      'flutter',
+      <String>['packages', 'get'],
+      workingDirectory: mockPackagePath,
+    );
 
     String packagePath = path.normalize(path.join(
       getTestScriptPath(),
@@ -28,7 +33,6 @@ void main() {
     String outputPath = tempDir.path;
 
     // Run the gen script.
-    print(outputPath);
     ProcessResult result = await Process.run(
       'pub',
       <String>['run', 'gen_widget_specs.dart', mockPackagePath, outputPath],
@@ -41,6 +45,7 @@ void main() {
         .listSync()
         .map((FileSystemEntity entity) => path.basename(entity.path))
         .toList();
+
     expect(
         createdFiles,
         unorderedEquals(<String>[
