@@ -46,18 +46,18 @@ class _RecipientInputState extends State<RecipientInput> {
   /// The 'in progress' text of the new recipient being composed in the input
   InputValue _currentInput;
 
-  /// GlobalKey that is required for a RawInput
-  GlobalKey<RawInputState> _rawInputKey = new GlobalKey<RawInputState>();
+  /// GlobalKey that is required for an EditableText
+  GlobalKey<EditableTextState> _editableTextKey = new GlobalKey<EditableTextState>();
 
   /// If parent widget has a specified GlobalKey use that as the focusKey of
-  /// the RawInput.
+  /// the EditableText.
   /// Use a new GlobalKey otherwise.
   GlobalKey get focusKey {
     Key parentKey = config.key;
     if (parentKey is GlobalKey) {
       return parentKey;
     } else {
-      return _rawInputKey;
+      return _editableTextKey;
     }
   }
 
@@ -132,14 +132,14 @@ class _RecipientInputState extends State<RecipientInput> {
     //add text input
     rowChildren.add(new Container(
       width: 100.0,
-      child: new RawInput(
+      child: new EditableText(
         onChanged: _handleInputChange,
         onSubmitted: _handleInputSubmit,
         value: _currentInput,
         platform: theme.platform,
         style: theme.textTheme.body1,
         focusKey: focusKey,
-        key: _rawInputKey,
+        key: _editableTextKey,
         cursorColor: theme.textSelectionColor,
         selectionColor: theme.textSelectionColor,
       ),
