@@ -53,3 +53,6 @@ final Action<Thread> emailSessionFocusThread = new Action<Thread>();
 
 /// Toggle the expansion of a message in a thread view
 final Action<Message> emailSessionToggleMessageExpand = new Action<Message>();
+
+/// Marks given message as read
+final Action<Message> emailSessionMarkMessageAsRead = new Action<Message>();
