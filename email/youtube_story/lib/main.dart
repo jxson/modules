@@ -70,7 +70,7 @@ class ModuleImpl extends Module {
     Map<String, dynamic> doc = <String, dynamic>{
       _kYoutubeVideoIdKey: _kVideoId
     };
-    link.updateObject('/' + _kYoutubeDocRoot, JSON.encode(doc));
+    link.updateObject(<String>[_kYoutubeDocRoot], JSON.encode(doc));
 
     // Spawn the child.
     _videoPlayerConn =

@@ -18,7 +18,7 @@ class LinkWatcherImpl extends LinkWatcher {
   /// Construct a LinkWatcherImpl
   LinkWatcherImpl(this._link, this._callback) {
     _link.watch(_binding.wrap(this));
-    _link.get('', this.notify);
+    _link.get(null, this.notify);
   }
 
   /// Closes the binding
