@@ -19,6 +19,9 @@ class Message {
   /// Unique Identifier for given email message
   final String id;
 
+  /// Unique Identifier for the thread that contains this message
+  final String threadId;
+
   /// List of recipient mailboxes
   final List<Mailbox> recipientList;
 
@@ -52,6 +55,7 @@ class Message {
   /// Constructor
   Message({
     this.id,
+    this.threadId,
     this.sender,
     this.senderProfileUrl,
     this.subject,
@@ -88,6 +92,7 @@ class Message {
 
     return new Message(
       id: json['id'],
+      threadId: json['threadId'],
       sender: new Mailbox.fromJson(json['sender']),
       senderProfileUrl: json['senderProfileUrl'],
       subject: json['subject'],
@@ -108,6 +113,7 @@ class Message {
     // backing data.
     Map<String, dynamic> json = <String, dynamic>{
       'id': id,
+      'threadId': threadId,
       'sender': sender.toJson(),
       'senderProfileUrl': senderProfileUrl,
       'subject': subject,

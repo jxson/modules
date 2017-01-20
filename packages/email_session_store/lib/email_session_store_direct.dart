@@ -42,6 +42,9 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
       _focusedThreadId = thread.id;
     });
     triggerOnAction(emailSessionToggleMessageExpand, _toggleMessageExpand);
+    triggerOnAction(emailSessionMarkMessageAsRead, (Message message) {
+      _markMessageAsRead(message);
+    });
   }
 
   /// Async helper to get an instance of EmailAPI. If one doesn't exist it
@@ -154,6 +157,48 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
 
     // Fetch Threads
     await _fetchThreadsForFocusedLabel();
+
+    return null;
+  }
+
+  Future<Null> _markMessageAsRead(Message message) async {
+    EmailAPI email = await api();
+    bool markedAsRead = await email.markMessageAsRead(message.id);
+
+    // Exit if the API call did not end up in a error, but the message is still
+    // marked as "UNREAD"
+    if (!markedAsRead) {
+      return null;
+    }
+
+    // Find the message in the thread and replace with a new copy with updated
+    // data
+    Thread containingThread = _visibleThreads.firstWhere(
+      (Thread t) => t.id == message.threadId,
+      orElse: () => null,
+    );
+
+    if (containingThread == null) {
+      return null;
+    }
+    int index = containingThread.messages.indexOf(message);
+    if (index >= 0) {
+      containingThread.messages[index] = new Message(
+        id: message.id,
+        threadId: message.threadId,
+        sender: message.sender,
+        senderProfileUrl: message.senderProfileUrl,
+        subject: message.subject,
+        text: message.text,
+        timestamp: message.timestamp,
+        isRead: true,
+        links: message.links,
+        attachments: message.attachments,
+        recipientList: message.recipientList,
+        ccList: message.ccList,
+      );
+      trigger();
+    }
 
     return null;
   }

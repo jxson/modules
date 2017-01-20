@@ -230,6 +230,7 @@ class EmailAPI {
 
     return new Message(
       id: message.id,
+      threadId: message.threadId,
       timestamp: _timestamp(message.internalDate),
       isRead: !message.labelIds.contains('UNREAD'),
       sender: sender,
@@ -241,6 +242,16 @@ class EmailAPI {
       links: links,
       attachments: _attachments(links),
     );
+  }
+
+  /// Marks a message as read given the ID
+  /// Returns true if the message has the "UNREAD" label removed.
+  Future<bool> markMessageAsRead(String id) async {
+    gmail.ModifyMessageRequest request = new gmail.ModifyMessageRequest()
+      ..removeLabelIds = <String>['UNREAD'];
+    gmail.Message message =
+        await _gmail.users.messages.modify(request, 'me', id);
+    return !message.labelIds.contains('UNREAD');
   }
 }
 

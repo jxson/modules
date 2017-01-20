@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:collection/collection.dart';
-import 'package:meta/meta.dart';
 import 'package:quiver/core.dart' as quiver;
 
 import 'message.dart';
@@ -31,9 +30,10 @@ class Thread {
     this.id,
     this.snippet,
     this.historyId,
-    @required List<Message> messages,
-  })
-      : messages = new List<Message>.unmodifiable(messages);
+    // HACK(@dayang): Removed the immutability of the actual message list for
+    // now. Messages themselves are still immutable
+    this.messages,
+  });
 
   /// Create a [Thread] from JSON.
   factory Thread.fromJson(Map<String, dynamic> json) {
