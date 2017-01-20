@@ -97,7 +97,7 @@ void _addEmbeddedChildBuilder({
           propKey: args,
           '@type': type
         };
-        link.set('/' + docRoot, JSON.encode(childDoc));
+        link.set(<String>[docRoot], JSON.encode(childDoc));
       }
 
       ModuleControllerProxy moduleController = new ModuleControllerProxy();

@@ -142,7 +142,7 @@ class ModuleImpl extends Module {
       _kMapLocationKey: location,
     };
 
-    link.updateObject('/' + _kMapDocRoot, JSON.encode(mapDoc));
+    link.updateObject(<String>[_kMapDocRoot], JSON.encode(mapDoc));
   }
 
   /// Obtains a duplicated [InterfaceHandle] for the given [Link] object.

@@ -34,9 +34,13 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
     super.dispose();
   }
 
-  void _onUpdate(Map<String, dynamic> json) {
-    _log("Received _onUpdate");
-    if (json == null || json[EmailSessionDoc.docroot] == null) {
+  void _onUpdate(dynamic json) {
+    _log("Received _onUpdate $json");
+    if (json is! Map) {
+      return null;
+    }
+    assert((json[EmailSessionDoc.docroot] is Map));
+    if (json[EmailSessionDoc.docroot] is! Map) {
       return null;
     }
 

@@ -41,7 +41,7 @@ class EmailSessionImpl extends es.EmailSession {
   /// Connects to necessary email services, and fetches the initial data.
   void initialize(ServiceProvider emailServices) {
     _log('initialize called');
-    _link.get('', _doc.readFromLink);
+    _link.get(null, _doc.readFromLink);
 
     connectToService(emailServices, _email.ctrl);
 

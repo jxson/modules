@@ -86,27 +86,30 @@ class EmailSessionDoc {
 
   /// Write state to link
   void writeToLink(Link link) {
-    link.updateObject('/' + docroot, JSON.encode(this));
+    link.updateObject(<String>[docroot], JSON.encode(this));
   }
 
   /// Convert a User object from Map<> representation to a concrete User object.
   bool fromJson(Map<String, dynamic> doc) {
-    if (doc != null && doc[docroot] != null) {
-      try {
-        doc = doc[docroot];
-        user = new User.fromJson(doc[userProp]);
-        visibleLabels = _labelsFromJson(doc[visibleLabelsProp]);
-        focusedLabelId = doc[focusedLabelIdProp];
-        visibleThreads = _threadsFromJson(doc[visibleThreadsProp]);
-        focusedThreadId = doc[focusedThreadIdProp];
-        fetchingLabels = _readBool(doc, fetchingLabelsProp);
-        fetchingThreads = _readBool(doc, fetchingThreadsProp);
-        return true;
-      } on CastError catch (e) {
-        _log('Failed to cast Link properties $e');
-      }
+    // The fact that we declared the parameter to be a Map does not mean
+    // that Dart checks this at run time, so we need to make sure. If this
+    // asserts, then you should check that the doc object is valid before
+    // creating the EmailSessionDoc and calling fromJson().
+    assert(doc is Map && doc[docroot] is Map);
+    try {
+      doc = doc[docroot];
+      user = new User.fromJson(doc[userProp]);
+      visibleLabels = _labelsFromJson(doc[visibleLabelsProp]);
+      focusedLabelId = doc[focusedLabelIdProp];
+      visibleThreads = _threadsFromJson(doc[visibleThreadsProp]);
+      focusedThreadId = doc[focusedThreadIdProp];
+      fetchingLabels = _readBool(doc, fetchingLabelsProp);
+      fetchingThreads = _readBool(doc, fetchingThreadsProp);
+      return true;
+    } catch (e) {
+      _log('Failed to cast Link properties $e');
+      return false;
     }
-    return false;
   }
 
   /// Helper function for JSON.encode()
