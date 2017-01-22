@@ -100,8 +100,16 @@ class LabelList extends StatelessWidget {
       alignment: FractionalOffset.centerLeft,
       height: _kProfileHeaderHeight,
       child: new ListItem(
-        title: new Text(user.name),
-        subtitle: new Text(user.email),
+        title: new Text(
+          user.name,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: new Text(
+          user.email,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+        ),
         leading: new Alphatar.fromUser(user: user),
       ),
     );
