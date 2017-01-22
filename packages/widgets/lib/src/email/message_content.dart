@@ -117,6 +117,7 @@ class _MessageContentState extends State<MessageContent> {
         bottom: 16.0,
       ),
       child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
       ),
     );

@@ -104,7 +104,7 @@ class ThreadListItem extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: new TextStyle(
             fontSize: 14.0,
-            color: lastMessage.isRead ? Colors.grey[500] : Colors.black,
+            color: lastMessage.isRead ? Colors.grey[700] : Colors.black,
             height: 1.4,
             fontWeight:
                 lastMessage.isRead ? FontWeight.normal : FontWeight.bold,
