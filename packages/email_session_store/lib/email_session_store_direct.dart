@@ -38,9 +38,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
       _focusedLabelId = folder.id;
       _fetchThreadsForFocusedLabel();
     });
-    triggerOnAction(emailSessionFocusThread, (Thread thread) {
-      _focusedThreadId = thread.id;
-    });
+    triggerOnAction(emailSessionFocusThread, _focusOnThread);
     triggerOnAction(emailSessionToggleMessageExpand, _toggleMessageExpand);
     triggerOnAction(emailSessionMarkMessageAsRead, (Message message) {
       _markMessageAsRead(message);
@@ -159,6 +157,32 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     await _fetchThreadsForFocusedLabel();
 
     return null;
+  }
+
+  /// Expand every unread message for the current focused thread
+  /// Mark all unread messages as read when a thread is opened
+  /// If all message have been read, expand the last message
+  void _focusOnThread(Thread thread) {
+    _focusedThreadId = thread.id;
+    _expandedMessageIds = <String>[];
+
+    List<Message> unreadMessages = thread.messages
+        .where(
+          (Message message) => !message.isRead,
+        )
+        .toList();
+
+    // TODO(dayang): Batch "Mark as Read" API requests
+    unreadMessages.forEach((Message message) {
+      _markMessageAsRead(message);
+      _expandedMessageIds.add(message.id);
+    });
+
+    if (unreadMessages.length == 0) {
+      _expandedMessageIds.add(thread.messages.last.id);
+    }
+
+    trigger();
   }
 
   Future<Null> _markMessageAsRead(Message message) async {
