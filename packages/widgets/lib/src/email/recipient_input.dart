@@ -47,7 +47,8 @@ class _RecipientInputState extends State<RecipientInput> {
   InputValue _currentInput;
 
   /// GlobalKey that is required for an EditableText
-  GlobalKey<EditableTextState> _editableTextKey = new GlobalKey<EditableTextState>();
+  GlobalKey<EditableTextState> _editableTextKey =
+      new GlobalKey<EditableTextState>();
 
   /// If parent widget has a specified GlobalKey use that as the focusKey of
   /// the EditableText.
