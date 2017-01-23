@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:analyzer/dart/element/element.dart';
+
 /// A class describing the specifications of a custom flutter widget.
 class WidgetSpecs implements Comparable<WidgetSpecs> {
   /// Creates a new instance of [WidgetSpecs] class with the given parameters.
@@ -10,6 +12,7 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
     this.name,
     this.path,
     this.doc,
+    this.classElement,
   });
 
   /// Name of the package in which this widget is defined.
@@ -23,6 +26,9 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
 
   /// Contents of the document comments associated with the widget.
   final String doc;
+
+  /// The [ClassElement] corresponding to this widget.
+  final ClassElement classElement;
 
   @override
   int compareTo(WidgetSpecs other) {

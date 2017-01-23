@@ -178,6 +178,7 @@ class _WidgetSpecsCreator {
       name: name,
       path: source.uri.pathSegments.skip(1).join('/'),
       doc: doc,
+      classElement: c,
     );
   }
 

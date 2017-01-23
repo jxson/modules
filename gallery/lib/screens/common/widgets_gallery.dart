@@ -7,6 +7,11 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gallery/src/generated/index.dart';
 import 'package:widget_specs/widget_specs.dart';
 
+const double _kMaxWidth = 1000.0;
+const double _kMaxHeight = 1000.0;
+const double _kDefaultWidth = 500.0;
+const double _kDefaultHeight = 500.0;
+
 /// A gallery screen that lists all the auto-generated widgets and their specs.
 class WidgetsGalleryScreen extends StatefulWidget {
   @override
@@ -15,6 +20,13 @@ class WidgetsGalleryScreen extends StatefulWidget {
 
 class _WidgetsGalleryState extends State<WidgetsGalleryScreen> {
   String selectedWidget;
+  double width;
+  double height;
+
+  _WidgetsGalleryState() {
+    width = _kDefaultWidth;
+    height = _kDefaultHeight;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +68,6 @@ class _WidgetsGalleryState extends State<WidgetsGalleryScreen> {
 
 ${specs.doc}''';
 
-    Widget exampleWidget;
-    try {
-      exampleWidget = kWidgetBuilders[specs.name]?.call(context);
-    } catch (e) {
-      exampleWidget = new Text('Failed to build the example widget.\n'
-          '(Likely due to missing required parameters.)');
-    }
-
     return new Align(
       alignment: FractionalOffset.topLeft,
       child: new Block(
@@ -72,18 +76,60 @@ ${specs.doc}''';
             data: markdownText,
             markdownStyle: new MarkdownStyle.largeFromTheme(Theme.of(context)),
           ),
-          new Container(
-            decoration: new BoxDecoration(
-              border: new Border.all(color: Colors.grey[500]),
-              borderRadius: new BorderRadius.all(new Radius.circular(4.0)),
-            ),
-            margin: const EdgeInsets.all(16.0),
-            child: new Container(
-              margin: const EdgeInsets.all(16.0),
-              child: exampleWidget,
-            ),
-          ),
+          _buildSizeControl(),
+          kWidgetBuilders[specs.name](context, width, height),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSizeControl() {
+    return new Container(
+      decoration: new BoxDecoration(
+        border: new Border.all(color: Colors.grey[500]),
+        borderRadius: new BorderRadius.all(new Radius.circular(4.0)),
+      ),
+      margin: const EdgeInsets.all(16.0),
+      child: new Container(
+        alignment: FractionalOffset.topLeft,
+        margin: const EdgeInsets.all(16.0),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            new Row(
+              children: <Widget>[
+                new Container(
+                  width: 100.0,
+                  child: new Text('Width: ${width.toStringAsFixed(1)}'),
+                ),
+                new Expanded(
+                  child: new Slider(
+                    value: width,
+                    onChanged: (double value) => setState(() => width = value),
+                    min: 0.0,
+                    max: _kMaxWidth,
+                  ),
+                ),
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                new Container(
+                  width: 100.0,
+                  child: new Text('Height: ${height.toStringAsFixed(1)}'),
+                ),
+                new Expanded(
+                  child: new Slider(
+                    value: height,
+                    onChanged: (double value) => setState(() => height = value),
+                    min: 0.0,
+                    max: _kMaxHeight,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
