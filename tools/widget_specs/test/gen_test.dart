@@ -54,5 +54,12 @@ void main() {
           'widget03.dart',
           'no_comment_widget.dart',
         ]));
+
+    // Verify the generated file contents.
+    expect(
+      new File(path.join(outputPath, 'widget01.dart')).readAsStringSync(),
+      new File(path.join(getTestDataPath(), 'widget01.dart'))
+          .readAsStringSync(),
+    );
   });
 }

@@ -7,6 +7,7 @@ description: Tools and APIs for extracting widget specs and generating gallery s
 dependencies:
   analyzer: ^0.28.1
   cli_util: ^0.0.1+2
+  dart_style: ^0.2.11+1
   glob: ^1.1.3
   mustache: ^0.2.5+1
   path: ^1.3.9

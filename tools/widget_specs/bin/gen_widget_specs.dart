@@ -7,6 +7,7 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:dart_style/dart_style.dart';
 import 'package:mustache/mustache.dart';
 import 'package:path/path.dart' as path;
 import 'package:strings/strings.dart' as strings;
@@ -14,6 +15,8 @@ import 'package:widget_specs/widget_specs.dart';
 
 const double _kBoxRadius = 4.0;
 const double _kMargin = 16.0;
+
+final DartFormatter _formatter = new DartFormatter();
 
 Future<Null> main(List<String> args) async {
   String error = checkArgs(args);
@@ -125,7 +128,7 @@ Future<Null> writeIndex(String outputDir, List<WidgetSpecs> widgetSpecs) async {
     'builders': builders,
   });
 
-  await new File(outputPath).writeAsString(output);
+  await new File(outputPath).writeAsString(_formatter.format(output));
 }
 
 const String _kSpecFileTemplate = '''
@@ -169,50 +172,95 @@ class _HelperWidgetState extends State<_HelperWidget> {
   {{ param_type }} {{ param_name }};
   {{/ params }}
 
+  Key uniqueKey = new UniqueKey();
+
   @override
   Widget build(BuildContext context) {
+    Widget widget;
     try {
-      return new Block(
-        children: <Widget>[
-          new Container(
-            decoration: new BoxDecoration(
-              border: new Border.all(color: Colors.grey[500]),
-              borderRadius: new BorderRadius.all(new Radius.circular($_kBoxRadius)),
-            ),
-            margin: const EdgeInsets.all($_kMargin),
-            child: new Container(),
+      widget = new {{ name }}(
+        key: uniqueKey,
+        {{# params }}
+        {{ param_name }}: {{ param_name }},
+        {{/ params }}
+      );
+    } catch (e) {
+      widget = new Text('Failed to build the widget.\\n'
+          'See the error message below:\\n\\n'
+          '\$e');
+    }
+
+    return new Block(
+      children: <Widget>[
+        new Container(
+          decoration: new BoxDecoration(
+            border: new Border.all(color: Colors.grey[500]),
+            borderRadius: new BorderRadius.all(new Radius.circular($_kBoxRadius)),
           ),
-          new Container(
-            decoration: new BoxDecoration(
-              border: new Border.all(color: Colors.grey[500]),
-              borderRadius: new BorderRadius.all(new Radius.circular($_kBoxRadius)),
-            ),
-            margin: const EdgeInsets.all($_kMargin),
+          margin: const EdgeInsets.all($_kMargin),
+          child: new Container(
             child: new Container(
               margin: const EdgeInsets.all($_kMargin),
-              child: new Row(
+              child: new Block(
                 children: <Widget>[
-                  new Container(
-                    width: config.width,
-                    height: config.height,
-                    child: new {{ name }}(
-                      {{# params }}
-                      {{ param_name }}: {{ param_name }},
-                      {{/ params }}
-                    ),
+                  new Text(
+                    'Parameters',
+                    style: new TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  new Expanded(child: new Container()),
+                  new Table(
+                    children: <TableRow>[
+                      {{# params }}
+                      new TableRow(
+                        children: <Widget>[
+                          new Text('{{ param_type }}'),
+                          new Container(),
+                          new Text('{{ param_name }}'),
+                          new Container(),
+                          {{ param_controller }},
+                        ],
+                      ),
+                      {{/ params }}
+                    ],
+                    columnWidths: <int, TableColumnWidth>{
+                      0: const IntrinsicColumnWidth(),
+                      1: const FixedColumnWidth($_kMargin),
+                      2: const IntrinsicColumnWidth(),
+                      3: const FixedColumnWidth($_kMargin),
+                      4: const FlexColumnWidth(1.0),
+                    },
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  ),
                 ],
               ),
             ),
           ),
-        ]
-      );
-    } catch (e) {
-      return new Text('Failed to build the example widget.\\n'
-          'See the error message below:\\n\\n'
-          '\$e');
-    }
+        ),
+        new Container(
+          decoration: new BoxDecoration(
+            border: new Border.all(color: Colors.grey[500]),
+            borderRadius: new BorderRadius.all(new Radius.circular($_kBoxRadius)),
+          ),
+          margin: const EdgeInsets.all($_kMargin),
+          child: new Container(
+            margin: const EdgeInsets.all($_kMargin),
+            child: new Row(
+              children: <Widget>[
+                new Container(
+                  width: config.width,
+                  height: config.height,
+                  child: widget,
+                ),
+                new Expanded(child: new Container()),
+              ],
+            ),
+          ),
+        ),
+      ]
+    );
+  }
+
+  void updateKey() {
+    uniqueKey = new UniqueKey();
   }
 }
 
@@ -273,9 +321,28 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
         .map((ParameterElement param) => <String, String>{
               'param_type': param.type.name,
               'param_name': param.name,
+              'param_controller': _generateParamControllerCode(param),
             })
         .toList(),
   });
 
-  await new File(outputPath).writeAsString(output);
+  await new File(outputPath).writeAsString(_formatter.format(output));
+}
+
+String _generateParamControllerCode(ParameterElement param) {
+  // TODO(youngseokyoon): handle more types of values.
+  if (param.type.name == 'String') {
+    return '''new TextField(
+      initialValue: new InputValue(text: ${param.name} ?? ''),
+      isDense: true,
+      onChanged: (InputValue value) {
+        setState(() {
+          ${param.name} = value.text;
+          updateKey();
+        });
+      },
+    )''';
+  }
+
+  return "new Text('null (this type of parameter is not supported yet)')";
 }

@@ -5,7 +5,19 @@
 import 'package:flutter/widgets.dart';
 
 /// This is a public [StatefulWidget].
-class Widget01 extends StatefulWidget {}
+class Widget01 extends StatefulWidget {
+  /// An example [int] parameter for testing code generation.
+  final int intParam;
+
+  /// An example [bool] parameter for testing code generation.
+  final bool boolParam;
+
+  /// An example [String] parameter for testing code generation.
+  final String stringParam;
+
+  Widget01({Key key, this.intParam, this.boolParam, this.stringParam})
+      : super(key: key);
+}
 
 /// This is a private [StatefulWidget].
 class _Widget02 extends StatefulWidget {}
