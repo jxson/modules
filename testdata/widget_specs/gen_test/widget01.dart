@@ -80,8 +80,22 @@ class _HelperWidgetState extends State<_HelperWidget> {
                         new Container(),
                         new Text('intParam'),
                         new Container(),
-                        new Text(
-                            'null (this type of parameter is not supported yet)'),
+                        new TextField(
+                          initialValue:
+                              new InputValue(text: (intParam ?? 0).toString()),
+                          isDense: true,
+                          onChanged: (InputValue value) {
+                            try {
+                              int intValue = int.parse(value.text);
+                              setState(() {
+                                intParam = intValue;
+                                updateKey();
+                              });
+                            } catch (e) {
+                              // Do nothing.
+                            }
+                          },
+                        ),
                       ],
                     ),
                     new TableRow(
@@ -90,8 +104,20 @@ class _HelperWidgetState extends State<_HelperWidget> {
                         new Container(),
                         new Text('boolParam'),
                         new Container(),
-                        new Text(
-                            'null (this type of parameter is not supported yet)'),
+                        new Row(
+                          children: <Widget>[
+                            new Switch(
+                              value: boolParam ?? false,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  boolParam = value;
+                                  updateKey();
+                                });
+                              },
+                            ),
+                            new Expanded(child: new Container()),
+                          ],
+                        ),
                       ],
                     ),
                     new TableRow(

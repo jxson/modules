@@ -331,6 +331,47 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
 
 String _generateParamControllerCode(ParameterElement param) {
   // TODO(youngseokyoon): handle more types of values.
+
+  // For int type, use a TextField where the user can type in the integer value.
+  if (param.type.name == 'int') {
+    return '''new TextField(
+      initialValue: new InputValue(text: (${param.name} ?? 0).toString()),
+      isDense: true,
+      onChanged: (InputValue value) {
+        try {
+          int intValue = int.parse(value.text);
+          setState(() {
+            ${param.name} = intValue;
+            updateKey();
+          });
+        } catch (e) {
+          // Do nothing.
+        }
+      },
+    )''';
+  }
+
+  // For bool type, use a Switch widget.
+  // Since we don't want the Switch widget to take up the entire width, add an
+  // empty widget next to it.
+  if (param.type.name == 'bool') {
+    return '''new Row(
+      children: <Widget>[
+        new Switch(
+          value: ${param.name} ?? false,
+          onChanged: (bool value) {
+            setState(() {
+              ${param.name} = value;
+              updateKey();
+            });
+          },
+        ),
+        new Expanded(child: new Container()),
+      ],
+    )''';
+  }
+
+  // For String type, use a TextField where the user can type in the value.
   if (param.type.name == 'String') {
     return '''new TextField(
       initialValue: new InputValue(text: ${param.name} ?? ''),
@@ -344,5 +385,36 @@ String _generateParamControllerCode(ParameterElement param) {
     )''';
   }
 
+  // Handle enum parameters with a popup menu button.
+  if (_isEnumParameter(param)) {
+    return '''new PopupMenuButton<${param.type.name}>(
+      itemBuilder: (BuildContext context) {
+        return ${param.type.name}.values.map((${param.type.name} value) {
+          return new PopupMenuItem<${param.type.name}>(
+            value: value,
+            child: new Text(value.toString()),
+          );
+        }).toList();
+      },
+      initialValue: ${param.type.name}.values[0],
+      onSelected: (${param.type.name} value) {
+        setState(() {
+          ${param.name} = value;
+          updateKey();
+        });
+      },
+      child: new Text((${param.name} ?? 'null').toString()),
+    )''';
+  }
+
   return "new Text('null (this type of parameter is not supported yet)')";
+}
+
+bool _isEnumParameter(ParameterElement param) {
+  if (param?.type?.element is! ClassElement) {
+    return false;
+  }
+
+  ClassElement paramType = param.type.element;
+  return paramType.isEnum;
 }
