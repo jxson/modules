@@ -26,7 +26,7 @@ import 'widget_specs.dart';
 /// Extracts all the flutter widgets and their specs from the given package.
 ///
 /// The dart files are assumed to be under the `lib` directory.
-List<WidgetSpecs> extractWidgetSpecs(String packagePath) {
+List<WidgetSpecs> extractWidgetSpecs(String packagePath, {String fuchsiaRoot}) {
   // Initialize the analysis engine.
   AnalysisContext context = _initContext(packagePath);
   ResourceProvider resourceProvider = PhysicalResourceProvider.INSTANCE;
@@ -60,8 +60,8 @@ List<WidgetSpecs> extractWidgetSpecs(String packagePath) {
   Set<LibraryElement> libraries = new Set<LibraryElement>();
 
   return sources
-      .expand((Source source) =>
-          _extractWidgetSpecsFromSource(context, source, libraries))
+      .expand((Source source) => _extractWidgetSpecsFromSource(
+          context, source, libraries, fuchsiaRoot))
       .toList()..sort();
 }
 
@@ -69,6 +69,7 @@ List<WidgetSpecs> _extractWidgetSpecsFromSource(
   AnalysisContext context,
   Source source,
   Set<LibraryElement> libraries,
+  String fuchsiaRoot,
 ) {
   Queue<LibraryElement> queue = new Queue<LibraryElement>();
   Set<LibraryElement> newLibraries = new Set<LibraryElement>();
@@ -97,7 +98,9 @@ List<WidgetSpecs> _extractWidgetSpecsFromSource(
       .toList();
 
   // Create widget specs from the given types.
-  return types.map(new _WidgetSpecsCreator(source)).toList();
+  return types
+      .map(new _WidgetSpecsCreator(source, context, fuchsiaRoot))
+      .toList();
 }
 
 /// Initialize the [AnalysisContext] in which the analysis will be performed.
@@ -152,9 +155,13 @@ AnalysisContext _initContext(String packagePath) {
 
 /// A helper class for creating [WidgetSpecs] from [ClassDeclaration]s.
 class _WidgetSpecsCreator {
-  _WidgetSpecsCreator(this.source);
+  _WidgetSpecsCreator(this.source, this.context, this.fuchsiaRoot);
 
   final Source source;
+
+  final AnalysisContext context;
+
+  final String fuchsiaRoot;
 
   /// Creates a new [WidgetSpecs] instance from the given [ClassDeclaration].
   ///
@@ -173,10 +180,19 @@ class _WidgetSpecsCreator {
       doc = _trimCommentPrefixes(c.documentationComment);
     }
 
+    // Calculate the path from fuchsia root, if the fuchsia root path is given.
+    String pathFromFuchsiaRoot;
+    if (fuchsiaRoot != null) {
+      String absSourcePath = c.librarySource.fullName;
+      String absFuchsiaRoot = path.absolute(fuchsiaRoot);
+      pathFromFuchsiaRoot = path.relative(absSourcePath, from: absFuchsiaRoot);
+    }
+
     return new WidgetSpecs(
       packageName: source.uri.pathSegments[0],
       name: name,
       path: source.uri.pathSegments.skip(1).join('/'),
+      pathFromFuchsiaRoot: pathFromFuchsiaRoot,
       doc: doc,
       classElement: c,
     );

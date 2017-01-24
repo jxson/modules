@@ -13,6 +13,15 @@ import 'util.dart';
 
 Future<Null> main() async {
   String mockPackagePath = path.join(getTestDataPath(), 'mock_package');
+  String fuchsiaRoot = path.join(
+    mockPackagePath,
+    '..',
+    '..',
+    '..',
+    '..',
+    '..',
+    '..',
+  );
 
   // Run 'flutter packages get'
   await Process.run(
@@ -21,7 +30,11 @@ Future<Null> main() async {
     workingDirectory: mockPackagePath,
   );
 
-  List<WidgetSpecs> widgetSpecs = extractWidgetSpecs(mockPackagePath);
+  List<WidgetSpecs> widgetSpecs = extractWidgetSpecs(
+    mockPackagePath,
+    fuchsiaRoot: fuchsiaRoot,
+  );
+
   Map<String, WidgetSpecs> widgetMap =
       new Map<String, WidgetSpecs>.fromIterable(
     widgetSpecs,
@@ -60,6 +73,17 @@ Future<Null> main() async {
   test('extractWidgetSpecs() should correctly extract the path.', () {
     widgetMap.keys.forEach((String key) {
       expect(widgetMap[key].path, equals('exported.dart'));
+    });
+  });
+
+  test(
+      'extractWidgetSpecs() should correctly extract relative path from fuchsia root.',
+      () {
+    widgetMap.keys.forEach((String key) {
+      expect(
+          widgetMap[key].pathFromFuchsiaRoot,
+          equals(
+              'apps/modules/testdata/widget_specs/extract_test/mock_package/lib/src/sample_widgets.dart'));
     });
   });
 }

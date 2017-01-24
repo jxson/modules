@@ -209,7 +209,11 @@ dart-clean:
 .PHONY: dart-gen-specs
 dart-gen-specs: $(DART_BIN) tools/widget_specs/.packages packages/widgets/.packages
 	@rm -rf gallery/lib/src/generated/*.dart
-	@cd tools/widget_specs && pub run gen_widget_specs.dart $(DIRNAME)/packages/widgets $(DIRNAME)/gallery/lib/src/generated
+	@cd tools/widget_specs && \
+	pub run gen_widget_specs.dart \
+		$(DIRNAME)/packages/widgets \
+		$(DIRNAME)/gallery/lib/src/generated \
+		$(FUCHSIA_ROOT)
 
 .PHONY: dart-coverage
 dart-coverage: dart-base

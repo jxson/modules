@@ -11,6 +11,7 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
     this.packageName,
     this.name,
     this.path,
+    this.pathFromFuchsiaRoot,
     this.doc,
     this.classElement,
   });
@@ -21,8 +22,11 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
   /// Name of the widget.
   final String name;
 
-  /// Path of the dart file (under `lib`) where this widget is defined.
+  /// Relative path of the dart file (under `lib`) where this widget is defined.
   final String path;
+
+  /// Relative path of this file under the fuchsia root.
+  final String pathFromFuchsiaRoot;
 
   /// Contents of the document comments associated with the widget.
   final String doc;

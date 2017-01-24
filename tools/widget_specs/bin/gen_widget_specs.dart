@@ -23,14 +23,16 @@ Future<Null> main(List<String> args) async {
   if (error != null) {
     stderr.writeln(error);
     stdout.writeln('Usage: pub run gen_widget_specs.dart '
-        '<widgets_package_dir> <output_dir>');
+        '<widgets_package_dir> <output_dir> [<fuchsia_root>]');
     exit(1);
   }
 
   String packageDir = args[0];
   String outputDir = args[1];
+  String fuchsiaRoot = args.length == 3 ? args[2] : null;
 
-  List<WidgetSpecs> allWidgetSpecs = extractWidgetSpecs(packageDir)..sort();
+  List<WidgetSpecs> allWidgetSpecs =
+      extractWidgetSpecs(packageDir, fuchsiaRoot: fuchsiaRoot)..sort();
 
   await writeIndex(outputDir, allWidgetSpecs);
   await Future.forEach(
@@ -43,8 +45,8 @@ Future<Null> main(List<String> args) async {
 ///
 /// Returns the reason when there is an error; returns null otherwise.
 String checkArgs(List<String> args) {
-  if (args.length != 2) {
-    return '';
+  if (args.length < 2 || args.length > 3) {
+    return 'Invalid number of arguments.';
   }
 
   String packageDir = args[0];
@@ -65,6 +67,20 @@ String checkArgs(List<String> args) {
     } catch (e) {
       return 'Could not create the output directory "$outputDir".';
     }
+  }
+
+  if (args.length == 2) {
+    return null;
+  }
+
+  String fuchsiaRoot = args[2];
+  if (!new Directory(fuchsiaRoot).existsSync()) {
+    return 'The specified fuchsia root "$fuchsiaRoot" does not exist.';
+  }
+
+  // The fuchsia root dir should be an ancestor of the given package dir.
+  if (!path.isWithin(fuchsiaRoot, packageDir)) {
+    return 'The fuchsia root should be an ancestor of the package dir.';
   }
 
   return null;
@@ -151,6 +167,9 @@ final WidgetSpecs kSpecs = new WidgetSpecs(
   packageName: '{{ package_name }}',
   name: '{{ name }}',
   path: '{{ path }}',
+  {{# path_from_fuchsia_root }}
+  pathFromFuchsiaRoot: '{{ path_from_fuchsia_root }}',
+  {{/ path_from_fuchsia_root }}
   doc: \'\'\'
 {{ doc }}\'\'\',
 );
@@ -311,6 +330,9 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
     'package_name': specs.packageName,
     'name': specs.name,
     'path': specs.path,
+    'path_from_fuchsia_root': specs.pathFromFuchsiaRoot != null
+        ? <String, String>{'path_from_fuchsia_root': specs.pathFromFuchsiaRoot}
+        : null,
     'doc': escapedDoc,
     'additional_imports': additionalImports
         .map((String uri) => <String, String>{

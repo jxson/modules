@@ -66,7 +66,15 @@ class _WidgetsGalleryState extends State<WidgetsGalleryScreen> {
     // Display the widget name as heading 1, follwed by the dartdoc comments.
     String markdownText = '''# ${specs.name}
 
-${specs.doc}''';
+${specs.doc}
+
+#### Location
+
+${specs.pathFromFuchsiaRoot != null ? '**Defined In**: `FUCHSIA_ROOT/${specs.pathFromFuchsiaRoot}`' : ''}
+
+**Import Path**: `package:${specs.packageName}/${specs.path}`
+
+''';
 
     return new Align(
       alignment: FractionalOffset.topLeft,
