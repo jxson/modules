@@ -11,3 +11,6 @@ typedef void PhoneActionCallback(PhoneEntry phone);
 
 /// Callback function signature for an action on a EmailEntry
 typedef void EmailActionCallback(EmailEntry email);
+
+/// Callback function signature for an action on a AddressEntry
+typedef void AddressActionCallback(AddressEntry address);

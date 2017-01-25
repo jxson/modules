@@ -1,4 +1,4 @@
-// Copyright 2016 The Fuchsia Authors. All rights reserved.
+// Copyright 2017 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -10,31 +10,31 @@ import 'contact_entry_group.dart';
 import 'contact_entry_row.dart';
 import 'type_defs.dart';
 
-/// A widget representing a contact group of phone entries (phone numbers)
-class PhoneEntryGroup extends StatelessWidget {
-  /// List of phone entries to show
-  final List<PhoneEntry> phoneEntries;
+/// A widget representing a contact group of email entries
+class EmailEntryGroup extends StatelessWidget {
+  /// List of email entries to show
+  final List<EmailEntry> emailEntries;
 
-  /// Callback for when a phone entry is selected
-  final PhoneActionCallback onSelectPhoneEntry;
+  /// Callback for when a email entry is selected
+  final EmailActionCallback onSelectEmailEntry;
 
   /// Constructor
-  PhoneEntryGroup({
+  EmailEntryGroup({
     Key key,
-    @required this.phoneEntries,
-    this.onSelectPhoneEntry,
+    @required this.emailEntries,
+    this.onSelectEmailEntry,
   })
       : super(key: key) {
-    assert(phoneEntries != null);
+    assert(emailEntries != null);
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = phoneEntries
-        .map((PhoneEntry entry) => new ContactEntryRow(
+    List<Widget> children = emailEntries
+        .map((EmailEntry entry) => new ContactEntryRow(
             label: entry.label,
             child: new Text(
-              entry.number,
+              entry.value,
               softWrap: false,
               overflow: TextOverflow.ellipsis,
               style: new TextStyle(
@@ -42,12 +42,12 @@ class PhoneEntryGroup extends StatelessWidget {
               ),
             ),
             onSelect: () {
-              onSelectPhoneEntry?.call(entry);
+              onSelectEmailEntry?.call(entry);
             }))
         .toList();
     return new ContactEntryGroup(
       child: new Column(children: children),
-      icon: Icons.phone,
+      icon: Icons.mail,
     );
   }
 }
