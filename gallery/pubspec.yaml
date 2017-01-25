@@ -21,3 +21,7 @@ dependencies:
     path: ../packages/widgets
   widget_specs:
     path: ../tools/widget_specs
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/config.json
