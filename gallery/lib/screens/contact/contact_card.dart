@@ -25,8 +25,10 @@ class ContactCardScreen extends StatelessWidget {
       ),
       addresses: <AddressEntry>[
         new AddressEntry(
+          street: '517 Fuchsia Drive',
           city: 'Mountain View',
           region: 'CA',
+          country: 'United States',
         )
       ],
       emails: <EmailEntry>[
