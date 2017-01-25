@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 /// A class describing the specifications of a custom flutter widget.
@@ -33,6 +34,45 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
 
   /// The [ClassElement] corresponding to this widget.
   final ClassElement classElement;
+
+  /// Gets the default [ConstructorElement] of this widget.
+  ConstructorElement get constructor => classElement?.constructors?.firstWhere(
+        (ConstructorElement constructor) => constructor.isDefaultConstructor,
+        orElse: () => null,
+      );
+
+  /// Gets the example value specified for the given parameter.
+  dynamic getExampleValue(ParameterElement param) {
+    ElementAnnotation annotation = getExampleValueAnnotation(param);
+    DartObject valueObj = annotation.computeConstantValue().getField('value');
+
+    // TODO(youngseokyoon): handle more types.
+    switch (param.type.name) {
+      case 'int':
+        return valueObj.toIntValue();
+      case 'bool':
+        return valueObj.toBoolValue();
+      case 'double':
+        return valueObj.toDoubleValue();
+      case 'String':
+        return valueObj.toStringValue();
+      default:
+        return null;
+    }
+  }
+
+  /// Gets the `ExampleValue` annotation associated with the given
+  /// [ParameterElement].
+  ElementAnnotation getExampleValueAnnotation(ParameterElement param) {
+    for (ElementAnnotation annotation in param.metadata) {
+      DartObject annotationValue = annotation.computeConstantValue();
+      if (annotationValue?.type?.name == 'ExampleValue') {
+        return annotation;
+      }
+    }
+
+    return null;
+  }
 
   @override
   int compareTo(WidgetSpecs other) {
