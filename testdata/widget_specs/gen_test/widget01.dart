@@ -37,6 +37,7 @@ class _HelperWidgetState extends State<_HelperWidget> {
   int intParam;
   bool boolParam;
   String stringParam;
+  dynamic noExampleValueParam;
 
   Key uniqueKey = new UniqueKey();
 
@@ -49,6 +50,7 @@ class _HelperWidgetState extends State<_HelperWidget> {
         intParam: intParam,
         boolParam: boolParam,
         stringParam: stringParam,
+        noExampleValueParam: noExampleValueParam,
       );
     } catch (e) {
       widget = new Text('Failed to build the widget.\n'
@@ -136,6 +138,16 @@ class _HelperWidgetState extends State<_HelperWidget> {
                             });
                           },
                         ),
+                      ],
+                    ),
+                    new TableRow(
+                      children: <Widget>[
+                        new Text('dynamic'),
+                        new Container(),
+                        new Text('noExampleValueParam'),
+                        new Container(),
+                        new Text(
+                            'null (this type of parameter is not supported yet)'),
                       ],
                     ),
                   ],

@@ -96,7 +96,6 @@ const String _kHeader = '''
 const String _kIndexFileTemplate = '''
 {{ header }}
 
-import 'package:flutter/widgets.dart';
 import 'package:gallery/src/common/typedefs.dart';
 import 'package:widget_specs/widget_specs.dart';
 

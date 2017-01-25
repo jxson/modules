@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/widgets.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 /// This is a public [StatefulWidget].
 class Widget01 extends StatefulWidget {
@@ -15,7 +16,16 @@ class Widget01 extends StatefulWidget {
   /// An example [String] parameter for testing code generation.
   final String stringParam;
 
-  Widget01({Key key, this.intParam, this.boolParam, this.stringParam})
+  /// An example parameter without a provided example value.
+  final dynamic noExampleValueParam;
+
+  Widget01({
+    Key key,
+    @ExampleValue(42) this.intParam,
+    @ExampleValue(true) this.boolParam,
+    @ExampleValue('example string value!') this.stringParam,
+    this.noExampleValueParam,
+  })
       : super(key: key);
 }
 

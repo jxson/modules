@@ -5,6 +5,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:analyzer/dart/constant/value.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:widget_specs/widget_specs.dart';
@@ -77,13 +79,70 @@ Future<Null> main() async {
   });
 
   test(
-      'extractWidgetSpecs() should correctly extract relative path from fuchsia root.',
-      () {
+      'extractWidgetSpecs() should correctly extract '
+      'relative path from fuchsia root.', () {
     widgetMap.keys.forEach((String key) {
       expect(
           widgetMap[key].pathFromFuchsiaRoot,
           equals(
               'apps/modules/testdata/widget_specs/extract_test/mock_package/lib/src/sample_widgets.dart'));
+    });
+  });
+
+  test('The extracted ClassElement should have annotation information.', () {
+    WidgetSpecs specs = widgetMap['Widget01'];
+    ClassElement classElement = specs.classElement;
+    ConstructorElement constructor = classElement.constructors.firstWhere(
+      (ConstructorElement constructor) => constructor.isDefaultConstructor,
+      orElse: () => null,
+    );
+
+    expect(constructor, isNotNull);
+    Map<String, dynamic> expectedExampleValues = <String, dynamic>{
+      'intParam': 42,
+      'boolParam': true,
+      'stringParam': 'example string value!',
+    };
+
+    constructor.parameters.forEach((ParameterElement param) {
+      // Compute the annotation's constant values.
+      param.metadata.forEach((ElementAnnotation annotation) {
+        annotation.computeConstantValue();
+      });
+
+      // Find the @ExampleValue annotation.
+      ElementAnnotation exampleValueAnnotation = param.metadata.firstWhere(
+        (ElementAnnotation annotation) =>
+            annotation.constantValue?.type?.name == 'ExampleValue',
+        orElse: () => null,
+      );
+
+      if (exampleValueAnnotation != null) {
+        expect(param.name, isIn(expectedExampleValues.keys));
+
+        DartObject valueObject =
+            exampleValueAnnotation.constantValue?.getField('value');
+        expect(valueObject, isNotNull);
+
+        dynamic value;
+        switch (param.type.name) {
+          case 'int':
+            value = valueObject.toIntValue();
+            break;
+
+          case 'bool':
+            value = valueObject.toBoolValue();
+            break;
+
+          case 'String':
+            value = valueObject.toStringValue();
+            break;
+        }
+
+        expect(value, equals(expectedExampleValues[param.name]));
+      } else {
+        expect(param.name, isNot(isIn(expectedExampleValues.keys)));
+      }
     });
   });
 }
