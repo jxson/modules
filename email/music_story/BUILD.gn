@@ -9,6 +9,7 @@ flutter_app("music_story") {
   main_dart = "lib/main.dart"
 
   deps = [
+    "//apps/maxwell/services/context:context_dart",
     "//apps/modular/lib/app/dart",
     "//apps/modular/services/application:application_dart",
     "//apps/modular/services/story:story_dart",

@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:apps.maxwell.services.context/client.fidl.dart';
+import 'package:apps.maxwell.services.context/publisher_link.fidl.dart';
 import 'package:apps.modular.lib.app.dart/app.dart';
 import 'package:apps.modular.services.application/service_provider.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
@@ -14,6 +16,9 @@ import 'package:lib.fidl.dart/bindings.dart';
 import 'package:widgets/music.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
+
+final ContextPublisherProxy _pub = new ContextPublisherProxy();
+final ContextPublisherLinkProxy _albumIdPub = new ContextPublisherLinkProxy();
 
 final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 
@@ -56,6 +61,8 @@ class LinkWatcherImpl extends LinkWatcher {
     }
 
     _albumId = doc[_kMusicDocRoot][_kMusicAlbumIdKey];
+    // TODO(rosswang): Integrate at a lower level.
+    _albumIdPub.update(_albumId);
 
     _log('_albumId: $_albumId');
     _kHomeKey.currentState?.updateUI();
@@ -89,6 +96,15 @@ class ModuleImpl extends Module {
     _log('ModuleImpl::initialize call');
 
     story.ctrl.bind(storyHandle);
+
+    connectToService(_context.environmentServices, _pub.ctrl);
+    _pub.publish(
+        "album id",
+        "https://developer.spotify.com/web-api/user-guide/#spotify-uris-and-ids",
+        null,
+        _albumIdPub.ctrl.request());
+
+    _albumIdPub.update(_albumId);
 
     // Bind the link handle and write the video id.
     link.ctrl.bind(linkHandle);
