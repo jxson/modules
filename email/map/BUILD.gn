@@ -8,7 +8,7 @@ import("//flutter/build/flutter_app.gni")
 flutter_app("map") {
   main_dart = "lib/main.dart"
 
-  manifest = "flutter.yaml"
+  manifest = "pubspec.yaml"
 
   deps = [
     "//apps/modular/lib/app/dart",
