@@ -5,7 +5,8 @@
 // THIS IS A GENERATED FILE. DO NOT MODIFY MANUALLY.
 
 import 'package:flutter/material.dart';
-import 'package:gallery/src/common/typedefs.dart';
+import 'package:gallery/src/widget_specs/typedefs.dart';
+import 'package:gallery/src/widget_specs/utils.dart';
 import 'package:widget_specs/widget_specs.dart';
 import 'package:mock_package/exported.dart';
 
@@ -86,12 +87,11 @@ class _HelperWidgetState extends State<_HelperWidget> {
                 ),
                 new Table(
                   children: <TableRow>[
-                    new TableRow(
-                      children: <Widget>[
+                    buildTableRow(
+                      context,
+                      <Widget>[
                         new Text('int'),
-                        new Container(),
                         new Text('intParam'),
-                        new Container(),
                         new TextField(
                           initialValue:
                               new InputValue(text: (intParam ?? 0).toString()),
@@ -110,12 +110,11 @@ class _HelperWidgetState extends State<_HelperWidget> {
                         ),
                       ],
                     ),
-                    new TableRow(
-                      children: <Widget>[
+                    buildTableRow(
+                      context,
+                      <Widget>[
                         new Text('bool'),
-                        new Container(),
                         new Text('boolParam'),
-                        new Container(),
                         new Row(
                           children: <Widget>[
                             new Switch(
@@ -132,12 +131,11 @@ class _HelperWidgetState extends State<_HelperWidget> {
                         ),
                       ],
                     ),
-                    new TableRow(
-                      children: <Widget>[
+                    buildTableRow(
+                      context,
+                      <Widget>[
                         new Text('String'),
-                        new Container(),
                         new Text('stringParam'),
-                        new Container(),
                         new TextField(
                           initialValue: new InputValue(text: stringParam ?? ''),
                           isDense: true,
@@ -150,12 +148,11 @@ class _HelperWidgetState extends State<_HelperWidget> {
                         ),
                       ],
                     ),
-                    new TableRow(
-                      children: <Widget>[
+                    buildTableRow(
+                      context,
+                      <Widget>[
                         new Text('dynamic'),
-                        new Container(),
                         new Text('noExampleValueParam'),
-                        new Container(),
                         new Text(
                             'null (this type of parameter is not supported yet)'),
                       ],

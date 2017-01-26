@@ -96,7 +96,7 @@ const String _kHeader = '''
 const String _kIndexFileTemplate = '''
 {{ header }}
 
-import 'package:gallery/src/common/typedefs.dart';
+import 'package:gallery/src/widget_specs/typedefs.dart';
 import 'package:widget_specs/widget_specs.dart';
 
 {{ imports }}
@@ -150,7 +150,8 @@ const String _kSpecFileTemplate = '''
 {{ header }}
 
 import 'package:flutter/material.dart';
-import 'package:gallery/src/common/typedefs.dart';
+import 'package:gallery/src/widget_specs/typedefs.dart';
+import 'package:gallery/src/widget_specs/utils.dart';
 import 'package:widget_specs/widget_specs.dart';
 import 'package:{{ package_name }}/{{ path }}';
 
@@ -237,12 +238,11 @@ class _HelperWidgetState extends State<_HelperWidget> {
                   new Table(
                     children: <TableRow>[
                       {{# params }}
-                      new TableRow(
-                        children: <Widget>[
+                      buildTableRow(
+                        context,
+                        <Widget>[
                           new Text('{{ param_type }}'),
-                          new Container(),
                           new Text('{{ param_name }}'),
-                          new Container(),
                           {{ param_controller }},
                         ],
                       ),
