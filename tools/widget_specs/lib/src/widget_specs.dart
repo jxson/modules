@@ -44,6 +44,10 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
   /// Gets the example value specified for the given parameter.
   dynamic getExampleValue(ParameterElement param) {
     ElementAnnotation annotation = getExampleValueAnnotation(param);
+    if (annotation == null) {
+      return null;
+    }
+
     DartObject valueObj = annotation.computeConstantValue().getField('value');
 
     // TODO(youngseokyoon): handle more types.

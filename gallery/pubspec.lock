@@ -333,6 +333,12 @@ packages:
       relative: true
     source: path
     version: "0.0.0"
+  widgets_meta:
+    description:
+      path: "../packages/widgets_meta"
+      relative: true
+    source: path
+    version: "0.0.0"
   xml:
     description:
       name: xml

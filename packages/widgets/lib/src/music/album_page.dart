@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/music.dart';
 import 'package:music_api/music_api.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 import 'loading_state.dart';
 import 'related_artists.dart';
@@ -19,7 +20,7 @@ class AlbumPage extends StatefulWidget {
   /// Constructor
   AlbumPage({
     Key key,
-    @required this.albumId,
+    @required @ExampleValue('0sNOF9WDwhWunNAHPD3Baj') this.albumId,
   })
       : super(key: key) {
     assert(albumId != null);

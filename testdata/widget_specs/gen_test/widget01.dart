@@ -42,6 +42,16 @@ class _HelperWidgetState extends State<_HelperWidget> {
   Key uniqueKey = new UniqueKey();
 
   @override
+  void initState() {
+    super.initState();
+
+    intParam = 42;
+    boolParam = true;
+    stringParam = '''example string value!''';
+    noExampleValueParam = null;
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget widget;
     try {

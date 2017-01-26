@@ -193,6 +193,15 @@ class _HelperWidgetState extends State<_HelperWidget> {
   Key uniqueKey = new UniqueKey();
 
   @override
+  void initState() {
+    super.initState();
+
+    {{# params }}
+    {{ param_name }} = {{ param_initial_value }};
+    {{/ params }}
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget widget;
     try {
@@ -299,10 +308,7 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
   );
 
   // Escape single quotes within the doc comments.
-  String escapedDoc = specs.doc?.replaceAllMapped(
-    new RegExp(r"([^\\])'"),
-    (Match m) => "${m.group(1)}\\\'",
-  );
+  String escapedDoc = _escapeQuotes(specs.doc);
 
   Set<String> additionalImports = new SplayTreeSet<String>();
   List<ParameterElement> params = <ParameterElement>[];
@@ -343,6 +349,7 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
               'param_type': param.type.name,
               'param_name': param.name,
               'param_controller': _generateParamControllerCode(param),
+              'param_initial_value': _generateInitialValueCode(specs, param),
             })
         .toList(),
   });
@@ -438,4 +445,58 @@ bool _isEnumParameter(ParameterElement param) {
 
   ClassElement paramType = param.type.element;
   return paramType.isEnum;
+}
+
+String _generateInitialValueCode(WidgetSpecs specs, ParameterElement param) {
+  // See if there is an example value specified.
+  dynamic value = specs.getExampleValue(param);
+  if (value != null) {
+    switch (value.runtimeType) {
+      case int:
+      case bool:
+      case double:
+        return value.toString();
+      case String:
+        return "'''${_escapeQuotes(value.toString())}'''";
+      default:
+        return 'null';
+    }
+  }
+
+  // TODO(youngseokyoon): See if the parameter type has a default constructor
+  // that can be used.
+  // if (param.type.element is ClassElement) {
+  //   ClassElement type = param.type.element;
+  //   if (type.constructors
+  //       .any((ConstructorElement c) => c.isDefaultConstructor)) {
+  //     return 'new ${param.type.name}()';
+  //   }
+  // }
+
+  // Handle primitive types.
+  switch (param.type.name) {
+    case 'int':
+      return '0';
+    case 'bool':
+      return 'false';
+    case 'double':
+      return '0.0';
+    case 'String':
+      return "''";
+  }
+
+  // Handle enum types.
+  if (_isEnumParameter(param)) {
+    return '${param.type.name}.values[0]';
+  }
+
+  // Otherwise, return 'null';
+  return 'null';
+}
+
+String _escapeQuotes(String str) {
+  return str?.replaceAllMapped(
+    new RegExp(r"([^\\])'"),
+    (Match m) => "${m.group(1)}\\\'",
+  );
 }
