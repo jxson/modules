@@ -365,6 +365,7 @@ String _generateParamControllerCode(ParameterElement param) {
     return '''new TextField(
       initialValue: new InputValue(text: (${param.name} ?? 0).toString()),
       isDense: true,
+      keyboardType: TextInputType.number,
       onChanged: (InputValue value) {
         try {
           int intValue = int.parse(value.text);
@@ -397,6 +398,26 @@ String _generateParamControllerCode(ParameterElement param) {
         new Expanded(child: new Container()),
       ],
     )''';
+  }
+
+  // For double type, use a TextField where the user can type the value.
+  if (param.type.name == 'double') {
+    return '''new TextField(
+        initialValue: new InputValue(text: (${param.name} ?? 0.0).toString()),
+        isDense: true,
+        keyboardType: TextInputType.number,
+        onChanged: (InputValue value) {
+          try {
+            double doubleValue = double.parse(value.text);
+            setState(() {
+              ${param.name} = doubleValue;
+              updateKey();
+            });
+          } catch (e) {
+            // Do nothing.
+          }
+        },
+      )''';
   }
 
   // For String type, use a TextField where the user can type in the value.

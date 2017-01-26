@@ -13,6 +13,9 @@ class Widget01 extends StatefulWidget {
   /// An example [bool] parameter for testing code generation.
   final bool boolParam;
 
+  /// An example [double] parameter for testing code generation.
+  final double doubleParam;
+
   /// An example [String] parameter for testing code generation.
   final String stringParam;
 
@@ -23,6 +26,7 @@ class Widget01 extends StatefulWidget {
     Key key,
     @ExampleValue(42) this.intParam,
     @ExampleValue(true) this.boolParam,
+    @ExampleValue(10.0) this.doubleParam,
     @ExampleValue('example string value!') this.stringParam,
     this.noExampleValueParam,
   })

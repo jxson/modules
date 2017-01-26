@@ -37,6 +37,7 @@ class _HelperWidget extends StatefulWidget {
 class _HelperWidgetState extends State<_HelperWidget> {
   int intParam;
   bool boolParam;
+  double doubleParam;
   String stringParam;
   dynamic noExampleValueParam;
 
@@ -48,6 +49,7 @@ class _HelperWidgetState extends State<_HelperWidget> {
 
     intParam = 42;
     boolParam = true;
+    doubleParam = 10.0;
     stringParam = '''example string value!''';
     noExampleValueParam = null;
   }
@@ -60,6 +62,7 @@ class _HelperWidgetState extends State<_HelperWidget> {
         key: uniqueKey,
         intParam: intParam,
         boolParam: boolParam,
+        doubleParam: doubleParam,
         stringParam: stringParam,
         noExampleValueParam: noExampleValueParam,
       );
@@ -96,6 +99,7 @@ class _HelperWidgetState extends State<_HelperWidget> {
                           initialValue:
                               new InputValue(text: (intParam ?? 0).toString()),
                           isDense: true,
+                          keyboardType: TextInputType.number,
                           onChanged: (InputValue value) {
                             try {
                               int intValue = int.parse(value.text);
@@ -128,6 +132,30 @@ class _HelperWidgetState extends State<_HelperWidget> {
                             ),
                             new Expanded(child: new Container()),
                           ],
+                        ),
+                      ],
+                    ),
+                    buildTableRow(
+                      context,
+                      <Widget>[
+                        new Text('double'),
+                        new Text('doubleParam'),
+                        new TextField(
+                          initialValue: new InputValue(
+                              text: (doubleParam ?? 0.0).toString()),
+                          isDense: true,
+                          keyboardType: TextInputType.number,
+                          onChanged: (InputValue value) {
+                            try {
+                              double doubleValue = double.parse(value.text);
+                              setState(() {
+                                doubleParam = doubleValue;
+                                updateKey();
+                              });
+                            } catch (e) {
+                              // Do nothing.
+                            }
+                          },
                         ),
                       ],
                     ),

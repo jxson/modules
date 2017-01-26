@@ -95,6 +95,7 @@ Future<Null> main() async {
     Map<String, dynamic> expectedExampleValues = <String, dynamic>{
       'intParam': 42,
       'boolParam': true,
+      'doubleParam': 10.0,
       'stringParam': 'example string value!',
     };
 
