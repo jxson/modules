@@ -13,6 +13,7 @@ dart_package("widgets") {
     "//apps/modules/packages/email_session_store",
     "//apps/modules/packages/models",
     "//apps/modules/packages/music_api",
+    "//apps/modules/packages/widgets_meta",
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/xml",
   ]
