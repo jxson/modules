@@ -87,7 +87,7 @@ class _MessageContentState extends State<MessageContent> {
   Widget build(BuildContext context) {
     List<Widget> children = <Widget>[
       new Text(
-        config.message.text,
+        config.message.text ?? '',
         softWrap: true,
         style: new TextStyle(
           fontSize: 16.0,

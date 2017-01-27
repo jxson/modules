@@ -6,11 +6,14 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:mustache/mustache.dart';
 import 'package:path/path.dart' as path;
 import 'package:strings/strings.dart' as strings;
+import 'package:widget_specs/src/utils.dart';
 import 'package:widget_specs/widget_specs.dart';
 
 const double _kBoxRadius = 4.0;
@@ -190,6 +193,9 @@ class _HelperWidgetState extends State<_HelperWidget> {
   {{# params }}
   {{ param_type }} {{ param_name }};
   {{/ params }}
+  {{# generators }}
+  {{ generator_declaration }};
+  {{/ generators }}
 
   Key uniqueKey = new UniqueKey();
 
@@ -311,6 +317,9 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
   String escapedDoc = _escapeQuotes(specs.doc);
 
   Set<String> additionalImports = new SplayTreeSet<String>();
+  Set<DartType> generators = new SplayTreeSet<DartType>(
+    (DartType t1, DartType t2) => t1.name.compareTo(t2.name),
+  );
   List<ParameterElement> params = <ParameterElement>[];
 
   ConstructorElement constructor = specs.classElement.constructors.firstWhere(
@@ -320,15 +329,37 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
   if (constructor != null) {
     params = new List<ParameterElement>.from(constructor.parameters);
     params.removeWhere((ParameterElement param) => param.type.name == 'Key');
-    params.forEach((ParameterElement param) {
-      String importUri = param.type.element.librarySource?.uri?.toString();
-      if (importUri != null) {
-        additionalImports.add(importUri);
-      }
-    });
+    params.forEach((ParameterElement param) =>
+        _addImportForElement(additionalImports, param.type.element));
   }
 
-  additionalImports.remove('dart:core');
+  // The parameter controllers / initial values should be generated here first
+  // so that the additional imports can be safely added.
+  List<Map<String, String>> paramList = params
+      .map((ParameterElement param) => <String, String>{
+            'param_type': param.type.name,
+            'param_name': param.name,
+            'param_controller': _generateParamControllerCode(
+              additionalImports,
+              generators,
+              param,
+            ),
+            'param_initial_value': _generateInitialValueCode(
+              additionalImports,
+              generators,
+              specs,
+              param,
+            ),
+          })
+      .toList();
+
+  List<Map<String, String>> generatorList = generators
+      .map((DartType generatorType) => <String, String>{
+            'generator_declaration': '${generatorType.name} '
+                '${lowerCamelize(generatorType.name)} = '
+                'new ${generatorType.name}()',
+          })
+      .toList();
 
   String output = template.renderString(<String, dynamic>{
     'header': _kHeader,
@@ -344,20 +375,18 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
               'additional_import': uri,
             })
         .toList(),
-    'params': params
-        .map((ParameterElement param) => <String, String>{
-              'param_type': param.type.name,
-              'param_name': param.name,
-              'param_controller': _generateParamControllerCode(param),
-              'param_initial_value': _generateInitialValueCode(specs, param),
-            })
-        .toList(),
+    'params': paramList,
+    'generators': generatorList,
   });
 
   await new File(outputPath).writeAsString(_formatter.format(output));
 }
 
-String _generateParamControllerCode(ParameterElement param) {
+String _generateParamControllerCode(
+  Set<String> additionalImports,
+  Set<DartType> generators,
+  ParameterElement param,
+) {
   // TODO(youngseokyoon): handle more types of values.
 
   // For int type, use a TextField where the user can type in the integer value.
@@ -461,10 +490,42 @@ String _generateParamControllerCode(ParameterElement param) {
     return '''new Text('Default implementation')''';
   }
 
+  // Handle parameters with a specified generator.
+  ElementAnnotation generatorAnnotation = _getGenerator(param);
+  if (generatorAnnotation != null) {
+    DartObject generatorObj = generatorAnnotation.computeConstantValue();
+    DartType generatorType = generatorObj.getField('type').toTypeValue();
+    String methodName = generatorObj.getField('methodName').toStringValue();
+
+    // Add the generator type to the list of additional imports and generators.
+    _addImportForElement(additionalImports, generatorType.element);
+    generators.add(generatorType);
+
+    // The actual code to invoke (e.g. `modelFixtures.thread()`).
+    String generatorInvocationCode =
+        _getGeneratorInvocationCode(generatorType, methodName);
+
+    // Place a button widget for regenerating the value.
+    return '''new RegenerateButton(
+      onPressed: () {
+        setState(() {
+          ${param.name} = $generatorInvocationCode;
+          updateKey();
+        });
+      },
+      codeToDisplay: '${_escapeQuotes(generatorInvocationCode)}',
+    )''';
+  }
+
   return "new Text('null (this type of parameter is not supported yet)')";
 }
 
-String _generateInitialValueCode(WidgetSpecs specs, ParameterElement param) {
+String _generateInitialValueCode(
+  Set<String> additionalImports,
+  Set<DartType> generators,
+  WidgetSpecs specs,
+  ParameterElement param,
+) {
   // See if there is an example value specified.
   dynamic value = specs.getExampleValue(param);
   if (value != null) {
@@ -527,6 +588,17 @@ String _generateInitialValueCode(WidgetSpecs specs, ParameterElement param) {
     return "() => print('$functionName called')";
   }
 
+  // Handle parameters with a specified generator.
+  ElementAnnotation generatorAnnotation = _getGenerator(param);
+  if (generatorAnnotation != null) {
+    DartObject generatorObj = generatorAnnotation.computeConstantValue();
+    DartType generatorType = generatorObj.getField('type').toTypeValue();
+    String methodName = generatorObj.getField('methodName').toStringValue();
+
+    // Place a button widget for regenerating the value.
+    return _getGeneratorInvocationCode(generatorType, methodName);
+  }
+
   // Otherwise, return 'null';
   return 'null';
 }
@@ -553,6 +625,26 @@ bool _isCallbackParameter(ParameterElement param) {
   return func.returnType.isVoid;
 }
 
+/// Gets the @Generator annotation of the given parameter.
+ElementAnnotation _getGenerator(ParameterElement param) {
+  ElementAnnotation annotation;
+
+  // An @Generator annotation on the parameter itself has a higher priority.
+  annotation = getAnnotationWithName(param, 'Generator');
+  if (annotation != null) {
+    return annotation;
+  }
+
+  // Also see if the parameter type (class) has an @Generator annotation.
+  annotation = getAnnotationWithName(param?.type?.element, 'Generator');
+  return annotation;
+}
+
+/// Gets the code for invoking the generator.
+String _getGeneratorInvocationCode(DartType generatorType, String methodName) {
+  return '${lowerCamelize(generatorType.name)}.$methodName()';
+}
+
 /// Escape all single quotes in the given string with a leading backslash,
 /// except for the ones already escaped.
 String _escapeQuotes(String str) {
@@ -560,4 +652,11 @@ String _escapeQuotes(String str) {
     new RegExp(r"([^\\])'"),
     (Match m) => "${m.group(1)}\\\'",
   );
+}
+
+void _addImportForElement(Set<String> additionalImports, Element element) {
+  String importUri = element?.librarySource?.uri?.toString();
+  if (importUri != null && importUri != 'dart:core') {
+    additionalImports.add(importUri);
+  }
 }

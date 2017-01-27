@@ -3,3 +3,4 @@
 // found in the LICENSE file.
 
 export 'src/example_value.dart';
+export 'src/generator.dart';

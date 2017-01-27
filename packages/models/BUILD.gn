@@ -12,6 +12,7 @@ dart_package("models") {
   deps = [
     "//apps/modules/packages/fixtures",
     "//apps/modules/packages/util",
+    "//apps/modules/packages/widgets_meta",
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/collection",
     "//third_party/dart-pkg/pub/intl",

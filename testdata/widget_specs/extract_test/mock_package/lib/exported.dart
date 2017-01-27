@@ -2,4 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+export 'src/generator_widget.dart';
+export 'src/mock_generator.dart';
+export 'src/mock_models.dart';
 export 'src/sample_widgets.dart';

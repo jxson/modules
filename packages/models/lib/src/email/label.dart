@@ -2,8 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:widgets_meta/widgets_meta.dart';
+
+import '../fixtures/fixtures.dart';
+
 /// Represents a Gmail folder.
 /// The main inbox (primary) and various labels can be thought of as folders.
+@Generator(ModelFixtures, 'label')
 class Label {
   /// ID for folder. Mainly for Gmail use.
   final String id;

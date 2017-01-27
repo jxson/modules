@@ -50,6 +50,7 @@ Future<Null> main() async {
           'Widget01',
           'Widget03',
           'NoCommentWidget',
+          'GeneratorWidget',
         ]));
   });
 
@@ -80,11 +81,18 @@ Future<Null> main() async {
   test(
       'extractWidgetSpecs() should correctly extract '
       'relative path from fuchsia root.', () {
+    Map<String, String> expected = <String, String>{
+      'Widget01': 'sample_widgets.dart',
+      'Widget03': 'sample_widgets.dart',
+      'NoCommentWidget': 'sample_widgets.dart',
+      'GeneratorWidget': 'generator_widget.dart',
+    };
+
     widgetMap.keys.forEach((String key) {
       expect(
           widgetMap[key].pathFromFuchsiaRoot,
           equals(
-              'apps/modules/testdata/widget_specs/extract_test/mock_package/lib/src/sample_widgets.dart'));
+              'apps/modules/testdata/widget_specs/extract_test/mock_package/lib/src/${expected[key]}'));
     });
   });
 

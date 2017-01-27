@@ -31,6 +31,7 @@ void main() {
     // Temp output dir.
     Directory tempDir = await Directory.systemTemp.createTemp();
     String outputPath = tempDir.path;
+    print('Temp dir: $outputPath');
 
     // Run the gen script.
     ProcessResult result = await Process.run(
@@ -38,6 +39,12 @@ void main() {
       <String>['run', 'gen_widget_specs.dart', mockPackagePath, outputPath],
       workingDirectory: packagePath,
     );
+
+    // Print out the error messages before the assert fails.
+    if (result.exitCode != 0) {
+      print(result.stdout);
+      print(result.stderr);
+    }
 
     expect(result.exitCode, equals(0));
 
@@ -53,6 +60,7 @@ void main() {
           'widget01.dart',
           'widget03.dart',
           'no_comment_widget.dart',
+          'generator_widget.dart',
         ]));
 
     // Verify the generated file contents.

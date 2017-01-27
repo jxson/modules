@@ -12,6 +12,8 @@ dependencies:
   quiver: ^0.24.0
   util:
     path: ../util
+  widgets_meta:
+    path: ../widgets_meta
   xml: ^2.4.3
 dependency_overrides:
   http:

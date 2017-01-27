@@ -2,6 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:widgets_meta/widgets_meta.dart';
+
+import '../fixtures/fixtures.dart';
+
 /// Some basic attachment types
 enum AttachmentType {
   /// Youtube Video
@@ -15,6 +19,7 @@ enum AttachmentType {
 }
 
 /// Simple representation of an email attachment
+@Generator(ModelFixtures, 'attachment')
 class Attachment {
   /// Type of the attachment
   AttachmentType type;

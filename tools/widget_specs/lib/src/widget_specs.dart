@@ -5,6 +5,8 @@
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 
+import 'utils.dart';
+
 /// A class describing the specifications of a custom flutter widget.
 class WidgetSpecs implements Comparable<WidgetSpecs> {
   /// Creates a new instance of [WidgetSpecs] class with the given parameters.
@@ -68,14 +70,7 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
   /// Gets the `ExampleValue` annotation associated with the given
   /// [ParameterElement].
   ElementAnnotation getExampleValueAnnotation(ParameterElement param) {
-    for (ElementAnnotation annotation in param.metadata) {
-      DartObject annotationValue = annotation.computeConstantValue();
-      if (annotationValue?.type?.name == 'ExampleValue') {
-        return annotation;
-      }
-    }
-
-    return null;
+    return getAnnotationWithName(param, 'ExampleValue');
   }
 
   @override
