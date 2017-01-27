@@ -4,7 +4,9 @@
 
 import 'package:collection/collection.dart';
 import 'package:quiver/core.dart' as quiver;
+import 'package:widgets_meta/widgets_meta.dart';
 
+import '../fixtures/fixtures.dart';
 import 'message.dart';
 
 const ListEquality<Message> _messageListEquality =
@@ -12,6 +14,7 @@ const ListEquality<Message> _messageListEquality =
 
 /// Represents a single Gmail Thread
 /// https://developers.google.com/gmail/api/v1/reference/users/threads#resource
+@Generator(ModelFixtures, 'thread')
 class Thread {
   /// The unique ID of the thread
   final String id;

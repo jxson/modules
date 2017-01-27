@@ -6,7 +6,9 @@ import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/core.dart' as quiver;
 import 'package:util/time_util.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
+import '../fixtures/fixtures.dart';
 import 'attachment.dart';
 import 'mailbox.dart';
 
@@ -15,6 +17,7 @@ const ListEquality<Mailbox> _mailboxListEquality =
 
 /// Represents a single Gmail Message
 /// https://developers.google.com/gmail/api/v1/reference/users/messages
+@Generator(ModelFixtures, 'message')
 class Message {
   /// Unique Identifier for given email message
   final String id;
@@ -141,7 +144,7 @@ class Message {
   ///
   /// Strips all newline characters
   String generateSnippet() {
-    return text.replaceAll('\r\n', ' ').replaceAll('\n', ' ');
+    return (text ?? '').replaceAll('\r\n', ' ').replaceAll('\n', ' ');
   }
 
   /// Get 'Display Date' for [Message]

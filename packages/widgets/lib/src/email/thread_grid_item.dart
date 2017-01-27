@@ -106,7 +106,7 @@ class ThreadGridItem extends StatelessWidget {
                   new Container(
                     margin: const EdgeInsets.only(top: 4.0),
                     child: new Text(
-                      lastMessage.text,
+                      lastMessage.text ?? '',
                       softWrap: true,
                       style: new TextStyle(
                         fontSize: 14.0,

@@ -3,12 +3,15 @@
 // found in the LICENSE file.
 
 import 'package:meta/meta.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 import '../email/mailbox.dart';
+import '../fixtures/fixtures.dart';
 
 /// Represents a Google User Account
 /// Fields are based off the data from the Google Identity API:
 /// https://developers.google.com/identity/
+@Generator(ModelFixtures, 'user')
 class User {
   /// Unique ID for user
   final String id;
