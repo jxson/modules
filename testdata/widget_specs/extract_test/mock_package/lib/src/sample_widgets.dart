@@ -36,8 +36,28 @@ class Widget01 extends StatefulWidget {
 /// This is a private [StatefulWidget].
 class _Widget02 extends StatefulWidget {}
 
+/// A callback function with no parameters.
+typedef void CallbackWithNoParams();
+
+/// A callback function with two parameters.
+typedef void CallbackWithParams(int foo, String bar);
+
 /// This is a public [StatelessWidget].
-class Widget03 extends StatelessWidget {}
+class Widget03 extends StatelessWidget {
+  /// An example callback function with no parameters.
+  final CallbackWithNoParams callbackWithNoParams;
+
+  /// An example callback function with parameters;
+  final CallbackWithParams callbackWithParams;
+
+  /// Creates a new instance of [Widget03].
+  Widget03({
+    Key key,
+    this.callbackWithNoParams,
+    this.callbackWithParams,
+  })
+      : super(key: key);
+}
 
 /// This is a private [StatelessWidget].
 class _Widget04 extends StatelessWidget {}

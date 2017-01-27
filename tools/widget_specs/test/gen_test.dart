@@ -61,5 +61,11 @@ void main() {
       new File(path.join(getTestDataPath(), 'widget01.dart'))
           .readAsStringSync(),
     );
+
+    expect(
+      new File(path.join(outputPath, 'widget03.dart')).readAsStringSync(),
+      new File(path.join(getTestDataPath(), 'widget03.dart'))
+          .readAsStringSync(),
+    );
   });
 }

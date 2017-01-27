@@ -456,16 +456,12 @@ String _generateParamControllerCode(ParameterElement param) {
     )''';
   }
 
-  return "new Text('null (this type of parameter is not supported yet)')";
-}
-
-bool _isEnumParameter(ParameterElement param) {
-  if (param?.type?.element is! ClassElement) {
-    return false;
+  // Handle callback parameters.
+  if (_isCallbackParameter(param)) {
+    return '''new Text('Default implementation')''';
   }
 
-  ClassElement paramType = param.type.element;
-  return paramType.isEnum;
+  return "new Text('null (this type of parameter is not supported yet)')";
 }
 
 String _generateInitialValueCode(WidgetSpecs specs, ParameterElement param) {
@@ -511,10 +507,54 @@ String _generateInitialValueCode(WidgetSpecs specs, ParameterElement param) {
     return '${param.type.name}.values[0]';
   }
 
+  // Handle callback parameters.
+  if (_isCallbackParameter(param)) {
+    FunctionTypedElement func = param.type.element;
+    String functionName = '${specs.name}.${param.name}';
+
+    // Print out all the parameter values to the console.
+    if (func.parameters.isNotEmpty) {
+      String paramList = func.parameters
+          .map((ParameterElement p) => 'dynamic ${p.name}')
+          .join(', ');
+      String valueList =
+          func.parameters.map((ParameterElement p) => p.name).join(', ');
+      return "($paramList) => print('$functionName called "
+          "with parameters: \${<dynamic>[$valueList]}')";
+    }
+
+    // If the callback function has no parameters, just say it was called.
+    return "() => print('$functionName called')";
+  }
+
   // Otherwise, return 'null';
   return 'null';
 }
 
+/// Determines whether the provided parameter is of an enum type.
+bool _isEnumParameter(ParameterElement param) {
+  if (param?.type?.element is! ClassElement) {
+    return false;
+  }
+
+  ClassElement paramType = param.type.element;
+  return paramType.isEnum;
+}
+
+/// Determines whether the provided parameter represents a callback function.
+///
+/// We consider any function parameter with a void return type as a callback.
+bool _isCallbackParameter(ParameterElement param) {
+  if (param?.type?.element is! FunctionTypedElement) {
+    return false;
+  }
+
+  FunctionTypedElement func = param.type.element;
+  return func.returnType.isVoid;
+}
+
+/// Escape all single quotes in the given string with a leading backslash,
+/// except for the ones already escaped.
 String _escapeQuotes(String str) {
   return str?.replaceAllMapped(
     new RegExp(r"([^\\])'"),
