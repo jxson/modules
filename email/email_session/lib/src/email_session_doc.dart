@@ -81,6 +81,11 @@ class EmailSessionDoc {
   bool readFromLink(String jsonString) {
     // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
     Map<String, dynamic> json = JSON.decode(jsonString);
+
+    if (json == null) {
+      return false;
+    }
+
     return fromJson(json);
   }
 
@@ -96,6 +101,7 @@ class EmailSessionDoc {
     // asserts, then you should check that the doc object is valid before
     // creating the EmailSessionDoc and calling fromJson().
     assert(doc is Map && doc[docroot] is Map);
+
     try {
       doc = doc[docroot];
       user = new User.fromJson(doc[userProp]);
