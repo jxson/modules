@@ -64,7 +64,7 @@ class EmailThreadScreen extends StoreWatcher {
         thread: thread,
         onArchive: _handleThreadAction,
         onMoreActions: _handleThreadAction,
-        onDelete: _handleThreadAction,
+        onDelete: emailSessionMoveThreadToTrash.call,
       ),
     );
   }

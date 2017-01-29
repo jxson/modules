@@ -43,6 +43,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     triggerOnAction(emailSessionMarkMessageAsRead, (Message message) {
       _markMessageAsRead(message);
     });
+    triggerOnAction(emailSessionMoveThreadToTrash, _moveThreadToTrash);
   }
 
   /// Async helper to get an instance of EmailAPI. If one doesn't exist it
@@ -225,5 +226,21 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
     }
 
     return null;
+  }
+
+  /// Sends thread to the trash
+  /// Remove thread from the visible threads if the API call is successful,
+  /// except for when the current label is the trash.
+  Future<Null> _moveThreadToTrash(Thread thread) async {
+    EmailAPI email = await api();
+    await email.moveThreadToTrash(thread.id);
+
+    if (_focusedThreadId == thread.id) {
+      _focusedThreadId = null;
+    }
+
+    if (_focusedLabelId != 'TRASH') {
+      _visibleThreads.remove(thread);
+    }
   }
 }

@@ -253,6 +253,12 @@ class EmailAPI {
         await _gmail.users.messages.modify(request, 'me', id);
     return !message.labelIds.contains('UNREAD');
   }
+
+  /// Moves given Thread to trash
+  Future<Null> moveThreadToTrash(String id) async {
+    assert(id != null);
+    await _gmail.users.threads.trash('me', id);
+  }
 }
 
 String _normalizeLabelName(String string) {
