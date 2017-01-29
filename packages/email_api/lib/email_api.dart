@@ -246,12 +246,18 @@ class EmailAPI {
 
   /// Marks a message as read given the ID
   /// Returns true if the message has the "UNREAD" label removed.
-  Future<bool> markMessageAsRead(String id) async {
+  Future<Null> markMessageAsRead(String id) async {
     gmail.ModifyMessageRequest request = new gmail.ModifyMessageRequest()
       ..removeLabelIds = <String>['UNREAD'];
-    gmail.Message message =
-        await _gmail.users.messages.modify(request, 'me', id);
-    return !message.labelIds.contains('UNREAD');
+    await _gmail.users.messages.modify(request, 'me', id);
+  }
+
+  /// Archive given thread
+  /// A thread is archived when all it's messages no longer have the INBOX label
+  Future<Null> archiveThread(String id) async {
+    gmail.ModifyThreadRequest request = new gmail.ModifyThreadRequest()
+      ..removeLabelIds = <String>['INBOX'];
+    await _gmail.users.threads.modify(request, 'me', id);
   }
 
   /// Moves given Thread to trash

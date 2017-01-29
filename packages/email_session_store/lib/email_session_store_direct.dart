@@ -44,6 +44,8 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
       _markMessageAsRead(message);
     });
     triggerOnAction(emailSessionMoveThreadToTrash, _moveThreadToTrash);
+    triggerOnAction(emailSessionMarkMessageAsRead, _markMessageAsRead);
+    triggerOnAction(emailSessionArchiveThread, _archiveThread);
   }
 
   /// Async helper to get an instance of EmailAPI. If one doesn't exist it
@@ -188,13 +190,7 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
 
   Future<Null> _markMessageAsRead(Message message) async {
     EmailAPI email = await api();
-    bool markedAsRead = await email.markMessageAsRead(message.id);
-
-    // Exit if the API call did not end up in a error, but the message is still
-    // marked as "UNREAD"
-    if (!markedAsRead) {
-      return null;
-    }
+    await email.markMessageAsRead(message.id);
 
     // Find the message in the thread and replace with a new copy with updated
     // data
@@ -224,7 +220,26 @@ class EmailSessionStoreDirect extends Store implements EmailSessionStore {
       );
       trigger();
     }
+    return null;
+  }
 
+  /// Archives the given thread
+  /// "De-focus" the focusedThread if it is the same thread being archived
+  /// Remove the thread from the the visible threads if the current label is
+  /// "INBOX"
+  Future<Null> _archiveThread(Thread thread) async {
+    EmailAPI email = await api();
+    await email.archiveThread(thread.id);
+
+    if (_focusedThreadId == thread.id) {
+      _focusedThreadId = null;
+    }
+
+    if (_focusedLabelId == 'INBOX') {
+      _visibleThreads.remove(thread);
+    }
+
+    trigger();
     return null;
   }
 

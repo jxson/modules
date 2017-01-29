@@ -61,6 +61,7 @@ class EmailListScreen extends StoreWatcher {
           thread: thread,
           onSelect: emailSessionFocusThread.call,
           isSelected: focused,
+          onArchive: emailSessionArchiveThread.call,
         );
         break;
       case InboxStyle.singleLine:
@@ -68,6 +69,7 @@ class EmailListScreen extends StoreWatcher {
           key: key,
           thread: thread,
           onSelect: emailSessionFocusThread.call,
+          onArchive: emailSessionArchiveThread.call,
         );
         break;
       case InboxStyle.gridView:
