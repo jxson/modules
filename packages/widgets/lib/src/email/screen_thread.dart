@@ -62,7 +62,7 @@ class EmailThreadScreen extends StoreWatcher {
       ),
       header: new ThreadActionBarHeader(
         thread: thread,
-        onArchive: _handleThreadAction,
+        onArchive: emailSessionArchiveThread.call,
         onMoreActions: _handleThreadAction,
         onDelete: emailSessionMoveThreadToTrash.call,
       ),
