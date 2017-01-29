@@ -56,3 +56,6 @@ final Action<Message> emailSessionToggleMessageExpand = new Action<Message>();
 
 /// Marks given message as read
 final Action<Message> emailSessionMarkMessageAsRead = new Action<Message>();
+
+/// Sends given thread to trash
+final Action<Thread> emailSessionMoveThreadToTrash = new Action<Thread>();
