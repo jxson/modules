@@ -7,10 +7,10 @@ import 'package:models/contact.dart';
 import 'package:models/user.dart';
 import 'package:widgets/contact.dart';
 
-/// Contact details page
-class ContactDetailsScreen extends StatelessWidget {
-  /// Creates a [ContactDetailsScreen] instance.
-  ContactDetailsScreen({Key key}) : super(key: key);
+/// Contact Card page
+class ContactCardScreen extends StatelessWidget {
+  /// Creates a [ContactCardScreen] instance.
+  ContactCardScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +49,11 @@ class ContactDetailsScreen extends StatelessWidget {
         ),
       ],
     );
-    // Apply the ContactTheme to the ContactDetails Widget
+    // Apply the ContactTheme to the ContactCard Widget
     return new Theme(
       data: contactTheme,
       isMaterialAppTheme: false,
-      child: new ContactDetails(
+      child: new ContactCard(
         contact: contact,
       ),
     );
