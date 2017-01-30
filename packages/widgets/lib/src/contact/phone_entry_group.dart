@@ -28,31 +28,9 @@ class PhoneEntryGroup extends StatelessWidget {
 
   Widget _buildPhoneEntryRow({
     PhoneEntry entry,
-    bool showPrimaryStar: false,
-    ThemeData theme,
   }) {
-    List<Widget> children = <Widget>[];
-
-    // Add label if it exists for given entry
-    // If not, just add an empty container for spacing
-    children.add(new Container(
-      width: 60.0,
-      margin: const EdgeInsets.only(right: 8.0),
-      child: new Text(
-        entry.label ?? '',
-        softWrap: false,
-        overflow: TextOverflow.ellipsis,
-        style: new TextStyle(
-          color: Colors.grey[500],
-          fontSize: 16.0,
-        ),
-      ),
-    ));
-
-    // Add actual phone number
-    children.add(new Expanded(
-      flex: 1,
-      child: new Text(
+    List<Widget> children = <Widget>[
+      new Text(
         entry.number,
         softWrap: false,
         overflow: TextOverflow.ellipsis,
@@ -60,18 +38,18 @@ class PhoneEntryGroup extends StatelessWidget {
           fontSize: 16.0,
         ),
       ),
-    ));
+    ];
 
-    children.add(new Container(
-      width: 50.0,
-      height: 24.0,
-      child: showPrimaryStar
-          ? new Icon(
-              Icons.star,
-              color: theme.primaryColor,
-            )
-          : null,
-    ));
+    // Label
+    if (entry.label != null) {
+      children.add(new Text(
+        entry.label,
+        style: new TextStyle(
+          color: Colors.grey[500],
+          fontSize: 14.0,
+        ),
+      ));
+    }
 
     return new InkWell(
       onTap: () {
@@ -80,8 +58,12 @@ class PhoneEntryGroup extends StatelessWidget {
         }
       },
       child: new Container(
-        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-        child: new Row(
+        padding: const EdgeInsets.only(
+          bottom: 16.0,
+        ),
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: children,
         ),
       ),
@@ -90,18 +72,12 @@ class PhoneEntryGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
     List<Widget> children = contact.phoneNumbers
-        .map((PhoneEntry entry) => _buildPhoneEntryRow(
-              entry: entry,
-              showPrimaryStar: entry == contact.primaryPhoneNumber &&
-                  contact.phoneNumbers.length > 1,
-              theme: theme,
-            ))
+        .map((PhoneEntry entry) => _buildPhoneEntryRow(entry: entry))
         .toList();
     return new Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         new Container(
           margin: const EdgeInsets.symmetric(
@@ -110,13 +86,10 @@ class PhoneEntryGroup extends StatelessWidget {
           ),
           child: new Icon(
             Icons.phone,
-            color: theme.primaryColor,
+            color: Colors.grey[500],
           ),
         ),
-        new Container(
-          constraints: new BoxConstraints(maxWidth: 300.0),
-          child: new Column(children: children),
-        ),
+        new Column(children: children),
       ],
     );
   }
