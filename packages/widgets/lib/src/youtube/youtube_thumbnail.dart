@@ -4,6 +4,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:widgets_meta/widgets_meta.dart';
+
+import 'example_video_id.dart';
 
 /// Callback function signature for selecting a Youtube video
 typedef void YoutubeSelectCallback(String videoId);
@@ -22,7 +25,7 @@ class YoutubeThumbnail extends StatelessWidget {
   /// Constructor
   YoutubeThumbnail({
     Key key,
-    @required this.videoId,
+    @required @ExampleValue(kExampleVideoId) this.videoId,
     this.onSelect,
   })
       : super(key: key) {

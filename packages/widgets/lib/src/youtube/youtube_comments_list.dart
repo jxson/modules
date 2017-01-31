@@ -9,8 +9,10 @@ import 'package:flutter/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/youtube.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 import '../user/alphatar.dart';
+import 'example_video_id.dart';
 import 'loading_state.dart';
 
 final String _kApiBaseUrl = 'content.googleapis.com';
@@ -33,8 +35,8 @@ class YoutubeCommentsList extends StatefulWidget {
   /// Constructor
   YoutubeCommentsList({
     Key key,
-    @required this.videoId,
-    @required this.apiKey,
+    @required @ExampleValue(kExampleVideoId) this.videoId,
+    @required @ConfigKey('google_api_key') this.apiKey,
   })
       : super(key: key) {
     assert(videoId != null);

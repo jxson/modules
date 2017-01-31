@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/music.dart';
 import 'package:music_api/music_api.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 import 'loading_state.dart';
 
@@ -17,7 +18,7 @@ class RelatedArtists extends StatefulWidget {
   /// Constructor
   RelatedArtists({
     Key key,
-    @required this.artistId,
+    @required @ExampleValue('0OdUWJ0sBjDrqHygGUXeCF') this.artistId,
   })
       : super(key: key) {
     assert(artistId != null);

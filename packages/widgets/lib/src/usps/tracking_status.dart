@@ -8,6 +8,7 @@ import 'package:flutter/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/usps.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 import 'package:xml/xml.dart' as xml;
 
 import '../common/embedded_child.dart';
@@ -47,8 +48,8 @@ class TrackingStatus extends StatefulWidget {
   /// Constructor
   TrackingStatus({
     Key key,
-    @required this.apiKey,
-    @required this.trackingCode,
+    @required @ConfigKey('usps_api_key') this.apiKey,
+    @required @ExampleValue('9374889676090175041871') this.trackingCode,
     this.onLocationSelect,
   })
       : super(key: key) {

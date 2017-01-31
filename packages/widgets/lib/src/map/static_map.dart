@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 /// UI Widget that renders a Google Map given a location
 class StaticMap extends StatelessWidget {
@@ -25,8 +26,8 @@ class StaticMap extends StatelessWidget {
   /// Constructor
   StaticMap({
     Key key,
-    @required this.apiKey,
-    this.location,
+    @required @ConfigKey('google_api_key') this.apiKey,
+    @ExampleValue('56 Henry, San Francisco, CA') this.location,
     int zoom,
     double width,
     double height,

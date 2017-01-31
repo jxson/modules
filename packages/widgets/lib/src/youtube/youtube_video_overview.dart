@@ -10,8 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 import 'package:models/youtube.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 import '../user/alphatar.dart';
+import 'example_video_id.dart';
 import 'loading_state.dart';
 
 const String _kApiBaseUrl = 'content.googleapis.com';
@@ -32,8 +34,8 @@ class YoutubeVideoOverview extends StatefulWidget {
   /// Constructor
   YoutubeVideoOverview({
     Key key,
-    @required this.videoId,
-    @required this.apiKey,
+    @required @ExampleValue(kExampleVideoId) this.videoId,
+    @required @ConfigKey('google_api_key') this.apiKey,
   })
       : super(key: key) {
     assert(videoId != null);
