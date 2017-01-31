@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/user.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 /// Holds all the allowed background colors for an [Alphatar].
 ///
@@ -54,7 +55,7 @@ class Alphatar extends StatelessWidget {
   Alphatar({
     Key key,
     this.avatarImage,
-    this.letter,
+    @ExampleValue('G') this.letter,
     this.size: 40.0,
     Color backgroundColor,
   })

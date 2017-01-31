@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/email.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 /// Callback type for updating the recipients of a new message
 typedef void RecipientsChangedCallback(List<Mailbox> recipientList);
@@ -25,7 +26,7 @@ class RecipientInput extends StatefulWidget {
   /// Creates a [RecipientInput] instance
   RecipientInput({
     Key key,
-    @required this.inputLabel,
+    @required @ExampleValue('To:') this.inputLabel,
     this.onRecipientsChanged,
     List<Mailbox> recipientList,
   })

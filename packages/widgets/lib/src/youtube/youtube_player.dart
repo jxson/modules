@@ -6,6 +6,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:widgets_meta/widgets_meta.dart';
+
+import 'example_video_id.dart';
 
 /// Duration between switching thumbnails to fake video playing effect
 final Duration _kSlideDuration = const Duration(milliseconds: 300);
@@ -27,8 +30,8 @@ class YoutubePlayer extends StatefulWidget {
   /// Constructor
   YoutubePlayer({
     Key key,
-    @required this.videoId,
-    @required this.apiKey,
+    @required @ExampleValue(kExampleVideoId) this.videoId,
+    @required @ConfigKey('google_api_key') this.apiKey,
   })
       : super(key: key) {
     assert(videoId != null);
