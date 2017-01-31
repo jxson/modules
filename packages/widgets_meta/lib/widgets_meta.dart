@@ -2,5 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+export 'src/config_key.dart';
 export 'src/example_value.dart';
 export 'src/generator.dart';
