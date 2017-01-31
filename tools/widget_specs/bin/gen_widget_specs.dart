@@ -152,6 +152,7 @@ Future<Null> writeIndex(String outputDir, List<WidgetSpecs> widgetSpecs) async {
 const String _kSpecFileTemplate = '''
 {{ header }}
 
+import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery/src/widget_specs/typedefs.dart';
 import 'package:gallery/src/widget_specs/utils.dart';
@@ -179,10 +180,11 @@ final WidgetSpecs kSpecs = new WidgetSpecs(
 
 /// Helper widget.
 class _HelperWidget extends StatefulWidget {
+  final Config config;
   final double width;
   final double height;
 
-  _HelperWidget(this.width, this.height);
+  _HelperWidget(this.config, this.width, this.height);
 
   @override
   _HelperWidgetState createState() => new _HelperWidgetState();
@@ -299,8 +301,8 @@ class _HelperWidgetState extends State<_HelperWidget> {
 
 /// Builder for this widget.
 final GalleryWidgetBuilder kBuilder =
-    (BuildContext context, double width, double height) =>
-        new _HelperWidget(width, height);
+    (BuildContext context, Config config, double width, double height) =>
+        new _HelperWidget(config, width, height);
 ''';
 
 /// Writes the widget specs to the given output directory.
@@ -342,6 +344,7 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
             'param_controller': _generateParamControllerCode(
               additionalImports,
               generators,
+              specs,
               param,
             ),
             'param_initial_value': _generateInitialValueCode(
@@ -385,6 +388,7 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
 String _generateParamControllerCode(
   Set<String> additionalImports,
   Set<DartType> generators,
+  WidgetSpecs specs,
   ParameterElement param,
 ) {
   // TODO(youngseokyoon): handle more types of values.
@@ -451,6 +455,16 @@ String _generateParamControllerCode(
 
   // For String type, use a TextField where the user can type in the value.
   if (param.type.name == 'String') {
+    // If this parameter should be retrieved from the config.json file, do not
+    // show the values on the screen.
+    String configKey = specs.getConfigKey(param);
+    if (configKey != null) {
+      return """new ConfigKeyText(
+        configKey: '${_escapeQuotes(configKey)}',
+        configValue: ${param.name},
+      )""";
+    }
+
     return '''new TextField(
       initialValue: new InputValue(text: ${param.name} ?? ''),
       isDense: true,
@@ -487,7 +501,7 @@ String _generateParamControllerCode(
 
   // Handle callback parameters.
   if (_isCallbackParameter(param)) {
-    return '''new Text('Default implementation')''';
+    return "new InfoText('Default implementation')";
   }
 
   // Handle parameters with a specified generator.
@@ -517,7 +531,7 @@ String _generateParamControllerCode(
     )''';
   }
 
-  return "new Text('null (this type of parameter is not supported yet)')";
+  return "new InfoText('null (this type of parameter is not supported yet)')";
 }
 
 String _generateInitialValueCode(
@@ -539,6 +553,12 @@ String _generateInitialValueCode(
       default:
         return 'null';
     }
+  }
+
+  // Retrieve the config value associated with the specified config key.
+  String configKey = specs.getConfigKey(param);
+  if (configKey != null) {
+    return "config.config.get('${_escapeQuotes(configKey)}')";
   }
 
   // TODO(youngseokyoon): See if the parameter type has a default constructor

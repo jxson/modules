@@ -50,6 +50,7 @@ Future<Null> main() async {
           'Widget01',
           'Widget03',
           'NoCommentWidget',
+          'ConfigKeyWidget',
           'GeneratorWidget',
         ]));
   });
@@ -85,6 +86,7 @@ Future<Null> main() async {
       'Widget01': 'sample_widgets.dart',
       'Widget03': 'sample_widgets.dart',
       'NoCommentWidget': 'sample_widgets.dart',
+      'ConfigKeyWidget': 'config_key_widget.dart',
       'GeneratorWidget': 'generator_widget.dart',
     };
 

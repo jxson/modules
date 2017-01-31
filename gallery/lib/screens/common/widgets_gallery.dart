@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gallery/src/generated/index.dart';
@@ -14,6 +15,12 @@ const double _kDefaultHeight = 500.0;
 
 /// A gallery screen that lists all the auto-generated widgets and their specs.
 class WidgetsGalleryScreen extends StatefulWidget {
+  /// Config provider.
+  final Config config;
+
+  /// Creates a new instance of [WidgetsGalleryScreen].
+  WidgetsGalleryScreen({Key key, this.config}) : super(key: key);
+
   @override
   _WidgetsGalleryState createState() => new _WidgetsGalleryState();
 }
@@ -85,7 +92,7 @@ ${specs.pathFromFuchsiaRoot != null ? '**Defined In**: `FUCHSIA_ROOT/${specs.pat
             markdownStyle: new MarkdownStyle.largeFromTheme(Theme.of(context)),
           ),
           _buildSizeControl(),
-          kWidgetBuilders[specs.name](context, width, height),
+          kWidgetBuilders[specs.name](context, config.config, width, height),
         ],
       ),
     );

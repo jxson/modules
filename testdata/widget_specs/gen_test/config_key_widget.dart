@@ -11,18 +11,16 @@ import 'package:gallery/src/widget_specs/utils.dart';
 import 'package:widget_specs/widget_specs.dart';
 import 'package:mock_package/exported.dart';
 
-import 'package:mock_package/src/sample_widgets.dart';
-
 /// Name of the widget.
-const String kName = 'Widget03';
+const String kName = 'ConfigKeyWidget';
 
 /// [WidgetSpecs] of this widget.
 final WidgetSpecs kSpecs = new WidgetSpecs(
   packageName: 'mock_package',
-  name: 'Widget03',
+  name: 'ConfigKeyWidget',
   path: 'exported.dart',
   doc: '''
-This is a public [StatelessWidget].''',
+Sample widget for demonstrating the use of @ConfigKey annotation.''',
 );
 
 /// Helper widget.
@@ -39,8 +37,7 @@ class _HelperWidget extends StatefulWidget {
 
 /// Helper widget state.
 class _HelperWidgetState extends State<_HelperWidget> {
-  CallbackWithNoParams callbackWithNoParams;
-  CallbackWithParams callbackWithParams;
+  String apiKey;
 
   Key uniqueKey = new UniqueKey();
 
@@ -48,19 +45,16 @@ class _HelperWidgetState extends State<_HelperWidget> {
   void initState() {
     super.initState();
 
-    callbackWithNoParams = () => print('Widget03.callbackWithNoParams called');
-    callbackWithParams = (dynamic foo, dynamic bar) => print(
-        'Widget03.callbackWithParams called with parameters: ${<dynamic>[foo, bar]}');
+    apiKey = config.config.get('api_key');
   }
 
   @override
   Widget build(BuildContext context) {
     Widget widget;
     try {
-      widget = new Widget03(
+      widget = new ConfigKeyWidget(
         key: uniqueKey,
-        callbackWithNoParams: callbackWithNoParams,
-        callbackWithParams: callbackWithParams,
+        apiKey: apiKey,
       );
     } catch (e) {
       widget = new Text('Failed to build the widget.\n'
@@ -89,17 +83,12 @@ class _HelperWidgetState extends State<_HelperWidget> {
                     buildTableRow(
                       context,
                       <Widget>[
-                        new Text('CallbackWithNoParams'),
-                        new Text('callbackWithNoParams'),
-                        new InfoText('Default implementation'),
-                      ],
-                    ),
-                    buildTableRow(
-                      context,
-                      <Widget>[
-                        new Text('CallbackWithParams'),
-                        new Text('callbackWithParams'),
-                        new InfoText('Default implementation'),
+                        new Text('String'),
+                        new Text('apiKey'),
+                        new ConfigKeyText(
+                          configKey: 'api_key',
+                          configValue: apiKey,
+                        ),
                       ],
                     ),
                   ],

@@ -8,6 +8,16 @@ import 'package:meta/meta.dart';
 const double _kTableRowVerticalMargin = 5.0;
 const double _kMargin = 16.0;
 
+TextStyle _kInfoStyle = new TextStyle(
+  color: Colors.grey[600],
+  fontStyle: FontStyle.italic,
+);
+
+TextStyle _kCodeStyle = new TextStyle(
+  fontFamily: 'monospace',
+  fontWeight: FontWeight.bold,
+);
+
 /// Wrapper widget which gives some top margin to a given child.
 class _TopMargined extends StatelessWidget {
   _TopMargined({
@@ -32,17 +42,12 @@ TableRow buildTableRow(BuildContext context, List<Widget> children) {
   assert(context != null);
   assert(children.length == 3);
 
-  TextStyle codeTextStyle = new TextStyle(
-    fontFamily: 'monospace',
-    fontWeight: FontWeight.bold,
-  );
-
   return new TableRow(
     children: <Widget>[
       new _TopMargined(
         child: new DefaultTextStyle.merge(
           context: context,
-          style: codeTextStyle,
+          style: _kCodeStyle,
           child: children[0],
         ),
       ),
@@ -50,7 +55,7 @@ TableRow buildTableRow(BuildContext context, List<Widget> children) {
       new _TopMargined(
         child: new DefaultTextStyle.merge(
           context: context,
-          style: codeTextStyle,
+          style: _kCodeStyle,
           child: children[1],
         ),
       ),
@@ -90,6 +95,50 @@ class RegenerateButton extends StatelessWidget {
         ),
         new Expanded(child: new Container()),
       ],
+    );
+  }
+}
+
+/// A text widget for information displayed in the parameter tuning panel.
+class InfoText extends Text {
+  /// Creates a new instance of [InfoText].
+  InfoText(String text, {Key key})
+      : super(
+          text,
+          key: key,
+          style: _kInfoStyle,
+        );
+}
+
+/// A widget indicating whether a config value has been successfully retrieved.
+class ConfigKeyText extends StatelessWidget {
+  /// The key name of the config value specified in the `@ConfigKey` annotation.
+  final String configKey;
+
+  /// The value associated with the key.
+  final String configValue;
+
+  /// Creates a new instance of [ConfigKeyText].
+  ConfigKeyText({
+    Key key,
+    @required this.configKey,
+    @required this.configValue,
+  })
+      : super(key: key) {
+    assert(configKey != null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (configValue == null) {
+      return new InfoText(
+        "WARNING: Could not find the '$configKey' value "
+            'from the config.json file.',
+      );
+    }
+
+    return new InfoText(
+      "'$configKey' value retrieved from the config.json file.",
     );
   }
 }

@@ -150,6 +150,7 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
     group: GalleryGroups.screen,
     href: '/widgets',
     builder: (BuildContext context, GalleryItem item, Config config) =>
-        galleryScaffoldedScreen(item.title, new WidgetsGalleryScreen()),
+        galleryScaffoldedScreen(
+            item.title, new WidgetsGalleryScreen(config: config)),
   ),
 ];

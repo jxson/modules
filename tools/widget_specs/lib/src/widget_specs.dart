@@ -73,6 +73,23 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
     return getAnnotationWithName(param, 'ExampleValue');
   }
 
+  /// Gets the config key specified for the given parameter.
+  String getConfigKey(ParameterElement param) {
+    ElementAnnotation annotation = getConfigKeyAnnotation(param);
+    if (annotation == null) {
+      return null;
+    }
+
+    DartObject keyObj = annotation.computeConstantValue().getField('key');
+    return keyObj?.toStringValue();
+  }
+
+  /// Gets the `ConfigKey` annotation associated with the given
+  /// [ParameterElement].
+  ElementAnnotation getConfigKeyAnnotation(ParameterElement param) {
+    return getAnnotationWithName(param, 'ConfigKey');
+  }
+
   @override
   int compareTo(WidgetSpecs other) {
     return this.name.compareTo(other.name);

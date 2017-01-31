@@ -4,6 +4,7 @@
 
 // THIS IS A GENERATED FILE. DO NOT MODIFY MANUALLY.
 
+import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery/src/widget_specs/typedefs.dart';
 import 'package:gallery/src/widget_specs/utils.dart';
@@ -24,10 +25,11 @@ This is a public [StatefulWidget].''',
 
 /// Helper widget.
 class _HelperWidget extends StatefulWidget {
+  final Config config;
   final double width;
   final double height;
 
-  _HelperWidget(this.width, this.height);
+  _HelperWidget(this.config, this.width, this.height);
 
   @override
   _HelperWidgetState createState() => new _HelperWidgetState();
@@ -181,7 +183,7 @@ class _HelperWidgetState extends State<_HelperWidget> {
                       <Widget>[
                         new Text('dynamic'),
                         new Text('noExampleValueParam'),
-                        new Text(
+                        new InfoText(
                             'null (this type of parameter is not supported yet)'),
                       ],
                     ),
@@ -230,5 +232,5 @@ class _HelperWidgetState extends State<_HelperWidget> {
 
 /// Builder for this widget.
 final GalleryWidgetBuilder kBuilder =
-    (BuildContext context, double width, double height) =>
-        new _HelperWidget(width, height);
+    (BuildContext context, Config config, double width, double height) =>
+        new _HelperWidget(config, width, height);

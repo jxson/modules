@@ -60,20 +60,23 @@ void main() {
           'widget01.dart',
           'widget03.dart',
           'no_comment_widget.dart',
+          'config_key_widget.dart',
           'generator_widget.dart',
         ]));
 
     // Verify the generated file contents.
-    expect(
-      new File(path.join(outputPath, 'widget01.dart')).readAsStringSync(),
-      new File(path.join(getTestDataPath(), 'widget01.dart'))
-          .readAsStringSync(),
-    );
+    List<String> filesToVerify = <String>[
+      'config_key_widget.dart',
+      'generator_widget.dart',
+      'widget01.dart',
+      'widget03.dart',
+    ];
 
-    expect(
-      new File(path.join(outputPath, 'widget03.dart')).readAsStringSync(),
-      new File(path.join(getTestDataPath(), 'widget03.dart'))
-          .readAsStringSync(),
-    );
+    filesToVerify.forEach((String filename) {
+      expect(
+        new File(path.join(outputPath, filename)).readAsStringSync(),
+        new File(path.join(getTestDataPath(), filename)).readAsStringSync(),
+      );
+    });
   });
 }
