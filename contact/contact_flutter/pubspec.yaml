@@ -1,0 +1,24 @@
+# Copyright 2017 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+name: contact_flutter
+description: Flutter app to run Contacts
+dependencies:
+  config_flutter:
+    path: ../../packages/config_flutter
+  contact_api:
+    path: ../../packages/contact_api
+  flutter:
+    sdk: flutter
+  widgets:
+    path: ../../packages/widgets
+  models:
+    path: ../../packages/models
+dependency_overrides:
+  http:
+    path: ../../packages/flutter-http/
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/config.json

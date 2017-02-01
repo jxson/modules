@@ -7,10 +7,10 @@
 /// A Contacts Email Entry
 class EmailEntry {
   /// Email address, e.g. littlePuppyCoco@cute.org
-  String value;
+  final String value;
 
   /// Optional label to give for the email, e.g. Work, Personal...
-  String label;
+  final String label;
 
   /// Constructor
   EmailEntry({
@@ -27,27 +27,27 @@ class EmailEntry {
 /// An Contacts Address Entry
 class AddressEntry {
   /// City, ex Mountain View
-  String city;
+  final String city;
 
   /// Full street name, e.g. 1842 Shoreline
-  String street;
+  final String street;
 
   /// Province or State, e.g. California, Chihuahua
-  String region;
+  final String region;
 
   /// Post/zip code, e.g. 95129
-  String postalCode;
+  final String postalCode;
 
   /// Country, e.g. United States of America, China
-  String country;
+  final String country;
 
   /// Country code for given country, e.g. CN
   // TODO(dayang): Create list of country codes
   // https://fuchsia.atlassian.net/browse/SO-45
-  String countryCode;
+  final String countryCode;
 
   /// Optional label to give for the address, e.g. Home, Work...
-  String label;
+  final String label;
 
   /// Constructor
   AddressEntry({
@@ -70,10 +70,10 @@ class AddressEntry {
 /// A Contacts Phone Number Entry
 class PhoneEntry {
   /// Phone number, e.g. 911, 1-408-111-2222
-  String number;
+  final String number;
 
   /// Optional label to give for the phone entry, e.g. Cell, Home, Work...
-  String label;
+  final String label;
 
   /// Constructor
   PhoneEntry({
@@ -103,13 +103,13 @@ enum SocialNetworkType {
 /// Social network account associated with given Contact
 class SocialNetworkEntry {
   /// Type of social network, e.g. Facebook, Twitter ...
-  SocialNetworkType type;
+  final SocialNetworkType type;
 
   /// User account of Social Network, ex @google
   // TODO(dayang): Validation/formatting/adaptation of common social media
   // accounts.
   // https://fuchsia.atlassian.net/browse/SO-45
-  String account;
+  final String account;
 
   /// Constructor
   SocialNetworkEntry({

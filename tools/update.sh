@@ -8,7 +8,7 @@ REPO_DIR="$( dirname ${SCRIPT_DIR} )"
 
 # If config.json files are missing create empty ones so the build doesn't
 # break.
-for name in email/email_flutter email/email_service email/map email/usps email/youtube_related_videos email/youtube_video gallery; do
+for name in contact/contact_flutter email/email_flutter email/email_service email/map email/usps email/youtube_related_videos email/youtube_video gallery; do
   CONFIG="${REPO_DIR}/${name}/assets/config.json"
   if [ ! -f "${CONFIG}" ]; then
     mkdir -p "$( dirname ${CONFIG} )"
