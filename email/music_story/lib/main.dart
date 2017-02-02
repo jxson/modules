@@ -99,8 +99,8 @@ class ModuleImpl extends Module {
 
     connectToService(_context.environmentServices, _pub.ctrl);
     _pub.publish(
-        "album id",
-        "https://developer.spotify.com/web-api/user-guide/#spotify-uris-and-ids",
+        'album id',
+        'https://developer.spotify.com/web-api/user-guide/#spotify-uris-and-ids',
         null,
         _albumIdPub.ctrl.request());
 
