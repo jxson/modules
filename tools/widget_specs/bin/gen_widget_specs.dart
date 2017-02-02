@@ -176,6 +176,8 @@ final WidgetSpecs kSpecs = new WidgetSpecs(
   {{/ path_from_fuchsia_root }}
   doc: \'\'\'
 {{ doc }}\'\'\',
+  exampleWidth: {{ example_width }},
+  exampleHeight: {{ example_height }},
 );
 
 /// Helper widget.
@@ -373,6 +375,8 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
         ? <String, String>{'path_from_fuchsia_root': specs.pathFromFuchsiaRoot}
         : null,
     'doc': escapedDoc,
+    'example_width': specs.exampleWidth ?? 'null',
+    'example_height': specs.exampleHeight ?? 'null',
     'additional_imports': additionalImports
         .map((String uri) => <String, String>{
               'additional_import': uri,

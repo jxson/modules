@@ -6,6 +6,7 @@ import 'dart:collection';
 import 'dart:io' as io;
 
 import 'package:analyzer/analyzer.dart';
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/file_system/file_system.dart';
@@ -21,6 +22,7 @@ import 'package:package_config/packages_file.dart' as pkgfile;
 import 'package:package_config/src/packages_impl.dart';
 import 'package:path/path.dart' as path;
 
+import 'utils.dart';
 import 'widget_specs.dart';
 
 /// Extracts all the flutter widgets and their specs from the given package.
@@ -188,12 +190,23 @@ class _WidgetSpecsCreator {
       pathFromFuchsiaRoot = path.relative(absSourcePath, from: absFuchsiaRoot);
     }
 
+    // Fill in the example size information.
+    double exampleWidth, exampleHeight;
+    DartObject exampleSizeObject =
+        getAnnotationWithName(c, 'ExampleSize')?.computeConstantValue();
+    if (exampleSizeObject != null) {
+      exampleWidth = exampleSizeObject.getField('width')?.toDoubleValue();
+      exampleHeight = exampleSizeObject.getField('height')?.toDoubleValue();
+    }
+
     return new WidgetSpecs(
       packageName: source.uri.pathSegments[0],
       name: name,
       path: source.uri.pathSegments.skip(1).join('/'),
       pathFromFuchsiaRoot: pathFromFuchsiaRoot,
       doc: doc,
+      exampleWidth: exampleWidth,
+      exampleHeight: exampleHeight,
       classElement: c,
     );
   }

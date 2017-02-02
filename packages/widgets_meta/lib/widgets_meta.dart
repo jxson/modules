@@ -3,5 +3,6 @@
 // found in the LICENSE file.
 
 export 'src/config_key.dart';
+export 'src/example_size.dart';
 export 'src/example_value.dart';
 export 'src/generator.dart';

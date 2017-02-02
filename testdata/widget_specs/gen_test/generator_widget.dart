@@ -25,6 +25,8 @@ final WidgetSpecs kSpecs = new WidgetSpecs(
   doc: '''
 Sample widget for demonstrating the use of model classes annotated with
 @Generator annotation.''',
+  exampleWidth: null,
+  exampleHeight: null,
 );
 
 /// Helper widget.

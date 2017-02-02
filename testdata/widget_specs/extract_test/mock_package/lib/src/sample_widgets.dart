@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:widgets_meta/widgets_meta.dart';
 
 /// This is a public [StatefulWidget].
+@ExampleSize(200.0, 300.0)
 class Widget01 extends StatefulWidget {
   /// An example [int] parameter for testing code generation.
   final int intParam;

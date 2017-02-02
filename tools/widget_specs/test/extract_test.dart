@@ -123,4 +123,19 @@ Future<Null> main() async {
       }
     });
   });
+
+  test('The example size should be correctly extracted.', () {
+    WidgetSpecs widget01 = widgetMap['Widget01'];
+    const double delta = 1e-10;
+
+    expect(widget01.exampleWidth, closeTo(200.0, delta));
+    expect(widget01.exampleHeight, closeTo(300.0, delta));
+
+    widgetMap.values
+        .where((WidgetSpecs ws) => ws != widget01)
+        .forEach((WidgetSpecs ws) {
+      expect(ws.exampleWidth, isNull);
+      expect(ws.exampleHeight, isNull);
+    });
+  });
 }

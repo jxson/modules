@@ -21,6 +21,8 @@ final WidgetSpecs kSpecs = new WidgetSpecs(
   path: 'exported.dart',
   doc: '''
 Sample widget for demonstrating the use of @ConfigKey annotation.''',
+  exampleWidth: null,
+  exampleHeight: null,
 );
 
 /// Helper widget.

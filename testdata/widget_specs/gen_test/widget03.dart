@@ -23,6 +23,8 @@ final WidgetSpecs kSpecs = new WidgetSpecs(
   path: 'exported.dart',
   doc: '''
 This is a public [StatelessWidget].''',
+  exampleWidth: null,
+  exampleHeight: null,
 );
 
 /// Helper widget.

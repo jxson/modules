@@ -16,6 +16,8 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
     this.path,
     this.pathFromFuchsiaRoot,
     this.doc,
+    this.exampleWidth,
+    this.exampleHeight,
     this.classElement,
   });
 
@@ -33,6 +35,12 @@ class WidgetSpecs implements Comparable<WidgetSpecs> {
 
   /// Contents of the document comments associated with the widget.
   final String doc;
+
+  /// Example width to be used as the initial width.
+  final double exampleWidth;
+
+  /// Example height to be used as the initial height.
+  final double exampleHeight;
 
   /// The [ClassElement] corresponding to this widget.
   final ClassElement classElement;
