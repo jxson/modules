@@ -3,57 +3,46 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
-import 'package:models/email.dart';
 
-import 'type_defs.dart';
-
-/// Google Inbox style action header for email editor that is used to compose
-/// a new [Message] which has affordances to close, attach files and send.
-// TODO(dayang): Figure out if the Message model should be extended so that
-// there is this concept of a Message Draft.
+/// Google Inbox style action header for the email editor
+///
+/// Contains affordances for:
+/// - adding an attachment
+/// - closing the editor
+/// - sending the email
 class EditorActionBarHeader extends StatelessWidget {
-  /// [Message] that is being composed
-  Message message;
+  /// Callback for 'attach file' affordance
+  final VoidCallback onAttach;
 
   /// Callback for 'close' affordance
-  MessageActionCallback onClose;
+  final VoidCallback onClose;
 
   /// Callback for sending message
-  MessageActionCallback onSend;
-
-  /// Callback for 'attach file' affordance
-  MessageActionCallback onAttach;
+  final VoidCallback onSend;
 
   /// Flag on whether to 'enable' send button.
-  bool enableSend;
+  final bool enableSend;
 
   /// Creates a new [EditorActionBarHeader]
   EditorActionBarHeader({
     Key key,
     this.enableSend: false,
-    @required this.message,
-    @required this.onAttach,
-    @required this.onClose,
-    @required this.onSend,
+    this.onAttach,
+    this.onClose,
+    this.onSend,
   })
-      : super(key: key) {
-    assert(this.message != null);
-    assert(this.onAttach != null);
-    assert(this.onClose != null);
-    assert(this.onSend != null);
-  }
+      : super(key: key);
 
   void _handleClose() {
-    onClose(message);
+    onClose?.call();
   }
 
   void _handleSend() {
-    onSend(message);
+    onSend?.call();
   }
 
   void _handleAttach() {
-    onAttach(message);
+    onAttach?.call();
   }
 
   /// Builds row of buttons for header

@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:models/email.dart';
 import 'package:widgets/email.dart';
 
 /// This screen displays an Google Inbox style email editor.
@@ -17,36 +16,5 @@ class EmailEditorScreen extends StatefulWidget {
 
 class _EmailEditorScreenState extends State<EmailEditorScreen> {
   @override
-  Widget build(BuildContext context) {
-    Message message = new Message(text: 'New Message');
-    return new Center(
-      child: new Column(
-        children: <Widget>[
-          new EditorActionBarHeader(
-            message: message,
-            enableSend: true,
-            onSend: _onPerformMessageAction,
-            onClose: _onPerformMessageAction,
-            onAttach: _onPerformMessageAction,
-          ),
-          new RecipientInput(
-            recipientList: <Mailbox>[
-              new Mailbox(
-                displayName: 'Coco',
-                address: 'coco@cu.te',
-              )
-            ],
-            inputLabel: 'To:',
-            onRecipientsChanged: (List<Mailbox> recipients) {
-              print(recipients);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _onPerformMessageAction(Message message) {
-    print('Action Performed');
-  }
+  Widget build(BuildContext context) => new EditorScreen();
 }
