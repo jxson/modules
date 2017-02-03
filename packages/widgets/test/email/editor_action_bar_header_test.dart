@@ -4,16 +4,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:models/email.dart';
 import 'package:widgets/email.dart';
 
 void main() {
   testWidgets(
       'Test to see if tapping on the ClOSE, ATTACH, and SEND buttons'
       'will call the appropiate callbacks', (WidgetTester tester) async {
-    Message message = new Message(
-      text: 'New Message',
-    );
     int attachTaps = 0;
     int closeTaps = 0;
     int sendTaps = 0;
@@ -23,17 +19,13 @@ void main() {
       return new Material(
         child: new EditorActionBarHeader(
           enableSend: true,
-          message: message,
-          onAttach: (Message m) {
-            expect(m, message);
+          onAttach: () {
             attachTaps++;
           },
-          onClose: (Message m) {
-            expect(m, message);
+          onClose: () {
             closeTaps++;
           },
-          onSend: (Message m) {
-            expect(m, message);
+          onSend: () {
             sendTaps++;
           },
         ),
@@ -63,20 +55,13 @@ void main() {
   testWidgets(
       'Test to see that the SEND button is disabled when enableSend is set to '
       'false', (WidgetTester tester) async {
-    Message message = new Message(
-      text: 'New Message',
-    );
     int sendTaps = 0;
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return new Material(
         child: new EditorActionBarHeader(
           enableSend: false,
-          message: message,
-          onAttach: (Message m) {},
-          onClose: (Message m) {},
-          onSend: (Message m) {
-            expect(m, message);
+          onSend: () {
             sendTaps++;
           },
         ),

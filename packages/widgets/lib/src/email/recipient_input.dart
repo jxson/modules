@@ -15,7 +15,7 @@ class RecipientInput extends StatefulWidget {
   /// Callback function that is called everytime a new recipient is add or an
   /// existing recipient is removed. The updated recipient list is passed in
   /// as the callback parameter.
-  RecipientsChangedCallback onRecipientsChanged;
+  final RecipientsChangedCallback onRecipientsChanged;
 
   /// List of recipients. This is a copy of what is fed in.
   final List<Mailbox> recipientList;
@@ -23,11 +23,23 @@ class RecipientInput extends StatefulWidget {
   /// Label for the recipient field. Ex. To, Cc Bcc...
   final String inputLabel;
 
+  /// TextStyle used for the input and recipient chips
+  ///
+  /// Defaults to the subhead style of the theme
+  final TextStyle inputStyle;
+
+  /// TextStyle used for the label
+  ///
+  /// Defaults to the inputStyle with a grey-500 color
+  final TextStyle labelStyle;
+
   /// Creates a [RecipientInput] instance
   RecipientInput({
     Key key,
     @required @ExampleValue('To:') this.inputLabel,
     this.onRecipientsChanged,
+    this.inputStyle,
+    this.labelStyle,
     List<Mailbox> recipientList,
   })
       : recipientList = recipientList ?? const <Mailbox>[],
@@ -48,7 +60,7 @@ class _RecipientInputState extends State<RecipientInput> {
   InputValue _currentInput;
 
   /// GlobalKey that is required for an EditableText
-  GlobalKey<EditableTextState> _editableTextKey =
+  final GlobalKey<EditableTextState> _inputFieldKey =
       new GlobalKey<EditableTextState>();
 
   /// If parent widget has a specified GlobalKey use that as the focusKey of
@@ -59,7 +71,7 @@ class _RecipientInputState extends State<RecipientInput> {
     if (parentKey is GlobalKey) {
       return parentKey;
     } else {
-      return _editableTextKey;
+      return _inputFieldKey;
     }
   }
 
@@ -71,7 +83,8 @@ class _RecipientInputState extends State<RecipientInput> {
   }
 
   void _notifyRecipientsChanged() {
-    config.onRecipientsChanged(new List<Mailbox>.unmodifiable(_recipientList));
+    config.onRecipientsChanged
+        ?.call(new List<Mailbox>.unmodifiable(_recipientList));
   }
 
   void _handleInputChange(InputValue input) {
@@ -107,13 +120,17 @@ class _RecipientInputState extends State<RecipientInput> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    TextStyle inputStyle = config.inputStyle ?? theme.textTheme.subhead;
+    TextStyle labelStyle =
+        config.labelStyle ?? inputStyle.copyWith(color: Colors.grey[500]);
 
     // Render Label
     List<Widget> rowChildren = <Widget>[
-      new Text(
-        config.inputLabel,
-        style: new TextStyle(
-          color: Colors.grey[500],
+      new Container(
+        margin: const EdgeInsets.only(right: 4.0),
+        child: new Text(
+          config.inputLabel,
+          style: labelStyle,
         ),
       ),
     ];
@@ -123,7 +140,10 @@ class _RecipientInputState extends State<RecipientInput> {
       rowChildren.add(new Container(
         margin: const EdgeInsets.symmetric(horizontal: 4.0),
         child: new Chip(
-          label: new Text(recipient.displayText),
+          label: new Text(
+            recipient.displayText,
+            style: config.inputStyle,
+          ),
           onDeleted: () {
             _removeRecipient(recipient);
           },
@@ -134,24 +154,32 @@ class _RecipientInputState extends State<RecipientInput> {
     //add text input
     rowChildren.add(new Container(
       width: 100.0,
-      child: new EditableText(
-        onChanged: _handleInputChange,
-        onSubmitted: _handleInputSubmit,
-        value: _currentInput,
-        platform: theme.platform,
-        style: theme.textTheme.body1,
-        focusKey: focusKey,
-        key: _editableTextKey,
-        cursorColor: theme.textSelectionColor,
-        selectionColor: theme.textSelectionColor,
-      ),
+      child: new InputField(
+          onChanged: _handleInputChange,
+          onSubmitted: _handleInputSubmit,
+          value: _currentInput,
+          focusKey: focusKey,
+          key: _inputFieldKey,
+          style: inputStyle,
+        ),
     ));
 
+    // TODO(dayang): Tapping on the entire container should bring focus to the
+    // InputField.
+    // https://fuchsia.atlassian.net/browse/SO-188
+    //
+    // This is blocked by Flutter Issue #7985
+    // https://github.com/flutter/flutter/issues/7985
     return new Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24.0,
-        vertical: 8.0,
+      height: 56.0,
+      decoration: new BoxDecoration(
+        border: new Border(
+          bottom: new BorderSide(
+            color: Colors.grey[200],
+          ),
+        ),
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: new Row(
         children: rowChildren,
       ),

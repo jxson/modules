@@ -14,31 +14,23 @@ void main() {
       (WidgetTester tester) async {
     int removeRecipientTaps = 0;
 
-    await tester.pumpWidget(new StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-      return new MaterialApp(
-        routes: <String, WidgetBuilder>{
-          '/next': (BuildContext context) {
-            return new Text('Next');
-          }
-        },
-        home: new Material(
-          child: new RecipientInput(
-            inputLabel: 'To:',
-            recipientList: <Mailbox>[
-              new Mailbox(
-                displayName: 'Coco',
-                address: 'coco@cu.te',
-              )
-            ],
-            onRecipientsChanged: (List<Mailbox> recipients) {
-              removeRecipientTaps++;
-              expect(recipients.length, 0);
-            },
-          ),
+    await tester.pumpWidget(new MaterialApp(
+      home: new Material(
+        child: new RecipientInput(
+          inputLabel: 'To:',
+          recipientList: <Mailbox>[
+            new Mailbox(
+              displayName: 'Coco',
+              address: 'coco@cu.te',
+            )
+          ],
+          onRecipientsChanged: (List<Mailbox> recipients) {
+            removeRecipientTaps++;
+            expect(recipients.length, 0);
+          },
         ),
-      );
-    }));
+      ),
+    ));
 
     expect(removeRecipientTaps, 0);
     await tester.tap(find.byWidgetPredicate(

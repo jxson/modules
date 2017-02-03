@@ -17,3 +17,6 @@ typedef void LabelActionCallback(Label folder);
 
 /// Boolean predicate function for a message
 typedef bool MessagePredicate(Message message);
+
+/// Void callback function signature for a string
+typedef void StringCallback(String string);
