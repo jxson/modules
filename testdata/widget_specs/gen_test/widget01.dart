@@ -6,7 +6,6 @@
 
 import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
-import 'package:gallery/src/widget_specs/typedefs.dart';
 import 'package:gallery/src/widget_specs/utils.dart';
 import 'package:widget_specs/widget_specs.dart';
 import 'package:mock_package/exported.dart';
@@ -25,32 +24,18 @@ This is a public [StatefulWidget].''',
   exampleHeight: 300.0,
 );
 
-/// Helper widget.
-class _HelperWidget extends StatefulWidget {
-  final Config config;
-  final double width;
-  final double height;
-
-  _HelperWidget(this.config, this.width, this.height);
-
-  @override
-  _HelperWidgetState createState() => new _HelperWidgetState();
-}
-
-/// Helper widget state.
-class _HelperWidgetState extends State<_HelperWidget> {
+/// Generated state object for this widget.
+class _GeneratedWidget01State extends GeneratedState {
   int intParam;
   bool boolParam;
   double doubleParam;
   String stringParam;
   dynamic noExampleValueParam;
 
-  Key uniqueKey = new UniqueKey();
+  _GeneratedWidget01State(SetStateFunc setState) : super(setState);
 
   @override
-  void initState() {
-    super.initState();
-
+  void initState(Config config) {
     intParam = 42;
     boolParam = true;
     doubleParam = 10.0;
@@ -59,180 +44,112 @@ class _HelperWidgetState extends State<_HelperWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Widget widget;
-    try {
-      widget = new Widget01(
-        key: uniqueKey,
-        intParam: intParam,
-        boolParam: boolParam,
-        doubleParam: doubleParam,
-        stringParam: stringParam,
-        noExampleValueParam: noExampleValueParam,
-      );
-    } catch (e) {
-      widget = new Text('Failed to build the widget.\n'
-          'See the error message below:\n\n'
-          '$e');
-    }
+  Widget buildWidget(BuildContext context, Key key) {
+    return new Widget01(
+      key: key,
+      intParam: intParam,
+      boolParam: boolParam,
+      doubleParam: doubleParam,
+      stringParam: stringParam,
+      noExampleValueParam: noExampleValueParam,
+    );
+  }
 
-    return new Block(children: <Widget>[
-      new Container(
-        decoration: new BoxDecoration(
-          border: new Border.all(color: Colors.grey[500]),
-          borderRadius: new BorderRadius.all(new Radius.circular(4.0)),
-        ),
-        margin: const EdgeInsets.all(16.0),
-        child: new Container(
-          child: new Container(
-            margin: const EdgeInsets.all(16.0),
-            child: new Block(
-              children: <Widget>[
-                new Text(
-                  'Parameters',
-                  style: new TextStyle(fontWeight: FontWeight.bold),
-                ),
-                new Table(
-                  children: <TableRow>[
-                    buildTableRow(
-                      context,
-                      <Widget>[
-                        new Text('int'),
-                        new Text('intParam'),
-                        new TextField(
-                          initialValue:
-                              new InputValue(text: (intParam ?? 0).toString()),
-                          isDense: true,
-                          keyboardType: TextInputType.number,
-                          onChanged: (InputValue value) {
-                            try {
-                              int intValue = int.parse(value.text);
-                              setState(() {
-                                intParam = intValue;
-                                updateKey();
-                              });
-                            } catch (e) {
-                              // Do nothing.
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    buildTableRow(
-                      context,
-                      <Widget>[
-                        new Text('bool'),
-                        new Text('boolParam'),
-                        new Row(
-                          children: <Widget>[
-                            new Switch(
-                              value: boolParam ?? false,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  boolParam = value;
-                                  updateKey();
-                                });
-                              },
-                            ),
-                            new Expanded(child: new Container()),
-                          ],
-                        ),
-                      ],
-                    ),
-                    buildTableRow(
-                      context,
-                      <Widget>[
-                        new Text('double'),
-                        new Text('doubleParam'),
-                        new TextField(
-                          initialValue: new InputValue(
-                              text: (doubleParam ?? 0.0).toString()),
-                          isDense: true,
-                          keyboardType: TextInputType.number,
-                          onChanged: (InputValue value) {
-                            try {
-                              double doubleValue = double.parse(value.text);
-                              setState(() {
-                                doubleParam = doubleValue;
-                                updateKey();
-                              });
-                            } catch (e) {
-                              // Do nothing.
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    buildTableRow(
-                      context,
-                      <Widget>[
-                        new Text('String'),
-                        new Text('stringParam'),
-                        new TextField(
-                          initialValue: new InputValue(text: stringParam ?? ''),
-                          isDense: true,
-                          onChanged: (InputValue value) {
-                            setState(() {
-                              stringParam = value.text;
-                              updateKey();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    buildTableRow(
-                      context,
-                      <Widget>[
-                        new Text('dynamic'),
-                        new Text('noExampleValueParam'),
-                        new InfoText(
-                            'null (this type of parameter is not supported yet)'),
-                      ],
-                    ),
-                  ],
-                  columnWidths: <int, TableColumnWidth>{
-                    0: const IntrinsicColumnWidth(),
-                    1: const FixedColumnWidth(16.0),
-                    2: const IntrinsicColumnWidth(),
-                    3: const FixedColumnWidth(16.0),
-                    4: const FlexColumnWidth(1.0),
-                  },
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                ),
-              ],
-            ),
+  @override
+  List<TableRow> buildParameterTableRows(BuildContext context) {
+    return <TableRow>[
+      buildTableRow(
+        context,
+        <Widget>[
+          new Text('int'),
+          new Text('intParam'),
+          new TextField(
+            initialValue: new InputValue(text: (intParam ?? 0).toString()),
+            isDense: true,
+            keyboardType: TextInputType.number,
+            onChanged: (InputValue value) {
+              try {
+                int intValue = int.parse(value.text);
+                setState(() {
+                  intParam = intValue;
+                });
+              } catch (e) {
+                // Do nothing.
+              }
+            },
           ),
-        ),
+        ],
       ),
-      new Container(
-        decoration: new BoxDecoration(
-          border: new Border.all(color: Colors.grey[500]),
-          borderRadius: new BorderRadius.all(new Radius.circular(4.0)),
-        ),
-        margin: const EdgeInsets.all(16.0),
-        child: new Container(
-          margin: const EdgeInsets.all(16.0),
-          child: new Row(
+      buildTableRow(
+        context,
+        <Widget>[
+          new Text('bool'),
+          new Text('boolParam'),
+          new Row(
             children: <Widget>[
-              new Container(
-                width: config.width,
-                height: config.height,
-                child: widget,
+              new Switch(
+                value: boolParam ?? false,
+                onChanged: (bool value) {
+                  setState(() {
+                    boolParam = value;
+                  });
+                },
               ),
               new Expanded(child: new Container()),
             ],
           ),
-        ),
+        ],
       ),
-    ]);
-  }
-
-  void updateKey() {
-    uniqueKey = new UniqueKey();
+      buildTableRow(
+        context,
+        <Widget>[
+          new Text('double'),
+          new Text('doubleParam'),
+          new TextField(
+            initialValue: new InputValue(text: (doubleParam ?? 0.0).toString()),
+            isDense: true,
+            keyboardType: TextInputType.number,
+            onChanged: (InputValue value) {
+              try {
+                double doubleValue = double.parse(value.text);
+                setState(() {
+                  doubleParam = doubleValue;
+                });
+              } catch (e) {
+                // Do nothing.
+              }
+            },
+          ),
+        ],
+      ),
+      buildTableRow(
+        context,
+        <Widget>[
+          new Text('String'),
+          new Text('stringParam'),
+          new TextField(
+            initialValue: new InputValue(text: stringParam ?? ''),
+            isDense: true,
+            onChanged: (InputValue value) {
+              setState(() {
+                stringParam = value.text;
+              });
+            },
+          ),
+        ],
+      ),
+      buildTableRow(
+        context,
+        <Widget>[
+          new Text('dynamic'),
+          new Text('noExampleValueParam'),
+          new InfoText('null (this type of parameter is not supported yet)'),
+        ],
+      ),
+    ];
   }
 }
 
-/// Builder for this widget.
-final GalleryWidgetBuilder kBuilder =
-    (BuildContext context, Config config, double width, double height) =>
-        new _HelperWidget(config, width, height);
+/// State builder for this widget.
+final GeneratedStateBuilder kBuilder =
+    (SetStateFunc setState) => new _GeneratedWidget01State(setState);

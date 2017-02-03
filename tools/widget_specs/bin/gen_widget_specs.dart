@@ -99,7 +99,7 @@ const String _kHeader = '''
 const String _kIndexFileTemplate = '''
 {{ header }}
 
-import 'package:gallery/src/widget_specs/typedefs.dart';
+import 'package:gallery/src/widget_specs/utils.dart';
 import 'package:widget_specs/widget_specs.dart';
 
 {{ imports }}
@@ -109,8 +109,8 @@ final Map<String, WidgetSpecs> kWidgetSpecs = <String, WidgetSpecs>{
 {{ items }}
 };
 
-/// Map of widget builders.
-final Map<String, GalleryWidgetBuilder> kWidgetBuilders = <String, GalleryWidgetBuilder>{
+/// Map of generated widget state builders.
+final Map<String, GeneratedStateBuilder> kStateBuilders = <String, GeneratedStateBuilder>{
 {{ builders }}
 };
 ''';
@@ -154,7 +154,6 @@ const String _kSpecFileTemplate = '''
 
 import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
-import 'package:gallery/src/widget_specs/typedefs.dart';
 import 'package:gallery/src/widget_specs/utils.dart';
 import 'package:widget_specs/widget_specs.dart';
 import 'package:{{ package_name }}/{{ path }}';
@@ -180,20 +179,8 @@ final WidgetSpecs kSpecs = new WidgetSpecs(
   exampleHeight: {{ example_height }},
 );
 
-/// Helper widget.
-class _HelperWidget extends StatefulWidget {
-  final Config config;
-  final double width;
-  final double height;
-
-  _HelperWidget(this.config, this.width, this.height);
-
-  @override
-  _HelperWidgetState createState() => new _HelperWidgetState();
-}
-
-/// Helper widget state.
-class _HelperWidgetState extends State<_HelperWidget> {
+/// Generated state object for this widget.
+class _Generated{{ name }}State extends GeneratedState {
   {{# params }}
   {{ param_type }} {{ param_name }};
   {{/ params }}
@@ -201,110 +188,45 @@ class _HelperWidgetState extends State<_HelperWidget> {
   {{ generator_declaration }};
   {{/ generators }}
 
-  Key uniqueKey = new UniqueKey();
+  _Generated{{ name }}State(SetStateFunc setState) : super(setState);
 
   @override
-  void initState() {
-    super.initState();
-
+  void initState(Config config) {
     {{# params }}
     {{ param_name }} = {{ param_initial_value }};
     {{/ params }}
   }
 
   @override
-  Widget build(BuildContext context) {
-    Widget widget;
-    try {
-      widget = new {{ name }}(
-        key: uniqueKey,
-        {{# params }}
-        {{ param_name }}: {{ param_name }},
-        {{/ params }}
-      );
-    } catch (e) {
-      widget = new Text('Failed to build the widget.\\n'
-          'See the error message below:\\n\\n'
-          '\$e');
-    }
-
-    return new Block(
-      children: <Widget>[
-        new Container(
-          decoration: new BoxDecoration(
-            border: new Border.all(color: Colors.grey[500]),
-            borderRadius: new BorderRadius.all(new Radius.circular($_kBoxRadius)),
-          ),
-          margin: const EdgeInsets.all($_kMargin),
-          child: new Container(
-            child: new Container(
-              margin: const EdgeInsets.all($_kMargin),
-              child: new Block(
-                children: <Widget>[
-                  new Text(
-                    'Parameters',
-                    style: new TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  new Table(
-                    children: <TableRow>[
-                      {{# params }}
-                      buildTableRow(
-                        context,
-                        <Widget>[
-                          new Text('{{ param_type }}'),
-                          new Text('{{ param_name }}'),
-                          {{ param_controller }},
-                        ],
-                      ),
-                      {{/ params }}
-                    ],
-                    columnWidths: <int, TableColumnWidth>{
-                      0: const IntrinsicColumnWidth(),
-                      1: const FixedColumnWidth($_kMargin),
-                      2: const IntrinsicColumnWidth(),
-                      3: const FixedColumnWidth($_kMargin),
-                      4: const FlexColumnWidth(1.0),
-                    },
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        new Container(
-          decoration: new BoxDecoration(
-            border: new Border.all(color: Colors.grey[500]),
-            borderRadius: new BorderRadius.all(new Radius.circular($_kBoxRadius)),
-          ),
-          margin: const EdgeInsets.all($_kMargin),
-          child: new Container(
-            margin: const EdgeInsets.all($_kMargin),
-            child: new Row(
-              children: <Widget>[
-                new Container(
-                  width: config.width,
-                  height: config.height,
-                  child: widget,
-                ),
-                new Expanded(child: new Container()),
-              ],
-            ),
-          ),
-        ),
-      ]
+  Widget buildWidget(BuildContext context, Key key) {
+    return new {{ name }}(
+      key: key,
+      {{# params }}
+      {{ param_name }}: {{ param_name }},
+      {{/ params }}
     );
   }
 
-  void updateKey() {
-    uniqueKey = new UniqueKey();
+  @override
+  List<TableRow> buildParameterTableRows(BuildContext context) {
+    return <TableRow>[
+      {{# params }}
+      buildTableRow(
+        context,
+        <Widget>[
+          new Text('{{ param_type }}'),
+          new Text('{{ param_name }}'),
+          {{ param_controller }},
+        ],
+      ),
+      {{/ params }}
+    ];
   }
 }
 
-/// Builder for this widget.
-final GalleryWidgetBuilder kBuilder =
-    (BuildContext context, Config config, double width, double height) =>
-        new _HelperWidget(config, width, height);
+/// State builder for this widget.
+final GeneratedStateBuilder kBuilder = (SetStateFunc setState) =>
+    new _Generated{{ name }}State(setState);
 ''';
 
 /// Writes the widget specs to the given output directory.
@@ -375,8 +297,8 @@ Future<Null> writeWidgetSpecs(String outputDir, WidgetSpecs specs) async {
         ? <String, String>{'path_from_fuchsia_root': specs.pathFromFuchsiaRoot}
         : null,
     'doc': escapedDoc,
-    'example_width': specs.exampleWidth ?? 'null',
-    'example_height': specs.exampleHeight ?? 'null',
+    'example_width': _doubleValueToCode(specs.exampleWidth),
+    'example_height': _doubleValueToCode(specs.exampleHeight),
     'additional_imports': additionalImports
         .map((String uri) => <String, String>{
               'additional_import': uri,
@@ -408,7 +330,6 @@ String _generateParamControllerCode(
           int intValue = int.parse(value.text);
           setState(() {
             ${param.name} = intValue;
-            updateKey();
           });
         } catch (e) {
           // Do nothing.
@@ -428,7 +349,6 @@ String _generateParamControllerCode(
           onChanged: (bool value) {
             setState(() {
               ${param.name} = value;
-              updateKey();
             });
           },
         ),
@@ -448,7 +368,6 @@ String _generateParamControllerCode(
             double doubleValue = double.parse(value.text);
             setState(() {
               ${param.name} = doubleValue;
-              updateKey();
             });
           } catch (e) {
             // Do nothing.
@@ -475,7 +394,6 @@ String _generateParamControllerCode(
       onChanged: (InputValue value) {
         setState(() {
           ${param.name} = value.text;
-          updateKey();
         });
       },
     )''';
@@ -496,7 +414,6 @@ String _generateParamControllerCode(
       onSelected: (${param.type.name} value) {
         setState(() {
           ${param.name} = value;
-          updateKey();
         });
       },
       child: new Text((${param.name} ?? 'null').toString()),
@@ -528,7 +445,6 @@ String _generateParamControllerCode(
       onPressed: () {
         setState(() {
           ${param.name} = $generatorInvocationCode;
-          updateKey();
         });
       },
       codeToDisplay: '${_escapeQuotes(generatorInvocationCode)}',
@@ -562,7 +478,7 @@ String _generateInitialValueCode(
   // Retrieve the config value associated with the specified config key.
   String configKey = specs.getConfigKey(param);
   if (configKey != null) {
-    return "config.config.get('${_escapeQuotes(configKey)}')";
+    return "config.get('${_escapeQuotes(configKey)}')";
   }
 
   // TODO(youngseokyoon): See if the parameter type has a default constructor
@@ -683,4 +599,22 @@ void _addImportForElement(Set<String> additionalImports, Element element) {
   if (importUri != null && importUri != 'dart:core') {
     additionalImports.add(importUri);
   }
+}
+
+String _doubleValueToCode(double value) {
+  if (value == double.NAN) {
+    return 'double.NAN';
+  } else if (value == double.INFINITY) {
+    return 'double.INFINITY';
+  } else if (value == double.NEGATIVE_INFINITY) {
+    return 'double.NEGATIVE_INFINITY';
+  } else if (value == double.MIN_POSITIVE) {
+    return 'double.MIN_POSITIVE';
+  } else if (value == double.MAX_FINITE) {
+    return 'double.MAX_FINITE';
+  } else if (value == null) {
+    return 'null';
+  }
+
+  return value.toString();
 }

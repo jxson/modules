@@ -2,21 +2,175 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 const double _kTableRowVerticalMargin = 5.0;
 const double _kMargin = 16.0;
+const double _kBoxRadius = 4.0;
 
-TextStyle _kInfoStyle = new TextStyle(
+final TextStyle _kInfoStyle = new TextStyle(
   color: Colors.grey[600],
   fontStyle: FontStyle.italic,
 );
 
-TextStyle _kCodeStyle = new TextStyle(
+final TextStyle _kCodeStyle = new TextStyle(
   fontFamily: 'monospace',
   fontWeight: FontWeight.bold,
 );
+
+/// A function type to be used as setState() function.
+typedef void SetStateFunc(VoidCallback fn);
+
+/// A class containing all the generated state values and widget builders.
+///
+/// The concrete implementations of this class should be provided by the
+/// `gen_widget_specs` tool.
+abstract class GeneratedState {
+  /// The `setState` function provided by the [GalleryWidgetWrapperState].
+  final SetStateFunc setState;
+
+  /// Creates a new instance of [GeneratedState] object with the given
+  /// [setState] function.
+  GeneratedState(this.setState);
+
+  /// Initialize all the parameter values.
+  void initState(Config config);
+
+  /// Builds the target widget with the current values.
+  Widget buildWidget(BuildContext context, Key key);
+
+  /// Builds the [TableRow]s, each of which represents a parameter description
+  /// and its controller widgets.
+  List<TableRow> buildParameterTableRows(BuildContext context);
+}
+
+/// Builder function for the [GeneratedState].
+typedef GeneratedState GeneratedStateBuilder(SetStateFunc setState);
+
+/// A widget that wraps the target widget and its size control panel.
+class GalleryWidgetWrapper extends StatefulWidget {
+  /// Config object.
+  final Config config;
+
+  /// Current width value.
+  final double width;
+
+  /// Current height value.
+  final double height;
+
+  /// The state builder provided for the target widget.
+  final GeneratedStateBuilder stateBuilder;
+
+  /// Creates a new instance of [GalleryWidgetWrapper].
+  GalleryWidgetWrapper({
+    Key key,
+    @required this.config,
+    @required this.width,
+    @required this.height,
+    @required this.stateBuilder,
+  })
+      : super(key: key);
+
+  @override
+  GalleryWidgetWrapperState createState() => new GalleryWidgetWrapperState();
+}
+
+/// The [State] class for the [GalleryWidgetWrapper].
+///
+/// The most important states are in fact stored in the [genState] field.
+class GalleryWidgetWrapperState extends State<GalleryWidgetWrapper> {
+  /// A [UniqueKey] to be used for the target widget.
+  Key uniqueKey = new UniqueKey();
+
+  /// An internal, generated state object that manages widget-specific states.
+  GeneratedState genState;
+
+  @override
+  void initState() {
+    super.initState();
+
+    genState = config.stateBuilder((VoidCallback fn) {
+      setState(() {
+        fn?.call();
+        _updateKey();
+      });
+    });
+
+    genState.initState(config.config);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget widget;
+    try {
+      widget = genState.buildWidget(context, uniqueKey);
+    } catch (e) {
+      widget = new Text('Failed to build the widget.\n'
+          'See the error message below:\n\n'
+          '$e');
+    }
+
+    return new Block(children: <Widget>[
+      new Container(
+        decoration: new BoxDecoration(
+          border: new Border.all(color: Colors.grey[500]),
+          borderRadius: new BorderRadius.all(new Radius.circular(_kBoxRadius)),
+        ),
+        margin: const EdgeInsets.all(_kMargin),
+        child: new Container(
+          child: new Container(
+            margin: const EdgeInsets.all(_kMargin),
+            child: new Block(
+              children: <Widget>[
+                new Text(
+                  'Parameters',
+                  style: new TextStyle(fontWeight: FontWeight.bold),
+                ),
+                new Table(
+                  children: genState.buildParameterTableRows(context),
+                  columnWidths: <int, TableColumnWidth>{
+                    0: const IntrinsicColumnWidth(),
+                    1: const FixedColumnWidth(_kMargin),
+                    2: const IntrinsicColumnWidth(),
+                    3: const FixedColumnWidth(_kMargin),
+                    4: const FlexColumnWidth(1.0),
+                  },
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      new Container(
+        decoration: new BoxDecoration(
+          border: new Border.all(color: Colors.grey[500]),
+          borderRadius: new BorderRadius.all(new Radius.circular(_kBoxRadius)),
+        ),
+        margin: const EdgeInsets.all(_kMargin),
+        child: new Container(
+          margin: const EdgeInsets.all(_kMargin),
+          child: new Row(
+            children: <Widget>[
+              new Container(
+                width: config.width,
+                height: config.height,
+                child: widget,
+              ),
+              new Expanded(child: new Container()),
+            ],
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  void _updateKey() {
+    uniqueKey = new UniqueKey();
+  }
+}
 
 /// Wrapper widget which gives some top margin to a given child.
 class _TopMargined extends StatelessWidget {

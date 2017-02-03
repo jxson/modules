@@ -6,6 +6,7 @@ import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gallery/src/generated/index.dart';
+import 'package:gallery/src/widget_specs/utils.dart';
 import 'package:widget_specs/widget_specs.dart';
 
 const double _kMaxWidth = 1000.0;
@@ -27,12 +28,14 @@ class WidgetsGalleryScreen extends StatefulWidget {
 
 class _WidgetsGalleryState extends State<WidgetsGalleryScreen> {
   String selectedWidget;
-  double width;
-  double height;
+  Key wrapperKey;
+  Size size;
+  Map<String, Size> widgetSizes;
 
   _WidgetsGalleryState() {
-    width = _kDefaultWidth;
-    height = _kDefaultHeight;
+    wrapperKey = new UniqueKey();
+    size = new Size(_kDefaultWidth, _kDefaultHeight);
+    widgetSizes = <String, Size>{};
   }
 
   @override
@@ -52,7 +55,7 @@ class _WidgetsGalleryState extends State<WidgetsGalleryScreen> {
         .map((WidgetSpecs specs) => new ListItem(
               title: new Text(specs.name),
               subtitle: new Text(specs.doc?.split('\n')?.first),
-              onTap: () => setState(() => selectedWidget = specs.name),
+              onTap: () => _selectWidget(specs),
             ))
         .toList();
 
@@ -92,7 +95,13 @@ ${specs.pathFromFuchsiaRoot != null ? '**Defined In**: `FUCHSIA_ROOT/${specs.pat
             markdownStyle: new MarkdownStyle.largeFromTheme(Theme.of(context)),
           ),
           _buildSizeControl(),
-          kWidgetBuilders[specs.name](context, config.config, width, height),
+          new GalleryWidgetWrapper(
+            key: wrapperKey,
+            config: config.config,
+            width: size.width,
+            height: size.height,
+            stateBuilder: kStateBuilders[specs.name],
+          ),
         ],
       ),
     );
@@ -111,41 +120,73 @@ ${specs.pathFromFuchsiaRoot != null ? '**Defined In**: `FUCHSIA_ROOT/${specs.pat
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            new Row(
-              children: <Widget>[
-                new Container(
-                  width: 100.0,
-                  child: new Text('Width: ${width.toStringAsFixed(1)}'),
-                ),
-                new Expanded(
-                  child: new Slider(
-                    value: width,
-                    onChanged: (double value) => setState(() => width = value),
-                    min: 0.0,
-                    max: _kMaxWidth,
-                  ),
-                ),
-              ],
-            ),
-            new Row(
-              children: <Widget>[
-                new Container(
-                  width: 100.0,
-                  child: new Text('Height: ${height.toStringAsFixed(1)}'),
-                ),
-                new Expanded(
-                  child: new Slider(
-                    value: height,
-                    onChanged: (double value) => setState(() => height = value),
-                    min: 0.0,
-                    max: _kMaxHeight,
-                  ),
-                ),
-              ],
-            ),
+            _buildSizeRow('Width', size.width, _adjustWidth, _kMaxWidth),
+            _buildSizeRow('Height', size.height, _adjustHeight, _kMaxHeight),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildSizeRow(
+    String rowName,
+    double value,
+    ValueChanged<double> onChanged,
+    double max,
+  ) {
+    return new Row(
+      children: <Widget>[
+        new Container(
+          width: 100.0,
+          child: new Text('$rowName: ${value.toStringAsFixed(1)}'),
+        ),
+        new Expanded(
+          child: new Slider(
+            value: value,
+            onChanged: onChanged,
+            min: 0.0,
+            max: max,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _selectWidget(WidgetSpecs specs) {
+    if (selectedWidget == specs.name) {
+      return;
+    }
+
+    setState(() {
+      selectedWidget = specs.name;
+      wrapperKey = new UniqueKey();
+
+      // If there is a size remembered for this widget, restore that value.
+      // Otherwise, use the default size for this widget.
+      size = widgetSizes[selectedWidget] ?? _getDefaultSize(specs);
+    });
+  }
+
+  Size _getDefaultSize(WidgetSpecs specs) {
+    double width = specs.exampleWidth ?? _kDefaultWidth;
+    double height = specs.exampleHeight ?? _kDefaultHeight;
+    return new Size(width, height);
+  }
+
+  void _adjustWidth(double width) {
+    _adjustSize(width: width);
+  }
+
+  void _adjustHeight(double height) {
+    _adjustSize(height: height);
+  }
+
+  void _adjustSize({double width, double height}) {
+    setState(() {
+      double newWidth = width ?? size.width;
+      double newHeight = height ?? size.height;
+      size = new Size(newWidth, newHeight);
+      widgetSizes[selectedWidget] = size;
+    });
   }
 }
