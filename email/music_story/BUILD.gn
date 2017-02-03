@@ -11,7 +11,7 @@ flutter_app("music_story") {
   deps = [
     "//application/lib/app/dart",
     "//application/services:services_dart",
-    "//apps/maxwell/services/context:context_dart",
+    "//apps/maxwell/lib/context/dart",
     "//apps/modular/services/story:story_dart",
     "//apps/modules/packages/models",
     "//apps/modules/packages/widgets",

@@ -18,10 +18,17 @@ class AlbumPage extends StatefulWidget {
   /// Spotify Id of given album
   final String albumId;
 
+  /// Called when the album data changes.
+  ///
+  /// The album page passes an [Album] object (or null) as a parameter to this
+  /// callback.
+  final ValueChanged<Album> onChanged;
+
   /// Constructor
   AlbumPage({
     Key key,
     @required @ExampleValue('0sNOF9WDwhWunNAHPD3Baj') this.albumId,
+    this.onChanged,
   })
       : super(key: key) {
     assert(albumId != null);
@@ -46,6 +53,7 @@ class _AlbumPageState extends State<AlbumPage> {
     super.initState();
     MusicAPI.getAlbumById(config.albumId).then((Album album) {
       if (mounted) {
+        config.onChanged?.call(album);
         if (album == null) {
           setState(() {
             _loadingState = LoadingState.failed;
@@ -155,7 +163,7 @@ class _AlbumPageState extends State<AlbumPage> {
             track: _currentTrack,
             album: _album,
             onNextTrack: _handleNextTrack,
-            onPreviousTrack: _hanldePreviousTrack,
+            onPreviousTrack: _handlePreviousTrack,
           ),
         ),
         new Expanded(
@@ -200,7 +208,7 @@ class _AlbumPageState extends State<AlbumPage> {
     }
   }
 
-  void _hanldePreviousTrack() {
+  void _handlePreviousTrack() {
     if (_currentTrack.trackNumber == 1) {
       setState(() {
         _currentTrack = _album.tracks.last;

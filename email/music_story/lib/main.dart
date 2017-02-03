@@ -6,7 +6,8 @@ import 'dart:convert';
 
 import 'package:application.lib.app.dart/app.dart';
 import 'package:application.services/service_provider.fidl.dart';
-import 'package:apps.maxwell.services.context/client.fidl.dart';
+import 'package:apps.maxwell.lib.context.dart/maxwell_context.dart'
+    as maxwell_context;
 import 'package:apps.maxwell.services.context/publisher_link.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
 import 'package:apps.modular.services.story/module.fidl.dart';
@@ -17,8 +18,9 @@ import 'package:widgets/music.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
 
-final ContextPublisherProxy _pub = new ContextPublisherProxy();
 final ContextPublisherLinkProxy _albumIdPub = new ContextPublisherLinkProxy();
+final ContextPublisherLinkProxy _artistNamePub =
+    new ContextPublisherLinkProxy();
 
 final GlobalKey<HomeScreenState> _kHomeKey = new GlobalKey<HomeScreenState>();
 
@@ -97,12 +99,13 @@ class ModuleImpl extends Module {
 
     story.ctrl.bind(storyHandle);
 
-    connectToService(_context.environmentServices, _pub.ctrl);
-    _pub.publish(
+    maxwell_context.publish(
         'album id',
         'https://developer.spotify.com/web-api/user-guide/#spotify-uris-and-ids',
         null,
         _albumIdPub.ctrl.request());
+    maxwell_context.publish(
+        'artist', 'name', null, _artistNamePub.ctrl.request());
 
     _albumIdPub.update(_albumId);
 
@@ -117,6 +120,11 @@ class ModuleImpl extends Module {
     _linkWatcher.close();
     story.ctrl.close();
     link.ctrl.close();
+    _albumIdPub.update(null);
+    _albumIdPub.ctrl.close();
+    _artistNamePub.update(null);
+    _artistNamePub.ctrl.close();
+    maxwell_context.closeGlobals();
     callback();
   }
 }
@@ -141,7 +149,8 @@ class HomeScreenState extends State<HomeScreen> {
         child: _albumId != null
             ? new AlbumPage(
                 albumId: _albumId,
-              )
+                onChanged: (album) =>
+                    _artistNamePub.update(album?.artists.first.name))
             : new CircularProgressIndicator(),
       ),
     );
@@ -156,6 +165,8 @@ class HomeScreenState extends State<HomeScreen> {
 /// Main entry point to the email folder list module.
 void main() {
   _log('Module started with context: $_context');
+
+  maxwell_context.connectPublisher(_context);
 
   /// Add [ModuleImpl] to this application's outgoing ServiceProvider.
   _context.outgoingServices.addServiceForName(
