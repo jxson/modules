@@ -8,5 +8,11 @@
   },
   "fuchsia:resources": {
     "main": "youtube_video_component"
+  },
+  "fuchsia:module": {
+    "contract": "display_attachment",
+    "data_preconditions": {
+      "@type": "youtube-video"
+    }
   }
 }
