@@ -100,12 +100,12 @@ class ModuleImpl extends Module {
     story.ctrl.bind(storyHandle);
 
     maxwell_context.publish(
-        'album id',
+        'music album id',
         'https://developer.spotify.com/web-api/user-guide/#spotify-uris-and-ids',
         null,
         _albumIdPub.ctrl.request());
     maxwell_context.publish(
-        'artist', 'name', null, _artistNamePub.ctrl.request());
+        'music artist name', 'string', null, _artistNamePub.ctrl.request());
 
     _albumIdPub.update(_albumId);
 
