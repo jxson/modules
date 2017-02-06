@@ -28,7 +28,7 @@ final String _kMusicAlbumIdKey = 'music-album-id';
 // The album id
 // TODO(dayang): this is hardcoded for now, ideally whoever launches this story
 // should set the album id
-String _albumId = '7gsWAHLeT0w7es6FofOXk1';
+String _albumId = '0nDpqGDg3ZsFWKCSPQE4M4';
 
 ModuleImpl _module;
 
