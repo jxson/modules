@@ -159,6 +159,12 @@ ${specs.pathFromFuchsiaRoot != null ? '**Defined In**: `FUCHSIA_ROOT/${specs.pat
 
     setState(() {
       selectedWidget = specs.name;
+
+      /// This key used to force the GalleryWidgetWrapper state to be recreated
+      /// and initialized, when the user selects a new widget from the menu.
+      ///
+      /// Without this key, the GalleryWidgetWrapper state is unintentionally
+      /// reused and thus incorrectly displays the previous widget information.
       wrapperKey = new UniqueKey();
 
       // If there is a size remembered for this widget, restore that value.
