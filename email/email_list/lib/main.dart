@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:apps.modular.lib.app.dart/app.dart';
+import 'package:application.lib.app.dart/app.dart';
 import 'package:apps.modules.email.services/email_session.fidl.dart' as es;
 import 'package:email_session_client/client.dart';
 import 'package:email_session_store/email_session_store.dart';
