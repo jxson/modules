@@ -10,7 +10,7 @@ flutter_app("email") {
   source_dir = "lib"
 
   deps = [
-    "//apps/modular/lib/app/dart",
+    "//application/lib/app/dart",
     "//apps/modular/services/story:story_dart",
     "//apps/mozart/services/views:views_dart",
     "//lib/fidl/dart",
