@@ -11,8 +11,8 @@ flutter_app("email_story") {
   source_dir = "lib"
 
   deps = [
-    "//apps/modular/lib/app/dart",
-    "//apps/modular/services/application:application_dart",
+    "//application/lib/app/dart",
+    "//application/services:services_dart",
     "//apps/modular/services/story:story_dart",
     "//apps/modules/packages/email_session_store",
     "//apps/modules/packages/models",

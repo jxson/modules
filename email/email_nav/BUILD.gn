@@ -9,8 +9,8 @@ flutter_app("email_nav") {
   main_dart = "lib/main.dart"
 
   deps = [
-    "//apps/modular/lib/app/dart",
-    "//apps/modular/services/application:application_dart",
+    "//application/lib/app/dart",
+    "//application/services:services_dart",
     "//apps/modular/services/story:story_dart",
     "//apps/modules/email/email_session:client",
     "//apps/modules/email/services:services_dart",
