@@ -125,7 +125,7 @@ class HomeScreenState extends State<HomeScreen> {
       constraints: const BoxConstraints.expand(),
       child: new Material(
         child: _videoId != null && _apiKey != null
-            ? new ScrollableViewport(
+            ? new SingleChildScrollView(
                 child: new YoutubeRelatedVideos(
                   videoId: _videoId,
                   apiKey: _apiKey,
