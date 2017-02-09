@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+
 import 'contact_card_screen.dart';
 
 void main() {
@@ -13,10 +14,9 @@ class _MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
-      home: new Material(
-        child: new ContactCardScreen(),
-      )
-    );
+        title: 'Flutter Demo',
+        home: new Material(
+          child: new ContactCardScreen(),
+        ));
   }
 }

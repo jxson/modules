@@ -16,7 +16,6 @@ class ContactCardScreen extends StatefulWidget {
 }
 
 class _ContactCardScreenState extends State<ContactCardScreen> {
-
   bool _loading = true;
 
   Contact _contact;
@@ -35,7 +34,7 @@ class _ContactCardScreenState extends State<ContactCardScreen> {
         _contact = contact;
         _loading = false;
       });
-    } catch(exception, stackTrace) {
+    } catch (exception, stackTrace) {
       print(exception);
       print(stackTrace);
     }
@@ -43,7 +42,7 @@ class _ContactCardScreenState extends State<ContactCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(_loading) {
+    if (_loading) {
       return new Center(
         child: new CircularProgressIndicator(
           value: null,
