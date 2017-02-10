@@ -11,6 +11,16 @@ typedef EmbeddedChild EmbeddedChildBuilder(dynamic args);
 /// Dispose method for an embedded child view.
 typedef void EmbeddedChildDisposer();
 
+/// A widget build function that returns a child based on the module specified
+/// by moduleUrl.
+typedef EmbeddedChild GeneralEmbeddedChildBuilder({
+  String docRoot,
+  String type,
+  String moduleUrl,
+  String propKey,
+  dynamic value,
+});
+
 /// A class representing an embedded child view.
 ///
 /// An instance of [EmbeddedChild] can be obtained by calling
@@ -100,13 +110,15 @@ class EmbeddedChildProvider {
   final Map<String, EmbeddedChildBuilder> _builders =
       <String, EmbeddedChildBuilder>{};
 
+  GeneralEmbeddedChildBuilder _generalBuilder;
+
   /// Adds a new [EmbeddedChildBuilder].
   ///
   /// Each application should add necessary [EmbeddedChildBuilder]s somewhere
   /// near the application entry point, such as in the main function.
   void addEmbeddedChildBuilder(
-    @required String type,
-    @required EmbeddedChildBuilder builder,
+    String type,
+    EmbeddedChildBuilder builder,
   ) {
     assert(type != null);
     assert(builder != null);
@@ -130,6 +142,33 @@ class EmbeddedChildProvider {
     }
 
     return builder(args);
+  }
+
+  /// Sets the [GeneralEmbeddedChildBuilder].
+  ///
+  /// [builder] will be called by [buildGeneralEmbeddedChild].
+  void setGeneralEmbeddedChildBuilder(GeneralEmbeddedChildBuilder builder) {
+    _generalBuilder = builder;
+  }
+
+  /// Buils a new instance of [EmbeddedChild].
+  ///
+  /// The `dispose()` method of the returned [EmbeddedChild] must be called when
+  /// the child is no longer in use.
+  EmbeddedChild buildGeneralEmbeddedChild({
+    String docRoot,
+    String type,
+    String moduleUrl,
+    String propKey,
+    dynamic value,
+  }) {
+    return _generalBuilder(
+      docRoot: docRoot,
+      type: type,
+      moduleUrl: moduleUrl,
+      propKey: propKey,
+      value: value,
+    );
   }
 }
 

@@ -36,32 +36,40 @@ class _MessageContentState extends State<MessageContent> {
   @override
   void initState() {
     super.initState();
+
     config.message.attachments.forEach((Attachment attachment) {
       try {
         switch (attachment.type) {
           case AttachmentType.uspsShipping:
             embeddedChildren.add(
-              kEmbeddedChildProvider.buildEmbeddedChild(
-                'usps-shipping',
-                attachment.value,
+              kEmbeddedChildProvider.buildGeneralEmbeddedChild(
+                docRoot: 'usps-doc',
+                type: 'usps-shipping',
+                moduleUrl: 'file:///system/apps/usps',
+                propKey: 'usps-tracking-key',
+                value: attachment.value,
               ),
             );
             break;
 
           case AttachmentType.youtubeVideo:
             embeddedChildren.add(
-              kEmbeddedChildProvider.buildEmbeddedChild(
-                'youtube-video',
-                attachment.value,
+              kEmbeddedChildProvider.buildGeneralEmbeddedChild(
+                docRoot: 'youtube-doc',
+                type: 'youtube-video',
+                moduleUrl: 'file:///system/apps/youtube_video',
+                propKey: 'youtube-video-id',
+                value: attachment.value,
               ),
             );
             break;
 
           case AttachmentType.orderReceipt:
             embeddedChildren.add(
-              kEmbeddedChildProvider.buildEmbeddedChild(
-                'order-receipt',
-                null,
+              kEmbeddedChildProvider.buildGeneralEmbeddedChild(
+                type: 'order-receipt',
+                moduleUrl: 'file:///system/apps/interactive_receipt_http',
+                value: null,
               ),
             );
         }
