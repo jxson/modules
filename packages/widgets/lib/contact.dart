@@ -5,6 +5,7 @@
 export 'src/contact/address_entry_group.dart';
 export 'src/contact/contact_card.dart';
 export 'src/contact/contact_details.dart';
+export 'src/contact/contact_list_item.dart';
 export 'src/contact/email_entry_group.dart';
 export 'src/contact/phone_entry_group.dart';
 export 'src/contact/theme.dart';
