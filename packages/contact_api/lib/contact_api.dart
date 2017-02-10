@@ -11,13 +11,25 @@ import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:models/contact.dart';
 
+/// The order in which a list of contact connections should be sorted.
+enum ContactSortOrder {
+  /// Sort people by when they were changed; older entries first.
+  lastModifiedAscending,
+
+  /// Sort people by first name.
+  firstNameAscending,
+
+  /// Sort people by last name
+  lastNameAscending,
+}
+
 /// The interface to the Google Contacts REST API.
 class ContactAPI {
   /// Google OAuth scopes.
   List<String> scopes;
   Client _baseClient;
   AutoRefreshingAuthClient _client;
-  contact.PeopleApi _contact;
+  contact.PeopleApi _contactApi;
 
   /// The [ContactAPI] constructor
   ContactAPI({
@@ -40,7 +52,7 @@ class ContactAPI {
         new AccessCredentials(accessToken, refreshToken, scopes);
     _baseClient = new Client();
     _client = autoRefreshingClient(clientId, credentials, _baseClient);
-    _contact = new contact.PeopleApi(_client);
+    _contactApi = new contact.PeopleApi(_client);
   }
 
   /// Create an instance of [ContactAPI] by loading a config file.
@@ -68,17 +80,62 @@ class ContactAPI {
   /// Use the ID value of "me" to retrieve the current authenticated user
   Future<Contact> getUser(String id) async {
     assert(id != null);
-    contact.Person person = await _contact.people.get('people/$id');
+    contact.Person person = await _contactApi.people.get(id);
     return new Contact(
       id: person.resourceName,
       displayName: person.names.first?.displayName,
       givenName: person.names.first?.givenName,
       familyName: person.names.first?.familyName,
-      addresses: person.addresses.map(_address).toList(),
-      emails: person.emailAddresses.map(_email).toList(),
-      phoneNumbers: person.phoneNumbers.map(_phoneNumber).toList(),
-      photoUrl: person.photos.first?.url,
-      backgroundImageUrl: person.coverPhotos.first?.url,
+      addresses: person.addresses?.map(_address)?.toList(),
+      emails: person.emailAddresses?.map(_email)?.toList(),
+      phoneNumbers: person.phoneNumbers?.map(_phoneNumber)?.toList(),
+      photoUrl: person.photos?.first?.url,
+      backgroundImageUrl: person.coverPhotos?.first?.url,
+    );
+  }
+
+  /// Retrieves the contacts that are "connections" of the currently
+  /// authenticated user.
+  Future<List<Contact>> getConnections({
+    ContactSortOrder sortOrder,
+    int pageSize,
+    String pageToken,
+  }) async {
+    String order;
+    switch (sortOrder) {
+      case ContactSortOrder.firstNameAscending:
+        order = 'FIRST_NAME_ASCENDING';
+        break;
+      case ContactSortOrder.lastNameAscending:
+        order = 'LAST_NAME_ASCENDING';
+        break;
+      case ContactSortOrder.lastModifiedAscending:
+        order = 'LAST_MODIFIED_ASCENDING';
+        break;
+    }
+    contact.ListConnectionsResponse response =
+        await _contactApi.people.connections.list(
+      'people/me',
+      sortOrder: order,
+      pageSize: pageSize ?? 100,
+      pageToken: pageToken,
+    );
+
+    return response.connections.map(_contact).toList();
+  }
+
+  /// Maps a Google People API person to the Contact Model
+  Contact _contact(contact.Person person) {
+    return new Contact(
+      id: person.resourceName,
+      displayName: person.names.first?.displayName,
+      givenName: person.names.first?.givenName,
+      familyName: person.names.first?.familyName,
+      addresses: person.addresses?.map(_address)?.toList(),
+      emails: person.emailAddresses?.map(_email)?.toList(),
+      phoneNumbers: person.phoneNumbers?.map(_phoneNumber)?.toList(),
+      photoUrl: person.photos?.first?.url,
+      backgroundImageUrl: person.coverPhotos?.first?.url,
     );
   }
 
