@@ -51,7 +51,7 @@ class ContactCard extends StatelessWidget {
             unselectedLabelColor: Colors.grey[700],
             tabs: <Widget>[
               new Tab(text: 'DETAILS'),
-              new Tab(text: 'YOU AND APARNA'),
+              new Tab(text: 'YOU AND ${contact.givenName.toUpperCase()}'),
               new Tab(text: 'OTHER ACTIVITY')
             ],
           ),
@@ -83,7 +83,9 @@ class ContactCard extends StatelessWidget {
             ),
             new Container(
               height: 800.0,
-              child: new Text('You and Aparna Content'),
+              child: new Text(
+                'You and ${contact.givenName.toUpperCase()} Content',
+              ),
             ),
             new Container(
               height: 800.0,

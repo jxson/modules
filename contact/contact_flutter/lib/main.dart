@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'contact_card_screen.dart';
+import 'contact_list_screen.dart';
 
 void main() {
   runApp(new _MyApp());
@@ -14,9 +14,10 @@ class _MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        title: 'Flutter Demo',
-        home: new Material(
-          child: new ContactCardScreen(),
-        ));
+      title: 'Flutter Contact',
+      home: new Material(
+        child: new ContactListScreen(),
+      ),
+    );
   }
 }
