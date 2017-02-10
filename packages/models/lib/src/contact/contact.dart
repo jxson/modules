@@ -2,50 +2,60 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:meta/meta.dart';
-
-import '../user/user.dart';
 import 'entry_types.dart';
 
 /// A Model representing a contact entry
 class Contact {
-  /// User data associated with the [Contact] entry
-  /// For now, we will use the User Model which is based on Google's User
-  /// Account schema.
-  ///
-  /// This will contain data for things such as Name and Avatar.
-  User user;
+  /// Unique Identifier for given contact
+  final String id;
+
+  /// Full name of contact, usually givenName + familyName
+  final String displayName;
+
+  /// First name for contact
+  final String givenName;
+
+  /// Last name for contact
+  final String familyName;
 
   /// Physical addresses associated with contact
-  List<AddressEntry> addresses;
+  final List<AddressEntry> addresses;
 
   /// Email addresses associated with contact
-  List<EmailEntry> emails;
+  final List<EmailEntry> emails;
 
   /// Phone numbers associated with contact
-  List<PhoneEntry> phoneNumbers;
+  final List<PhoneEntry> phoneNumbers;
 
   /// Social Networks associated with contact
-  List<SocialNetworkEntry> socialNetworks;
+  final List<SocialNetworkEntry> socialNetworks;
 
   /// URL for background image
-  String backgroundImageUrl;
+  final String backgroundImageUrl;
+
+  /// URL for main contact profile photo;
+  final String photoUrl;
 
   /// Constructor
   Contact({
-    @required this.user,
-    this.addresses: const <AddressEntry>[],
-    this.emails: const <EmailEntry>[],
-    this.phoneNumbers: const <PhoneEntry>[],
-    this.socialNetworks: const <SocialNetworkEntry>[],
+    this.id,
+    this.displayName,
+    this.givenName,
+    this.familyName,
     this.backgroundImageUrl,
-  }) {
-    assert(this.user != null);
-    this.addresses ??= <AddressEntry>[];
-    this.emails ??= <EmailEntry>[];
-    this.phoneNumbers ??= <PhoneEntry>[];
-    this.socialNetworks ??= <SocialNetworkEntry>[];
-  }
+    this.photoUrl,
+    List<AddressEntry> addresses,
+    List<EmailEntry> emails,
+    List<PhoneEntry> phoneNumbers,
+    List<SocialNetworkEntry> socialNetworks,
+  })
+      : addresses =
+            new List<AddressEntry>.unmodifiable(addresses ?? <AddressEntry>[]),
+        emails = new List<EmailEntry>.unmodifiable(emails ?? <EmailEntry>[]),
+        phoneNumbers =
+            new List<PhoneEntry>.unmodifiable(phoneNumbers ?? <PhoneEntry>[]),
+        socialNetworks = new List<SocialNetworkEntry>.unmodifiable(
+            socialNetworks ?? <SocialNetworkEntry>[]);
 
   /// The primary address is the first address in the list of addresses
   /// Returns null if there is no address for contact

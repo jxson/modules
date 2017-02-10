@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:models/contact.dart';
-import 'package:models/user.dart';
 import 'package:widgets/contact.dart';
 
 /// Contact Card page
@@ -15,14 +14,11 @@ class ContactCardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Contact contact = new Contact(
-      user: new User(
-        name: 'Coco Yang',
-        email: 'coco@cu.te',
-        familyName: 'Yang',
-        givenName: 'Coco',
-        picture:
-            'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
-      ),
+      displayName: 'Coco Yang',
+      familyName: 'Yang',
+      givenName: 'Coco',
+      photoUrl:
+          'https://raw.githubusercontent.com/dvdwasibi/DogsOfFuchsia/master/coco.jpg',
       addresses: <AddressEntry>[
         new AddressEntry(
           street: '517 Fuchsia Drive',

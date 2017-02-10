@@ -47,20 +47,11 @@ void main() {
   group('Contact', () {
     group('primaryAddress', () {
       test('Should return null if contact contains no addresses', () {
-        Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
-        );
+        Contact contact = new Contact();
         expect(contact.primaryAddress, null);
       });
       test('Should return first address if contact contains addresses', () {
         Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
           addresses: <AddressEntry>[
             new AddressEntry(
               label: 'Work',
@@ -77,20 +68,11 @@ void main() {
     });
     group('primaryEmail', () {
       test('Should return null if contact contains no emails', () {
-        Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
-        );
+        Contact contact = new Contact();
         expect(contact.primaryEmail, null);
       });
       test('Should return first address if contact contains addresses', () {
         Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
           emails: <EmailEntry>[
             new EmailEntry(
               label: 'Work',
@@ -107,21 +89,12 @@ void main() {
     });
     group('primaryPhoneNumber', () {
       test('Should return null if contact contains no phone numbers', () {
-        Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
-        );
+        Contact contact = new Contact();
         expect(contact.primaryPhoneNumber, null);
       });
       test('Should return first phone number if contact contains phone numbers',
           () {
         Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
           phoneNumbers: <PhoneEntry>[
             new PhoneEntry(
               label: 'Work',
@@ -138,22 +111,13 @@ void main() {
     });
     group('regionPreview', () {
       test('Should return null if contact has no primary address', () {
-        Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
-        );
+        Contact contact = new Contact();
         expect(contact.regionPreview, null);
       });
       test(
           'Should return null if contact has primary address but no city nor region is given',
           () {
         Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
           addresses: <AddressEntry>[
             new AddressEntry(
               country: 'USA',
@@ -167,10 +131,6 @@ void main() {
           'Should return city if contact has primary address with a city and no region',
           () {
         Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
           addresses: <AddressEntry>[
             new AddressEntry(
               city: 'Mountain View',
@@ -185,10 +145,6 @@ void main() {
           'Should return region if contact has primary address with a region and no city',
           () {
         Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
           addresses: <AddressEntry>[
             new AddressEntry(
               region: 'CA',
@@ -203,10 +159,6 @@ void main() {
           'Should return city, region if contact has primary address with a region and city',
           () {
         Contact contact = new Contact(
-          user: new User(
-            name: 'Coco',
-            email: 'Coco@cu.te',
-          ),
           addresses: <AddressEntry>[
             new AddressEntry(
               city: 'Mountain View',
