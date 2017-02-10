@@ -110,7 +110,7 @@ class _GalleryDrawerState extends State<GalleryDrawer> {
       },
     ));
 
-    return new Drawer(child: new Block(children: drawerItems));
+    return new Drawer(child: new ListView(children: drawerItems));
   }
 
   Widget createCheckboxItem({

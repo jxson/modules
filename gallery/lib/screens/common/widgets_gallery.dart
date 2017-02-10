@@ -60,7 +60,7 @@ class _WidgetsGalleryState extends State<WidgetsGalleryScreen> {
         .toList();
 
     return new Drawer(
-      child: new Block(children: items),
+      child: new ListView(children: items),
       elevation: 4,
     );
   }
@@ -88,7 +88,7 @@ ${specs.pathFromFuchsiaRoot != null ? '**Defined In**: `FUCHSIA_ROOT/${specs.pat
 
     return new Align(
       alignment: FractionalOffset.topLeft,
-      child: new Block(
+      child: new ListView(
         children: <Widget>[
           new Markdown(
             data: markdownText,

@@ -112,7 +112,7 @@ class GalleryWidgetWrapperState extends State<GalleryWidgetWrapper> {
           '$e');
     }
 
-    return new Block(children: <Widget>[
+    return new ListView(shrinkWrap: true, children: <Widget>[
       new Container(
         decoration: new BoxDecoration(
           border: new Border.all(color: Colors.grey[500]),
@@ -122,7 +122,8 @@ class GalleryWidgetWrapperState extends State<GalleryWidgetWrapper> {
         child: new Container(
           child: new Container(
             margin: const EdgeInsets.all(_kMargin),
-            child: new Block(
+            child: new ListView(
+              shrinkWrap: true,
               children: <Widget>[
                 new Text(
                   'Parameters',

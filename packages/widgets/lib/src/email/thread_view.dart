@@ -56,13 +56,13 @@ class ThreadView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Column is used to create the "sticky header"
     // The first child will be the header, while the last child will
-    // be the scrollable block of MessageListItems (blockChildren)
+    // be the scrollable block of MessageListItems (listChildren)
     List<Widget> columnChildren = <Widget>[];
-    List<Widget> blockChildren = <Widget>[];
+    List<Widget> listChildren = <Widget>[];
 
     // Add the messages.
     thread.messages.forEach((Message message) {
-      blockChildren.add(new Container(
+      listChildren.add(new Container(
         decoration: new BoxDecoration(
           border: new Border(
             bottom: new BorderSide(
@@ -85,7 +85,7 @@ class ThreadView extends StatelessWidget {
 
     // Append footer widget to end of the list of messages if specified
     if (footer != null) {
-      blockChildren.add(footer);
+      listChildren.add(footer);
     }
 
     if (header != null) {
@@ -94,8 +94,8 @@ class ThreadView extends StatelessWidget {
 
     columnChildren.add(new Expanded(
       flex: 1,
-      child: new Block(
-        children: blockChildren,
+      child: new ListView(
+        children: listChildren,
       ),
     ));
 

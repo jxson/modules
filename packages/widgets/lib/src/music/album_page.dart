@@ -164,7 +164,7 @@ class _AlbumPageState extends State<AlbumPage> {
             children: <Widget>[
               new Expanded(
                 flex: 3,
-                child: new Block(
+                child: new ListView(
                   children: <Widget>[
                     _buildTrackList(),
                   ],
@@ -172,7 +172,7 @@ class _AlbumPageState extends State<AlbumPage> {
               ),
               new Expanded(
                 flex: 2,
-                child: new Block(
+                child: new ListView(
                   children: <Widget>[
                     new RelatedArtists(
                       artistId: _album.artists.first.id,

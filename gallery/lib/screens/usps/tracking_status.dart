@@ -23,15 +23,13 @@ class TrackingStatusScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Block(
-      children: <Widget>[
-        new Center(
-          child: new TrackingStatus(
-            trackingCode: '9374889676090175041871',
-            apiKey: uspsApiKey,
-          ),
+    return new SingleChildScrollView(
+      child: new Center(
+        child: new TrackingStatus(
+          trackingCode: '9374889676090175041871',
+          apiKey: uspsApiKey,
         ),
-      ],
+      ),
     );
   }
 }

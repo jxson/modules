@@ -29,7 +29,7 @@ class ContactCard extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     return new DefaultTabController(
       length: 3,
-      child: new Block(children: <Widget>[
+      child: new ListView(children: <Widget>[
         new ContactHeader(contact: contact),
         new Container(
           decoration: new BoxDecoration(

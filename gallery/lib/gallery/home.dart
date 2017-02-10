@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(title: new Text('FX Modules')),
-      body: new Block(children: kGalleryCollection),
+      body: new ListView(children: kGalleryCollection),
       drawer: new GalleryDrawer(
         showPerformanceOverlay: config.showPerformanceOverlay,
         onShowPerformanceOverlayChanged: config.onShowPerformanceOverlayChanged,
