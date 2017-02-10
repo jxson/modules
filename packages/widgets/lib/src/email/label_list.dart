@@ -127,7 +127,7 @@ class LabelList extends StatelessWidget {
 
     return new Material(
       color: Colors.white,
-      child: new Block(children: children),
+      child: new ListView(children: children),
     );
   }
 }

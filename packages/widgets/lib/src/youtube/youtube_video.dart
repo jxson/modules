@@ -35,7 +35,7 @@ class YoutubeVideo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Block(
+    return new ListView(
       children: <Widget>[
         new YoutubePlayer(
           videoId: videoId,

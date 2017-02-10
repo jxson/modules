@@ -451,7 +451,7 @@ class _InteractiveReceiptState extends State<InteractiveReceipt>
   Widget build(BuildContext context) {
     return new Scaffold(
       key: _scaffoldKey,
-      body: new Block(
+      body: new ListView(
         children: <Widget>[
           new Container(
             decoration: new BoxDecoration(
