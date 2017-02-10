@@ -10,7 +10,6 @@ import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:models/contact.dart';
-import 'package:models/user.dart';
 
 /// The interface to the Google Contacts REST API.
 class ContactAPI {
@@ -71,17 +70,14 @@ class ContactAPI {
     assert(id != null);
     contact.Person person = await _contact.people.get('people/$id');
     return new Contact(
-      user: new User(
-        name: person.names.first?.displayName,
-        givenName: person.names.first?.givenName,
-        familyName: person.names.first?.familyName,
-        locale: person.locales.first?.value,
-        email: person.emailAddresses.first?.value,
-        picture: person.photos.first?.url,
-      ),
+      id: person.resourceName,
+      displayName: person.names.first?.displayName,
+      givenName: person.names.first?.givenName,
+      familyName: person.names.first?.familyName,
       addresses: person.addresses.map(_address).toList(),
       emails: person.emailAddresses.map(_email).toList(),
       phoneNumbers: person.phoneNumbers.map(_phoneNumber).toList(),
+      photoUrl: person.photos.first?.url,
       backgroundImageUrl: person.coverPhotos.first?.url,
     );
   }

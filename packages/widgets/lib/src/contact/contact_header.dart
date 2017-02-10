@@ -67,8 +67,9 @@ class ContactHeader extends StatelessWidget {
             backgroundColor: primaryColor,
             shape: BoxShape.circle,
           ),
-          child: new Alphatar.fromUser(
-            user: contact.user,
+          child: new Alphatar.fromNameAndUrl(
+            name: contact.displayName,
+            avatarUrl: contact.photoUrl,
             size: _kAlphatarDiameter,
           ),
         ),
@@ -81,7 +82,7 @@ class ContactHeader extends StatelessWidget {
       new Container(
         margin: const EdgeInsets.only(bottom: 4.0),
         child: new Text(
-          contact.user.name,
+          contact.displayName,
           style: new TextStyle(
             fontSize: 18.0,
           ),
