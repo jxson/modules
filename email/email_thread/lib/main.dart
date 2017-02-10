@@ -33,7 +33,7 @@ void _initialize(es.EmailSession service, EmailSessionLinkStore store) {
   // HACK: Global reference must be set before store is accessed by widgets.
   kEmailSessionStoreToken = new StoreToken(store);
 
-  _addEmbeddedChildBuilders();
+  _addEmbeddedChildBuilder();
 
   runApp(new MaterialApp(
     title: 'Email Thread Module',
@@ -53,83 +53,58 @@ void main() {
   addEmailSessionModule(_context, _moduleName, _created, _initialize, _stop);
 }
 
-/// Adds all the [EmbeddedChildBuilder]s that this module supports.
-void _addEmbeddedChildBuilders() {
-  _addEmbeddedChildBuilder(
-    docRoot: 'usps-doc',
-    type: 'usps-shipping',
-    moduleUrl: 'file:///system/apps/usps',
-    propKey: 'usps-tracking-key',
-  );
+void _addEmbeddedChildBuilder() {
+  kEmbeddedChildProvider.setGeneralEmbeddedChildBuilder(({
+    String docRoot,
+    String type,
+    String moduleUrl,
+    String propKey,
+    dynamic value,
+  }) {
+    // Initialize the sub-module.
 
-  _addEmbeddedChildBuilder(
-    docRoot: 'youtube-doc',
-    type: 'youtube-video',
-    moduleUrl: 'file:///system/apps/youtube_video',
-    propKey: 'youtube-video-id',
-  );
+    // Create a new link, add necessary data to it, and create a duplicate of
+    // it to be passed to the sub-module.
+    LinkProxy link = new LinkProxy();
+    _module.story.createLink(type, link.ctrl.request());
 
-  _addEmbeddedChildBuilder(
-    type: 'order-receipt',
-    moduleUrl: 'file:///system/apps/interactive_receipt_http',
-  );
-}
+    if (docRoot != null && propKey != null && propKey is String) {
+      Map<String, dynamic> childDoc = <String, dynamic>{
+        propKey: value,
+        '@type': type
+      };
+      link.set(<String>[docRoot], JSON.encode(childDoc));
+    }
 
-void _addEmbeddedChildBuilder({
-  String docRoot,
-  String type,
-  String moduleUrl,
-  String propKey,
-}) {
-  // USPS Tracking.
-  kEmbeddedChildProvider.addEmbeddedChildBuilder(
-    type,
-    (dynamic args) {
-      // Initialize the sub-module.
+    ModuleControllerProxy moduleController = new ModuleControllerProxy();
+    InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
 
-      // Create a new link, add necessary data to it, and create a duplicate of
-      // it to be passed to the sub-module.
-      LinkProxy link = new LinkProxy();
-      _module.story.createLink(type, link.ctrl.request());
+    _module.story.startModule(
+      moduleUrl,
+      link.ctrl.unbind(),
+      null,
+      null,
+      moduleController.ctrl.request(),
+      viewOwnerPair.passRequest(),
+    );
 
-      if (docRoot != null && propKey != null && propKey is String) {
-        Map<String, dynamic> childDoc = <String, dynamic>{
-          propKey: args,
-          '@type': type
-        };
-        link.set(<String>[docRoot], JSON.encode(childDoc));
-      }
+    InterfaceHandle<ViewOwner> viewOwner = viewOwnerPair.passHandle();
+    ChildViewConnection conn = new ChildViewConnection(viewOwner);
 
-      ModuleControllerProxy moduleController = new ModuleControllerProxy();
-      InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
-
-      _module.story.startModule(
-        moduleUrl,
-        link.ctrl.unbind(),
-        null,
-        null,
-        moduleController.ctrl.request(),
-        viewOwnerPair.passRequest(),
-      );
-
-      InterfaceHandle<ViewOwner> viewOwner = viewOwnerPair.passHandle();
-      ChildViewConnection conn = new ChildViewConnection(viewOwner);
-
-      return new EmbeddedChild(
-        widgetBuilder: (_) => new ChildView(connection: conn),
-        disposer: () {
-          moduleController.stop(() {
-            viewOwner.close();
-            // NOTE(youngseokyoon): Not sure if it is safe to close the module
-            // controller within a callback passed to module controller, so do
-            // it in the next idle cycle.
-            scheduleMicrotask(() {
-              moduleController.ctrl.close();
-            });
+    return new EmbeddedChild(
+      widgetBuilder: (_) => new ChildView(connection: conn),
+      disposer: () {
+        moduleController.stop(() {
+          viewOwner.close();
+          // NOTE(youngseokyoon): Not sure if it is safe to close the module
+          // controller within a callback passed to module controller, so do
+          // it in the next idle cycle.
+          scheduleMicrotask(() {
+            moduleController.ctrl.close();
           });
-        },
-        additionalData: moduleController,
-      );
-    },
-  );
+        });
+      },
+      additionalData: moduleController,
+    );
+  });
 }
