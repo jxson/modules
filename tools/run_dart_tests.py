@@ -42,13 +42,6 @@ class WorkerThread(threading.Thread):
             except Queue.Empty, e:
                 # no more packages
                 return
-            # Backup '.packages' file if it is a symlink.
-            # Otherwise, 'flutter test' may inadvertently overwrite the contents
-            # of the original '.packages' file that the symlink points to.
-            backup = False
-            if os.path.islink(package + '/.packages'):
-                os.rename(package + '/.packages', package + '/.packages.bak')
-                backup = True
             job = subprocess.Popen(
                 [FUCHSIA_ROOT + '/lib/flutter/bin/flutter', 'test'] +
                 self.args,
@@ -58,9 +51,6 @@ class WorkerThread(threading.Thread):
             stdout, stderr = job.communicate()
             output = stdout + stderr
             self.result_queue.put((package, job.returncode, output))
-            # Restore the '.packages' symlink if it was backed up before.
-            if backup:
-                os.rename(package + '/.packages.bak', package + '/.packages')
 
 
 def main():

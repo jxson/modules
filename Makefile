@@ -68,6 +68,8 @@ DART_ANALYSIS_FLAGS := --lints --fatal-lints --fatal-warnings
 gitbook = $(shell which gitbook)
 
 DART_PACKAGES = $(sort $(shell find . \( -name "pubspec.yaml" -or -name ".packages" \) ! -wholename "*/testdata/*" -exec dirname {} \;))
+GN_PROJECTS = $(shell find . -name "BUILD.gn" ! -wholename "*/testdata/*" -exec dirname {} \;)
+DART_PACKAGES_NO_FUCHSIA = $(filter-out $(GN_PROJECTS),$(DART_PACKAGES))
 DART_FILES = $(shell find . -name "*.dart" ! -wholename "*/.pub/*" ! -wholename "./*/packages/*" ! -wholename "*/testdata/*" ! -wholename "*/generated/*")
 DART_ANALYSIS_OPTIONS = $(addsuffix /.analysis_options, $(DART_PACKAGES))
 FIDL_FILES = $(shell find . -name "*.fidl")
@@ -146,15 +148,9 @@ coverage: dart-coverage ## Show coverage for all modules.
 
 .PHONY: run
 run: dart-gen-specs ## Run the gallery flutter app.
-	@if [ -L "gallery/.packages" ]; then \
-		rm gallery/.packages; \
-	fi;
 	@cd gallery && flutter run --hot
 
 run-email: ## Run the email flutter app.
-	@if [ -L "email/email_flutter/.packages" ]; then \
-		rm email/email_flutter/.packages; \
-	fi;
 	@cd email/email_flutter && flutter run --hot
 
 # TODO(jxson): Add gitbook as a third-party dependency.
@@ -189,12 +185,8 @@ $(DART_ANALYSIS_OPTIONS): $(DIRNAME)/.analysis_options
 	cp $< $@
 
 .PHONY: dart-base
-dart-base: build-fuchsia dart-symlinks $(addsuffix /.packages, $(DART_PACKAGES)) $(DART_ANALYSIS_OPTIONS)
+dart-base: build-fuchsia $(addsuffix /.packages, $(DART_PACKAGES_NO_FUCHSIA)) $(DART_ANALYSIS_OPTIONS)
 	@true
-
-.PHONY: dart-symlinks
-dart-symlinks:
-	@$(FUCHSIA_ROOT)/scripts/symlink-dot-packages.py --tree=//apps/modules/*
 
 .PHONY: dart-clean
 dart-clean:
@@ -281,8 +273,7 @@ dart-lint: dart-base
 			--tree=//apps/modules/* \
 			$(DART_ANALYSIS_FLAGS)
 	@# Next, run the dartanalyzer for regular dart packages without BUILD.gn
-	@for pkg in $(DART_PACKAGES); do \
-		if [ -e $${pkg}/BUILD.gn ]; then continue; fi; \
+	@for pkg in $(DART_PACKAGES_NO_FUCHSIA); do \
 		echo "** Running the dartanalyzer in '$${pkg}' ..."; \
 		pushd $${pkg} > /dev/null; \
 		dartanalyzer $(DART_ANALYSIS_FLAGS) . || exit 1; \
