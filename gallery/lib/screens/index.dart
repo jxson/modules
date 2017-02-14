@@ -4,7 +4,6 @@
 
 export 'common/error.dart';
 export 'common/widgets_gallery.dart';
-export 'contact/contact_card.dart';
 export 'email/editor.dart';
 export 'map/static_map.dart';
 export 'usps/tracking_status.dart';

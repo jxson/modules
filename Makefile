@@ -157,9 +157,6 @@ run-email: ## Run the email flutter app.
 	fi;
 	@cd email/email_flutter && flutter run --hot
 
-run-contact: ## Run the contact flutter app.
-	@cd contact/contact_flutter && flutter run --hot
-
 # TODO(jxson): Add gitbook as a third-party dependency.
 .PHONY: doc
 doc:
@@ -307,7 +304,7 @@ dart-presubmit: dart-gen-specs dart-fmt-check dart-fmt-extras-check dart-lint da
 auth: email/config.json ## Update email auth credentials with a refresh token.
 	@cd email/tools; \
 	pub run bin/oauth.dart
-	@for dir in contact/contact_flutter/assets email/email_flutter/assets email/email_service/assets email/map/assets email/usps/assets email/youtube_related_videos/assets email/youtube_video/assets gallery/assets; do \
+	@for dir in ../contacts/modules/contacts/assets email/email_flutter/assets email/email_service/assets email/map/assets email/usps/assets email/youtube_related_videos/assets email/youtube_video/assets gallery/assets; do \
 		mkdir -p $${dir}; \
 		cp email/config.json $${dir}/config.json; \
 	done

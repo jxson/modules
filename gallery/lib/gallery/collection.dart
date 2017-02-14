@@ -73,14 +73,6 @@ final List<GalleryItem> kGalleryCollection = <GalleryItem>[
         galleryScaffoldedScreen(item.title, new EmailNavScreen()),
   ),
   new GalleryItem(
-    title: 'Contact - Card',
-    subtitle: 'Contact Card',
-    group: GalleryGroups.screen,
-    href: '/contact/card',
-    builder: (BuildContext context, GalleryItem item, Config config) =>
-        galleryScaffoldedScreen(item.title, new ContactCardScreen()),
-  ),
-  new GalleryItem(
     title: 'Youtube - Thumbnail',
     subtitle: 'Youtube Thumbnail',
     group: GalleryGroups.screen,
