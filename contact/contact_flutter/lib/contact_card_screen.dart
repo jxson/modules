@@ -11,12 +11,6 @@ import 'package:widgets/contact.dart';
 
 /// UI Widget that shows the authenticated User's Contact Card
 class ContactCardScreen extends StatefulWidget {
-  /// ID of contact to show
-  final String contactId;
-
-  /// Constructor
-  ContactCardScreen({this.contactId});
-
   @override
   _ContactCardScreenState createState() => new _ContactCardScreenState();
 }
@@ -35,7 +29,7 @@ class _ContactCardScreenState extends State<ContactCardScreen> {
   Future<Null> _loadContact() async {
     try {
       ContactAPI api = await ContactAPI.fromConfig('assets/config.json');
-      Contact contact = await api.getUser(config.contactId ?? 'people/me');
+      Contact contact = await api.getUser('me');
       setState(() {
         _contact = contact;
         _loading = false;
@@ -44,11 +38,6 @@ class _ContactCardScreenState extends State<ContactCardScreen> {
       print(exception);
       print(stackTrace);
     }
-  }
-
-  @override
-  void didUpdateConfig(_) {
-    _loadContact();
   }
 
   @override

@@ -6,9 +6,6 @@ import 'package:models/contact.dart';
 
 /// Common Type Definitions
 
-/// Callback function signature for an action on a Contact
-typedef void ContactActionCallback(Contact contact);
-
 /// Callback function signature for an action on a PhoneEntry
 typedef void PhoneActionCallback(PhoneEntry phone);
 
