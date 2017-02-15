@@ -13,6 +13,7 @@ import 'related_artists.dart';
 import 'vertical_track_player.dart';
 
 /// UI Widget that represents the overview page of an album
+@ExampleSize(800.0, 1000.0)
 class AlbumPage extends StatefulWidget {
   /// Spotify Id of given album
   final String albumId;

@@ -36,6 +36,7 @@ List<Color> _kAllowedColors = <Color>[
 /// Alphatar is a 'circle avatar' to represent user profiles
 /// If no avatar URL is given for an Alphatar, then the letter of the users name
 /// along with a colored circle background will be used.
+@ExampleSize(40.0, 40.0)
 class Alphatar extends StatelessWidget {
   /// The [Image] to be displayed.
   final Image avatarImage;
@@ -56,7 +57,7 @@ class Alphatar extends StatelessWidget {
     Key key,
     this.avatarImage,
     @ExampleValue('G') this.letter,
-    this.size: 40.0,
+    @sizeParam this.size: 40.0,
     Color backgroundColor,
   })
       : backgroundColor = backgroundColor ?? _pickRandomColor(),

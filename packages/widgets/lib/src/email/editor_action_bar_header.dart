@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 /// Google Inbox style action header for the email editor
 ///
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 /// - adding an attachment
 /// - closing the editor
 /// - sending the email
+@ExampleSize(600.0, 70.0)
 class EditorActionBarHeader extends StatelessWidget {
   /// Callback for 'attach file' affordance
   final VoidCallback onAttach;

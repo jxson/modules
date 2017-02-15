@@ -6,3 +6,6 @@ export 'src/config_key.dart';
 export 'src/example_size.dart';
 export 'src/example_value.dart';
 export 'src/generator.dart';
+export 'src/height_param.dart';
+export 'src/size_param.dart';
+export 'src/width_param.dart';

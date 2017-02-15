@@ -29,8 +29,8 @@ class StaticMap extends StatelessWidget {
     @required @ConfigKey('google_api_key') this.apiKey,
     @ExampleValue('56 Henry, San Francisco, CA') this.location,
     int zoom,
-    double width,
-    double height,
+    @widthParam double width,
+    @heightParam double height,
   })
       : zoom = zoom ?? 5,
         width = width ?? 300.0,

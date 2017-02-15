@@ -155,13 +155,13 @@ class _RecipientInputState extends State<RecipientInput> {
     rowChildren.add(new Container(
       width: 100.0,
       child: new InputField(
-          onChanged: _handleInputChange,
-          onSubmitted: _handleInputSubmit,
-          value: _currentInput,
-          focusKey: focusKey,
-          key: _inputFieldKey,
-          style: inputStyle,
-        ),
+        onChanged: _handleInputChange,
+        onSubmitted: _handleInputSubmit,
+        value: _currentInput,
+        focusKey: focusKey,
+        key: _inputFieldKey,
+        style: inputStyle,
+      ),
     ));
 
     // TODO(dayang): Tapping on the entire container should bring focus to the

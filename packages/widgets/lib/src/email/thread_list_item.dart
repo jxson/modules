@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:models/email.dart';
+import 'package:widgets_meta/widgets_meta.dart';
 
 import '../user/alphatar.dart';
 import 'archive_dismissable_background.dart';
@@ -16,6 +17,7 @@ final Color _kSelectedBgColor = Colors.blue[200].withOpacity(0.2);
 /// [ThreadListItem] is a [StatelessWidget]
 ///
 /// An item that represents a single thread in inbox view
+@ExampleSize(800.0, 100.0)
 class ThreadListItem extends StatelessWidget {
   /// The [Thread] that this List Item should render
   final Thread thread;
