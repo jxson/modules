@@ -112,60 +112,63 @@ class GalleryWidgetWrapperState extends State<GalleryWidgetWrapper> {
           '$e');
     }
 
-    return new ListView(shrinkWrap: true, children: <Widget>[
-      new Container(
-        decoration: new BoxDecoration(
-          border: new Border.all(color: Colors.grey[500]),
-          borderRadius: new BorderRadius.all(new Radius.circular(_kBoxRadius)),
+    return new BlockBody(
+      children: <Widget>[
+        new Container(
+          decoration: new BoxDecoration(
+            border: new Border.all(color: Colors.grey[500]),
+            borderRadius:
+                new BorderRadius.all(new Radius.circular(_kBoxRadius)),
+          ),
+          margin: const EdgeInsets.all(_kMargin),
+          child: new Container(
+            child: new Container(
+              margin: const EdgeInsets.all(_kMargin),
+              child: new BlockBody(
+                children: <Widget>[
+                  new Text(
+                    'Parameters',
+                    style: new TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  new Table(
+                    children: genState.buildParameterTableRows(context),
+                    columnWidths: <int, TableColumnWidth>{
+                      0: const IntrinsicColumnWidth(),
+                      1: const FixedColumnWidth(_kMargin),
+                      2: const IntrinsicColumnWidth(),
+                      3: const FixedColumnWidth(_kMargin),
+                      4: const FlexColumnWidth(1.0),
+                    },
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
-        margin: const EdgeInsets.all(_kMargin),
-        child: new Container(
+        new Container(
+          decoration: new BoxDecoration(
+            border: new Border.all(color: Colors.grey[500]),
+            borderRadius:
+                new BorderRadius.all(new Radius.circular(_kBoxRadius)),
+          ),
+          margin: const EdgeInsets.all(_kMargin),
           child: new Container(
             margin: const EdgeInsets.all(_kMargin),
-            child: new ListView(
-              shrinkWrap: true,
+            child: new Row(
               children: <Widget>[
-                new Text(
-                  'Parameters',
-                  style: new TextStyle(fontWeight: FontWeight.bold),
+                new Container(
+                  width: config.width,
+                  height: config.height,
+                  child: widget,
                 ),
-                new Table(
-                  children: genState.buildParameterTableRows(context),
-                  columnWidths: <int, TableColumnWidth>{
-                    0: const IntrinsicColumnWidth(),
-                    1: const FixedColumnWidth(_kMargin),
-                    2: const IntrinsicColumnWidth(),
-                    3: const FixedColumnWidth(_kMargin),
-                    4: const FlexColumnWidth(1.0),
-                  },
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                ),
+                new Expanded(child: new Container()),
               ],
             ),
           ),
         ),
-      ),
-      new Container(
-        decoration: new BoxDecoration(
-          border: new Border.all(color: Colors.grey[500]),
-          borderRadius: new BorderRadius.all(new Radius.circular(_kBoxRadius)),
-        ),
-        margin: const EdgeInsets.all(_kMargin),
-        child: new Container(
-          margin: const EdgeInsets.all(_kMargin),
-          child: new Row(
-            children: <Widget>[
-              new Container(
-                width: config.width,
-                height: config.height,
-                child: widget,
-              ),
-              new Expanded(child: new Container()),
-            ],
-          ),
-        ),
-      ),
-    ]);
+      ],
+    );
   }
 
   void _updateKey() {

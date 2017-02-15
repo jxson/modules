@@ -90,9 +90,13 @@ ${specs.pathFromFuchsiaRoot != null ? '**Defined In**: `FUCHSIA_ROOT/${specs.pat
       alignment: FractionalOffset.topLeft,
       child: new ListView(
         children: <Widget>[
-          new Markdown(
-            data: markdownText,
-            markdownStyle: new MarkdownStyle.largeFromTheme(Theme.of(context)),
+          new Container(
+            padding: const EdgeInsets.all(16.0),
+            child: new MarkdownBody(
+              data: markdownText,
+              markdownStyle:
+                  new MarkdownStyle.largeFromTheme(Theme.of(context)),
+            ),
           ),
           _buildSizeControl(),
           new GalleryWidgetWrapper(
