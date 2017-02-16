@@ -12,6 +12,7 @@ dart_package("fixtures") {
   deps = [
     "//apps/modules/packages/util",
     "//lib/flutter/packages/flutter",
+    "//third_party/dart-pkg/pub/lorem",
     "//third_party/dart-pkg/pub/uuid",
   ]
 

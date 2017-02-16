@@ -4,6 +4,7 @@
 
 import 'dart:math';
 
+import 'package:lorem/lorem.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
@@ -31,7 +32,12 @@ class FixturesError extends StateError {
 class Fixtures {
   final Set<String> _names = new Set<String>();
   final Map<String, Sequence> _sequences = new Map<String, Sequence>();
-  final Random _rng = new Random();
+
+  /// Random number generator to be used by [Fixtures] and other subclasses.
+  final Random rng = new Random();
+
+  /// A Lorem Ipsum generator to be used by [Fixtures] and other subclasses.
+  final Lorem lorem = new Lorem();
 
   /// Global [Uuid] generator.
   static final Uuid _uuid = new Uuid();
@@ -131,7 +137,7 @@ class Fixtures {
 
   /// Genrate a random [int] no greater than [max].
   int number([int max]) {
-    return _rng.nextInt(max);
+    return rng.nextInt(max);
   }
 
   /// Generates sequenced String ids based on key.

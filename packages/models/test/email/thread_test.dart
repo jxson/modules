@@ -41,7 +41,7 @@ void main() {
             text: 'Woof Woof. I\'m so hungry. You need to feed me!'),
       ]);
 
-      expect(thread.getSubject(), '(No Subject)');
+      expect(thread.getSubject(), isNotNull);
     });
 
     test('empty message subject', () {

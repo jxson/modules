@@ -141,8 +141,8 @@ class ModelFixtures extends Fixtures {
       senderProfileUrl: null,
       recipientList: to?.map((User recipient) => recipient.mailbox)?.toList(),
       ccList: cc?.map((User recipient) => recipient.mailbox)?.toList(),
-      subject: subject,
-      text: text,
+      subject: subject ?? lorem.createSentence(),
+      text: text ?? lorem.createText(),
       timestamp: timestamp ?? new DateTime.now(),
       isRead: isRead ?? false,
       attachments: attachments,
@@ -151,11 +151,10 @@ class ModelFixtures extends Fixtures {
 
   /// Generate a [Thread].
   Thread thread([List<Message> messages]) {
-    // TODO(jasoncampbell): randomize the number of messages once content can
-    // be generated.
-    messages ??= <Message>[
-      message(),
-    ];
+    messages ??= new List<Message>.generate(
+      rng.nextInt(3) + 1,
+      (int _) => message(),
+    );
 
     return new Thread(
       id: id('thread'),
