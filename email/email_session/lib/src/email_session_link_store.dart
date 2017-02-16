@@ -35,7 +35,7 @@ class EmailSessionLinkStore extends Store implements EmailSessionStore {
   }
 
   void _onUpdate(dynamic json) {
-    _log("Received _onUpdate $json");
+    _log('Received _onUpdate $json');
     if (json is! Map) {
       return null;
     }
