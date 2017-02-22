@@ -112,7 +112,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
         child: new Center(
           child: new IconButton(
             icon: _playing ? new Icon(Icons.pause) : new Icon(Icons.play_arrow),
-            size: 60.0,
+            iconSize: 60.0,
             onPressed: _togglePlay,
             color: Colors.white,
           ),

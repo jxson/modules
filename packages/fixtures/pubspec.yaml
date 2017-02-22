@@ -10,4 +10,6 @@ dependencies:
     path: ../models
   uuid: 0.5.3
 dev_dependencies:
-  test: 0.12.15+6
+  flutter_test:
+    sdk: flutter
+  test: any
