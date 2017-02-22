@@ -3,6 +3,20 @@ Modules
 
 > This repository is a workspace and incubator for Fuchsia modules.
 
+# Running Modules
+
+NOTE: On OS X there can be an annoying firewall dialog every time the Magenta tools are rebuilt. To prevent the dialog disable the firewall or sign the new binaries, for instance to sign the `netruncmd`:
+
+    sudo codesign --force --sign - $FUCHSIA_DIR/out/build-magenta/tools/netruncmd
+
+The dialog will now only appear the first time the command is run, at least until it gets rebuilt.
+
+# Debugging
+
+Listen to device logs:
+
+    $FUCHSIA_DIR/out/build-magenta/tools/loglistener
+
 # Email
 
 ## Configure
