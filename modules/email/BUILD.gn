@@ -17,5 +17,5 @@ flutter_app("email") {
     "//lib/flutter/packages/flutter",
   ]
 
-  analysis_options = "//apps/email/.analysis_options"
+  analysis_options = "//apps/modules/.analysis_options"
 }

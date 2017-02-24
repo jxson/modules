@@ -2,67 +2,29 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-MAKEFLAGS += --warn-undefined-variables --no-print-directory
-SHELL := /bin/bash
-
-.SHELLFLAGS := -eu -o pipefail -c
-.DEFAULT_GOAL := all
-.DELETE_ON_ERROR:
-.SUFFIXES:
-
-root := $(shell pwd)
+# Assumes that the project is located two levels deep in the Fuchsia tree, for
+# example: $FUCHSIA_DIR/apps/<project>. Change to suit the project location.
+root := $(shell git rev-parse --show-toplevel)
 fuchsia_root := $(realpath $(root)/../..)
-fuchsia_out := $(realpath $(fuchsia_root)/out)
-flutter_bin := $(fuchsia_root)/lib/flutter/bin
-flutter := $(flutter_bin)/flutter
-sources := $(shell find $(root) \
-    -name "*.dart" \
-    -o -name "*.fidl" \
-    -o -name "*.gn" \
-    -o -name "*.sh" \
-    -o -name "*.yaml")
+common_root := $(realpath $(fuchsia_root)/apps/modules/tools/common)
+common_makfile := $(realpath $(common_root)/Makefile)
 
-PHONY: all
-all: build
+PROJECT := email
 
-PHONY: build
-build: ## Build Fuchsia (including this app).
-	./tools/build.sh
+include $(common_makfile)
+
+PHONY: fmt
+fmt: dart-fmt ## Format the code in this project.
 
 PHONY: test
-test: ## Run the tests.
+test: ## run the tests.
 	@true
 
-PHONY: test
+PHONY: presubmit
 presubmit: lint test
 
-PHONY: run
-run: ## Run on Fuchsia.
-	./tools/run.sh
+PHONY: presubmit-cq
+presubmit-cq: lint test
 
 PHONY: lint
 lint: dart-lint copyright-check ## Lint the code.
-
-PHONY: flutter
-flutter-run: ## Run via `flutter run`.
-	# TODO(jasoncampbell): Trap and remove .packages when this process is
-	# done.
-	cd $(root)/modules/chat && \
-		$(flutter) upgrade && \
-		$(flutter) build clean && \
-		$(flutter) run --hot
-
-PHONY: dart-lint
-dart-lint: build
-	$(fuchsia_root)/scripts/run-dart-analysis.py \
-			--out=$(fuchsia_out)/debug-x86-64 \
-			--tree=//apps/chat/* \
-			--lints --fatal-lints --fatal-warnings
-
-PHONY: copyright-check
-copyright-check: ## Check source files for missing copyright.
-	@./tools/copyright-check.sh $(sources)
-
-.PHONY: help
-help: ## Displays this help message.
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "%-20s %s\n", $$1, $$2}'
