@@ -14,7 +14,8 @@ Future<Null> main(List<String> args) async {
   String filename = resolve('config.json');
   Config config = await Config.read(filename);
 
-  if (config.has('oauth_id') == false || config.has('oauth_secret') == false) {
+  if (config.has('oauth_id') == false ||
+      config.has('oauth_secret') == false) {
     String message = '''
 Config keys for "oauth_id" and "oauth_secret" are required in file:
 
@@ -30,6 +31,7 @@ Config keys for "oauth_id" and "oauth_secret" are required in file:
       clientId, config.scopes, client, _prompt);
   client.close();
 
+  config.put('id_token', credentials.idToken);
   config.put('oauth_token', credentials.accessToken.data);
   config.put('oauth_token_expiry', credentials.accessToken.expiry.toString());
   config.put('oauth_refresh_token', credentials.refreshToken);

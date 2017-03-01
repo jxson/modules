@@ -15,6 +15,8 @@ abstract class BaseConfig {
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/youtube.readonly',
     'https://www.googleapis.com/auth/contacts',
+    'https://www.googleapis.com/auth/plus.login',
+    'https://www.googleapis.com/auth/firebase.database',
   ];
 
   final Map<String, dynamic> _data = <String, dynamic>{};

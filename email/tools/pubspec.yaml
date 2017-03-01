@@ -4,7 +4,8 @@
 
 name: tools
 dependencies:
-  googleapis_auth: ^0.2.3
+  googleapis_auth:
+    git: https://github.com/jxson/googleapis_auth.git
   googleapis: ^0.32.0
   http: ^0.11.3
   path: ^1.4.0
