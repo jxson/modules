@@ -18,4 +18,28 @@ void main() {
     DateTime time2 = DateTime.parse('1969-07-21 06:18:00');
     expect(TimeUtil.isSameDay(time1, time2), false);
   });
+
+  test(
+      'relativeDisplayDate() should return minutes/hour/period'
+      'format if the date is the same day as the reference date', () {
+    DateTime date = DateTime.parse('1969-07-20 20:18:00');
+    DateTime referenceDate = DateTime.parse('1969-07-20 23:18:00');
+    String displayDate = TimeUtil.relativeDisplayDate(
+      date: date,
+      relativeTo: referenceDate,
+    );
+    expect(displayDate, '8:18 PM');
+  });
+
+  test(
+      'relativeDisplayDate() should return Month/Day'
+      'format if the date is not same day as the reference date', () {
+    DateTime date = DateTime.parse('1969-07-19 20:18:00');
+    DateTime referenceDate = DateTime.parse('1969-07-20 23:18:00');
+    String displayDate = TimeUtil.relativeDisplayDate(
+      date: date,
+      relativeTo: referenceDate,
+    );
+    expect(displayDate, 'Jul 19');
+  });
 }

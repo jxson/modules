@@ -98,7 +98,7 @@ class ThreadListItemSingleLine extends StatelessWidget {
     final Widget timestamp = new Container(
       padding: const EdgeInsets.only(left: 32.0),
       child: new Text(
-        lastMessage.getDisplayDate(),
+        lastMessage.displayDate,
         style: new TextStyle(
           fontSize: 12.0,
           color: Colors.grey[500],

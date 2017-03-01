@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:collection/collection.dart';
-import 'package:intl/intl.dart';
 import 'package:quiver/core.dart' as quiver;
 import 'package:util/time_util.dart';
 import 'package:widgets_meta/widgets_meta.dart';
@@ -147,22 +146,11 @@ class Message {
     return (text ?? '').replaceAll('\r\n', ' ').replaceAll('\n', ' ');
   }
 
-  /// Get 'Display Date' for [Message]
-  ///
-  /// Rules for Display Date:
-  /// 1. Show minutes/hour/am-pm for timestamps in the same day.
-  ///    Ex: 10:44 pm
-  /// 2. Show month abbreviation + day for timestamps not in the same day.
-  ///    Ex. Aug 15
-  String getDisplayDate({DateTime relativeTo}) {
-    if (relativeTo == null) {
-      relativeTo = new DateTime.now();
-    }
-    if (TimeUtil.isSameDay(relativeTo, timestamp)) {
-      return new DateFormat.jm().format(timestamp);
-    } else {
-      return new DateFormat.MMMd().format(timestamp);
-    }
+  /// Get 'Display Date' for [Message] as the relative display date
+  String get displayDate {
+    return TimeUtil.relativeDisplayDate(
+      date: timestamp,
+    );
   }
 
   @override

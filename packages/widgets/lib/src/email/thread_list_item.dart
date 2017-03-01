@@ -85,7 +85,7 @@ class ThreadListItem extends StatelessWidget {
           child: new Container(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              lastMessage.getDisplayDate(),
+              lastMessage.displayDate,
               style: new TextStyle(
                 fontSize: 12.0,
                 color: Colors.grey[500],

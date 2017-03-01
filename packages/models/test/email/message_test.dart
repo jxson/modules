@@ -17,28 +17,4 @@ void main() {
     Message message = new Message(text: messageText);
     expect(message.generateSnippet(), 'Puppies in Paris');
   });
-
-  test(
-      'getDisplayDate() should return minutes/hour/period'
-      'format if currentDate is same as message date', () {
-    Message message = new Message(
-      text: 'Baku in the Bathroom',
-      timestamp: DateTime.parse('1969-07-20 20:18:00'),
-    );
-    DateTime currentDate = DateTime.parse('1969-07-20 23:18:00');
-    String displayDate = message.getDisplayDate(relativeTo: currentDate);
-    expect(displayDate, '8:18 PM');
-  });
-
-  test(
-      'getDisplayDate() should return Month/Day'
-      'format if currentDate is not same as message date', () {
-    Message message = new Message(
-      text: 'Baku in the Bathroom',
-      timestamp: DateTime.parse('1969-07-19 20:18:00'),
-    );
-    DateTime currentDate = DateTime.parse('1969-07-20 23:18:00');
-    String displayDate = message.getDisplayDate(relativeTo: currentDate);
-    expect(displayDate, 'Jul 19');
-  });
 }

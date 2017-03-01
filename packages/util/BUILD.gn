@@ -11,6 +11,7 @@ dart_package("util") {
 
   deps = [
     "//lib/flutter/packages/flutter",
+    "//third_party/dart-pkg/pub/intl",
   ]
 
   analysis_options = "//apps/modules/.analysis_options"

@@ -7,6 +7,7 @@ description: Utilities
 dependencies:
   flutter:
     sdk: flutter
+  intl: ^0.14.0
 dev_dependencies:
   test: any
   flutter_test:

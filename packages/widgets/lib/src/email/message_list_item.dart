@@ -70,7 +70,7 @@ class MessageListItem extends StatelessWidget {
             child: titleText,
           ),
           new Text(
-            message.getDisplayDate(),
+            message.displayDate,
             style: new TextStyle(
               fontSize: 12.0,
               color: Colors.grey[500],
