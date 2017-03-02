@@ -14,6 +14,7 @@ import 'package:apps.modular.services.story/module.fidl.dart';
 import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
+import 'package:models/music.dart';
 import 'package:widgets/music.dart';
 
 final ApplicationContext _context = new ApplicationContext.fromStartupInfo();
@@ -149,8 +150,8 @@ class HomeScreenState extends State<HomeScreen> {
         child: _albumId != null
             ? new AlbumPage(
                 albumId: _albumId,
-                onChanged: (album) =>
-                    _artistNamePub.update(album?.artists.first.name))
+                onChanged: (Album album) =>
+                    _artistNamePub.update(album?.artists?.first?.name))
             : new CircularProgressIndicator(),
       ),
     );
