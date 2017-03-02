@@ -14,8 +14,7 @@ Future<Null> main(List<String> args) async {
   String filename = resolve('config.json');
   Config config = await Config.read(filename);
 
-  if (config.has('oauth_id') == false ||
-      config.has('oauth_secret') == false) {
+  if (config.has('oauth_id') == false || config.has('oauth_secret') == false) {
     String message = '''
 Config keys for "oauth_id" and "oauth_secret" are required in file:
 

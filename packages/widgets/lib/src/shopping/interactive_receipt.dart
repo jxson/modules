@@ -481,10 +481,13 @@ class _AnimatedPhoneImage extends AnimatedWidget {
     Animation<double> animation,
     this.imageUrl,
   })
-      : super(key: key, animation: animation);
+      : super(key: key, listenable: animation);
 
   @override
   Widget build(BuildContext context) {
+    // ignore: strong_mode_down_cast_composite
+    final Animation<double> animation = this.listenable;
+
     return new Container(
       height: 100.0 + 100 * animation.value,
       width: 100.0 + 100 * animation.value,
