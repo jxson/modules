@@ -12,19 +12,3 @@ common_makfile := $(realpath $(common_root)/Makefile)
 PROJECT := email
 
 include $(common_makfile)
-
-PHONY: fmt
-fmt: dart-fmt ## Format the code in this project.
-
-PHONY: test
-test: ## run the tests.
-	@true
-
-PHONY: presubmit
-presubmit: lint test
-
-PHONY: presubmit-cq
-presubmit-cq: lint test
-
-PHONY: lint
-lint: dart-lint copyright-check ## Lint the code.
