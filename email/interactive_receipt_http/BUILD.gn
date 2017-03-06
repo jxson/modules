@@ -11,6 +11,7 @@ flutter_app("interactive_receipt_http") {
   deps = [
     "//application/lib/app/dart",
     "//application/services:services_dart",
+    "//apps/modular/services/module:module_dart",
     "//apps/modular/services/story:story_dart",
     "//apps/modules/packages/widgets",
     "//apps/mozart/lib/flutter",

@@ -4,9 +4,9 @@
 
 import 'package:application.lib.app.dart/app.dart';
 import 'package:application.services/service_provider.fidl.dart';
+import 'package:apps.modular.services.module/module.fidl.dart';
+import 'package:apps.modular.services.module/module_context.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
-import 'package:apps.modular.services.story/module.fidl.dart';
-import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.modules.email.services/email_session.fidl.dart' as es;
 import 'package:email_session_store/email_session_store.dart';
 import 'package:lib.fidl.dart/bindings.dart';
@@ -80,7 +80,7 @@ class EmailSessionModule extends Module {
   /// [Story] service given by the framework.
   ///
   /// This can be used to spawn new sub-modules and control their lifecycles.
-  final StoryProxy story = new StoryProxy();
+  final ModuleContextProxy moduleContext = new ModuleContextProxy();
 
   /// [Link] for watching the[EmailSession] state.
   final LinkProxy _emailSessionLinkProxy = new LinkProxy();
@@ -104,13 +104,13 @@ class EmailSessionModule extends Module {
   /// Implementation of the Initialize(Story story, Link link) method.
   @override
   void initialize(
-    InterfaceHandle<Story> storyHandle,
+    InterfaceHandle<ModuleContext> moduleContextHandle,
     InterfaceHandle<Link> linkHandle,
     InterfaceHandle<ServiceProvider> incomingServicesHandle,
     InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('EmailSessionModuleInit::initialize call');
-    story.ctrl.bind(storyHandle);
+    moduleContext.ctrl.bind(moduleContextHandle);
     _incomingServices.ctrl.bind(incomingServicesHandle);
     connectToService(_incomingServices, _emailSessionService.ctrl);
     _emailSessionLinkProxy.ctrl.bind(linkHandle);

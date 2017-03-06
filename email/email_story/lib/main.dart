@@ -4,10 +4,10 @@
 
 import 'package:application.lib.app.dart/app.dart';
 import 'package:application.services/service_provider.fidl.dart';
+import 'package:apps.modular.services.module/module.fidl.dart';
+import 'package:apps.modular.services.module/module_context.fidl.dart';
+import 'package:apps.modular.services.module/module_controller.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
-import 'package:apps.modular.services.story/module.fidl.dart';
-import 'package:apps.modular.services.story/module_controller.fidl.dart';
-import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.mozart.lib.flutter/child_view.dart';
 import 'package:apps.mozart.services.views/view_token.fidl.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +65,7 @@ class ModuleImpl extends Module {
   final ModuleBinding _binding = new ModuleBinding();
 
   /// [Story] service provided by the framework.
-  final StoryProxy story = new StoryProxy();
+  final ModuleContextProxy moduleContext = new ModuleContextProxy();
 
   /// [Link] service provided by the framework.
   final LinkProxy link = new LinkProxy();
@@ -86,14 +86,14 @@ class ModuleImpl extends Module {
   /// Implementation of the Initialize(Story story, Link link) method.
   @override
   void initialize(
-    InterfaceHandle<Story> storyHandle,
+    InterfaceHandle<ModuleContext> moduleContextHandle,
     InterfaceHandle<Link> linkHandle,
     InterfaceHandle<ServiceProvider> incomingServices,
     InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
 
-    story.ctrl.bind(storyHandle);
+    moduleContext.ctrl.bind(moduleContextHandle);
     link.ctrl.bind(linkHandle);
 
     // Binding between email service and email session.
@@ -146,7 +146,7 @@ class ModuleImpl extends Module {
   @override
   void stop(void callback()) {
     _log('ModuleImpl::stop call');
-    story.ctrl.close();
+    moduleContext.ctrl.close();
     link.ctrl.close();
     emailSessionProvider.ctrl.close();
     serviceProviders.forEach((ServiceProviderWrapper s) => s.close());

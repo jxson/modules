@@ -7,9 +7,9 @@ import 'dart:convert';
 
 import 'package:application.lib.app.dart/app.dart';
 import 'package:application.services/service_provider.fidl.dart';
+import 'package:apps.modular.services.module/module.fidl.dart';
+import 'package:apps.modular.services.module/module_context.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
-import 'package:apps.modular.services.story/module.fidl.dart';
-import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:config_flutter/config.dart';
 import 'package:flutter/material.dart';
 import 'package:lib.fidl.dart/bindings.dart';
@@ -84,7 +84,7 @@ class ModuleImpl extends Module {
 
   @override
   void initialize(
-    InterfaceHandle<Story> storyHandle,
+    InterfaceHandle<ModuleContext> moduleContextHandle,
     InterfaceHandle<Link> linkHandle,
     InterfaceHandle<ServiceProvider> incomingServicesHandle,
     InterfaceRequest<ServiceProvider> outgoingServices,

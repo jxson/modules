@@ -7,10 +7,10 @@ import 'dart:convert';
 
 import 'package:application.lib.app.dart/app.dart';
 import 'package:application.services/service_provider.fidl.dart';
+import 'package:apps.modular.services.module/module.fidl.dart';
+import 'package:apps.modular.services.module/module_context.fidl.dart';
+import 'package:apps.modular.services.module/module_controller.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
-import 'package:apps.modular.services.story/module.fidl.dart';
-import 'package:apps.modular.services.story/module_controller.fidl.dart';
-import 'package:apps.modular.services.story/story.fidl.dart';
 import 'package:apps.mozart.lib.flutter/child_view.dart';
 import 'package:apps.mozart.services.views/view_token.fidl.dart';
 import 'package:config_flutter/config.dart';
@@ -88,7 +88,7 @@ class ModuleImpl extends Module {
   final ModuleBinding _binding = new ModuleBinding();
 
   /// [Story] service provided by the framework.
-  final StoryProxy story = new StoryProxy();
+  final ModuleContextProxy moduleContext = new ModuleContextProxy();
 
   /// The [LinkProxy] from which this module gets the tracking code
   final LinkProxy link = new LinkProxy();
@@ -102,14 +102,14 @@ class ModuleImpl extends Module {
 
   @override
   void initialize(
-    InterfaceHandle<Story> storyHandle,
+    InterfaceHandle<ModuleContext> moduleContextHandle,
     InterfaceHandle<Link> linkHandle,
     InterfaceHandle<ServiceProvider> incomingServicesHandle,
     InterfaceRequest<ServiceProvider> outgoingServices,
   ) {
     _log('ModuleImpl::initialize call');
 
-    story.ctrl.bind(storyHandle);
+    moduleContext.ctrl.bind(moduleContextHandle);
 
     // Bind the link handle and register the link watcher.
     link.ctrl.bind(linkHandle);
@@ -244,7 +244,7 @@ void _addEmbeddedChildBuilders() {
       InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
 
       _log('before startModule!');
-      _module.story.startModule(
+      _module.moduleContext.startModule(
         _kMapModuleUrl,
         _module.duplicateLink(),
         null,
