@@ -62,7 +62,7 @@ class ModuleImpl extends Module {
   ) {
     _log('ModuleImpl::initialize call');
 
-    moduleContext.ctrl.bind(moduleContext);
+    moduleContext.ctrl.bind(moduleContextHandle);
 
     // Bind the link handle and write the video id.
     link.ctrl.bind(linkHandle);

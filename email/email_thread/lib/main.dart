@@ -66,7 +66,7 @@ void _addEmbeddedChildBuilder() {
     // Create a new link, add necessary data to it, and create a duplicate of
     // it to be passed to the sub-module.
     LinkProxy link = new LinkProxy();
-    _module.story.createLink(type, link.ctrl.request());
+    _module.moduleContext.createLink(type, link.ctrl.request());
 
     if (docRoot != null && propKey != null && propKey is String) {
       Map<String, dynamic> childDoc = <String, dynamic>{
@@ -79,7 +79,7 @@ void _addEmbeddedChildBuilder() {
     ModuleControllerProxy moduleController = new ModuleControllerProxy();
     InterfacePair<ViewOwner> viewOwnerPair = new InterfacePair<ViewOwner>();
 
-    _module.story.startModule(
+    _module.moduleContext.startModule(
       moduleUrl,
       link.ctrl.unbind(),
       null,

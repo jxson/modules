@@ -169,7 +169,7 @@ class ModuleImpl extends Module {
         new InterfacePair<ModuleController>();
 
     _log('Starting sub-module: $url');
-    story.startModule(
+    moduleContext.startModule(
       url,
       duplicateLink(),
       outgoingServices,
