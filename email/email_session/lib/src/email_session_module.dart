@@ -77,7 +77,7 @@ class EmailSessionModule extends Module {
   /// [EmailSession] service obtained from the incoming [ServiceProvider].
   final es.EmailSessionProxy _emailSessionService = new es.EmailSessionProxy();
 
-  /// [Story] service given by the framework.
+  /// [ModuleContext] service given by the framework.
   ///
   /// This can be used to spawn new sub-modules and control their lifecycles.
   final ModuleContextProxy moduleContext = new ModuleContextProxy();

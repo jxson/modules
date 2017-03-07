@@ -87,7 +87,7 @@ class LinkWatcherImpl extends LinkWatcher {
 class ModuleImpl extends Module {
   final ModuleBinding _binding = new ModuleBinding();
 
-  /// [Story] service provided by the framework.
+  /// [ModuleContext] service provided by the framework.
   final ModuleContextProxy moduleContext = new ModuleContextProxy();
 
   /// The [LinkProxy] from which this module gets the tracking code

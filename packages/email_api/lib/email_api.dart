@@ -184,6 +184,11 @@ class EmailAPI {
       maxResults: max,
     );
 
+    // TODO(jasoncampbell): handle error and empty cases.
+    if (response.threads == null) {
+      return <Thread>[];
+    }
+
     Iterable<Future<Thread>> requests =
         response.threads.map((gmail.Thread thread) {
       return new Future<Thread>(() async {
