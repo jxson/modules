@@ -10,8 +10,8 @@ dart_package("email_session_store") {
   source_dir = "lib"
 
   deps = [
+    "//apps/email/packages/email_api",
     "//apps/modules/packages/config_flutter",
-    "//apps/modules/packages/email_api",
     "//apps/modules/packages/models",
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/flutter_flux",

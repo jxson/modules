@@ -6,7 +6,7 @@ name: email_session_store
 description: Action and store interface definition for the email session store.
 dependencies:
   config_flutter:
-    path: ../config_flutter
+    path: ../../../modules/packages/config_flutter
   email_api:
     path: ../email_api
   flutter:
@@ -14,7 +14,4 @@ dependencies:
   flutter_flux:
     path: ../../../../third_party/dart-pkg/pub/flutter_flux
   models:
-    path: ../models
-dependency_overrides:
-  http:
-    path: ../../packages/flutter-http/
+    path: ../../../modules/packages/models

@@ -1,0 +1,16 @@
+# Copyright 2016 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+name: email_story
+description: A new flutter project.
+
+dependencies:
+  email_session_store:
+    path: ../../packages/email_session_store
+  flutter:
+    sdk: flutter
+  widgets:
+    path: ../../../modules/packages/widgets
+flutter:
+  uses-material-design: true

@@ -10,5 +10,7 @@ common_root := $(realpath $(fuchsia_root)/apps/modules/tools/common)
 common_makfile := $(realpath $(common_root)/Makefile)
 
 PROJECT := email
+FLUTTER_TARGET := modules/story
+FUCHSIA_TARGET := email_story
 
 include $(common_makfile)

@@ -2,13 +2,6 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-group("modules") {
-  deps = [
-    "nav",
-    "service",
-    "session",
-    "story",
-    "thread_list",
-    "thread",
-  ]
-}
+name: email_service
+flutter:
+  uses-material-design: true

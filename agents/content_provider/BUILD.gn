@@ -1,0 +1,19 @@
+# Copyright 2017 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//apps/dart_content_handler/dart_app.gni")
+
+dart_app("content_provider") {
+  main_dart = "lib/main.dart"
+
+  deps = [
+    "//application/lib/app/dart",
+    "//application/services:services_dart",
+    "//apps/maxwell/services/suggestion:suggestion_dart",
+    "//apps/modular/services/agent:agent_dart",
+    "//apps/email/packages/email_api",
+    "//apps/email/services:services_dart",
+    "//lib/fidl/dart",
+  ]
+}

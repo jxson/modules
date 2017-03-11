@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:config_flutter/config.dart';
+import 'package:config/config.dart';
 import 'package:googleapis/gmail/v1.dart' as gmail;
 import 'package:googleapis/oauth2/v2.dart' as oauth;
 import 'package:googleapis_auth/auth_io.dart';
@@ -29,6 +29,9 @@ class EmailAPI {
   Client _baseClient;
   AutoRefreshingAuthClient _client;
   gmail.GmailApi _gmail;
+
+  // TODO(vardhan): Do we need to track separate historyIds per-label?
+  String _latestHistoryId;
 
   /// The [EmailAPI] constructor.
   EmailAPI({
@@ -57,6 +60,7 @@ class EmailAPI {
   /// Create an instance of [EmailAPI] by loading a config file.
   static Future<EmailAPI> fromConfig(String src) async {
     Config config = await Config.read(src);
+
     List<String> keys = <String>[
       'oauth_id',
       'oauth_secret',
@@ -173,6 +177,22 @@ class EmailAPI {
     );
   }
 
+  /// Returns the number of new email for the given labelId since the previous
+  /// threads() call on the labelId.
+  // TODO(vardhan): This returns a false positive for all history events, not
+  // just new email. Filter, or rework the behaviour of updating emails.
+  Future<int> fetchNewEmail({String labelId: 'INBOX', int max: 15}) async {
+    // It could be that we have not finished fetching initial emails yet. In
+    // which case, there are no new emails.
+    if (_latestHistoryId == null) {
+      return 0;
+    }
+
+    gmail.ListHistoryResponse response = await _gmail.users.history.list('me',
+        labelId: labelId, maxResults: max, startHistoryId: _latestHistoryId);
+    return response.history == null ? 0 : response.history.length;
+  }
+
   /// Get a list of [Thread]s from the Gmail REST API.
   Future<List<Thread>> threads({
     String labelId: 'INBOX',
@@ -198,6 +218,8 @@ class EmailAPI {
 
     Stream<Thread> stream = new Stream<Thread>.fromFutures(requests);
     List<Thread> threads = await stream.toList();
+    // According to the Gmail API, the response is ordered from newest->oldest.
+    _latestHistoryId = threads[0].historyId;
 
     return threads;
   }

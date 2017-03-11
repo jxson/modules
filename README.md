@@ -1,18 +1,19 @@
-# Chat
+# Email
 
 > Status: Experimental
-
-What exists here mostly boilerplate for the tooling and infrastructure needed
-to build out the UI as a set of Flutter Widgets that can be run on Fuchsia and have the UI developed on Android.
 
 # Structure
 
 This repo contains code for running a vanilla [Flutter][flutter] application (iOS & Android) and a [Fuchsia][fuchsia] specific set of [modules][modular].
 
 * **modules**: Fuchsia application code using Modular APIs.
-  * **chat**: Is a Flutter app with two entry points, one for Fuchsia and one for Vanilla Flutter.
-* **services**: [FIDL][fidl] service definitions.
-* **tools**: Development helper scripts.
+  * **nav**: Navigation module.
+  * **service**: The old email_service.
+  * **session**: The Email Module responsible for managing shared state between modules.
+  * **story**: The top-level email "Story".
+  * **story**: The primary entry point for the full Email experience.
+  * **thread_list**: The list of Threads.
+  * **thread**: A single Email Thread.
 
 # Development
 
@@ -32,7 +33,7 @@ There are Makefile tasks setup to help simplify common development tasks. Use `m
 
 When you have changes you are ready to see in action you can build with:
 
-    make build
+    make build # or fset x86-64 --modules default && fbuild
 
 Once the system has been built you will need to run a bootserver to get it
 over to a connected Acer. You can use the `env.sh` helper to move the build from your host to the target device with:

@@ -1,0 +1,12 @@
+{
+  "fuchsia:component": {
+    "name": "email_thread_list",
+    "url": "file:///system/apps/email_thread_list"
+  },
+  "fuchsia:program": {
+    "resource": "main"
+  },
+  "fuchsia:resources": {
+    "main": "email_thread_list_component"
+  }
+}

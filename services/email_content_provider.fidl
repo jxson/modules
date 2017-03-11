@@ -1,0 +1,61 @@
+// Copyright 2017 The Fuchsia Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+module email_content_provider;
+
+// These data structures are (for now) modelled to represent Gmail's data model.
+
+struct Thread {
+  string id;
+  // The actual thread data is represented in JSON for convinence when
+  // communicating it over a Link.
+  //
+  // Thread Schema:
+  // {
+  //   'id': <thread id>,
+  //   'snippet': <short text describing the thread>,
+  //   'historyId': <marker used in future Gmail fetches to get deltas>,
+  //   'messages': [<message>]
+  // }
+  //
+  // The message schema is more invovled; for now, see
+  // packages/models/lib/src/email/message.dart.
+  // TODO(vardhan): Spec out the message format in JSON.
+  string json_payload;
+};
+
+struct Label {
+  string id;
+  // Label schema:
+  //
+  // {'id': <thread id>,
+  //  'name': <name of the label.  e.g: INBOX>,
+  //  'unread': <number of unread threads>,
+  //  'type': <type of folder.>
+  // }
+  string json_payload;
+};
+
+struct User {
+  string id;
+  // User schema:
+  //
+  // {'id': <unique user id>,
+  //  'email': <email address>,
+  //  'unread': <full name>,
+  //  'picture': <URL of their avatar>
+  // }
+  string json_payload;
+};
+
+[ServiceName="email_content_provider.EmailContentProvider"]
+interface EmailContentProvider {
+  Me() => (User user);
+  Labels() => (array<Label> labels);
+  Threads(string LabelID, int64 max) => (array<Thread> threads);
+
+  // When new emails come in, a notification is sent on the given message queue,
+  // and the given Story is focused.
+  RegisterForUpdates(string story_id, string message_queue_token);
+};
