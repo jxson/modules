@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:apps.email.services/email_service.fidl.dart' as es;
+import 'package:apps.modules.email.services/email_service.fidl.dart' as es;
 import 'package:email_api/email_api.dart';
 import 'package:lib.fidl.dart/bindings.dart' as bindings;
 import 'package:models/email.dart';

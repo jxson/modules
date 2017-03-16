@@ -13,5 +13,5 @@ dart_test("test") {
     "//third_party/dart-pkg/pub/test",
   ]
 
-  analysis_options = "//apps/modules/.analysis_options"
+  analysis_options = "//apps/modules/common/.analysis_options"
 }

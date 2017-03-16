@@ -5,12 +5,13 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:apps.email.services/email_content_provider.fidl.dart' as ecp;
 import 'package:apps.maxwell.services.suggestion/proposal.fidl.dart';
 import 'package:apps.maxwell.services.suggestion/proposal_publisher.fidl.dart';
 import 'package:apps.maxwell.services.suggestion/suggestion_display.fidl.dart';
 import 'package:apps.modular.services.component/component_context.fidl.dart';
 import 'package:apps.modular.services.component/message_queue.fidl.dart';
+import 'package:apps.modules.email.services/email_content_provider.fidl.dart'
+    as ecp;
 import 'package:email_api/email_api.dart';
 import 'package:lib.fidl.dart/bindings.dart' as bindings;
 import 'package:models/email.dart';

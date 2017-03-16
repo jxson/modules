@@ -14,12 +14,12 @@ dart_package("client") {
   deps = [
     "//application/lib/app/dart",
     "//application/services:services_dart",
-    "//apps/email/packages/email_session_store",
-    "//apps/email/services:services_dart",
     "//apps/modular/services/module:module_dart",
     "//apps/modular/services/story:story_dart",
-    "//apps/modules/packages/fixtures",
-    "//apps/modules/packages/models",
+    "//apps/modules/common/packages/fixtures",
+    "//apps/modules/common/packages/models",
+    "//apps/modules/email/packages/email_session_store",
+    "//apps/modules/email/services:services_dart",
     "//apps/mozart/lib/flutter",
     "//apps/mozart/services/views:views_dart",
     "//lib/fidl/dart",
@@ -28,7 +28,7 @@ dart_package("client") {
     "//third_party/dart-pkg/pub/googleapis",
   ]
 
-  analysis_options = "//apps/modules/.analysis_options"
+  analysis_options = "//apps/modules/common/.analysis_options"
 }
 
 flutter_app("session") {
@@ -38,10 +38,10 @@ flutter_app("session") {
   main_dart = "lib/main.dart"
 
   deps = [
-    "//apps/email/modules/session:client",
+    "//apps/modules/email/modules/session:client",
   ]
 
-  analysis_options = "//apps/modules/.analysis_options"
+  analysis_options = "//apps/modules/common/.analysis_options"
 }
 
 fuchsia_component("email_session_component") {

@@ -7,13 +7,13 @@ dependencies:
   flutter:
     sdk: flutter
   config_flutter:
-    path: ../../../modules/packages/config_flutter
+    path: ../../../common/packages/config_flutter
   googleapis: ^0.32.0
   googleapis_auth: ^0.2.3
   models:
-    path: ../../../modules/packages/models
+    path: ../../../common/packages/models
   util:
-    path: ../../../modules/packages/util
+    path: ../../../common/packages/util
 dev_dependencies:
   flutter_test:
     sdk: flutter

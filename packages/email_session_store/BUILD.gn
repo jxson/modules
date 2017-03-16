@@ -10,13 +10,13 @@ dart_package("email_session_store") {
   source_dir = "lib"
 
   deps = [
-    "//apps/email/packages/email_api",
-    "//apps/modules/packages/config_flutter",
-    "//apps/modules/packages/models",
+    "//apps/modules/common/packages/config_flutter",
+    "//apps/modules/common/packages/models",
+    "//apps/modules/email/packages/email_api",
     "//lib/flutter/packages/flutter",
     "//third_party/dart-pkg/pub/flutter_flux",
     "//third_party/dart-pkg/pub/googleapis",
   ]
 
-  analysis_options = "//apps/modules/.analysis_options"
+  analysis_options = "//apps/modules/common/.analysis_options"
 }

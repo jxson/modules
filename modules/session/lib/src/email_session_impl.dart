@@ -6,12 +6,13 @@ import 'dart:convert';
 
 import 'package:application.lib.app.dart/app.dart';
 import 'package:application.services/service_provider.fidl.dart';
-import 'package:apps.email.services/email_content_provider.fidl.dart' as ecp;
-import 'package:apps.email.services/email_session.fidl.dart' as es;
 import 'package:apps.modular.services.agent.agent_controller/agent_controller.fidl.dart';
 import 'package:apps.modular.services.component/component_context.fidl.dart';
 import 'package:apps.modular.services.component/message_queue.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
+import 'package:apps.modules.email.services/email_content_provider.fidl.dart'
+    as ecp;
+import 'package:apps.modules.email.services/email_session.fidl.dart' as es;
 import 'package:lib.fidl.dart/bindings.dart';
 import 'package:models/email.dart';
 import 'package:models/user.dart';

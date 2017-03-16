@@ -11,6 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   widgets:
-    path: ../../../modules/packages/widgets
+    path: ../../../common/packages/widgets
 flutter:
   uses-material-design: true

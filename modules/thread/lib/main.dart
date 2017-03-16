@@ -6,9 +6,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:application.lib.app.dart/app.dart';
-import 'package:apps.email.services/email_session.fidl.dart' as es;
 import 'package:apps.modular.services.module/module_controller.fidl.dart';
 import 'package:apps.modular.services.story/link.fidl.dart';
+import 'package:apps.modules.email.services/email_session.fidl.dart' as es;
 import 'package:apps.mozart.lib.flutter/child_view.dart';
 import 'package:email_session_client/client.dart';
 import 'package:email_session_store/email_session_store.dart';

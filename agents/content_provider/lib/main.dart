@@ -6,11 +6,12 @@ import 'dart:async';
 
 import 'package:application.lib.app.dart/app.dart';
 import 'package:application.services/service_provider.fidl.dart';
-import 'package:apps.email.services/email_content_provider.fidl.dart' as ecp;
 import 'package:apps.maxwell.services.suggestion/proposal_publisher.fidl.dart';
 import 'package:apps.modular.services.agent/agent.fidl.dart';
 import 'package:apps.modular.services.agent/agent_context.fidl.dart';
 import 'package:apps.modular.services.component/component_context.fidl.dart';
+import 'package:apps.modules.email.services/email_content_provider.fidl.dart'
+    as ecp;
 import 'package:lib.fidl.dart/bindings.dart';
 
 import 'src/content_provider_impl.dart';

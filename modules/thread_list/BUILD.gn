@@ -11,19 +11,19 @@ flutter_app("thread_list") {
   deps = [
     "//application/lib/app/dart",
     "//application/services:services_dart",
-    "//apps/email/packages/email_session_store",
-    "//apps/email/modules/session:client",
-    "//apps/email/services:services_dart",
     "//apps/modular/services/story:story_dart",
-    "//apps/modules/packages/models",
-    "//apps/modules/packages/widgets",
+    "//apps/modules/common/packages/models",
+    "//apps/modules/common/packages/widgets",
+    "//apps/modules/email/packages/email_session_store",
+    "//apps/modules/email/modules/session:client",
+    "//apps/modules/email/services:services_dart",
     "//apps/mozart/lib/flutter",
     "//apps/mozart/services/views:views_dart",
     "//lib/fidl/dart",
     "//lib/flutter/packages/flutter",
   ]
 
-  analysis_options = "//apps/modules/.analysis_options"
+  analysis_options = "//apps/modules/common/.analysis_options"
 }
 
 fuchsia_component("email_thread_list_component") {

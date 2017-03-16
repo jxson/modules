@@ -4,8 +4,8 @@
 
 group("email") {
   deps = [
-    "//apps/email/agents",
-    "//apps/email/modules",
-    "//apps/email/services",
+    "//apps/modules/email/agents",
+    "//apps/modules/email/modules",
+    "//apps/modules/email/services",
   ]
 }
