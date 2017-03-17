@@ -6,6 +6,8 @@
 
 This repo contains code for running a vanilla [Flutter][flutter] application (iOS & Android) and a [Fuchsia][fuchsia] specific set of [modules][modular].
 
+* **agents**: Fuchsia agents (background services) using Modular APIs.
+  * **content_provider**: The email content provider agent which communicates with the cloud email services.
 * **modules**: Fuchsia application code using Modular APIs.
   * **nav**: Navigation module.
   * **service**: The old email_service.
@@ -14,6 +16,8 @@ This repo contains code for running a vanilla [Flutter][flutter] application (iO
   * **story**: The primary entry point for the full Email experience.
   * **thread_list**: The list of Threads.
   * **thread**: A single Email Thread.
+* **packages**: Common Dart packages used by email agents / modules.
+* **services**: [FIDL][fidl] service definitions.
 
 # Development
 
