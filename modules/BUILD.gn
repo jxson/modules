@@ -5,7 +5,6 @@
 group("modules") {
   deps = [
     "nav",
-    "service",
     "session",
     "story",
     "thread_list",
